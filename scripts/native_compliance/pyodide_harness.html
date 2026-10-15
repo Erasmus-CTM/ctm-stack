@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>STACK Pyodide parity</title></head>
+<body><script>
+'use strict';
+let worker = null;
+let nextId = 0;
+const pending = new Map();
+function stopWorker(error) {
+  if (worker) worker.terminate();
+  worker = null;
+  for (const [id, request] of pending) {
+    clearTimeout(request.timer);
+    request.reject(error);
+    pending.delete(id);
+  }
+}
+function send(type, item, timeoutMs) {
+  if (!worker) {
+    worker = new Worker('/scripts/native_compliance/pyodide_worker.js');
+    worker.onmessage = ({data}) => {
+      const request = pending.get(data.id);
+      if (!request) return;
+      clearTimeout(request.timer);
+      pending.delete(data.id);
+      if (data.ok) request.resolve(data.result);
+      else request.reject(new Error(data.error));
+    };
+    worker.onerror = (event) => {
+      stopWorker(new Error('Pyodide Worker error: ' + event.message));
+    };
+  }
+  const id = ++nextId;
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      stopWorker(new Error('Pyodide ' + type + ' timeout after ' + timeoutMs + ' ms'));
+    }, timeoutMs);
+    pending.set(id, {resolve, reject, timer});
+    worker.postMessage({id, type, item});
+  });
+}
+window.initializeParity = (timeoutMs) => send('init', null, timeoutMs);
+window.evaluateParity = (item, timeoutMs) => send('evaluate', item, timeoutMs);
+window.resetParity = () => stopWorker(new Error('Worker reset'));
+</script></body></html>

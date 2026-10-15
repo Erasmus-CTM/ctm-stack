@@ -8,10 +8,6 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: stack-sympy-pages
-  cancel-in-progress: false
-
 jobs:
   maxima-reference:
     runs-on: ubuntu-24.04
@@ -45,6 +41,9 @@ jobs:
   site:
     needs: maxima-reference
     runs-on: ubuntu-latest
+    concurrency:
+      group: stack-sympy-pages
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4

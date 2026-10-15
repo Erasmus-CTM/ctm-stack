@@ -1,6 +1,11 @@
 project:
   type: website
   output-dir: _site
+  render:
+    - index.qmd
+    - examples.qmd
+    - corpus.qmd
+    - docs/authoring.qmd
   resources:
     - questions/**
 
@@ -16,6 +21,8 @@ website:
         text: Question corpus
       - href: docs/authoring.qmd
         text: Authoring guide
+      - href: https://erasmus-ctm.github.io/stack-sympy/compliance/
+        text: Native compliance
     right:
       - icon: github
         href: https://github.com/Erasmus-CTM/stack-sympy

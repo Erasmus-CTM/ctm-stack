@@ -96,6 +96,21 @@ The learner's current answer, visible question text and selected context form th
 
 The optional native reference check runs a source-controlled set of scalar answer-test cases through this adapter and the official STACK/Maxima answer-test functions from the pinned upstream checkout. It compares CAS test applicability and correctness; adapter input validation is recorded separately. Install Maxima and run `python scripts/compare_stack_maxima.py --stack-source /path/to/moodle-qtype_stack` against the exact commit specified by that script. CI runs this comparison before building the example site. Passing its selected cases does not imply that all STACK expressions, question settings, or random variants agree with Maxima.
 
+The separate [native compliance report](https://erasmus-ctm.github.io/stack-sympy/compliance/) inventories all 2,303 static upstream answer-test rows from the pinned fixture and shows three independent checks: Python against authored desired results, Python against official STACK/Maxima, and Pyodide against CPython. It distinguishes unsupported cases, controlled errors, known native mathematical failures, reviewed Python defects, and unexplained differences. Native agreement is a comparison of CAS applicability and correctness, not an assertion that STACK's mathematical result is correct. Raw notes are available for inspection but are not asserted equivalent. The report covers this adapter's bounded scalar answer-test subset, not Moodle's PHP controller, question state, or every STACK feature; the upstream PHP fixture is parsed as data and never executed.
+
+The dedicated [compliance workflow](.github/workflows/native-compliance.yml) runs only for relevant pushes and pull requests. It publishes the independent report after a main-branch push and attaches downloadable HTML and JSON to pull-request runs, including failed runs with unavailable checks shown explicitly. An ordinary `quarto render` of this website does not rerun or replace the report. To reproduce locally using an official STACK checkout at `10d323311b7f39fb7b092dd10ce75f7d8632f525`, install `requirements-dev.txt`, Maxima and Playwright Chromium, then run:
+
+```sh
+python scripts/run_compliance_python.py
+python scripts/run_compliance_maxima.py --stack-source /path/to/moodle-qtype_stack
+python scripts/native_compliance/compatibility.py
+python scripts/run_compliance_pyodide.py
+python scripts/native_compliance/report.py
+quarto render compliance-report
+```
+
+The generated page is `compliance-report/_site/index.html`; `compliance-report/report.json` is the downloadable report. Checkers produce independent JSON files under `test-results/compliance/`. Missing runner output, unexpected execution errors, and unexplained mismatches fail their corresponding CI checks while the report still renders for diagnosis. Rows deliberately outside the direct CAS scope remain visible as unavailable and do not fail a check solely for that reason. `tests/native_compliance/policy.json` records case-specific Python deviations; `native_policy.json` is the separate, case-specific approval list for native differences.
+
 The original corpus question `AlgMap-2.5` grants full credit when `LowestTerms` accepts the written form before its `AlgEquiv` node runs. A reduced fraction with the wrong value can therefore receive full credit. Its passing authored qtests demonstrate replay of those specific tests, not that the upstream grading tree enforces mathematical correctness for every response. The [corpus gallery](corpus.qmd) flags this behavior beside the card.
 
 To check a file before rendering:

@@ -1,0 +1,24 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - index.qmd
+  resources:
+    - report.json
+    - report.js
+    - report.css
+
+website:
+  title: "STACK SymPy · Native compliance"
+  navbar:
+    left:
+      - text: Back to example site
+        href: https://erasmus-ctm.github.io/stack-sympy/
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    css: report.css
+    html-math-method: mathjax
+
