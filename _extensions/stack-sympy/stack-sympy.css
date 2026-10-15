@@ -30,7 +30,7 @@
 .stack-sympy .stack-answer[aria-invalid="true"] { border-color: #b7433e; }
 .stack-sympy .stack-variant-wrap { display: flex; gap: .7rem; align-items: center; margin: 0 0 1rem; }
 .stack-sympy select { padding: .4rem .5rem; border: 1px solid #9aaebb; border-radius: .3rem; background: white; }
-.stack-sympy .stack-actions { display: flex; gap: .6rem; flex-wrap: wrap; margin: 1rem 0 .3rem; }
+.stack-sympy .stack-actions { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; margin: 1rem 0 .3rem; }
 .stack-sympy button {
   padding: .55rem .95rem;
   border: 1px solid var(--stack-accent);
@@ -41,13 +41,19 @@
   font-weight: 600;
   cursor: pointer;
 }
+.stack-sympy .stack-actions > button {
+  margin: 0;
+  padding: .25rem .6rem;
+  font-size: .875rem;
+  line-height: 1.25;
+}
 .stack-sympy button.stack-tests { color: var(--stack-accent); background: white; }
 .stack-sympy button.ai-feedback-gear {
   color: var(--stack-accent);
   background: transparent;
   border-color: transparent;
-  font-size: 1.2rem;
-  padding-inline: .55rem;
+  font-size: 1rem;
+  padding-inline: .45rem;
 }
 .stack-sympy > .ai-feedback-output:not(:empty) {
   margin-top: .8rem;
