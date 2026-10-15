@@ -44,6 +44,7 @@ def test_browser_worker_grades_and_runs_authored_tests():
         card = page.locator(".stack-sympy:not(.stack-diagnostic)").first
         assert card.count() == 1
         assert card.locator(".stack-answer").count() > 0
+        card.locator(".stack-prompt mjx-container").first.wait_for(timeout=60000)
 
         # Exact tests from the imported XML must execute in the browser's
         # bundled Python engine, rather than a JavaScript imitation.
@@ -61,6 +62,7 @@ def test_browser_worker_grades_and_runs_authored_tests():
         card.locator(".stack-answer").first.fill("x+x")
         card.locator(".stack-validate").click()
         card.locator('.stack-validation[data-state="valid"]').wait_for(timeout=120000)
+        card.locator('.stack-validation mjx-container').first.wait_for(timeout=60000)
         assert card.locator('.stack-validation').first.get_attribute('data-latex') == 'x + x'
         assert card.locator(".stack-check").is_enabled()
         assert card.locator(".stack-result").get_attribute("data-state") == "valid"
@@ -77,6 +79,7 @@ def test_browser_worker_grades_and_runs_authored_tests():
             selector.select_option(index=1)
             assert card.locator(".stack-answer").first.input_value() == ""
             assert card.locator(".stack-result").inner_text() == ""
+            card.locator(".stack-prompt mjx-container").first.wait_for(timeout=60000)
 
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
         cards = page.locator(".stack-sympy:not(.stack-diagnostic)")

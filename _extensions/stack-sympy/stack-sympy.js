@@ -54,13 +54,93 @@
     return result;
   }
 
+  var MATHJAX_URL = 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-chtml.js';
+  var mathQueue = Promise.resolve();
+
+  function ensureMathJax() {
+    if (window.MathJax && typeof window.MathJax.typesetPromise === 'function') {
+      return Promise.resolve(window.MathJax.startup && window.MathJax.startup.promise)
+        .then(function () { return window.MathJax; });
+    }
+    if (window.__stackSympyMathJax) return window.__stackSympyMathJax;
+    var ownedScript = null;
+    var pending = (async function () {
+      // Keep an existing page's MathJax configuration. Version 3 recognizes
+      // both \( ... \) and \[ ... \] by default; configure our own only when
+      // Quarto has not installed one for ordinary document mathematics.
+      if (!window.MathJax) {
+        window.MathJax = {
+          tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] }
+        };
+      }
+      var script = document.querySelector('script[src*="mathjax"]');
+      if (!script) {
+        script = document.createElement('script');
+        script.src = MATHJAX_URL;
+        script.async = true;
+        script.dataset.stackSympyMathjax = '1';
+        ownedScript = script;
+        var loaded = new Promise(function (resolve, reject) {
+          script.onload = resolve;
+          script.onerror = function () { reject(new Error('Could not load MathJax.')); };
+        });
+        document.head.appendChild(script);
+        await loaded;
+      } else if (!window.MathJax.startup || !window.MathJax.startup.promise) {
+        await new Promise(function (resolve, reject) {
+          var timer, poll;
+          function finish(error) {
+            clearTimeout(timer);
+            clearInterval(poll);
+            script.removeEventListener('load', loaded);
+            script.removeEventListener('error', failed);
+            if (error) reject(error); else resolve();
+          }
+          function loaded() { finish(); }
+          function failed() { finish(new Error('Could not load MathJax.')); }
+          timer = setTimeout(function () { finish(new Error('MathJax did not initialize.')); }, 30000);
+          poll = setInterval(function () {
+            if (window.MathJax && (typeof window.MathJax.typesetPromise === 'function' ||
+                window.MathJax.startup && window.MathJax.startup.promise)) finish();
+          }, 50);
+          script.addEventListener('load', loaded);
+          script.addEventListener('error', failed);
+        });
+      }
+      if (window.MathJax.startup && window.MathJax.startup.promise) {
+        await window.MathJax.startup.promise;
+      }
+      if (typeof window.MathJax.typesetPromise !== 'function') {
+        throw new Error('MathJax did not expose a typesetting API.');
+      }
+      return window.MathJax;
+    })();
+    window.__stackSympyMathJax = pending;
+    pending.catch(function () {
+      if (ownedScript && ownedScript.isConnected) ownedScript.remove();
+      if (window.__stackSympyMathJax === pending) delete window.__stackSympyMathJax;
+    });
+    return pending;
+  }
+
   function math(element) {
-    if (window.MathJax && window.MathJax.typesetPromise) {
-      window.MathJax.typesetPromise([element]).catch(function () {});
+    // MathJax's document state is shared across cards and is not reentrant.
+    mathQueue = mathQueue.catch(function () {}).then(async function () {
+      var mj = await ensureMathJax();
+      if (element.isConnected) await mj.typesetPromise([element]);
+    }).catch(function (error) { console.warn('STACK SymPy math display:', error); });
+    return mathQueue;
+  }
+
+  function clearMath(element) {
+    if (window.MathJax && typeof window.MathJax.typesetClear === 'function') {
+      try { window.MathJax.typesetClear([element]); }
+      catch (error) { console.warn('STACK SymPy math cleanup:', error); }
     }
   }
 
   function message(container, text, state) {
+    clearMath(container);
     container.replaceChildren();
     container.dataset.state = state || '';
     var line = document.createElement('p');
@@ -78,6 +158,7 @@
 
   function showGrade(card, result) {
     var output = card.querySelector('.stack-result');
+    clearMath(output);
     output.replaceChildren();
     output.dataset.state = result.status === 'invalid' ? 'invalid' : result.score >= 1 ? 'correct' : 'retry';
     if (result.status === 'invalid') {
@@ -92,7 +173,10 @@
       var item = card.querySelector('.stack-answer[data-name="' + CSS.escape(name) + '"]');
       if (item) item.setAttribute('aria-invalid', detail.valid === false ? 'true' : 'false');
       var validation = card.querySelector('.stack-validation[data-name="' + CSS.escape(name) + '"]');
-      if (detail.feedback && validation) validation.textContent = detail.feedback;
+      if (detail.feedback && validation) {
+        clearMath(validation);
+        validation.textContent = detail.feedback;
+      }
       else if (detail.feedback) output.appendChild(node('p', 'stack-input-feedback', name + ': ' + detail.feedback));
     });
     Object.keys(result.prts || {}).forEach(function (name) {
@@ -102,7 +186,10 @@
         var feedback = node('div', 'stack-prt-feedback');
         feedback.innerHTML = detail.feedback;
         var inline = card.querySelector('.stack-feedback[data-name="' + CSS.escape(name) + '"]');
-        if (inline) inline.innerHTML = detail.feedback;
+        if (inline) {
+          clearMath(inline);
+          inline.innerHTML = detail.feedback;
+        }
         else output.appendChild(feedback);
       }
     });
@@ -111,6 +198,7 @@
 
   function showValidation(card, result) {
     var output = card.querySelector('.stack-result');
+    clearMath(output);
     output.replaceChildren();
     output.dataset.state = result.status === 'valid' ? 'valid' : 'invalid';
     output.appendChild(node('p', 'stack-verdict', result.status === 'valid' ?
@@ -127,6 +215,7 @@
       }
       validation.dataset.state = detail.valid ? 'valid' : 'invalid';
       validation.dataset.latex = detail.latex || '';
+      clearMath(validation);
       validation.textContent = detail.valid ? 'Interpreted as \\(' + detail.latex + '\\)' : detail.feedback;
       math(validation);
     });
@@ -134,6 +223,7 @@
 
   function showTests(card, result) {
     var output = card.querySelector('.stack-result');
+    clearMath(output);
     output.replaceChildren();
     output.dataset.state = result.passed ? 'correct' : 'retry';
     output.appendChild(node('p', 'stack-verdict', result.passed ? 'All authored tests passed.' : 'Some authored tests failed.'));
@@ -177,9 +267,12 @@
         item.value = '';
         item.removeAttribute('aria-invalid');
       });
-      card.querySelector('.stack-result').replaceChildren();
-      card.querySelector('.stack-result').removeAttribute('data-state');
+      var output = card.querySelector('.stack-result');
+      clearMath(output);
+      output.replaceChildren();
+      output.removeAttribute('data-state');
       card.querySelectorAll('.stack-validation, .stack-feedback').forEach(function (item) {
+        clearMath(item);
         item.textContent = '';
         delete item.dataset.latex;
         delete item.dataset.state;
@@ -189,6 +282,7 @@
       var variant = variantAt();
       var prompt = card.querySelector('.stack-prompt');
       if (prompt && variant) {
+        clearMath(prompt);
         prompt.innerHTML = variant.question_html;
         math(prompt);
       }
@@ -200,8 +294,11 @@
         validatedSnapshot = null;
         if (check) check.disabled = true;
         event.target.removeAttribute('aria-invalid');
-        card.querySelector('.stack-result').replaceChildren();
+        var output = card.querySelector('.stack-result');
+        clearMath(output);
+        output.replaceChildren();
         card.querySelectorAll('.stack-validation, .stack-feedback').forEach(function (item) {
+          clearMath(item);
           item.textContent = '';
           delete item.dataset.latex;
           delete item.dataset.state;
@@ -242,6 +339,7 @@
     if (validate) validate.addEventListener('click', function () { act('validate', validate); });
     var tests = card.querySelector('.stack-tests');
     if (tests) tests.addEventListener('click', function () { act('tests', tests); });
+    math(card);
   }
 
   document.querySelectorAll('.stack-sympy:not(.stack-diagnostic)').forEach(initialize);
