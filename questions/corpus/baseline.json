@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "engine_revision": "96cf783bf1e05f5068391f344c0abc42d215b434",
-  "adapter_source_sha256": "fb2678bc0650b003339daca21cee59625d2cab56c74c0b8538489b89581c044c",
+  "engine_revision": "e8c41f595bd80aa44ec72d42c5d2e655240e351e",
+  "adapter_source_sha256": "a17216d1d55b934ed6eb08838765147cbff1357bef0e45d2da9527bc56fedc8e",
   "python_version": "3.12.14",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",

@@ -12,6 +12,12 @@
   {"id":"eca_wrong_value","test":"EqualComAss","student":"1+x","teacher":"2*x+1","options":"","source":"STACK fixtures EqualComAss, line 944"},
   {"id":"eca_fraction_associate","test":"EqualComAss","student":"(a*b)/c","teacher":"a*(b/c)","options":"","source":"STACK fixtures EqualComAss, line 973"},
   {"id":"eca_numeric_unsimplified","test":"EqualComAss","student":"1/2","teacher":"3/6","options":"","source":"STACK fixtures EqualComAss, line 970"},
+  {"id":"eca_cosine_evaluated","test":"EqualComAss","student":"cos(0)","teacher":"1","options":"","source":"STACK fixtures EqualComAss, line 919"},
+  {"id":"eca_sqrt_power_form","test":"EqualComAss","student":"sqrt(3)","teacher":"3^(1/2)","options":"","source":"STACK fixtures EqualComAss, line 923"},
+  {"id":"eca_sqrt_product_form","test":"EqualComAss","student":"2*sqrt(2)","teacher":"sqrt(8)","options":"","source":"STACK fixtures EqualComAss, line 924"},
+  {"id":"eca_function_sum_order","test":"EqualComAss","student":"sqrt(x)+sin(x)","teacher":"sin(x)+sqrt(x)","options":"","source":"commutative function-sum boundary"},
+  {"id":"eca_exp_alias","test":"EqualComAss","student":"exp(x)","teacher":"%e^x","options":"","source":"STACK fixtures EqualComAss, line 994"},
+  {"id":"eca_sine_evaluated","test":"EqualComAss","student":"sin(0)","teacher":"0","options":"","source":"evaluated function-form boundary"},
 
   {"id":"fac_square","test":"FacForm","student":"(x+1)^2","teacher":"(x+1)^2","options":"x","source":"STACK general CAS test, line 262"},
   {"id":"fac_expanded_square","test":"FacForm","student":"x^2+2*x+1","teacher":"(x+1)^2","options":"x","source":"STACK general CAS test, line 270"},

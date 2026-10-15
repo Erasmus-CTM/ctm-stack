@@ -435,7 +435,11 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
         if value.is_Mul:
             return combine("mul", [from_sympy(x) for x in value.args])
         if value.is_Pow:
+            if value.exp == sp.Rational(1, 2):
+                return ("call", "sqrt", (from_sympy(value.base),))
             return ("pow", from_sympy(value.base), from_sympy(value.exp))
+        if value.func == sp.exp:
+            return ("pow", from_sympy(sp.E), from_sympy(value.args[0]))
         return ("call", value.func.__name__.lower(), tuple(from_sympy(x) for x in value.args))
 
     def combine(op, terms):
@@ -503,11 +507,11 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
         if n.kind == "call":
             if n.value not in _STUDENT_FUNCTIONS:
                 return from_sympy(evaluate(n, env, assumptions=assumptions))
-            calculated = evaluate(n, env, assumptions=assumptions)
-            if calculated.is_number:
-                return from_sympy(calculated)
             if n.value == "sqrt" and len(n.children) == 1:
-                return ("pow", visit(n.children[0]), ("number", "1/2"))
+                return ("call", "sqrt", (visit(n.children[0]),))
+            # Maxima rewrites exp(x) to %e^x before noun arithmetic.
+            if n.value == "exp" and len(n.children) == 1:
+                return ("pow", from_sympy(sp.E), visit(n.children[0]))
             return ("call", n.value, tuple(visit(x) for x in n.children))
         raise Unsupported("EqualComAss supports scalar expressions")
 

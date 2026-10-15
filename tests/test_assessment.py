@@ -23,6 +23,15 @@ class AssessmentTest(unittest.TestCase):
         self.assertTrue(answer_test("EqualComAss", "3/4", "ta", env={"ta": sp.Rational(3, 4)})["correct"])
         self.assertFalse(answer_test("EqualComAss", "2/4", "ta", env={"ta": sp.Rational(1, 2)})["correct"])
         self.assertFalse(answer_test("EqualComAss", "0.75", "3/4")["correct"])
+        for written, computed in (("cos(0)", "1"), ("sqrt(3)", "3^(1/2)"),
+                                  ("2*sqrt(2)", "sqrt(8)"), ("4^(1/2)", "2")):
+            with self.subTest(written=written):
+                result = answer_test("EqualComAss", written, computed)
+                self.assertTrue(result["valid"])
+                self.assertTrue(result["cas_valid"])
+                self.assertFalse(result["correct"])
+        self.assertTrue(answer_test("EqualComAss", "sqrt(x)+sin(x)", "sin(x)+sqrt(x)")["correct"])
+        self.assertTrue(answer_test("EqualComAss", "exp(x)", "%e^x")["correct"])
         wrong = answer_test("EqualComAss", "1+x", "1+2*x")
         self.assertEqual((wrong["valid"], wrong["cas_valid"], wrong["correct"]), (True, False, False))
         self.assertEqual(answer_test("EqualComAss", "x+x", "2*x")["cas_valid"], True)

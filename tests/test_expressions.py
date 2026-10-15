@@ -51,6 +51,10 @@ class ExpressionsTest(unittest.TestCase):
         self.assertNotEqual(canonical_form("xy"), canonical_form("x*y"))
         self.assertEqual(canonical_form("sqrt(x)"), canonical_form("a", {"a": sp.sqrt(sp.Symbol("x"))}))
         self.assertEqual(canonical_form("abs(x)"), canonical_form("a", {"a": sp.Abs(sp.Symbol("x"))}))
+        self.assertNotEqual(canonical_form("cos(0)"), canonical_form("1"))
+        self.assertNotEqual(canonical_form("sqrt(3)"), canonical_form("3^(1/2)"))
+        self.assertNotEqual(canonical_form("2*sqrt(2)"), canonical_form("sqrt(8)"))
+        self.assertEqual(canonical_form("exp(x)"), canonical_form("%e^x"))
 
     def test_assumptions_are_explicit(self):
         x = sp.Symbol("x")
