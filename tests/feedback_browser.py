@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 
 from playwright.sync_api import sync_playwright
 
@@ -41,7 +42,7 @@ def test_feedback_copy_prompt_and_context_modes():
         card.locator(".stack-answer").first.fill("x**2+8x+15")
         first = prompt_data(card)
         assert "[Answer " in first["task"]
-        assert r"\(x+" in first["task"] and r"\)" in first["task"]
+        assert re.search(r"\\\(\(x\+\d+\)\(x\+\d+\)\\\)", first["task"])
         assert "{@" not in first["task"]  # Frozen coefficients, not author CAS text.
         assert "<quiz>" not in json.dumps(first)
         assert "questionvariables" not in json.dumps(first)
