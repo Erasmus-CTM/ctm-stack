@@ -7,8 +7,9 @@
 .report-summary dd { margin: 0; font-variant-numeric: tabular-nums; }
 .report-runners details { margin: .35rem 0; }
 .report-controls { display: grid; grid-template-columns: repeat(auto-fit,minmax(13rem,1fr)); gap: .75rem; margin-block: 1rem; }
-.report-controls label { display: grid; gap: .2rem; font-weight: 600; }
-.report-controls input,.report-controls select { width: 100%; padding: .35rem; }
+.report-controls > p { display: contents; }
+.report-controls label { display: grid; gap: .2rem; font-weight: 600; min-width: 0; }
+.report-controls input,.report-controls select { box-sizing: border-box; width: 100%; min-width: 0; padding: .35rem; }
 .case-list { display: grid; gap: .55rem; }
 .case { border: 1px solid #cbd5e1; border-radius: .4rem; padding: .5rem .8rem; }
 .case summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: .35rem .65rem; align-items: center; }
