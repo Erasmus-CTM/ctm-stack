@@ -40,3 +40,16 @@ Additional input-state and domain checks:
 | AlgMap-10.1 | Grade `18*(1-x)` Correct, then edit input to `18-18*x` | Old result text and validation preview cleared; Check disabled until a fresh validation. The result element retained a `data-state="correct"` attribute while its text was empty. |
 
 There were **28 distinct entered-answer scenarios** (25 graded valid form or value cases, two invalid validation cases, one unsupported-domain error) plus the edit-invalidation transition. No incorrect grading surfaced. The exposed traceback on an out-of-domain answer is a user-facing presentation issue; the underlying error classification correctly differs from retry. These checks do not assert behavior for the other six interactive cards, which were covered separately in `reports/corpus-live-math.md` at an earlier deployment.
+
+## v0.1.7 targeted regression (2026-10-15 UTC)
+
+After deployment of commit `155507b290cf0755f3fcb83b6fcf96b5fb81c835`, I repeated the AlgMap-13.1 issue in a cloud Chromium tab at the verified URL `https://erasmus-ctm.github.io/stack-sympy/corpus.html?release=155507b290cf0755f3fcb83b6fcf96b5fb81c835`. Its script tag referenced `site_libs/quarto-contrib/stack-sympy-0.1.7/stack-sympy.js`. The initial canonical tab had briefly served v0.1.6 HTML; a normal reload then showed the v0.1.7 script at the separately verified canonical URL `https://erasmus-ctm.github.io/stack-sympy/corpus.html`. I repeated the same transition there as well.
+
+| Tested URL | Input and action | Observed outcome |
+| --- | --- | --- |
+| Query URL above, v0.1.7 script | `t/(t-1)`; Validate, then Check | Parsed preview and enabled Check. Check displayed `Could not check this answer: AlgMap-13.1: prt[prt1]/node[0]: FacForm supports only numeric denominators`. No traceback. |
+| Query URL above | Edit to `(8-t)*(4*t-1)`; Validate, then Check | The previous error and preview cleared on edit; Check disabled, then re-enabled on validation. Check displayed `Correct.` |
+| Canonical URL above after reload, v0.1.7 script | `t/(t-1)`; Validate, then Check | Parsed preview and enabled Check. Check displayed the same concise numeric-denominator error, with no traceback. |
+| Canonical URL above after reload | Edit to `(8-t)*(4*t-1)`; Validate, then Check | Previous result and preview cleared; Check disabled until validation. Check displayed `Correct.` |
+
+The v0.1.6 traceback finding above is historical and resolved in this targeted v0.1.7 browser regression. The full 28-scenario matrix was not repeated on v0.1.7.
