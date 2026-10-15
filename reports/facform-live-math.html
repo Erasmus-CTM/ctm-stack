@@ -128,7 +128,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#live-exercise-checks-after-facform-support" id="toc-live-exercise-checks-after-facform-support" class="nav-link active" data-scroll-target="#live-exercise-checks-after-facform-support">Live exercise checks after FacForm support</a></li>
+  <li><a href="#live-exercise-checks-after-facform-support" id="toc-live-exercise-checks-after-facform-support" class="nav-link active" data-scroll-target="#live-exercise-checks-after-facform-support">Live exercise checks after FacForm support</a>
+  <ul class="collapse">
+  <li><a href="#v0.1.7-targeted-regression-2026-10-15-utc" id="toc-v0.1.7-targeted-regression-2026-10-15-utc" class="nav-link" data-scroll-target="#v0.1.7-targeted-regression-2026-10-15-utc">v0.1.7 targeted regression (2026-10-15 UTC)</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -320,8 +323,49 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 <p>There were <strong>28 distinct entered-answer scenarios</strong> (25 graded valid form or value cases, two invalid validation cases, one unsupported-domain error) plus the edit-invalidation transition. No incorrect grading surfaced. The exposed traceback on an out-of-domain answer is a user-facing presentation issue; the underlying error classification correctly differs from retry. These checks do not assert behavior for the other six interactive cards, which were covered separately in <code>reports/corpus-live-math.md</code> at an earlier deployment.</p>
+<section id="v0.1.7-targeted-regression-2026-10-15-utc" class="level2">
+<h2 class="anchored" data-anchor-id="v0.1.7-targeted-regression-2026-10-15-utc">v0.1.7 targeted regression (2026-10-15 UTC)</h2>
+<p>After deployment of commit <code>155507b290cf0755f3fcb83b6fcf96b5fb81c835</code>, I repeated the AlgMap-13.1 issue in a cloud Chromium tab at the verified URL <code>https://erasmus-ctm.github.io/stack-sympy/corpus.html?release=155507b290cf0755f3fcb83b6fcf96b5fb81c835</code>. Its script tag referenced <code>site_libs/quarto-contrib/stack-sympy-0.1.7/stack-sympy.js</code>. The initial canonical tab had briefly served v0.1.6 HTML; a normal reload then showed the v0.1.7 script at the separately verified canonical URL <code>https://erasmus-ctm.github.io/stack-sympy/corpus.html</code>. I repeated the same transition there as well.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Tested URL</th>
+<th>Input and action</th>
+<th>Observed outcome</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Query URL above, v0.1.7 script</td>
+<td><code>t/(t-1)</code>; Validate, then Check</td>
+<td>Parsed preview and enabled Check. Check displayed <code>Could not check this answer: AlgMap-13.1: prt[prt1]/node[0]: FacForm supports only numeric denominators</code>. No traceback.</td>
+</tr>
+<tr class="even">
+<td>Query URL above</td>
+<td>Edit to <code>(8-t)*(4*t-1)</code>; Validate, then Check</td>
+<td>The previous error and preview cleared on edit; Check disabled, then re-enabled on validation. Check displayed <code>Correct.</code></td>
+</tr>
+<tr class="odd">
+<td>Canonical URL above after reload, v0.1.7 script</td>
+<td><code>t/(t-1)</code>; Validate, then Check</td>
+<td>Parsed preview and enabled Check. Check displayed the same concise numeric-denominator error, with no traceback.</td>
+</tr>
+<tr class="even">
+<td>Canonical URL above after reload</td>
+<td>Edit to <code>(8-t)*(4*t-1)</code>; Validate, then Check</td>
+<td>Previous result and preview cleared; Check disabled until validation. Check displayed <code>Correct.</code></td>
+</tr>
+</tbody>
+</table>
+<p>The v0.1.6 traceback finding above is historical and resolved in this targeted v0.1.7 browser regression. The full 28-scenario matrix was not repeated on v0.1.7.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
