@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-4f504391229830b406574e462f7afa43.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/quarto-contrib/stack-sympy-0.1.1/stack-sympy.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/stack-sympy-0.1.2/stack-sympy.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -156,8 +156,185 @@ ul.task-list li input[type="checkbox"] {
 <section id="start-with-a-native-export" class="level2">
 <h2 class="anchored" data-anchor-id="start-with-a-native-export">Start with a native export</h2>
 <p>Use a Moodle STACK export whose root is <code>&lt;quiz&gt;</code> and whose questions use <code>&lt;question type="stack"&gt;</code>. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a <code>stack-question</code> block at its XML path and exact <code>&lt;name&gt;&lt;text&gt;…&lt;/text&gt;&lt;/name&gt;</code>. The filter embeds a selected question and precomputes the requested variants when Quarto renders. The original XML remains the source of truth and can be imported back into Moodle.</p>
-<section class="stack-sympy" data-stack-id="stack-sympy-1"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option><option value="1">Variant 2</option><option value="2">Variant 3</option></select></label></div><div class="stack-prompt stack-question"><p>Expand and collect like terms: \((x+5)(x+3)\).</p><p>Give your answer as a polynomial in \(x\). <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="18" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span> <span class="stack-feedback" data-name="prt1"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-1","question":{"name":"Expand a product (form-sensitive)","questiontext":"\u003cp\u003eExpand and collect like terms: \\((x+{@a@})(x+{@b@})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). [[input:ans]] [[validation:ans]] [[feedback:prt1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eMultiply each term and collect: \\(x^2+({@a@}+{@b@})x+{@a@}\\cdot{@b@}={@ta@}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"Expansion: (x+a)(x+b) = ta","variables":"a:rand(4)+2;\nb:rand(3)+2;\nta:x^2+(a+b)*x+a*b;","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":18,"strictsyntax":true,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"prt1-0-T","feedback":"\u003cp\u003eCorrect: the expression is expanded and collected.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":1,"note":"prt1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.5,"next":-1,"note":"prt1-1-T","feedback":"\u003cp\u003eThis is equivalent, but expand the product and collect like terms for full credit.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"prt1-1-F","feedback":"\u003cp\u003eCheck the middle term and constant term when you multiply the binomials.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"Expanded polynomial","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"2","description":"Equivalent but still factored","inputs":{"ans":"(x+a)*(x+b)"},"expected":{"prt1":{"score":0.5,"penalty":0.1,"note":"prt1-0-F | prt1-1-T"}}},{"testcase":"3","description":"Incorrect middle coefficient","inputs":{"ans":"x^2+(a+b+1)*x+a*b"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F | prt1-1-F"}}}],"deployedseeds":[17,29,47]},"variants":[{"seed":17,"env":{"a":"5","b":"3","ta":"x**2 + 8*x + 15"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+5)(x+3)\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+(5+3)x+5\\cdot3=x^{2} + 8 x + 15\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":18,"env":{"a":"3","b":"2","ta":"x**2 + 5*x + 6"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+3)(x+2)\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+(3+2)x+3\\cdot2=x^{2} + 5 x + 6\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":19,"env":{"a":"2","b":"4","ta":"x**2 + 6*x + 8"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+2)(x+4)\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+(2+4)x+2\\cdot4=x^{2} + 6 x + 8\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"}],"review":true}</script></section>
+<div class="stack-question-group"><section class="stack-sympy" data-stack-id="stack-sympy-1"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option><option value="1">Variant 2</option><option value="2">Variant 3</option></select></label></div><div class="stack-prompt stack-question"><p>Expand and collect like terms: \((x+5)(x+3)\).</p><p>Give your answer as a polynomial in \(x\). <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="18" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span> <span class="stack-feedback" data-name="prt1"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-1","question":{"name":"Expand a product (form-sensitive)","questiontext":"\u003cp\u003eExpand and collect like terms: \\((x+{@a@})(x+{@b@})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). [[input:ans]] [[validation:ans]] [[feedback:prt1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eMultiply each term and collect: \\(x^2+({@a@}+{@b@})x+{@a@}\\cdot{@b@}={@ta@}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"Expansion: (x+a)(x+b) = ta","variables":"a:rand(4)+2;\nb:rand(3)+2;\nta:x^2+(a+b)*x+a*b;","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":18,"strictsyntax":true,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"prt1-0-T","feedback":"\u003cp\u003eCorrect: the expression is expanded and collected.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":1,"note":"prt1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.5,"next":-1,"note":"prt1-1-T","feedback":"\u003cp\u003eThis is equivalent, but expand the product and collect like terms for full credit.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"prt1-1-F","feedback":"\u003cp\u003eCheck the middle term and constant term when you multiply the binomials.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"Expanded polynomial","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"2","description":"Equivalent but still factored","inputs":{"ans":"(x+a)*(x+b)"},"expected":{"prt1":{"score":0.5,"penalty":0.1,"note":"prt1-0-F | prt1-1-T"}}},{"testcase":"3","description":"Incorrect middle coefficient","inputs":{"ans":"x^2+(a+b+1)*x+a*b"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F | prt1-1-F"}}}],"deployedseeds":[17,29,47]},"variants":[{"seed":17,"env":{"a":"5","b":"3","ta":"x**2 + 8*x + 15"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+5)(x+3)\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+(5+3)x+5\\cdot3=x^{2} + 8 x + 15\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":18,"env":{"a":"3","b":"2","ta":"x**2 + 5*x + 6"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+3)(x+2)\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+(3+2)x+3\\cdot2=x^{2} + 5 x + 6\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":19,"env":{"a":"2","b":"4","ta":"x**2 + 6*x + 8"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+2)(x+4)\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+(2+4)x+2\\cdot4=x^{2} + 6 x + 8\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: ../questions/polynomial-expansion.xml
+#| question: Expand a product (form-sensitive)
+#| seed: 17
+#| variants: 3
+#| review: true
+```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Example question authored by the CTM team. Licensed under CC BY-SA 4.0. --&gt;
+&lt;quiz&gt;
+  &lt;question type="stack"&gt;
+    &lt;name&gt;
+      &lt;text&gt;Expand a product (form-sensitive)&lt;/text&gt;
+    &lt;/name&gt;
+    &lt;questiontext format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;Expand and collect like terms: \((x+{@a@})(x+{@b@})\).&amp;lt;/p&amp;gt;&amp;lt;p&amp;gt;Give your answer as a polynomial in \(x\). [[input:ans]] [[validation:ans]] [[feedback:prt1]]&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/questiontext&gt;
+    &lt;generalfeedback format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;Multiply each term and collect: \(x^2+({@a@}+{@b@})x+{@a@}\cdot{@b@}={@ta@}\).&amp;lt;/p&amp;gt;&amp;lt;p&amp;gt;A factored expression has the same value, but this task asks for expanded form.&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/generalfeedback&gt;
+    &lt;defaultgrade&gt;1&lt;/defaultgrade&gt;
+    &lt;penalty&gt;0.1&lt;/penalty&gt;
+    &lt;hidden&gt;0&lt;/hidden&gt;
+    &lt;idnumber/&gt;
+    &lt;stackversion&gt;
+      &lt;text&gt;2021072200&lt;/text&gt;
+    &lt;/stackversion&gt;
+    &lt;questionvariables&gt;
+      &lt;text&gt;a:rand(4)+2;
+b:rand(3)+2;
+ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
+    &lt;/questionvariables&gt;
+    &lt;specificfeedback format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;[[feedback:prt1]]&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/specificfeedback&gt;
+    &lt;questionnote format="moodle_auto_format"&gt;
+      &lt;text&gt;Expansion: (x+a)(x+b) = ta&lt;/text&gt;
+    &lt;/questionnote&gt;
+    &lt;questiondescription format="moodle_auto_format"&gt;
+      &lt;text/&gt;
+    &lt;/questiondescription&gt;
+    &lt;questionsimplify&gt;1&lt;/questionsimplify&gt;
+    &lt;assumepositive&gt;0&lt;/assumepositive&gt;
+    &lt;assumereal&gt;0&lt;/assumereal&gt;
+    &lt;scientificnotation&gt;*10&lt;/scientificnotation&gt;
+    &lt;multiplicationsign&gt;none&lt;/multiplicationsign&gt;
+    &lt;sqrtsign&gt;1&lt;/sqrtsign&gt;
+    &lt;complexno&gt;i&lt;/complexno&gt;
+    &lt;inversetrig&gt;cos-1&lt;/inversetrig&gt;
+    &lt;logicsymbol&gt;lang&lt;/logicsymbol&gt;
+    &lt;matrixparens&gt;[&lt;/matrixparens&gt;
+    &lt;isbroken&gt;0&lt;/isbroken&gt;
+    &lt;variantsselectionseed/&gt;
+    &lt;input&gt;
+      &lt;name&gt;ans&lt;/name&gt;
+      &lt;type&gt;algebraic&lt;/type&gt;
+      &lt;tans&gt;ta&lt;/tans&gt;
+      &lt;boxsize&gt;18&lt;/boxsize&gt;
+      &lt;strictsyntax&gt;1&lt;/strictsyntax&gt;
+      &lt;insertstars&gt;0&lt;/insertstars&gt;
+      &lt;syntaxhint/&gt;
+      &lt;syntaxattribute&gt;0&lt;/syntaxattribute&gt;
+      &lt;forbidwords/&gt;
+      &lt;allowwords/&gt;
+      &lt;forbidfloat&gt;1&lt;/forbidfloat&gt;
+      &lt;requirelowestterms&gt;0&lt;/requirelowestterms&gt;
+      &lt;checkanswertype&gt;1&lt;/checkanswertype&gt;
+      &lt;mustverify&gt;1&lt;/mustverify&gt;
+      &lt;showvalidation&gt;1&lt;/showvalidation&gt;
+      &lt;options/&gt;
+    &lt;/input&gt;
+    &lt;prt&gt;
+      &lt;name&gt;prt1&lt;/name&gt;
+      &lt;value&gt;1.0000000&lt;/value&gt;
+      &lt;autosimplify&gt;0&lt;/autosimplify&gt;
+      &lt;feedbackstyle&gt;1&lt;/feedbackstyle&gt;
+      &lt;feedbackvariables&gt;
+        &lt;text/&gt;
+      &lt;/feedbackvariables&gt;
+      &lt;node&gt;
+        &lt;name&gt;0&lt;/name&gt;
+        &lt;description/&gt;
+        &lt;answertest&gt;EqualComAss&lt;/answertest&gt;
+        &lt;sans&gt;ans&lt;/sans&gt;
+        &lt;tans&gt;ta&lt;/tans&gt;
+        &lt;testoptions/&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;1.0000000&lt;/truescore&gt;
+        &lt;truepenalty/&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;prt1-0-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text&gt;&amp;lt;p&amp;gt;Correct: the expression is expanded and collected.&amp;lt;/p&amp;gt;&lt;/text&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;
+        &lt;falsenextnode&gt;1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;prt1-0-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+      &lt;node&gt;
+        &lt;name&gt;1&lt;/name&gt;
+        &lt;description/&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;ans&lt;/sans&gt;
+        &lt;tans&gt;ta&lt;/tans&gt;
+        &lt;testoptions/&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;0.5000000&lt;/truescore&gt;
+        &lt;truepenalty/&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;prt1-1-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text&gt;&amp;lt;p&amp;gt;This is equivalent, but expand the product and collect like terms for full credit.&amp;lt;/p&amp;gt;&lt;/text&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;
+        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;prt1-1-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text&gt;&amp;lt;p&amp;gt;Check the middle term and constant term when you multiply the binomials.&amp;lt;/p&amp;gt;&lt;/text&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+    &lt;/prt&gt;
+    &lt;deployedseed&gt;17&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;29&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;47&lt;/deployedseed&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;1&lt;/testcase&gt;
+      &lt;description&gt;Expanded polynomial&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;ta&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.0000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;2&lt;/testcase&gt;
+      &lt;description&gt;Equivalent but still factored&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;(x+a)*(x+b)&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;0.5000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.1000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-F | prt1-1-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;3&lt;/testcase&gt;
+      &lt;description&gt;Incorrect middle coefficient&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;x^2+(a+b+1)*x+a*b&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;0.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.1000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-F | prt1-1-F&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+  &lt;/question&gt;
+&lt;/quiz&gt;
+</code></pre></details></div></div>
 <p>The learner submits in two steps: <strong>Validate answers</strong> parses the current fields and displays the exact expression form (for example, <code>x+x</code> rather than a simplified <code>2*x</code>), then <strong>Check answer</strong> grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading.</p>
+<p>Below a rendered question, <strong>Show source</strong> reveals its authored Quarto fenced block and <strong>Show STACK source</strong> reveals the original XML file contents. Both panels start closed; they are available for inspecting and copying a working example.</p>
 <p>The options are <code>file</code> and <code>question</code> (required), <code>seed</code> (signed integer, default 1), <code>variants</code> (1–20, default 1), <code>review</code> (<code>true</code> or <code>false</code>, default false), and <code>diagnostics</code> (<code>true</code> or <code>false</code>, default false). A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle’s Maxima backend.</p>
 </section>
 <section id="what-the-adapter-checks" class="level2">
@@ -628,5 +805,5 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<script src="../site_libs/quarto-contrib/stack-sympy-0.1.1/stack-sympy.js"></script>
+<script src="../site_libs/quarto-contrib/stack-sympy-0.1.2/stack-sympy.js"></script>
 </body></html>
