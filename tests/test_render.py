@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from functools import cache
+import html
 import os
 from pathlib import Path
 import re
@@ -45,6 +46,27 @@ def test_project_renders_cards_and_deployable_assets():
     for sibling in ("worker.js", "runtime-sources.js", "vendor/pyodide-runtime.js"):
         assert (asset.parent / sibling).is_file(), sibling
     assert "STACK_SYMPY_SOURCES" in (asset.parent / "runtime-sources.js").read_text()
+
+
+def test_rendered_questions_show_authored_block_and_original_xml():
+    site = render_site()
+    panel = re.compile(r'<details class="stack-source"><summary>(Show source|Show STACK source)' r'</summary><pre><code class="language-(markdown|xml)">(.*?)</code></pre></details>', re.S)
+    block = re.compile(r'^```\{\.stack-question\}\n(.*?)\n```$', re.M | re.S)
+    for page in ("index", "examples", "docs/authoring"):
+        qmd = ROOT / f"{page}.qmd"
+        output = (site / f"{page}.html").read_text()
+        rendered = panel.findall(output)
+        count = output.count('class="stack-sympy"')
+        assert len(rendered) == count * 2
+        authored = block.findall(qmd.read_text())
+        for i in range(count):
+            first, second = rendered[i * 2:i * 2 + 2]
+            assert first[:2] == ("Show source", "markdown")
+            assert second[:2] == ("Show STACK source", "xml")
+            assert html.unescape(first[2]) == "```{.stack-question}\n" + authored[i] + "\n```"
+            path = re.search(r"^#\| file: (.+)$", authored[i], re.M).group(1)
+            assert html.unescape(second[2]) == (qmd.parent / path).read_text()
+            assert "<quiz>" not in second[2], "XML should be escaped as code"
 
 
 def test_unsupported_question_stops_quarto_build():

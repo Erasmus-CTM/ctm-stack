@@ -63,6 +63,39 @@
 .stack-sympy .stack-validation[data-state="valid"] { color: #216a43; }
 .stack-sympy.stack-diagnostic { border-color: #b7433e; background: #fff7f6; }
 .stack-sympy.stack-diagnostic pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.stack-question-group { margin: 1.6rem 0; }
+.stack-question-group > .stack-sympy { margin: 0; }
+.stack-source-panels {
+  margin-top: .55rem;
+  color: var(--stack-ink, #263746);
+  font-size: .92rem;
+}
+.stack-source {
+  margin-top: .35rem;
+  border: 1px solid #d7e0e7;
+  border-radius: .4rem;
+  background: #fbfdfe;
+}
+.stack-source summary {
+  padding: .5rem .75rem;
+  color: #14627b;
+  font-weight: 600;
+  cursor: pointer;
+}
+.stack-source summary:focus-visible { outline: 3px solid #67bfdc; outline-offset: 2px; }
+.stack-source pre {
+  max-height: min(32rem, 70vh);
+  margin: 0;
+  padding: .8rem 1rem;
+  overflow: auto;
+  border-top: 1px solid #d7e0e7;
+  background: #f5f8fa;
+  color: #263746;
+  font-size: .85rem;
+  line-height: 1.5;
+  white-space: pre;
+}
+.stack-source code { color: inherit; background: none; }
 @media (prefers-reduced-motion: no-preference) {
   .stack-sympy button { transition: filter .15s ease; }
 }

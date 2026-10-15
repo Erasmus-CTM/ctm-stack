@@ -50,6 +50,8 @@ In a `.qmd` file, use the exact XML question name:
 
 A learner enters answers, presses **Validate answers** to inspect how each expression was parsed, then presses **Check answer** to grade the validated response. Editing a field clears its validation and requires another Validate step. The preview preserves the written form, so `x+x` still appears as `x+x`; this is important when an answer test checks form. Invalid input receives a validation message and cannot be graded until corrected.
 
+Each rendered question also has closed **Show source** and **Show STACK source** panels below it. They show the authored Quarto fenced block and the original XML file, respectively, for inspection or copying. Opening either panel does not affect the question or its grading.
+
 `file` and `question` are required. `variants` is 1–20 (default 1); `seed` is a signed integer (default 1). `review: true` exposes the authored qtests for inspection. `diagnostics: true` displays build errors in the rendered page during authoring. Remove diagnostics for publishing, so unsupported content fails the build. A seed produces repeatable variants in this adapter, but is **not** expected to match Maxima's random sequence for the same seed.
 
 ## Supported subset and grading behavior

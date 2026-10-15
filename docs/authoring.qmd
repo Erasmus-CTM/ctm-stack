@@ -16,6 +16,8 @@ Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<quest
 
 The learner submits in two steps: **Validate answers** parses the current fields and displays the exact expression form (for example, `x+x` rather than a simplified `2*x`), then **Check answer** grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading.
 
+Below a rendered question, **Show source** reveals its authored Quarto fenced block and **Show STACK source** reveals the original XML file contents. Both panels start closed; they are available for inspecting and copying a working example.
+
 The options are `file` and `question` (required), `seed` (signed integer, default 1), `variants` (1–20, default 1), `review` (`true` or `false`, default false), and `diagnostics` (`true` or `false`, default false). A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle's Maxima backend.
 
 ## What the adapter checks

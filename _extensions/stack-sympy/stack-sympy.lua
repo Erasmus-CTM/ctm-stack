@@ -18,11 +18,41 @@ local function pathFromFilter()
   return pandoc.path.directory(quarto.utils.resolve_path('stack-sympy.lua'))
 end
 
+local function readFile(path)
+  local file, reason = io.open(path, 'rb')
+  if not file then fail('stack-sympy: could not read source ' .. path .. ': ' .. tostring(reason)) end
+  local contents = file:read('*a')
+  file:close()
+  return contents
+end
+
+local function authoredSource(block)
+  -- Pandoc provides the authored body and attributes, but normalizes the
+  -- outer fence. Choose a fence that cannot close within the body.
+  local longest = 0
+  for ticks in block.text:gmatch('`+') do longest = math.max(longest, #ticks) end
+  local fence = string.rep('`', math.max(3, longest + 1))
+  local attributes = {'.stack-question'}
+  if block.identifier ~= '' then table.insert(attributes, '#' .. block.identifier) end
+  for _, class in ipairs(block.classes) do
+    if class ~= 'stack-question' then table.insert(attributes, '.' .. class) end
+  end
+  for key, value in pairs(block.attributes) do
+    table.insert(attributes, key .. '="' .. value:gsub('\\', '\\\\'):gsub('"', '\\"') .. '"')
+  end
+  return fence .. '{' .. table.concat(attributes, ' ') .. '}\n' .. block.text .. '\n' .. fence
+end
+
+local function sourcePanel(label, language, source)
+  return '<details class="stack-source"><summary>' .. label .. '</summary>' ..
+    '<pre><code class="language-' .. language .. '">' .. escape(source) .. '</code></pre></details>'
+end
+
 local function setup()
   if installed then return end
   installed = true
   quarto.doc.add_html_dependency({
-    name = 'stack-sympy', version = '0.1.1',
+    name = 'stack-sympy', version = '0.1.2',
     scripts = {{path = 'stack-sympy.js', afterBody = true}},
     stylesheets = {'stack-sympy.css'},
     resources = {
@@ -103,7 +133,16 @@ local function render(block)
     fail('stack-sympy: could not render ' .. opts.file .. ' / ' .. opts.question .. ': ' .. detail)
   end
   setup()
-  return pandoc.RawBlock('html', output)
+  if output:find('class="stack-sympy stack-diagnostic"', 1, true) then
+    return pandoc.RawBlock('html', output)
+  end
+  local source = authoredSource(block)
+  local xml = readFile(inputPath)
+  return pandoc.RawBlock('html', '<div class="stack-question-group">' .. output ..
+    '<div class="stack-source-panels">' ..
+    sourcePanel('Show source', 'markdown', source) ..
+    sourcePanel('Show STACK source', 'xml', xml) ..
+    '</div></div>')
 end
 
 return { { CodeBlock = render } }
