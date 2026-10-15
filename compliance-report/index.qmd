@@ -13,7 +13,7 @@ Fixture score codes: `0` means desired reject, `1` desired accept, and `-1` an a
 
 The scope is **CAS answer-test behavior** for the imported static rows. PHP question/controller behavior, Moodle attempt state, dynamically appended fixture cases, complete input validation, and all STACK functionality are outside this comparison. Unsupported and out-of-contract rows remain visible in the inventory. An unavailable runner is shown as unavailable, never treated as a pass.
 
-<p><a href="report.json" download>Download complete JSON report</a> · <a href="https://github.com/Erasmus-CTM/stack-sympy/blob/main/tests/native_compliance/fixtures.json">Pinned fixture</a> · <a href="https://github.com/Erasmus-CTM/stack-sympy">Source repository</a></p>
+<p><a href="report.json" download>Download complete JSON report</a> · <span id="fixture-link">Fixture commit link unavailable until report loads</span> · <a href="https://github.com/Erasmus-CTM/stack-sympy">Source repository</a></p>
 
 <div id="report-loading" role="status">Loading report data…</div>
 <div id="report-root" hidden>

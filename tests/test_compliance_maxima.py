@@ -1,5 +1,7 @@
 """Protocol tests for the native STACK oracle (Maxima runs in hosted CI)."""
 
+from contextlib import redirect_stdout
+import io
 import json
 from pathlib import Path
 import re
@@ -253,11 +255,14 @@ class NativeMaximaTests(unittest.TestCase):
                         f"STACKNATIVE|{current['id']}|[true,{mark},\"\"]\n"
                         f"STACKNATIVE-END|{number}|1\n")
 
-            with patch.object(native, "_command", side_effect=command), patch.object(native.shutil, "which", return_value="/usr/bin/maxima"):
+            progress = io.StringIO()
+            with patch.object(native, "_command", side_effect=command), patch.object(
+                    native.shutil, "which", return_value="/usr/bin/maxima"), redirect_stdout(progress):
                 result = native.run_native(rows, source, jobs=1)
         self.assertEqual(result["metadata"]["reference_layer"], "direct_official_maxima_AT")
         self.assertEqual(result["metadata"]["execution_isolation"], "fresh_maxima_process_per_case")
         self.assertEqual(calls, ["warmup", "case", "case"])
+        self.assertRegex(progress.getvalue(), r"Native cases: 2/2 completed in [0-9.]+s")
         self.assertEqual(result["metadata"]["native_scope_sha256"], native.scope_sha256(rows))
         self.assertEqual([x["status"] for x in result["observations"]], ["unavailable", "ok", "unavailable", "ok"])
         self.assertEqual(result["summary"], {"total": 4, "ok": 2, "error": 0, "unavailable": 2})

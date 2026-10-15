@@ -29,6 +29,12 @@ function details(title, content) {
 function summary(report) {
   const p = report.provenance;
   const provenance = $("report-provenance");
+  const fixtureLink = $("fixture-link");
+  if (/^[0-9a-f]{40}$/.test(p.code_sha || "")) {
+    fixtureLink.replaceChildren(safeLink(`https://github.com/Erasmus-CTM/stack-sympy/blob/${p.code_sha}/tests/native_compliance/fixtures.json`, "Fixture at report commit"));
+  } else {
+    fixtureLink.textContent = "Fixture commit link unavailable";
+  }
   provenance.append(node("strong", `Generated ${report.generated_at} · ${report.cases.length} imported static rows`));
   const metadata = node("p");
   metadata.append(`Code ${p.code_sha || "unavailable"} · Fixture SHA-256 ${p.fixture_sha256} · Upstream ${p.fixture_upstream?.commit || "unavailable"} · Python ${p.python_version || "unavailable"}. `);

@@ -3,7 +3,11 @@ name: Test and publish Quarto site
 on:
   push:
     branches: [main, 'feature/**']
+    paths-ignore:
+      - 'docs/audits/**'
   pull_request:
+    paths-ignore:
+      - 'docs/audits/**'
 
 permissions:
   contents: read

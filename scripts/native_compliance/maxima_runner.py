@@ -15,6 +15,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import time
 from pathlib import Path
 
 
@@ -501,12 +502,18 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs:
                 raise type(exc)(f"case process {batch_number} (fixture ordinal "
                                 f"{case.get('ordinal', '?')}, id {case['id']}): {exc}") from exc
 
+    started = time.monotonic()
+    completed = 0
     with ThreadPoolExecutor(max_workers=jobs) as pool:
         futures = {pool.submit(observe_one, index, case): case["id"]
                    for index, case in enumerate(runnable)}
         try:
             for future in as_completed(futures):
                 observations.append(future.result())
+                completed += 1
+                if completed % 50 == 0 or completed == len(runnable):
+                    print(f"Native cases: {completed}/{len(runnable)} completed "
+                          f"in {time.monotonic() - started:.1f}s", flush=True)
         except (NativeProcessError, NativeProtocolError):
             for future in futures:
                 future.cancel()
