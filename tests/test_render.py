@@ -72,6 +72,39 @@ def test_rendered_questions_show_authored_block_and_original_xml():
             assert "<quiz>" not in second[2], "XML should be escaped as code"
 
 
+def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
+    from scripts.generate_corpus_page import generate
+
+    manifest = json.loads((ROOT / "questions/corpus/manifest.json").read_text())
+    baseline = json.loads((ROOT / "questions/corpus/baseline.json").read_text())
+    entries = manifest["questions"]
+    reports = {row["id"]: row for row in baseline["questions"]}
+    authored = (ROOT / "corpus.qmd").read_text()
+    assert authored == generate(), "regenerate with python scripts/generate_corpus_page.py"
+    output = (render_site() / "corpus.html").read_text()
+    navbar = output
+    assert re.search(r'href="(?:\./|/)?corpus\.html"', navbar)
+    assert "Question corpus" in navbar
+    assert len(entries) == len(reports) == 30
+    assert output.count('class="stack-sympy-data"') == 6
+    assert 'class="stack-sympy stack-diagnostic"' not in output
+    assert output.count('<details class="stack-source">') == 12
+    assert '<details class="stack-source" open' not in output
+    rendered_xml = re.findall(r'<code class="language-xml">(.*?)</code>', output, re.S)
+    passing = [entry for entry in entries if reports[entry["id"]]["status"] == "qtests_pass"]
+    assert len(rendered_xml) == len(passing)
+    for entry, source in zip(passing, rendered_xml):
+        assert html.unescape(source) == (ROOT / "questions/corpus" / entry["file"]).read_text()
+    for entry in entries:
+        assert f'id="{entry["id"]}"' in output
+        assert f'questions/corpus/{entry["file"]}' in output
+        assert html.escape(entry["source_url"], quote=True) in output
+        assert (render_site() / "questions/corpus" / entry["file"]).is_file()
+    assert "CC BY-SA 4.0" in output
+    assert (render_site() / "questions/corpus/manifest.json").is_file()
+    assert (render_site() / "questions/corpus/baseline.json").is_file()
+
+
 def test_unsupported_question_stops_quarto_build():
     # An independent project avoids mutating the built site's website cache.
     with tempfile.TemporaryDirectory(dir=ROOT, prefix="invalid_stack_") as temporary:

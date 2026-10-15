@@ -12,6 +12,8 @@ website:
         text: Try it
       - href: examples.qmd
         text: More examples
+      - href: corpus.qmd
+        text: Question corpus
       - href: docs/authoring.qmd
         text: Authoring guide
     right:

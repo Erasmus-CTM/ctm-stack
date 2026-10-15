@@ -39,6 +39,9 @@ jobs:
       - run: python -m pytest -q tests
         env:
           PYTHONPATH: _extensions/stack-sympy
+      - run: python scripts/check_corpus.py --check
+        env:
+          PYTHONPATH: _extensions/stack-sympy
       - run: python -m playwright install --with-deps chromium
       - run: python -m pytest -q tests/browser.py tests/feedback_browser.py
         env:
