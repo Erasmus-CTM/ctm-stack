@@ -45,7 +45,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-contrib/ai-feedback-0.6.0/feedback-dom.js"></script>
 <script src="../site_libs/quarto-contrib/ai-feedback-0.6.0/ai-feedback.js"></script>
 <link href="../site_libs/quarto-contrib/ai-feedback-0.6.0/ai-feedback.css" rel="stylesheet">
-<link href="../site_libs/quarto-contrib/stack-sympy-0.1.7/stack-sympy.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/stack-sympy-0.1.8/stack-sympy.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -373,11 +373,11 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
 </tr>
 <tr class="odd">
 <td>Variables</td>
-<td>A small, safely parsed Maxima-like assignment and arithmetic subset, including <code>rand(n)</code> for seeded variants.</td>
+<td>A small, safely parsed Maxima-like assignment and arithmetic subset, including <code>rand(n)</code> for seeded variants and two-integer <code>lcm(a,b)</code>. <code>ratsimp</code> preserves a common-denominator form for supported scalar expressions.</td>
 </tr>
 <tr class="even">
 <td>Tests</td>
-<td><code>AlgEquiv</code>, <code>EqualComAss</code>, <code>FacForm</code>, <code>NumAbsolute</code>, <code>NumRelative</code>, <code>NumDecPlaces</code>. <code>FacForm</code> requires <code>sans</code> to name the input directly and one polynomial variable in <code>&lt;testoptions&gt;</code> (a symbol or an author alias resolving to one). It checks both equivalence and factorization of univariate polynomials over the rationals. Blank absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist.</td>
+<td><code>AlgEquiv</code>, <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, <code>LowestTerms</code>, <code>NumAbsolute</code>, <code>NumRelative</code>, <code>NumDecPlaces</code>. The four form-sensitive tests require <code>sans</code> to name an input directly. <code>FacForm</code> also requires one polynomial variable in <code>&lt;testoptions&gt;</code> (a symbol or an author alias resolving to one); it checks equivalence and factorization of univariate polynomials over the rationals. Blank absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist.</td>
 </tr>
 <tr class="odd">
 <td>PRTs</td>
@@ -389,7 +389,8 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
 </tr>
 </tbody>
 </table>
-<p>This is a deliberately limited evaluator, not a replacement for Moodle STACK or its Maxima CAS. <code>questionsimplify=0</code> (<code>simp:false</code>) is accepted when any <code>EqualComAss</code> teacher form can be preserved after freezing author variables; otherwise the build rejects it. In this mode, supported <code>{@expression@}</code> CASText also preserves authored arithmetic form and groups substitutions inside existing TeX math. <code>EqualComAss</code> and <code>FacForm</code> require a direct input name in <code>sans</code> to preserve the student’s written form. <code>FacForm</code> considers the written factors, including common integer content, and rejects expressions outside its bounded polynomial subset or a missing/non-symbol variable option. Build-time validation rejects unsupported author features rather than silently grading them differently. Symbolic equivalence uses SymPy transformations rather than randomized substitution. Decimal-place grading reads the literal answer so a trailing zero is meaningful. Native qtest answer notes are checked using STACK-style ordered subsequence matching, including anchored beginning/end notes and <code>NULL</code>: a terminal note can pass even if earlier PRT nodes contributed notes. The review interface and qtests help an author inspect parity, but they do not establish complete parity with all STACK configurations.</p>
+<p>This is a deliberately limited evaluator, not a replacement for Moodle STACK or its Maxima CAS. <code>questionsimplify=0</code> (<code>simp:false</code>) is accepted when any <code>EqualComAss</code> teacher form can be preserved after freezing author variables; otherwise the build rejects it. In this mode, supported <code>{@expression@}</code> CASText also preserves authored arithmetic form and groups substitutions inside existing TeX math. <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, and <code>LowestTerms</code> require a direct input name in <code>sans</code> to preserve the student’s written form. <code>FacForm</code> considers the written factors, including common integer content, and rejects expressions outside its bounded polynomial subset or a missing/non-symbol variable option. <code>SingleFrac</code> requires an equivalent single written fraction (or equivalent atomic answer) and excludes divisions nested in its numerator or denominator. <code>LowestTerms</code> checks reducible written integer fractions and supported denominator restrictions; it does not compare the teacher expression or factor symbolic polynomials. Build-time validation rejects unsupported author features rather than silently grading them differently. Symbolic equivalence uses SymPy transformations rather than randomized substitution. Decimal-place grading reads the literal answer so a trailing zero is meaningful. Native qtest answer notes are checked using STACK-style ordered subsequence matching, including anchored beginning/end notes and <code>NULL</code>: a terminal note can pass even if earlier PRT nodes contributed notes. The review interface and qtests help an author inspect the selected seeds, but they do not establish complete parity with all STACK configurations.</p>
+<p>CASText also renders a scalar equality such as <code>{@p=ta@}</code> as an equation for display. This does not enable equation-valued student inputs or arbitrary Maxima equations.</p>
 </section>
 <section id="validate-and-publish" class="level2">
 <h2 class="anchored" data-anchor-id="validate-and-publish">Validate and publish</h2>
@@ -817,5 +818,5 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
 
 
 
-<script src="../site_libs/quarto-contrib/stack-sympy-0.1.7/stack-sympy.js"></script>
+<script src="../site_libs/quarto-contrib/stack-sympy-0.1.8/stack-sympy.js"></script>
 </body></html>
