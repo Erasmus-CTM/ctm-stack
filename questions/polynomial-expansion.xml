@@ -50,7 +50,7 @@ ta:x^2+(a+b)*x+a*b;</text>
       <tans>ta</tans>
       <boxsize>18</boxsize>
       <strictsyntax>1</strictsyntax>
-      <insertstars>0</insertstars>
+      <insertstars>1</insertstars>
       <syntaxhint/>
       <syntaxattribute>0</syntaxattribute>
       <forbidwords/>
