@@ -17,6 +17,11 @@ import platform
 import subprocess
 import sys
 
+try:
+    from .common import matches_desired
+except ImportError:  # Direct CLI invocation.
+    from common import matches_desired
+
 ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -155,10 +160,7 @@ def validated_run(document: dict | None, read_error: str | None, expected_hash: 
             score = expected_cases[case_id]["expected_score"]
             if score not in {-3, -2, -1, 0, 1}:
                 return None, f"Unknown authored score for {case_id}"
-            controlled = {"invalid_student", "invalid_teacher", "invalid_option"}
-            actual_match = (row["kind"] in controlled if score == -1 else
-                            row["kind"] == "result" and row.get("valid") is True and
-                            row.get("correct") is (score in {1, -3}))
+            actual_match = matches_desired(row, score, expected_cases[case_id].get("answer_note", ""))
             if row["desired_match"] is not actual_match:
                 return None, f"Contradictory Python desired mark for {case_id}"
             if ((row["policy_status"] == "pass" and not actual_match) or
@@ -244,7 +246,11 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
             "native_mark_status": _native_dimension(n, p, "correct"),
             "native_applicability_status": _native_dimension(n, p, "cas_valid"),
             "native_desired_status": _native_desired(case, n, ref),
-            "answer_note_status": "not_compared",
+            "answer_note_status": ("controlled_error_note_matched" if ref and ref.get("status") == "match_controlled_error"
+                                   else "controlled_error_note_mismatch" if case.get("expected_score") == -1 and
+                                   ref and ref.get("status") == "unexpected_mismatch" and
+                                   p and p.get("kind") in {"invalid_student", "invalid_teacher", "invalid_option"}
+                                   else "not_compared"),
             "parity_status": _parity_status(b),
         })
     run_url = None

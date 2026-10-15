@@ -9,7 +9,7 @@ import unittest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "_extensions/stack-sympy"))
 sys.path.insert(0, str(ROOT / "scripts"))
-from native_compliance.common import desired_outcome, matches_desired
+from native_compliance.common import desired_outcome, expected_error_kind, matches_desired
 from native_compliance.python_runner import classify_case, evaluate_case
 from run_compliance_python import assess, load_policy, run
 
@@ -25,10 +25,42 @@ class PythonConformanceTests(unittest.TestCase):
     def test_desired_codes_are_mathematical_axis(self):
         self.assertEqual(desired_outcome(-2), {"kind": "result", "correct": False})
         self.assertEqual(desired_outcome(-3), {"kind": "result", "correct": True})
-        self.assertEqual(desired_outcome(-1), {"kind": "controlled_error", "correct": None})
-        self.assertFalse(matches_desired({"kind": "unexpected_exception", "correct": False}, -1))
-        self.assertFalse(matches_desired({"kind": "unsupported"}, -1))
-        self.assertTrue(matches_desired({"kind": "invalid_option"}, -1))
+        note = "ATNumDecPlaces_OptNotInt."
+        self.assertEqual(desired_outcome(-1, note), {"kind": "controlled_error", "correct": None,
+                                                      "error_kind": "invalid_option"})
+        self.assertFalse(matches_desired({"kind": "unexpected_exception", "correct": False}, -1, note))
+        self.assertFalse(matches_desired({"kind": "unsupported"}, -1, note))
+        self.assertTrue(matches_desired({"kind": "invalid_option"}, -1, note))
+        self.assertFalse(matches_desired({"kind": "invalid_student"}, -1, note))
+        self.assertFalse(matches_desired({"kind": "invalid_option"}, -1, "TEST_FAILED"))
+        self.assertIsNone(expected_error_kind("_STACKERROR_SAns. _STACKERROR_TAns."))
+
+    def test_upstream_error_origin_notes(self):
+        for note, kind in (("ATAlgEquiv_STACKERROR_SAns.", "invalid_student"),
+                           ("ATAlgEquivTEST_FAILED-Empty SA.", "invalid_student"),
+                           ("ATAlgEquiv_STACKERROR_TAns.", "invalid_teacher"),
+                           ("ATAlgEquivTEST_FAILED-Empty TA.", "invalid_teacher"),
+                           ("ATNumRelative_STACKERROR_Opt.", "invalid_option"),
+                           ("ATNumerical_STACKERROR_tol.", "invalid_option"),
+                           ("ATNumDecPlaces_OptNotInt.", "invalid_option"),
+                           ("STACKERROR_OPTION.", "invalid_option")):
+            with self.subTest(note=note):
+                self.assertEqual(expected_error_kind(note), kind)
+                self.assertTrue(matches_desired({"kind": kind}, -1, note))
+                for other in {"invalid_student", "invalid_teacher", "invalid_option"} - {kind}:
+                    self.assertFalse(matches_desired({"kind": other}, -1, note))
+
+    def test_runner_rejects_wrong_or_unknown_error_origin(self):
+        case = sample(expected_score=-1, answer_note="ATAlgEquiv_STACKERROR_SAns.")
+        wrong = {"case_id": "case-1", "test": "AlgEquiv", "kind": "invalid_teacher",
+                 "message": "teacher evaluation failed"}
+        assessed = assess(case, wrong, {}, {"kind": "supported"})
+        self.assertEqual(assessed["desired"]["error_kind"], "invalid_student")
+        self.assertFalse(assessed["desired_match"])
+        self.assertEqual(assessed["policy_status"], "unexpected")
+        self.assertEqual(assess({**case, "answer_note": "TEST_FAILED"},
+                                {**wrong, "kind": "invalid_student"}, {},
+                                {"kind": "supported"})["policy_status"], "unexpected")
 
     def test_equalcomass_wrong_value_is_ordinary_result(self):
         observation = evaluate_case(sample(test="EqualComAss", student="x+1", teacher="x+2",

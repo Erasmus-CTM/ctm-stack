@@ -35,12 +35,18 @@ CASE_ID = re.compile(r"[0-9a-f]{64}-[1-9][0-9]*\Z")
 RESULT = re.compile(r"^\s*STACKNATIVE\|([0-9a-f]{64}-[1-9][0-9]*)\|(.+?)\s*$")
 BEGIN = re.compile(r"^\s*STACKNATIVE-BEGIN\|(\d+)\|(\d+)\s*$")
 END = re.compile(r"^\s*STACKNATIVE-END\|(\d+)\|(\d+)\s*$")
+DIAG = re.compile(r"^\s*STACKNATIVE-DIAG\|(.+?)\s*$")
 CONTROLLED_AT_ERROR = re.compile(
     r"(?:AT[A-Za-z0-9]+_STACKERROR_(?:SAns|TAns|Opt|Raw|tol)"
     r"|ATNumDecPlaces_OptNotInt|STACKERROR_OPTION)\.\Z"
 )
 UNSAFE = re.compile(r"[;:$\"\r\n]|/\*|\*/|\b(?:load|system|kill|batch|file_search_maxima|with_stdout)\s*\(", re.I)
 DEFAULT_JOBS = 4
+PROBE_KEYS = (
+    "i_binding", "parsed_i", "parsed_fraction", "ev_parsed_fraction",
+    "literal_lowest_terms", "parsed_lowest_terms", "ev_parsed_lowest_terms",
+    "eca_cos_evaluated", "eca_sqrt_evaluated",
+)
 
 
 class NativeProtocolError(RuntimeError):
@@ -179,6 +185,56 @@ def make_batch(source: Path, cases: list[dict], home: Path, batch_number: int) -
     return "\n".join(lines) + "\n"
 
 
+def _probe_call(call: str) -> str:
+    return ("block([simp:false,_probe_result],_probe_result:errcatch(" + call + "),"
+            "if _probe_result=[] then [\"cas_error\"] else "
+            "[first(_probe_result)[1],first(_probe_result)[2],first(_probe_result)[3]])")
+
+
+def make_warmup_batch(source: Path, home: Path) -> str:
+    """Prime loader caches and inspect aliases/form handling without fixture marks."""
+    batch = make_batch(source, [], home, 0)
+    expressions = [
+        "string(i)",
+        'string(parse_string("i"))',
+        'string(parse_string("1/(1+i)"))',
+        'string(ev(parse_string("1/(1+i)"),simp:false))',
+        _probe_call("ATLowestTerms(1/(1+i),(1-i)/2)"),
+        _probe_call('ATLowestTerms(parse_string("1/(1+i)"),parse_string("(1-i)/2"))'),
+        _probe_call('ATLowestTerms(ev(parse_string("1/(1+i)"),simp:false),'
+                    'ev(parse_string("(1-i)/2"),simp:false))'),
+        _probe_call('ATEqualComAss(ev(parse_string("cos(0)"),simp:false),'
+                    'ev(parse_string("1"),simp:false))'),
+        _probe_call('ATEqualComAss(ev(parse_string("sqrt(3)"),simp:false),'
+                    'ev(parse_string("3^(1/2)"),simp:false))'),
+    ]
+    diagnostic = ('simp:false$\nprint(sconcat("STACKNATIVE-DIAG|",stackjson_stringify(['
+                  + ",".join(expressions) + '])))$\n')
+    end = 'print("STACKNATIVE-END|0|0")$\n'
+    if batch.count(end) != 1:
+        raise NativeProtocolError("Cannot locate loader warm-up end marker")
+    return batch.replace(end, diagnostic + end)
+
+
+def parse_probe_output(output: str) -> dict:
+    payloads = []
+    for line in output.splitlines():
+        match = DIAG.fullmatch(line)
+        if match:
+            payloads.append(match.group(1))
+        elif line.lstrip().startswith("STACKNATIVE-DIAG|"):
+            raise NativeProtocolError(f"Malformed loader diagnostic: {line[:300]}")
+    if len(payloads) != 1:
+        raise NativeProtocolError(f"Expected one loader diagnostic, got {len(payloads)}")
+    try:
+        values = json.loads(payloads[0])
+    except json.JSONDecodeError as exc:
+        raise NativeProtocolError(f"Malformed loader diagnostic JSON: {exc}") from exc
+    if not isinstance(values, list) or len(values) != len(PROBE_KEYS):
+        raise NativeProtocolError(f"Unexpected loader diagnostic shape: {values!r}")
+    return dict(zip(PROBE_KEYS, values))
+
+
 def parse_output(output: str, cases: list[dict], batch_number: int) -> list[dict]:
     expected = {c["id"] for c in cases}
     observations: dict[str, dict] = {}
@@ -276,6 +332,24 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs:
             unavailable[case["id"]] = reason
         else:
             runnable.append(case)
+
+    if runnable:
+        # Several Maxima packages are lazily compiled on the first loader
+        # invocation. Prime that shared package cache in a single process
+        # before launching isolated case processes concurrently. A failure is
+        # fatal: no partial/old observations are substituted for this run.
+        with tempfile.TemporaryDirectory(prefix="stack-compliance-warmup-") as directory:
+            home = Path(directory)
+            batch = home / "warmup.mac"
+            batch.write_text(make_warmup_batch(source, home), encoding="utf-8")
+            try:
+                output = _command([executable, "--very-quiet", f"--batch={batch}"], timeout)
+                parse_output(output, [], 0)
+                probe = parse_probe_output(output)
+                print("Native loader probe: " + json.dumps(probe, sort_keys=True), flush=True)
+            except (NativeProcessError, NativeProtocolError) as exc:
+                raise type(exc)(f"official STACK loader warm-up: {exc}") from exc
+
     def observe_one(batch_number: int, case: dict) -> dict:
         # An AT or a source expression can change global assumptions/features.
         # A fresh process per case prevents those changes affecting later
@@ -311,7 +385,9 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs:
             "metadata": {"reference_layer": "direct_official_maxima_AT", "stack_sha": checkout,
                          "stack_library_version": library_match[1], "maxima_version": version,
                          "native_scope_sha256": scope_sha256(cases),
-                         "execution_isolation": "fresh_maxima_process_per_case", "jobs": jobs},
+                         "execution_isolation": "fresh_maxima_process_per_case", "jobs": jobs,
+                         "loader_warmup": bool(runnable),
+                         "loader_probe": probe if runnable else None},
             "observations": ordered,
             "summary": {"total": len(ordered), "ok": sum(r["status"] == "ok" for r in ordered),
                         "error": sum(r["status"] == "error" for r in ordered),

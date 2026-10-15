@@ -35,7 +35,7 @@ def load_fixture(path: Path) -> dict:
         if not isinstance(case, dict) or not isinstance(case.get("id"), str) or case["id"] in seen:
             raise ValueError("Fixture case IDs must be unique strings")
         seen.add(case["id"])
-        desired_outcome(case["expected_score"])
+        desired_outcome(case["expected_score"], case.get("answer_note", ""))
     return fixture
 
 
@@ -91,9 +91,10 @@ def isolated_case(case: dict, timeout: float) -> dict:
 
 
 def assess(case: dict, observation: dict, policy: dict, scope: dict) -> dict:
-    expected = desired_outcome(case["expected_score"])
+    expected = desired_outcome(case["expected_score"], case.get("answer_note", ""))
     result = {**observation, "expected_score": case["expected_score"], "desired": expected,
-              "desired_match": matches_desired(observation, case["expected_score"]),
+              "desired_match": matches_desired(observation, case["expected_score"],
+                                                case.get("answer_note", "")),
               "scope": scope["kind"]}
     if scope["kind"] == "unsupported" or (scope["kind"] in {
             "invalid_student", "invalid_teacher", "invalid_option"} and case["expected_score"] != -1):

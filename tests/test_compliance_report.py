@@ -154,3 +154,46 @@ def test_reviewed_native_exception_cannot_silently_improve(tmp_path, monkeypatch
     import pytest
     with pytest.raises(ValueError, match="Stale or contradicted native policy"):
         assess(fixture, python, maxima, policy)
+
+
+def test_python_controlled_error_requires_authored_origin(tmp_path):
+    fixture, python, maxima, parity, reference = inputs(tmp_path)
+    import pytest
+    for note, kind in [("ATAlgEquiv_STACKERROR_SAns.", "invalid_option"),
+                       ("unknown error note", "invalid_student")]:
+        source = json.loads(fixture.read_text())
+        source["cases"][0].update(expected_score=-1, answer_note=note)
+        write(fixture, source)
+        observed = json.loads(python.read_text())
+        observed["metadata"]["fixture_sha256"] = hashlib.sha256(fixture.read_bytes()).hexdigest()
+        observed["observations"][0].update(kind=kind, desired_match=True, policy_status="pass")
+        observed["passed"] = True
+        write(python, observed)
+        report = assemble(fixture, python, maxima, parity, reference)
+        assert report["results"]["python"]["error"].startswith("Contradictory Python desired mark")
+        assert report["summary"]["desired"] == {"unavailable": 2}
+
+
+def test_native_controlled_error_requires_exact_asserted_note(tmp_path, monkeypatch):
+    fixture, python, maxima, _, _ = inputs(tmp_path)
+    source = json.loads(fixture.read_text())
+    source["cases"][0].update(expected_score=-1, answer_note="ATAlgEquiv_STACKERROR_SAns.")
+    write(fixture, source)
+    digest = hashlib.sha256(fixture.read_bytes()).hexdigest()
+    observed = json.loads(python.read_text())
+    observed["metadata"]["fixture_sha256"] = digest
+    observed["observations"][0].update(kind="invalid_student", desired_match=True, policy_status="pass")
+    observed["passed"] = True
+    write(python, observed)
+    native = json.loads(maxima.read_text())
+    native["metadata"]["fixture_sha256"] = digest
+    native["observations"][0].update(cas_valid=False, correct=False, controlled_error=True,
+                                      answer_note="ATAlgEquiv_STACKERROR_TAns.")
+    write(maxima, native)
+    monkeypatch.setattr("native_compliance.compatibility.scope_sha256", lambda cases: "0" * 64)
+    monkeypatch.setattr("native_compliance.compatibility._unavailable",
+                        lambda case: "outside scope" if case["test"] == "UnsupportedTest" else None)
+    policy = write(tmp_path / "native_policy.json", {"schema_version": 1, "native_scope_sha256": "0" * 64, "cases": {}})
+    result = assess(fixture, python, maxima, policy)
+    assert not result["passed"]
+    assert result["observations"][0]["status"] == "unexpected_mismatch"

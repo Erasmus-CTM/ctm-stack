@@ -78,8 +78,12 @@ def assess(fixture_path: Path, python_path: Path, native_path: Path, policy_path
             status, reason = "unexpected_execution_error", n.get("error")
         elif n["status"] == "ok":
             if case["expected_score"] == -1 and p["kind"] in {"invalid_student", "invalid_teacher", "invalid_option"}:
-                status, reason = ("match_controlled_error", None) if n.get("controlled_error") is True else (
-                    "unexpected_mismatch", "Authored controlled error was not observed in native CAS")
+                asserted = case.get("answer_note", "")
+                native_note = n.get("answer_note")
+                exact_note = (isinstance(asserted, str) and isinstance(native_note, str)
+                              and native_note.strip() == asserted.strip())
+                status, reason = ("match_controlled_error", None) if p.get("desired_match") is True and n.get("controlled_error") is True and exact_note else (
+                    "unexpected_mismatch", "Native controlled error origin or answer note differs from authored assertion")
             elif p["kind"] != "result" or not isinstance(p.get("correct"), bool):
                 status, reason = ("not_compared" if p["policy_status"] == "out_of_contract" else "unexpected_execution_error"), p.get("message")
             else:

@@ -15,6 +15,17 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from native_compliance import maxima_runner as native  # noqa: E402
 import run_compliance_maxima  # noqa: E402
 
+PROBE_VALUES = ["%i", "%i", "1/(1+%i)", "1/(1+%i)",
+                [True, False, "ATLowestTerms_not_rat. "],
+                [True, False, "ATLowestTerms_not_rat. "],
+                [True, False, "ATLowestTerms_not_rat. "],
+                [True, True, ""], [True, False, ""]]
+
+
+def warmup_output():
+    return ("STACKNATIVE-BEGIN|0|0\nSTACKNATIVE-DIAG|" + json.dumps(PROBE_VALUES, separators=(",", ":"))
+            + "\nSTACKNATIVE-END|0|0\n")
+
 
 def case(suffix="1", test="AlgEquiv", student="x+1", teacher="1+x", options=""):
     return {"id": "a" * 64 + "-" + suffix, "test": test,
@@ -54,6 +65,20 @@ class NativeMaximaTests(unittest.TestCase):
         self.assertIn('STACKNATIVE-BEGIN|7|6', batch)
         self.assertIn('STACKNATIVE-END|7|6', batch)
         self.assertIn('[\\\"error\\\",\\\"cas_evaluation\\\",null]', batch)
+
+    def test_warmup_probe_is_separate_from_fixture_results(self):
+        with tempfile.TemporaryDirectory() as directory:
+            batch = native.make_warmup_batch(ROOT, Path(directory))
+        self.assertIn('STACKNATIVE-BEGIN|0|0', batch)
+        self.assertIn('simp:false$\nprint(sconcat("STACKNATIVE-DIAG|"', batch)
+        self.assertIn('ATLowestTerms(1/(1+i),(1-i)/2)', batch)
+        self.assertIn('ATLowestTerms(ev(parse_string("1/(1+i)"),simp:false)', batch)
+        self.assertIn('ATEqualComAss(ev(parse_string("cos(0)"),simp:false)', batch)
+        self.assertIn('ATEqualComAss(ev(parse_string("sqrt(3)"),simp:false)', batch)
+        self.assertEqual(native.parse_output(warmup_output(), [], 0), [])
+        self.assertEqual(native.parse_probe_output(warmup_output())["literal_lowest_terms"], PROBE_VALUES[4])
+        with self.assertRaises(native.NativeProtocolError):
+            native.parse_probe_output("STACKNATIVE-BEGIN|0|0\nSTACKNATIVE-END|0|0\n")
 
     def test_protocol_preserves_note_and_controlled_native_error(self):
         rows = [case(), case("2")]
@@ -129,6 +154,7 @@ class NativeMaximaTests(unittest.TestCase):
             maxima_dir.mkdir(parents=True)
             (maxima_dir / "stacklocallinux.mac").write_text("", encoding="utf-8")
             (maxima_dir / "stackmaxima.mac").write_text("stackmaximaversion:123$", encoding="utf-8")
+            calls = []
 
             def command(argv, timeout):
                 if argv[0] == "git":
@@ -136,6 +162,10 @@ class NativeMaximaTests(unittest.TestCase):
                 if "--version" in argv:
                     return "Maxima 5.x\n"
                 batch = Path(argv[-1].removeprefix("--batch=")).read_text()
+                if 'STACKNATIVE-BEGIN|0|0' in batch:
+                    calls.append("warmup")
+                    return warmup_output()
+                calls.append("case")
                 self.assertEqual(len(re.findall(r'ATAlgEquiv\(parse_string\("x\+1"\),parse_string\("1\+x"\)\)', batch)), 1)
                 number = int(re.search(r"STACKNATIVE-BEGIN\|(\d+)\|1", batch).group(1))
                 current = rows[1] if number == 0 else rows[3]
@@ -148,6 +178,7 @@ class NativeMaximaTests(unittest.TestCase):
                 result = native.run_native(rows, source, jobs=1)
         self.assertEqual(result["metadata"]["reference_layer"], "direct_official_maxima_AT")
         self.assertEqual(result["metadata"]["execution_isolation"], "fresh_maxima_process_per_case")
+        self.assertEqual(calls, ["warmup", "case", "case"])
         self.assertEqual(result["metadata"]["native_scope_sha256"], native.scope_sha256(rows))
         self.assertEqual([x["status"] for x in result["observations"]], ["unavailable", "ok", "unavailable", "ok"])
         self.assertEqual(result["summary"], {"total": 4, "ok": 2, "error": 0, "unavailable": 2})
@@ -164,6 +195,8 @@ class NativeMaximaTests(unittest.TestCase):
 
             def command(argv, timeout):
                 if "--batch=" in argv[-1]:
+                    if 'STACKNATIVE-BEGIN|0|0' in Path(argv[-1].removeprefix("--batch=")).read_text():
+                        return warmup_output()
                     raise native.NativeProcessError("timeout after 300s")
                 return next(calls)
 
