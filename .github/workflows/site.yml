@@ -33,6 +33,12 @@ jobs:
       - run: python -m pytest -q tests/browser.py
         env:
           PYTHONPATH: _extensions/stack-sympy
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-ui-example
+          path: test-results/example.png
+          if-no-files-found: ignore
       - name: Publish main site and feature previews
         if: github.event_name == 'push'
         uses: peaceiris/actions-gh-pages@v4

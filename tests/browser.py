@@ -96,12 +96,14 @@ def test_browser_worker_grades_and_runs_authored_tests():
                 break
         assert multi is not None, "numerical multi-input example was not rendered"
         for answer in multi.locator(".stack-answer").all():
-            answer.fill("0")
+            answer.fill("0.00")
         multi.locator(".stack-validate").click()
         multi.locator('.stack-result[data-state="valid"]').wait_for(timeout=120000)
         assert multi.locator(".stack-check").is_enabled()
         multi.locator(".stack-check").click()
         multi.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
         assert multi.locator(".stack-result").get_attribute("data-state") == "retry"
+        (site.parent / "test-results").mkdir(exist_ok=True)
+        page.screenshot(path=str(site.parent / "test-results/example.png"), full_page=True)
         assert not errors, errors
         browser.close()
