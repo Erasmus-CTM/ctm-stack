@@ -20,8 +20,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--stack-source", type=Path, required=True)
     parser.add_argument("--maxima", default="maxima")
     parser.add_argument("--output", type=Path, default=ROOT / "test-results/compliance/maxima.json")
-    parser.add_argument("--chunk-size", type=int, default=100)
-    parser.add_argument("--timeout", type=int, default=300, help="seconds per Maxima batch")
+    parser.add_argument("--jobs", type=int, default=4, help="concurrent isolated Maxima case processes")
+    parser.add_argument("--timeout", type=int, default=300, help="seconds per Maxima case process")
     args = parser.parse_args(argv)
     report: dict = {"schema_version": 1, "engine": "maxima", "metadata": {
         "reference_layer": "direct_official_maxima_AT", "stack_sha": STACK_SHA},
@@ -32,7 +32,7 @@ def main(argv: list[str] | None = None) -> int:
         if fixture.get("schema_version") != 1 or fixture.get("upstream", {}).get("commit") != STACK_SHA:
             raise ValueError("Fixture is not from the pinned STACK revision")
         report = run_native(fixture["cases"], args.stack_source, args.maxima,
-                            chunk_size=args.chunk_size, timeout=args.timeout)
+                            jobs=args.jobs, timeout=args.timeout)
         report["metadata"]["fixture_sha256"] = hashlib.sha256(fixture_bytes).hexdigest()
     except (OSError, KeyError, TypeError, ValueError, NativeProcessError, NativeProtocolError) as exc:
         report["error"] = f"{type(exc).__name__}: {exc}"

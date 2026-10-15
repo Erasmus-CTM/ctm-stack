@@ -66,6 +66,20 @@ def _native_status(native: dict | None, python: dict | None) -> str:
     return "match" if (native["correct"], native["cas_valid"]) == (python["correct"], python_cas_valid) else "mismatch"
 
 
+def _native_dimension(native: dict | None, python: dict | None, field: str) -> str:
+    if native is None:
+        return "unavailable"
+    if native.get("status") != "ok":
+        return native.get("status") if native.get("status") in {"unavailable", "unsupported"} else "error"
+    if not python or python.get("kind") != "result":
+        return "not_compared"
+    local = python.get("cas_valid", python.get("valid")) if field == "cas_valid" else python.get("correct")
+    reference = native.get(field)
+    if not isinstance(local, bool) or not isinstance(reference, bool):
+        return "not_compared"
+    return "match" if local == reference else "mismatch"
+
+
 def _desired_status(python: dict | None) -> str:
     if python is None:
         return "unavailable"
@@ -85,7 +99,7 @@ def _parity_status(parity: dict | None) -> str:
     return str(parity.get("status", "not_compared"))
 
 
-def _native_desired(case: dict, native: dict | None) -> str:
+def _native_desired(case: dict, native: dict | None, reference: dict | None) -> str:
     if native is None or native.get("status") != "ok" or not isinstance(native.get("correct"), bool):
         return "not_compared"
     score = case.get("expected_score")
@@ -95,7 +109,9 @@ def _native_desired(case: dict, native: dict | None) -> str:
         return "unknown_expectation"
     desired = score in {1, -3}
     if score in {-2, -3} and native["correct"] != desired:
-        return "known_native_mathematical_failure"
+        return ("known_native_mathematical_failure" if reference and
+                reference.get("status") == "known_native_mathematical_failure" else
+                "upstream_negative_sentinel_difference")
     return "matches_desired" if native["correct"] == desired else "unexpected_native_deviation"
 
 
@@ -111,6 +127,8 @@ def validated_run(document: dict | None, read_error: str | None, expected_hash: 
         return None, f"Wrong result engine: {document.get('engine')!r}"
     if document.get("error"):
         return None, f"Runner error: {document['error']}"
+    if engine != "native" and not isinstance(document.get("passed"), bool):
+        return None, "Missing checker pass/fail verdict"
     metadata = document.get("metadata")
     if engine in {"python", "native"} and not isinstance(metadata, dict):
         return None, "Missing runner metadata"
@@ -154,11 +172,19 @@ def validated_run(document: dict | None, read_error: str | None, expected_hash: 
                 return None, f"Invalid native result for {case_id}"
         elif engine == "compatibility":
             if row.get("status") not in {"match", "match_controlled_error", "known_native_mathematical_failure", "approved_difference",
-                                         "known_port_defect", "unavailable", "not_compared",
+                                         "known_port_defect", "known_port_limitation", "unavailable", "not_compared",
                                          "unexpected_mismatch", "unexpected_execution_error"}:
                 return None, f"Invalid compatibility verdict for {case_id}"
         elif not isinstance(row.get("match"), bool):
             return None, f"Invalid parity result for {case_id}"
+    if engine == "python" and document["passed"] is any(row["policy_status"] == "unexpected" for row in observations):
+        return None, "Python verdict contradicts case policy statuses"
+    if engine == "compatibility":
+        unexpected = any(row["status"] in {"unexpected_mismatch", "unexpected_execution_error"} for row in observations)
+        if document["passed"] is unexpected:
+            return None, "Compatibility verdict contradicts case statuses"
+    if engine == "parity" and document["passed"] is not all(row["match"] for row in observations):
+        return None, "Parity verdict contradicts case statuses"
     return document, None
 
 
@@ -215,7 +241,9 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
             "source_url": source_link, "python": p, "native": n, "parity": b, "compatibility": ref,
             "desired_status": _desired_status(p), "native_status": ref["status"] if ref else "unavailable",
             "native_boolean_status": _native_status(n, p),
-            "native_desired_status": _native_desired(case, n),
+            "native_mark_status": _native_dimension(n, p, "correct"),
+            "native_applicability_status": _native_dimension(n, p, "cas_valid"),
+            "native_desired_status": _native_desired(case, n, ref),
             "answer_note_status": "not_compared",
             "parity_status": _parity_status(b),
         })
@@ -225,15 +253,17 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
     results = {
         "python": {"path": str(python_path), "available": python is not None,
                    "error": python_error or (python or {}).get("error"), "metadata": (python or {}).get("metadata"),
-                   "summary": (python or {}).get("summary")},
+                   "summary": (python or {}).get("summary"), "passed": (python or {}).get("passed")},
         "native": {"path": str(maxima_path), "available": maxima is not None,
                    "error": maxima_error or (maxima or {}).get("error"), "metadata": (maxima or {}).get("metadata"),
                    "summary": (maxima or {}).get("summary")},
         "compatibility": {"path": str(reference_path), "available": reference is not None,
                           "error": reference_error, "summary": (reference or {}).get("summary"),
+                          "passed": (reference or {}).get("passed"),
                           "metadata": {"policy_sha256": reference.get("policy_sha256")} if reference else None},
         "parity": {"path": str(pyodide_path), "available": pyodide is not None,
                    "error": pyodide_error or (pyodide or {}).get("error"),
+                   "passed": (pyodide or {}).get("passed"),
                    "metadata": {"pyodide_version": pyodide.get("pyodide_version"),
                                 "sympy_version": pyodide.get("sympy_version"),
                                 "browser_versions": pyodide.get("browser_versions"),
@@ -255,7 +285,7 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
                        "python_version": platform.python_version()},
         "results": results,
         "summary": {axis: dict(Counter(row[f"{axis}_status"] for row in rows))
-                    for axis in ("desired", "native", "native_desired", "parity")},
+                    for axis in ("desired", "native", "native_mark", "native_applicability", "native_desired", "parity")},
         "cases": rows,
     }
 

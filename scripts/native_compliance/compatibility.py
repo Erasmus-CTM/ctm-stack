@@ -43,7 +43,7 @@ def assess(fixture_path: Path, python_path: Path, native_path: Path, policy_path
         raise ValueError("Python policy differs from reviewed report")
     for case_id, entry in exceptions.items():
         if (not isinstance(entry, dict) or entry.get("category") not in
-                {"known_native_mathematical_failure", "approved_difference"}
+                {"known_native_mathematical_failure", "known_port_limitation", "approved_difference"}
                 or not isinstance(entry.get("reason"), str) or not entry["reason"].strip()
                 or not isinstance(entry.get("python"), dict) or not isinstance(entry.get("native"), dict)
                 or set(entry["python"]) != {"cas_valid", "correct"}
@@ -55,6 +55,11 @@ def assess(fixture_path: Path, python_path: Path, native_path: Path, policy_path
             if (score not in {-2, -3} or entry["python"]["correct"] is not (score == -3)
                     or entry["native"]["correct"] is not (score == -2)):
                 raise ValueError(f"Invalid known native mathematical failure: {case_id}")
+        if entry["category"] == "known_port_limitation":
+            if (by_case[case_id]["expected_score"] != 0 or
+                    entry["python"]["correct"] is not False or entry["native"]["correct"] is not False or
+                    entry["python"]["cas_valid"] is entry["native"]["cas_valid"]):
+                raise ValueError(f"Invalid applicability-only port limitation: {case_id}")
     pobs = {row["case_id"]: row for row in python["observations"]}
     nobs = {row["case_id"]: row for row in native["observations"]}
     for case in cases:
@@ -91,6 +96,10 @@ def assess(fixture_path: Path, python_path: Path, native_path: Path, policy_path
                 else:
                     status, reason = "unexpected_mismatch", "Native and Python CAS applicability or correctness differ"
         rows.append({"case_id": case_id, "test": case["test"], "status": status, "reason": reason})
+    verdicts = {row["case_id"]: row["status"] for row in rows}
+    for case_id, entry in exceptions.items():
+        if verdicts[case_id] != entry["category"]:
+            raise ValueError(f"Stale or contradicted native policy for {case_id}: observed {verdicts[case_id]}")
     counts = dict(Counter(row["status"] for row in rows))
     failures = counts.get("unexpected_mismatch", 0) + counts.get("unexpected_execution_error", 0)
     return {"schema_version": 1, "engine": "compatibility", "fixture_sha256": digest,

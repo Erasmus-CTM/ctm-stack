@@ -20,6 +20,8 @@
 .badge { border-radius: 1rem; padding: .13rem .55rem; background: #e2e8f0; font-size: .83rem; }
 .badge[data-status="pass"],.badge[data-status="match"],.badge[data-status="match_controlled_error"],.badge[data-status="matches_desired"] { background: #d8eddb; color: #155424; }
 .badge[data-status="mismatch"],.badge[data-status="unexpected"],.badge[data-status="error"] { background: #fbd5d5; color: #7a1e1e; }
-.badge[data-status="known_defect"],.badge[data-status="approved_difference"] { background: #fff0be; color: #65490a; }
+.badge[data-status="failed"] { background: #fbd5d5; color: #7a1e1e; font-weight: 700; }
+.badge[data-status="known_defect"],.badge[data-status="known_port_defect"],.badge[data-status="known_port_limitation"],.badge[data-status="approved_difference"] { background: #fff0be; color: #65490a; }
 .badge[data-status="known_native_mathematical_failure"] { background: #fff0be; color: #65490a; }
+.badge[data-status="upstream_negative_sentinel_difference"] { background: #e2e8f0; color: #334155; }
 #show-more { margin: 1rem 0; }

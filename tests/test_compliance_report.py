@@ -26,7 +26,7 @@ def inputs(tmp_path: Path):
                   "upstream": {"commit": "pinned", "source_url": "https://github.com/org/repo/blob/pinned/source.php"},
                   "inventory": {"total_rows": 2}})
     digest = hashlib.sha256(fixture.read_bytes()).hexdigest()
-    python = write(tmp_path / "python.json", {"schema_version": 1, "engine": "python",
+    python = write(tmp_path / "python.json", {"schema_version": 1, "engine": "python", "passed": False,
                    "metadata": {"fixture_sha256": digest,
                                 "policy_sha256": hashlib.sha256((ROOT / "tests/native_compliance/policy.json").read_bytes()).hexdigest()},
                    "observations": [
@@ -38,9 +38,9 @@ def inputs(tmp_path: Path):
                    "metadata": {"fixture_sha256": digest, "stack_sha": "pinned", "native_scope_sha256": "0" * 64}, "observations": [
                        {"case_id": "a", "status": "ok", "cas_valid": True, "correct": True},
                        {"case_id": "b", "status": "unavailable", "reason": "outside scope"}]})
-    parity = write(tmp_path / "parity.json", {"schema_version": 1, "engine": "parity", "fixture_sha256": digest,
+    parity = write(tmp_path / "parity.json", {"schema_version": 1, "engine": "parity", "passed": True, "fixture_sha256": digest,
                    "cases": [{"id": "a", "match": True}, {"id": "b", "match": True}]})
-    reference = write(tmp_path / "reference.json", {"schema_version": 1, "engine": "compatibility",
+    reference = write(tmp_path / "reference.json", {"schema_version": 1, "engine": "compatibility", "passed": True,
                       "fixture_sha256": digest,
                       "policy_sha256": hashlib.sha256((ROOT / "tests/native_compliance/native_policy.json").read_bytes()).hexdigest(),
                       "python_report_sha256": hashlib.sha256(python.read_bytes()).hexdigest(),
@@ -57,9 +57,21 @@ def test_separate_desired_native_and_parity_axes(tmp_path):
     report = assemble(*inputs(tmp_path))
     a, b = report["cases"]
     assert (a["desired_status"], a["native_status"], a["native_desired_status"], a["parity_status"]) == (
-        "unexpected", "match", "known_native_mathematical_failure", "match")
+        "unexpected", "match", "upstream_negative_sentinel_difference", "match")
     assert b["native_status"] == "unavailable"
     assert report["provenance"]["fixture_upstream"]["commit"] == "pinned"
+
+
+def test_same_final_mark_can_have_different_cas_applicability(tmp_path):
+    fixture, python, maxima, parity, reference = inputs(tmp_path)
+    data = json.loads(python.read_text())
+    data["observations"][0]["cas_valid"] = False
+    write(python, data)
+    report = assemble(fixture, python, maxima, parity, reference)
+    row = report["cases"][0]
+    assert row["native_mark_status"] == "match"
+    assert row["native_applicability_status"] == "mismatch"
+    assert report["summary"]["native_applicability"]["mismatch"] == 1
 
 
 def test_missing_or_stale_run_is_explicitly_unavailable(tmp_path):
@@ -127,4 +139,18 @@ def test_native_failure_label_requires_upstream_negative_sentinel(tmp_path, monk
                                    "native": {"cas_valid": True, "correct": False}}}})
     import pytest
     with pytest.raises(ValueError, match="Invalid known native mathematical failure"):
+        assess(fixture, python, maxima, policy)
+
+
+def test_reviewed_native_exception_cannot_silently_improve(tmp_path, monkeypatch):
+    fixture, python, maxima, _, _ = inputs(tmp_path)
+    monkeypatch.setattr("native_compliance.compatibility.scope_sha256", lambda cases: "0" * 64)
+    monkeypatch.setattr("native_compliance.compatibility._unavailable",
+                        lambda case: "outside scope" if case["test"] == "UnsupportedTest" else None)
+    policy = write(tmp_path / "native_policy.json", {"schema_version": 1, "native_scope_sha256": "0" * 64,
+                   "cases": {"a": {"category": "approved_difference", "reason": "Previously reviewed mark difference",
+                                   "python": {"cas_valid": True, "correct": True},
+                                   "native": {"cas_valid": True, "correct": False}}}})
+    import pytest
+    with pytest.raises(ValueError, match="Stale or contradicted native policy"):
         assess(fixture, python, maxima, policy)

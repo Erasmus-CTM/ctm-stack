@@ -36,8 +36,14 @@ function summary(report) {
   provenance.append(metadata, details("Fixture inventory and provenance", {inventory:p.fixture_inventory,upstream:p.fixture_upstream,scope:report.scope}));
   const eligible = report.results.parity.summary;
   if (eligible) provenance.append(node("p", `Browser grading parity: ${eligible.eligible_matched ?? "unavailable"} matching eligible executions of ${eligible.eligible ?? "unavailable"}; whole-inventory classification includes unsupported cases. Native direct-CAS observations: ${report.results.native.summary?.ok ?? "unavailable"} of ${report.cases.length} imported rows. Answer notes are not compared.`));
+  const verdicts = node("p", undefined, "report-verdicts");
+  for (const [key,title] of [["python","Desired outcome"],["compatibility","Native compatibility"],["parity","Browser parity"]]) {
+    const result = report.results[key];
+    verdicts.append(badge(title, !result.available ? "unavailable" : result.passed === true ? "pass" : "failed"), " ");
+  }
+  provenance.append(verdicts);
 
-  for (const [axis,title] of [["desired","Python vs desired result"],["native","Python vs native STACK/Maxima"],["native_desired","Native vs desired result"],["parity","Pyodide vs CPython"]]) {
+  for (const [axis,title] of [["desired","Python vs desired result"],["native","Reviewed native comparison"],["native_mark","Python vs native final mark"],["native_applicability","Python vs native CAS applicability"],["native_desired","Native vs desired result"],["parity","Pyodide vs CPython"]]) {
     const section = node("section");
     section.append(node("h3", title));
     const dl = node("dl");
@@ -48,7 +54,9 @@ function summary(report) {
     $("report-summary").append(section);
   }
   for (const [engine,result] of Object.entries(report.results)) {
-    $("report-runners").append(details(`${engine}: ${result.available ? (result.error ? "reported error" : "result available") : "unavailable"}`, result));
+    const state = !result.available ? "unavailable" : result.error ? "reported error" :
+                  result.passed === false ? "check failed" : "result available";
+    $("report-runners").append(details(`${engine}: ${state}`, result));
   }
 }
 function optionValues(id, rows, key) {
@@ -64,6 +72,7 @@ function caseElement(row) {
   const head = node("summary");
   head.append(node("span", `#${row.ordinal} · ${row.test}`, "case-test"),
               badge("desired", row.desired_status), badge("native", row.native_status),
+              badge("mark", row.native_mark_status), badge("CAS applicable", row.native_applicability_status),
               badge("native vs desired", row.native_desired_status),
               badge("parity", row.parity_status), node("span", `${row.student} → ${row.teacher}`));
   box.append(head);
@@ -91,19 +100,19 @@ fetch("report.json", {cache:"no-store"}).then(response => {
   $("report-root").hidden = false;
   summary(report);
   optionValues("test-filter", report.cases, "test");
-  for (const axis of ["desired","native","native_desired","parity"]) optionValues(`${axis}-filter`, report.cases, `${axis}_status`);
+  for (const axis of ["desired","native","native_mark","native_applicability","native_desired","parity"]) optionValues(`${axis}-filter`, report.cases, `${axis}_status`);
   let visible = 80;
   function update() {
     const query = $("case-search").value.trim().toLowerCase();
     const matches = report.cases.filter(row =>
       (!$("test-filter").value || row.test === $("test-filter").value) &&
-      ["desired","native","native_desired","parity"].every(axis => !$(axis+"-filter").value || row[axis+"_status"] === $(axis+"-filter").value) &&
+      ["desired","native","native_mark","native_applicability","native_desired","parity"].every(axis => !$(axis+"-filter").value || row[axis+"_status"] === $(axis+"-filter").value) &&
       (!query || [row.id,row.test,row.student,row.teacher,row.options,row.notes,row.answer_note,pretty(row.extra_fields)].some(value => String(value ?? "").toLowerCase().includes(query))));
     $("case-count").textContent = `${matches.length} matching rows; showing ${Math.min(visible,matches.length)}`;
     $("case-list").replaceChildren(...matches.slice(0,visible).map(caseElement));
     $("show-more").hidden = matches.length <= visible;
   }
-  for (const id of ["case-search","test-filter","desired-filter","native-filter","native_desired-filter","parity-filter"]) {
+  for (const id of ["case-search","test-filter","desired-filter","native-filter","native_mark-filter","native_applicability-filter","native_desired-filter","parity-filter"]) {
     $(id).addEventListener("input", () => { visible = 80; update(); });
   }
   $("show-more").addEventListener("click", () => { visible += 80; update(); });

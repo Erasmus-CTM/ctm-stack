@@ -8,6 +8,7 @@ Python behaviour and these native observations.
 
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import hashlib
 import json
 import re
@@ -39,7 +40,7 @@ CONTROLLED_AT_ERROR = re.compile(
     r"|ATNumDecPlaces_OptNotInt|STACKERROR_OPTION)\.\Z"
 )
 UNSAFE = re.compile(r"[;:$\"\r\n]|/\*|\*/|\b(?:load|system|kill|batch|file_search_maxima|with_stdout)\s*\(", re.I)
-CHUNK_SIZE = 100
+DEFAULT_JOBS = 4
 
 
 class NativeProtocolError(RuntimeError):
@@ -232,18 +233,26 @@ def _command(command: list[str], timeout: int) -> str:
     try:
         proc = subprocess.run(command, capture_output=True, text=True, timeout=timeout, check=False)
     except subprocess.TimeoutExpired as exc:
-        raise NativeProcessError(f"Maxima timeout after {timeout}s: {command[0]}") from exc
+        captured = exc.stdout or b""
+        if isinstance(captured, bytes):
+            captured = captured.decode("utf-8", errors="replace")
+        completed = [match.group(1) for line in captured.splitlines()
+                     if (match := RESULT.fullmatch(line))]
+        last = completed[-1] if completed else "none"
+        raise NativeProcessError(f"Maxima timeout after {timeout}s: {command[0]}; "
+                                 f"completed_result_markers={len(completed)}, last_case_id={last}; "
+                                 f"output_tail={captured[-500:]!r}") from exc
     if proc.returncode:
         raise NativeProcessError(f"Maxima exit {proc.returncode}: {(proc.stdout + proc.stderr)[-3000:]}")
     return proc.stdout + proc.stderr
 
 
-def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, chunk_size: int = CHUNK_SIZE,
+def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs: int = DEFAULT_JOBS,
                timeout: int = 300) -> dict:
     """Return independent native observations and version/provenance metadata."""
     validate_cases(cases)
-    if chunk_size < 1 or timeout < 1:
-        raise ValueError("chunk_size and timeout must be positive")
+    if not 1 <= jobs <= 16 or timeout < 1:
+        raise ValueError("jobs must be 1–16 and timeout must be positive")
     source = source.resolve()
     if not (source / "stack/maxima/stacklocallinux.mac").is_file():
         raise NativeProcessError(f"Not a STACK Maxima source checkout: {source}")
@@ -267,15 +276,31 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, chunk
             unavailable[case["id"]] = reason
         else:
             runnable.append(case)
-    for offset in range(0, len(runnable), chunk_size):
-        chunk = runnable[offset:offset + chunk_size]
-        batch_number = offset // chunk_size
+    def observe_one(batch_number: int, case: dict) -> dict:
+        # An AT or a source expression can change global assumptions/features.
+        # A fresh process per case prevents those changes affecting later
+        # official fixture rows, as in the Moodle fixture test's CAS sessions.
         with tempfile.TemporaryDirectory(prefix="stack-compliance-maxima-") as directory:
             home = Path(directory)
             batch = home / "native.mac"
-            batch.write_text(make_batch(source, chunk, home, batch_number), encoding="utf-8")
-            output = _command([executable, "--very-quiet", f"--batch={batch}"], timeout)
-        observations.extend(parse_output(output, chunk, batch_number))
+            batch.write_text(make_batch(source, [case], home, batch_number), encoding="utf-8")
+            try:
+                output = _command([executable, "--very-quiet", f"--batch={batch}"], timeout)
+                return parse_output(output, [case], batch_number)[0]
+            except (NativeProcessError, NativeProtocolError) as exc:
+                raise type(exc)(f"case process {batch_number} (fixture ordinal "
+                                f"{case.get('ordinal', '?')}, id {case['id']}): {exc}") from exc
+
+    with ThreadPoolExecutor(max_workers=jobs) as pool:
+        futures = {pool.submit(observe_one, index, case): case["id"]
+                   for index, case in enumerate(runnable)}
+        try:
+            for future in as_completed(futures):
+                observations.append(future.result())
+        except (NativeProcessError, NativeProtocolError):
+            for future in futures:
+                future.cancel()
+            raise
     by_id = {row["case_id"]: row for row in observations}
     for case in cases:
         if case["id"] in unavailable:
@@ -285,7 +310,8 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, chunk
     return {"schema_version": 1, "engine": "maxima",
             "metadata": {"reference_layer": "direct_official_maxima_AT", "stack_sha": checkout,
                          "stack_library_version": library_match[1], "maxima_version": version,
-                         "native_scope_sha256": scope_sha256(cases)},
+                         "native_scope_sha256": scope_sha256(cases),
+                         "execution_isolation": "fresh_maxima_process_per_case", "jobs": jobs},
             "observations": ordered,
             "summary": {"total": len(ordered), "ok": sum(r["status"] == "ok" for r in ordered),
                         "error": sum(r["status"] == "error" for r in ordered),

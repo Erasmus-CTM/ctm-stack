@@ -110,8 +110,11 @@ class NativeMaximaTests(unittest.TestCase):
                 native.parse_output(bad, [row], 1)
 
     def test_timeout_and_process_exit_are_distinct(self):
-        with patch.object(native.subprocess, "run", side_effect=subprocess.TimeoutExpired("maxima", 2)):
-            with self.assertRaisesRegex(native.NativeProcessError, "timeout"):
+        row = case()
+        partial = f"STACKNATIVE-BEGIN|0|1\nSTACKNATIVE|{row['id']}|[true,true,\"\"]\n"
+        timeout = subprocess.TimeoutExpired("maxima", 2, output=partial.encode())
+        with patch.object(native.subprocess, "run", side_effect=timeout):
+            with self.assertRaisesRegex(native.NativeProcessError, f"last_case_id={row['id']}"):
                 native._command(["maxima"], 2)
         response = subprocess.CompletedProcess(["maxima"], 13, stdout="partial", stderr="fatal")
         with patch.object(native.subprocess, "run", return_value=response):
@@ -133,19 +136,40 @@ class NativeMaximaTests(unittest.TestCase):
                 if "--version" in argv:
                     return "Maxima 5.x\n"
                 batch = Path(argv[-1].removeprefix("--batch=")).read_text()
-                ids = re.findall(r'ATAlgEquiv\(parse_string\("x\+1"\),parse_string\("1\+x"\)\)', batch)
-                self.assertEqual(len(ids), 2)
-                return ("STACKNATIVE-BEGIN|0|2\n"
-                        f"STACKNATIVE|{rows[1]['id']}|[true,true,\"\"]\n"
-                        f"STACKNATIVE|{rows[3]['id']}|[true,false,\"Wrong. \"]\n"
-                        "STACKNATIVE-END|0|2\n")
+                self.assertEqual(len(re.findall(r'ATAlgEquiv\(parse_string\("x\+1"\),parse_string\("1\+x"\)\)', batch)), 1)
+                number = int(re.search(r"STACKNATIVE-BEGIN\|(\d+)\|1", batch).group(1))
+                current = rows[1] if number == 0 else rows[3]
+                mark = "true" if number == 0 else "false"
+                return (f"STACKNATIVE-BEGIN|{number}|1\n"
+                        f"STACKNATIVE|{current['id']}|[true,{mark},\"\"]\n"
+                        f"STACKNATIVE-END|{number}|1\n")
 
             with patch.object(native, "_command", side_effect=command), patch.object(native.shutil, "which", return_value="/usr/bin/maxima"):
-                result = native.run_native(rows, source, chunk_size=2)
+                result = native.run_native(rows, source, jobs=1)
         self.assertEqual(result["metadata"]["reference_layer"], "direct_official_maxima_AT")
+        self.assertEqual(result["metadata"]["execution_isolation"], "fresh_maxima_process_per_case")
         self.assertEqual(result["metadata"]["native_scope_sha256"], native.scope_sha256(rows))
         self.assertEqual([x["status"] for x in result["observations"]], ["unavailable", "ok", "unavailable", "ok"])
         self.assertEqual(result["summary"], {"total": 4, "ok": 2, "error": 0, "unavailable": 2})
+
+    def test_runner_process_failure_names_batch_and_fixture_ordinals(self):
+        row = {**case(), "ordinal": 42}
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory)
+            maxima_dir = source / "stack/maxima"
+            maxima_dir.mkdir(parents=True)
+            (maxima_dir / "stacklocallinux.mac").write_text("", encoding="utf-8")
+            (maxima_dir / "stackmaxima.mac").write_text("stackmaximaversion:123$", encoding="utf-8")
+            calls = iter([native.STACK_SHA, "Maxima 5.x"])
+
+            def command(argv, timeout):
+                if "--batch=" in argv[-1]:
+                    raise native.NativeProcessError("timeout after 300s")
+                return next(calls)
+
+            with patch.object(native, "_command", side_effect=command), patch.object(native.shutil, "which", return_value="/usr/bin/maxima"):
+                with self.assertRaisesRegex(native.NativeProcessError, rf"case process 0 \(fixture ordinal 42, id {row['id']}\): timeout"):
+                    native.run_native([row], source)
 
     def test_cli_writes_failure_document_when_maxima_missing(self):
         with tempfile.TemporaryDirectory() as directory:
