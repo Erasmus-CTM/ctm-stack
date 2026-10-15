@@ -1,0 +1,93 @@
+[
+  {
+    "objectID": "docs/authoring.html",
+    "href": "docs/authoring.html",
+    "title": "Authoring and support",
+    "section": "",
+    "text": "Use a Moodle STACK export whose root is &lt;quiz&gt; and whose questions use &lt;question type=\"stack\"&gt;. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a stack-question block at its XML path and exact &lt;name&gt;&lt;text&gt;…&lt;/text&gt;&lt;/name&gt;. The filter embeds a selected question and precomputes the requested variants when Quarto renders. The original XML remains the source of truth and can be imported back into Moodle.\nVariant Variant 1Variant 2Variant 3Expand and collect like terms: \\((x+5)(x+3)\\).Give your answer as a polynomial in \\(x\\).   Validate answersCheck answerRun author tests\nThe learner submits in two steps: Validate answers parses the current fields and displays the exact expression form (for example, x+x rather than a simplified 2*x), then Check answer grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading.\nThe options are file and question (required), seed (signed integer, default 1), variants (1–20, default 1), review (true or false, default false), and diagnostics (true or false, default false). A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle’s Maxima backend."
+  },
+  {
+    "objectID": "docs/authoring.html#start-with-a-native-export",
+    "href": "docs/authoring.html#start-with-a-native-export",
+    "title": "Authoring and support",
+    "section": "",
+    "text": "Use a Moodle STACK export whose root is &lt;quiz&gt; and whose questions use &lt;question type=\"stack\"&gt;. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a stack-question block at its XML path and exact &lt;name&gt;&lt;text&gt;…&lt;/text&gt;&lt;/name&gt;. The filter embeds a selected question and precomputes the requested variants when Quarto renders. The original XML remains the source of truth and can be imported back into Moodle.\nVariant Variant 1Variant 2Variant 3Expand and collect like terms: \\((x+5)(x+3)\\).Give your answer as a polynomial in \\(x\\).   Validate answersCheck answerRun author tests\nThe learner submits in two steps: Validate answers parses the current fields and displays the exact expression form (for example, x+x rather than a simplified 2*x), then Check answer grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading.\nThe options are file and question (required), seed (signed integer, default 1), variants (1–20, default 1), review (true or false, default false), and diagnostics (true or false, default false). A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle’s Maxima backend."
+  },
+  {
+    "objectID": "docs/authoring.html#what-the-adapter-checks",
+    "href": "docs/authoring.html#what-the-adapter-checks",
+    "title": "Authoring and support",
+    "section": "What the adapter checks",
+    "text": "What the adapter checks\n\n\n\n\n\n\n\nSupported here\nScope\n\n\n\n\nSource\nMoodle STACK XML &lt;quiz&gt; with named STACK questions; category and description entries are skipped.\n\n\nInputs\nScalar algebraic and numerical text answers, with strict syntax and the implemented input flags.\n\n\nVariables\nA small, safely parsed Maxima-like assignment and arithmetic subset, including rand(n) for seeded variants.\n\n\nTests\nAlgEquiv, EqualComAss, NumAbsolute, NumRelative, NumDecPlaces; blank absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist.\n\n\nPRTs\nAcyclic node graphs with =, +, and − score operations, weighted response trees, branch feedback and notes.\n\n\nAuthor tests\nNative &lt;qtest&gt; inputs and expected PRT score, penalty, and answer note.\n\n\n\nThis is a deliberately limited evaluator, not a replacement for Moodle STACK or its Maxima CAS. questionsimplify=0 is accepted when any EqualComAss teacher form can be preserved after freezing author variables; otherwise the build rejects it. EqualComAss requires a direct input name in sans to preserve the student’s written form. Build-time validation rejects unsupported author features rather than silently grading them differently. Symbolic equivalence uses SymPy transformations rather than randomized substitution. Decimal-place grading reads the literal answer so a trailing zero is meaningful. The review interface and qtests help an author inspect parity, but they do not establish complete parity with all STACK configurations."
+  },
+  {
+    "objectID": "docs/authoring.html#validate-and-publish",
+    "href": "docs/authoring.html#validate-and-publish",
+    "title": "Authoring and support",
+    "section": "Validate and publish",
+    "text": "Validate and publish\nFor an extension-only installation, install sympy==1.13.3 in the Python environment used by Quarto. Run python -m stack_sympy.cli test --file questions/polynomial-expansion.xml after placing _extensions/stack-sympy on PYTHONPATH, then render with quarto render. Serve the _site directory through an HTTP server, including locally: python -m http.server --directory _site 8000. Browser grading loads Pyodide and SymPy; its first use downloads runtime packages, so it needs network access. Review the generated question and run its qtests before publishing any assessment. If a source uses features outside the supported subset, #| diagnostics: true displays the location of a build error in the page during authoring; remove it for production so unsupported questions fail the render."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Try a STACK question on a static page",
+    "section": "",
+    "text": "STACK SymPy reads an ordinary Moodle STACK XML export at build time. The Quarto page contains an interactive question card; a browser worker uses the same bounded Python question model to check each response. No Moodle session is needed to try these examples. The review buttons here show the authored question tests and their expected PRT outcomes."
+  },
+  {
+    "objectID": "index.html#expand-and-collect",
+    "href": "index.html#expand-and-collect",
+    "title": "Try a STACK question on a static page",
+    "section": "Expand and collect",
+    "text": "Expand and collect\nThis question rewards an expanded polynomial. A mathematically equivalent factored answer earns partial credit, with feedback explaining which form was requested. Press Validate answers to inspect the parsed answer, then Check answer to grade it. Editing an answer requires validation again. Change the variant to see fresh coefficients.\nVariant Variant 1Variant 2Variant 3Expand and collect like terms: \\((x+5)(x+3)\\).Give your answer as a polynomial in \\(x\\).   Validate answersCheck answerRun author tests\nDownload the native STACK XML · See the other examples"
+  },
+  {
+    "objectID": "index.html#how-to-use-it-in-your-own-page",
+    "href": "index.html#how-to-use-it-in-your-own-page",
+    "title": "Try a STACK question on a static page",
+    "section": "How to use it in your own page",
+    "text": "How to use it in your own page\nPut the XML in your project, install the extension in _extensions/stack-sympy, add filters: [stack-sympy] to _quarto.yml, and point a code block at one named question:\n```{.stack-question}\n#| file: questions/polynomial-expansion.xml\n#| question: Expand a product (form-sensitive)\n#| variants: 3\n#| seed: 17\n#| review: true\n```\nRender with quarto render, then serve the output over HTTP. The authoring guide explains the XML subset, diagnostics, grading, and the test command. The README has installation and development instructions."
+  },
+  {
+    "objectID": "examples.html",
+    "href": "examples.html",
+    "title": "More worked questions",
+    "section": "",
+    "text": "Press Validate answers to inspect each parsed response, then Check answer to grade it. An edit requires validation again."
+  },
+  {
+    "objectID": "examples.html#equivalent-rational-expression",
+    "href": "examples.html#equivalent-rational-expression",
+    "title": "More worked questions",
+    "section": "Equivalent rational expression",
+    "text": "Equivalent rational expression\nThe prompt states the domain (x-n). A cancelled fraction and the original unreduced expression both receive full credit because the question asks for any equivalent expression on that domain. A reciprocal triggers a targeted feedback branch.\nVariant Variant 1Variant 2Variant 3For \\(x\\neq-4\\), give an expression equivalent to \\(\\dfrac{(x+4)(x+5)}{(x+4)^2}\\). You may simplify it, or give any equivalent expression on this domain.  Validate answersCheck answerRun author tests\nDownload the rational question"
+  },
+  {
+    "objectID": "examples.html#three-numerical-checks",
+    "href": "examples.html#three-numerical-checks",
+    "title": "More worked questions",
+    "section": "Three numerical checks",
+    "text": "Three numerical checks\nThese fields demonstrate absolute tolerance, relative tolerance, and decimal-place precision. The final field distinguishes 17.5 from 17.50, because the written precision is part of the task. Their response trees contribute 30%, 40%, and 30% of the total.\nVariant Variant 1A rectangle is \\(7\\) cm long and \\(5\\) cm wide. A right triangle has those same perpendicular side lengths.Find the rectangle perimeter in cm, within \\(0.25\\) cm.   Find the triangle area in cm², within \\(2\\%\\) of the exact value.   Write the triangle area to exactly two decimal places (include the final zero).   Validate answersCheck answerRun author tests\nDownload the numerical question"
+  },
+  {
+    "objectID": "examples.html#imported-stack-fixture",
+    "href": "examples.html#imported-stack-fixture",
+    "title": "More worked questions",
+    "section": "Imported STACK fixture",
+    "text": "Imported STACK fixture\nThis original Moodle export illustrates the form-sensitive EqualComAss test in an established STACK question. Its qtests are retained in the unmodified XML. The local adapter reports a build-time error when a question relies on an unsupported feature.\nVariant Variant 1Variant 2Simplify the following expression by collecting together like terms:  \\[10x+8y-6x-7y+5.\\]   Validate answersCheck answerRun author tests\nDownload the original XML fixture"
+  },
+  {
+    "objectID": "examples.html#numeric-order-of-operations-from-the-stack-collection",
+    "href": "examples.html#numeric-order-of-operations-from-the-stack-collection",
+    "title": "More worked questions",
+    "section": "Numeric order of operations from the STACK collection",
+    "text": "Numeric order of operations from the STACK collection\nThis unchanged sample tests a numerical answer against a relative tolerance. It is included as a source-import fixture so you can compare our interpreted result to its authored qtest.\nVariant Variant 1Exercise\nEvaluate the expression below\n\\(5 + 2 \\times 8 =\\)   Validate answersCheck answerRun author tests\nDownload BODMAS XML · Read the authoring guide"
+  },
+  {
+    "objectID": "examples.html#original-rounding-question",
+    "href": "examples.html#original-rounding-question",
+    "title": "More worked questions",
+    "section": "Original rounding question",
+    "text": "Original rounding question\nThis unmodified STACK sample has multiple answer fields and checks decimal-place reporting. Its authored test cases are visible in review mode.\nVariant Variant 1Exercise\nWrite down each of these numbers rounded to 3 decimal places: \n\n\\(\\frac{222353}{250000}\\)\n\\(- \\frac{1543}{10000}\\)\n\\(\\frac{847981}{1000000}\\)\n\\(−0.5555,\\)\n\\(45.6789\\)\n\\(\\frac{10001}{5000}\\)\n\nSolution\n\n  \n  \n  \n  \n  \n  \nValidate answersCheck answerRun author tests\nDownload rounding XML"
+  }
+]
