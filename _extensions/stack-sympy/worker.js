@@ -28,18 +28,24 @@ self.onmessage = async function (event) {
     var result = await py.runPythonAsync([
       'import json',
       'from stack_sympy.engine import grade, validate, run_question_tests',
+      'from stack_sympy.importer import UnsupportedQuestion',
       '_request = json.loads(_stack_request)',
-      'if _request["type"] == "grade":',
-      '    _result = grade(_request["question"], _request["answers"], variant=_request["variant"])',
-      'elif _request["type"] == "validate":',
-      '    _result = validate(_request["question"], _request["answers"], variant=_request["variant"])',
-      'elif _request["type"] == "tests":',
-      '    _result = run_question_tests(_request["question"], seeds=[_request["variant"]["seed"]], variants=[_request["variant"]])',
+      'try:',
+      '    if _request["type"] == "grade":',
+      '        _result = grade(_request["question"], _request["answers"], variant=_request["variant"])',
+      '    elif _request["type"] == "validate":',
+      '        _result = validate(_request["question"], _request["answers"], variant=_request["variant"])',
+      '    elif _request["type"] == "tests":',
+      '        _result = run_question_tests(_request["question"], seeds=[_request["variant"]["seed"]], variants=[_request["variant"]])',
+      '    else:',
+      '        raise ValueError("Unknown worker request")',
+      'except UnsupportedQuestion as exc:',
+      '    _response = {"ok": False, "error": str(exc)}',
       'else:',
-      '    raise ValueError("Unknown worker request")',
-      'json.dumps(_result, default=str)'
+      '    _response = {"ok": True, "result": _result}',
+      'json.dumps(_response, default=str)'
     ].join('\n'));
-    self.postMessage({ id: msg.id, ok: true, result: JSON.parse(result) });
+    self.postMessage(Object.assign({ id: msg.id }, JSON.parse(result)));
   } catch (error) {
     self.postMessage({ id: msg.id, ok: false, error: String(error && error.message || error) });
   }

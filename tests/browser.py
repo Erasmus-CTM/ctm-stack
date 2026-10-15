@@ -169,7 +169,7 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
         item["question_name"]: (item, reports[item["id"]])
         for item in manifest["questions"] if reports[item["id"]]["status"] == "qtests_pass"
     }
-    assert {"AlgMap-2.1", "AlgMap-10.1"} <= expected.keys()
+    assert {"AlgMap-2.1", "AlgMap-10.1", "AlgMap-13.1"} <= expected.keys()
 
     site = render_site()
     with serve(site) as url, sync_playwright() as pw:
@@ -218,6 +218,33 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
                                  f"{common}*({k // common}-{coefficient // common}*{variable})",
                                  "correct")
             _check_corpus_answer(factor_card, f"{k}-{coefficient}*{variable}", "retry")
+
+            quadratic_card, env = by_name["AlgMap-13.1"]
+            variable = env["v"]
+            assert variable in {"x", "y", "z", "t"}
+            response = quadratic_card.locator('.stack-answer[data-name="ans"]')
+            response.fill(f"{variable}/({variable}-1)")
+            quadratic_card.locator(".stack-validate").click()
+            quadratic_card.locator('.stack-result[data-state="valid"] .stack-verdict').wait_for(timeout=120000)
+            quadratic_card.locator(".stack-check").click()
+            error_result = quadratic_card.locator('.stack-result[data-state="error"]')
+            error_result.locator("p").wait_for(timeout=120000)
+            error_text = error_result.inner_text()
+            assert "FacForm supports only numeric denominators" in error_text
+            assert all(fragment not in error_text for fragment in ("Traceback", 'File "', "PythonError"))
+
+            # A corrected response recovers on the same card and Worker.
+            first_coefficient, first_constant = int(env["cf1"]), int(env["a"])
+            second_coefficient, second_constant = int(env["cf2"]), int(env["b"])
+            factors = []
+            for coefficient, constant in ((first_coefficient, first_constant),
+                                          (second_coefficient, second_constant)):
+                common = math.gcd(coefficient, constant)
+                factors.append(f"{common}*({coefficient // common}*{variable}{constant // common:+d})")
+            response.fill("*".join(factors))
+            assert quadratic_card.locator(".stack-result").inner_text() == ""
+            assert quadratic_card.locator(".stack-check").is_disabled()
+            _check_corpus_answer(quadratic_card, response.input_value(), "correct")
 
             primes_card, env = by_name["AlgMap-2.1"]
             number = int(env["n"])
