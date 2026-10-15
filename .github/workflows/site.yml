@@ -1,0 +1,44 @@
+name: Test and publish Quarto site
+
+on:
+  push:
+    branches: [main, 'feature/**']
+  pull_request:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stack-sympy-pages
+  cancel-in-progress: false
+
+jobs:
+  site:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.8.27
+      - run: pip install -r requirements-dev.txt
+      - run: python scripts/bundle_runtime.py --check
+      - run: python -m pytest -q tests
+        env:
+          PYTHONPATH: _extensions/stack-sympy
+      - run: python -m playwright install --with-deps chromium
+      - run: python -m pytest -q tests/browser.py
+        env:
+          PYTHONPATH: _extensions/stack-sympy
+      - name: Publish main site and feature previews
+        if: github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          publish_branch: gh-pages
+          destination_dir: ${{ github.ref == 'refs/heads/main' && '.' || format('previews/{0}', github.ref_name) }}
+          keep_files: true

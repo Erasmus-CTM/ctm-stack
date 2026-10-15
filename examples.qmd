@@ -1,0 +1,73 @@
+---
+title: "More worked questions"
+subtitle: "Equivalent expressions and numerical answer tests"
+---
+
+Press **Validate answers** to inspect each parsed response, then **Check answer** to grade it. An edit requires validation again.
+
+## Equivalent rational expression
+
+The prompt states the domain (x\ne -n). A cancelled fraction and the original unreduced expression both receive full credit because the question asks for *any equivalent expression* on that domain. A reciprocal triggers a targeted feedback branch.
+
+```{.stack-question}
+#| file: questions/rational-equivalence.xml
+#| question: Equivalent rational expression
+#| variants: 3
+#| seed: 29
+#| review: true
+```
+
+[Download the rational question](questions/rational-equivalence.xml)
+
+## Three numerical checks
+
+These fields demonstrate absolute tolerance, relative tolerance, and decimal-place precision. The final field distinguishes `17.5` from `17.50`, because the written precision is part of the task. Their response trees contribute 30%, 40%, and 30% of the total.
+
+```{.stack-question}
+#| file: questions/numerical-measurement.xml
+#| question: Rectangle and triangle measurements
+#| seed: 47
+#| review: true
+```
+
+[Download the numerical question](questions/numerical-measurement.xml)
+
+## Imported STACK fixture
+
+This original Moodle export illustrates the form-sensitive `EqualComAss` test in an established STACK question. Its qtests are retained in the unmodified XML. The local adapter reports a build-time error when a question relies on an unsupported feature.
+
+```{.stack-question}
+#| file: questions/upstream/algmap-6-1.xml
+#| question: AlgMap-6.1
+#| variants: 2
+#| seed: 17
+#| review: true
+```
+
+[Download the original XML fixture](questions/upstream/algmap-6-1.xml)
+
+## Numeric order of operations from the STACK collection
+
+This unchanged sample tests a numerical answer against a relative tolerance. It is included as a source-import fixture so you can compare our interpreted result to its authored qtest.
+
+```{.stack-question}
+#| file: questions/upstream/bodmas.xml
+#| question: 1.1.4.T2 BODMAS
+#| seed: 29
+#| review: true
+```
+
+[Download BODMAS XML](questions/upstream/bodmas.xml) · [Read the authoring guide](docs/authoring.qmd)
+
+## Original rounding question
+
+This unmodified STACK sample has multiple answer fields and checks decimal-place reporting. Its authored test cases are visible in review mode.
+
+```{.stack-question}
+#| file: questions/upstream/rounding-three-dp.xml
+#| question: 1.1.3.T1 Rounding to n Decimal Places
+#| seed: 47
+#| review: true
+```
+
+[Download rounding XML](questions/upstream/rounding-three-dp.xml)

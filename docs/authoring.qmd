@@ -1,0 +1,36 @@
+---
+title: "Authoring and support"
+---
+
+## Start with a native export
+
+Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<question type="stack">`. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a `stack-question` block at its XML path and exact `<name><text>…</text></name>`. The filter embeds a selected question and precomputes the requested variants when Quarto renders. The original XML remains the source of truth and can be imported back into Moodle.
+
+```{.stack-question}
+#| file: ../questions/polynomial-expansion.xml
+#| question: Expand a product (form-sensitive)
+#| seed: 17
+#| variants: 3
+#| review: true
+```
+
+The learner submits in two steps: **Validate answers** parses the current fields and displays the exact expression form (for example, `x+x` rather than a simplified `2*x`), then **Check answer** grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading.
+
+The options are `file` and `question` (required), `seed` (signed integer, default 1), `variants` (1–20, default 1), `review` (`true` or `false`, default false), and `diagnostics` (`true` or `false`, default false). A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle's Maxima backend.
+
+## What the adapter checks
+
+| Supported here | Scope |
+|---|---|
+| Source | Moodle STACK XML `<quiz>` with named STACK questions; category and description entries are skipped. |
+| Inputs | Scalar algebraic and numerical text answers, with strict syntax and the implemented input flags. |
+| Variables | A small, safely parsed Maxima-like assignment and arithmetic subset, including `rand(n)` for seeded variants. |
+| Tests | `AlgEquiv`, `EqualComAss`, `NumAbsolute`, `NumRelative`, `NumDecPlaces`; blank absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist. |
+| PRTs | Acyclic node graphs with `=`, `+`, and `−` score operations, weighted response trees, branch feedback and notes. |
+| Author tests | Native `<qtest>` inputs and expected PRT score, penalty, and answer note. |
+
+This is a deliberately limited evaluator, not a replacement for Moodle STACK or its Maxima CAS. `questionsimplify=0` is accepted when any `EqualComAss` teacher form can be preserved after freezing author variables; otherwise the build rejects it. `EqualComAss` requires a direct input name in `sans` to preserve the student’s written form. Build-time validation rejects unsupported author features rather than silently grading them differently. Symbolic equivalence uses SymPy transformations rather than randomized substitution. Decimal-place grading reads the literal answer so a trailing zero is meaningful. The review interface and qtests help an author inspect parity, but they do not establish complete parity with all STACK configurations.
+
+## Validate and publish
+
+For an extension-only installation, install `sympy==1.13.3` in the Python environment used by Quarto. Run `python -m stack_sympy.cli test --file questions/polynomial-expansion.xml` after placing `_extensions/stack-sympy` on `PYTHONPATH`, then render with `quarto render`. Serve the `_site` directory through an HTTP server, including locally: `python -m http.server --directory _site 8000`. Browser grading loads Pyodide and SymPy; its first use downloads runtime packages, so it needs network access. Review the generated question and run its qtests before publishing any assessment. If a source uses features outside the supported subset, `#| diagnostics: true` displays the location of a build error in the page during authoring; remove it for production so unsupported questions fail the render.

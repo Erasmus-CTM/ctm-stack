@@ -1,0 +1,11 @@
+_site/
+.quarto/
+.pytest_cache/
+__pycache__/
+*.py[cod]
+.venv/
+playwright-report/
+test-results/
+
+/.quarto/
+**/*.quarto_ipynb

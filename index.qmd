@@ -1,0 +1,36 @@
+---
+title: "Try a STACK question on a static page"
+subtitle: "Native question exports, evaluated with SymPy in your browser"
+---
+
+STACK SymPy reads an ordinary Moodle STACK XML export at build time. The Quarto page contains an interactive question card; a browser worker uses the same bounded Python question model to check each response. No Moodle session is needed to try these examples. The review buttons here show the authored question tests and their expected PRT outcomes.
+
+## Expand and collect
+
+This question rewards an expanded polynomial. A mathematically equivalent factored answer earns partial credit, with feedback explaining which form was requested. Press **Validate answers** to inspect the parsed answer, then **Check answer** to grade it. Editing an answer requires validation again. Change the variant to see fresh coefficients.
+
+```{.stack-question}
+#| file: questions/polynomial-expansion.xml
+#| question: Expand a product (form-sensitive)
+#| variants: 3
+#| seed: 17
+#| review: true
+```
+
+[Download the native STACK XML](questions/polynomial-expansion.xml) · [See the other examples](examples.qmd)
+
+## How to use it in your own page
+
+Put the XML in your project, install the extension in `_extensions/stack-sympy`, add `filters: [stack-sympy]` to `_quarto.yml`, and point a code block at one named question:
+
+````text
+```{.stack-question}
+#| file: questions/polynomial-expansion.xml
+#| question: Expand a product (form-sensitive)
+#| variants: 3
+#| seed: 17
+#| review: true
+```
+````
+
+Render with `quarto render`, then serve the output over HTTP. The [authoring guide](docs/authoring.qmd) explains the XML subset, diagnostics, grading, and the test command. The [README](https://github.com/Erasmus-CTM/stack-sympy#readme) has installation and development instructions.

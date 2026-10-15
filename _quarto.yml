@@ -1,0 +1,32 @@
+project:
+  type: website
+  output-dir: _site
+  resources:
+    - questions/**
+
+website:
+  title: "STACK SymPy"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Try it
+      - href: examples.qmd
+        text: More examples
+      - href: docs/authoring.qmd
+        text: Authoring guide
+    right:
+      - icon: github
+        href: https://github.com/Erasmus-CTM/stack-sympy
+        aria-label: Source repository
+  page-footer:
+    left: "STACK SymPy · a bounded, inspectable STACK subset for static Quarto pages"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    html-math-method: mathjax
+    code-copy: true
+
+filters:
+  - stack-sympy
