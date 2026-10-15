@@ -95,11 +95,16 @@ class NativeMaximaTests(unittest.TestCase):
         marker = f"STACKNATIVE|{row['id']}|[true,true,\"\"]\n"
         valid = "STACKNATIVE-BEGIN|1|1\n" + marker + "STACKNATIVE-END|1|1\n"
         self.assertEqual(native.parse_output(valid, [row], 1)[0]["correct"], True)
+        echoed = ("print(\"STACKNATIVE-BEGIN|1|1\")\n"
+                  f'block([simp:true],print(sconcat("STACKNATIVE|{row["id"]}|", "[true,true,\\\"\\\"]")))$\n'
+                  '(%i9) print("STACKNATIVE-END|1|1")$\n')
+        self.assertEqual(native.parse_output(echoed + valid, [row], 1)[0]["correct"], True)
         for bad in (valid.replace("STACKNATIVE-END|1|1\n", ""),
                     valid.replace(marker, marker + marker),
                     valid.replace("[true,true,\"\"]", "[1,true,\"\"]"),
                     valid.replace("[true,true,\"\"]", "{broken}"),
                     valid + "STACKNATIVE|bad marker\n",
+                    valid + "STACKNATIVE-BEGIN|1|oops\n",
                     valid.replace("BEGIN|1|1", "BEGIN|1|2")):
             with self.subTest(bad=bad[-80:]), self.assertRaises(native.NativeProtocolError):
                 native.parse_output(bad, [row], 1)

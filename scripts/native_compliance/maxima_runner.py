@@ -217,7 +217,10 @@ def parse_output(output: str, cases: list[dict], batch_number: int) -> list[dict
                 raise NativeProtocolError(f"Invalid AT value for {case_id}: {result!r}")
             observations[case_id] = observation
             continue
-        if "STACKNATIVE" in line:
+        # --batch echoes input commands such as print("STACKNATIVE-BEGIN|...").
+        # Only an output line beginning with our marker prefix is a malformed
+        # marker; all other source echoes and Maxima diagnostics are noise.
+        if line.lstrip().startswith(("STACKNATIVE|", "STACKNATIVE-BEGIN|", "STACKNATIVE-END|")):
             raise NativeProtocolError(f"Malformed native marker: {line[:300]}")
     if beginnings != 1 or endings != 1 or observations.keys() != expected:
         missing = sorted(expected - observations.keys())
