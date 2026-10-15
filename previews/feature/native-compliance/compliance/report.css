@@ -1,0 +1,27 @@
+.report-provenance,.report-runners,.report-summary { margin: 1.2rem 0; }
+.report-provenance { background: #f1f5f9; border-left: .25rem solid #27669b; padding: 1rem; overflow-wrap: anywhere; }
+.report-summary { display: grid; grid-template-columns: repeat(auto-fit,minmax(16rem,1fr)); gap: 1rem; }
+.report-summary section { border: 1px solid #cbd5e1; border-radius: .4rem; padding: 1rem; }
+.report-summary h3 { margin-top: 0; }
+.report-summary dl { display: grid; grid-template-columns: 1fr auto; gap: .35rem .75rem; margin-bottom: 0; }
+.report-summary dd { margin: 0; font-variant-numeric: tabular-nums; }
+.report-runners details { margin: .35rem 0; }
+.report-controls { display: grid; grid-template-columns: repeat(auto-fit,minmax(13rem,1fr)); gap: .75rem; margin-block: 1rem; }
+.report-controls label { display: grid; gap: .2rem; font-weight: 600; }
+.report-controls input,.report-controls select { width: 100%; padding: .35rem; }
+.case-list { display: grid; gap: .55rem; }
+.case { border: 1px solid #cbd5e1; border-radius: .4rem; padding: .5rem .8rem; }
+.case summary { cursor: pointer; display: flex; flex-wrap: wrap; gap: .35rem .65rem; align-items: center; }
+.case summary .case-test { font-weight: 700; min-width: 7rem; }
+.case pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f8fafc; padding: .75rem; }
+.case .case-detail { display: grid; grid-template-columns: repeat(auto-fit,minmax(17rem,1fr)); gap: 1rem; padding: .5rem 0; }
+.case-detail section { min-width: 0; }
+.case-detail h4 { margin-bottom: .35rem; }
+.badge { border-radius: 1rem; padding: .13rem .55rem; background: #e2e8f0; font-size: .83rem; }
+.badge[data-status="pass"],.badge[data-status="match"],.badge[data-status="match_controlled_error"],.badge[data-status="matches_desired"] { background: #d8eddb; color: #155424; }
+.badge[data-status="mismatch"],.badge[data-status="unexpected"],.badge[data-status="error"] { background: #fbd5d5; color: #7a1e1e; }
+.badge[data-status="failed"] { background: #fbd5d5; color: #7a1e1e; font-weight: 700; }
+.badge[data-status="known_defect"],.badge[data-status="known_port_defect"],.badge[data-status="known_port_limitation"],.badge[data-status="approved_difference"] { background: #fff0be; color: #65490a; }
+.badge[data-status="known_native_mathematical_failure"] { background: #fff0be; color: #65490a; }
+.badge[data-status="upstream_negative_sentinel_difference"] { background: #e2e8f0; color: #334155; }
+#show-more { margin: 1rem 0; }
