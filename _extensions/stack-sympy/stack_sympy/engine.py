@@ -128,6 +128,15 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                 where = f"prt[{prt['name']}]/node[{node['name']}]"
                 evaluate(node["student"], {**env, **{n: sp.Symbol(n) for n in inputmap}}, assumptions=assumptions)
                 evaluate(node["teacher"], env, assumptions=assumptions)
+                if node["test"] == "FacForm":
+                    if not node["options"]:
+                        raise UnsupportedQuestion(name, where + "/testoptions", "FacForm requires a polynomial variable option")
+                    try:
+                        option_value = evaluate(node["options"], env, assumptions=assumptions)
+                    except (InvalidAnswer, Unsupported, TypeError, ValueError, ZeroDivisionError) as exc:
+                        raise UnsupportedQuestion(name, where + "/testoptions", f"invalid FacForm variable option: {exc}") from exc
+                    if not isinstance(option_value, sp.Symbol):
+                        raise UnsupportedQuestion(name, where + "/testoptions", "FacForm requires a single polynomial variable")
                 if node["test"] in {"NumAbsolute", "NumRelative", "NumDecPlaces"}:
                     if node["test"] == "NumDecPlaces" and not node["options"]:
                         raise UnsupportedQuestion(name, where + "/testoptions", "NumDecPlaces requires options")

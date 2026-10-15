@@ -61,6 +61,23 @@ class ImporterTests(unittest.TestCase):
         with self.assertRaisesRegex(UnsupportedQuestion, "loses unsimplified answer form"):
             instantiate(import_xml(xml)[0], 17)
 
+    def test_facform_requires_direct_input_and_variable_option(self):
+        path = ROOT / "questions/corpus/AlgMap-10-1.xml"
+        xml = path.read_text().replace("<sans>ans</sans>", "<sans>ans+0</sans>", 1)
+        with self.assertRaisesRegex(UnsupportedQuestion, r"node\[0\]/sans: FacForm requires a direct input"):
+            import_xml(xml)
+        question = import_xml(path)[0]
+        node = question["prts"][0]["nodes"][0]
+        self.assertEqual(node["options"], "v")
+        instantiate(question, question["deployedseeds"][0])
+        for option, reason in (("", "FacForm requires a polynomial variable option"),
+                               ("1", "FacForm requires a single polynomial variable"),
+                               ("x+", "invalid FacForm variable option")):
+            with self.subTest(option=option), self.assertRaisesRegex(
+                    UnsupportedQuestion, rf"node\[0\]/testoptions: {reason}"):
+                node["options"] = option
+                instantiate(question, question["deployedseeds"][0])
+
     def test_reject_forward_assignment_and_nonfinite_scoring(self):
         path = ROOT / "questions/upstream/algmap-6-1.xml"
         xml = path.read_text().replace("a:rand(9)+2;", "a:b+1;")

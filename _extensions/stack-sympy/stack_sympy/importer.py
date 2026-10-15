@@ -161,10 +161,10 @@ def _question(element):
     for prt in prts:
         for node in prt["nodes"]:
             _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans", bool(node["student"]), "empty student expression")
-            if node["test"] == "EqualComAss":
+            if node["test"] in {"EqualComAss", "FacForm"}:
                 _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans",
                        node["student"] in {inp["name"] for inp in inputs},
-                       "EqualComAss requires a direct input to preserve answer form")
+                       f"{node['test']} requires a direct input to preserve answer form")
     qtests = []
     for test in element.findall("qtest"):
         qtests.append({"testcase": _text(test, "testcase"),

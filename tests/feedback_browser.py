@@ -42,7 +42,10 @@ def test_feedback_copy_prompt_and_context_modes():
         card.locator(".stack-answer").first.fill("x**2+8x+15")
         first = prompt_data(card)
         assert "[Answer " in first["task"]
-        assert re.search(r"\\\(\(x\+\d+\)\(x\+\d+\)\\\)", first["task"])
+        # Numeric TeX groups such as {5} preserve CAS expression boundaries.
+        # Strip only those groups before checking the frozen product structure.
+        task_without_numeric_groups = re.sub(r"\{(\d+)\}", r"\1", first["task"])
+        assert re.search(r"\\\(\(x\+\d+\)\(x\+\d+\)\\\)", task_without_numeric_groups)
         assert "{@" not in first["task"]  # Frozen coefficients, not author CAS text.
         assert "<quiz>" not in json.dumps(first)
         assert "questionvariables" not in json.dumps(first)
