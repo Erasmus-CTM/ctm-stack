@@ -12,13 +12,16 @@ Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<quest
 #| seed: 17
 #| variants: 3
 #| review: true
+#| feedback: true
 ```
 
 The learner submits in two steps: **Validate answers** parses the current fields and displays the expression form (for example, `x+x` rather than a simplified `2*x`), then **Check answer** grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading. The polynomial example sets `<insertstars>1</insertstars>`, so `x**2+8x+15` previews as one sum and receives full credit in its first variant.
 
 Below a rendered question, **Show source** reveals its authored Quarto fenced block and **Show STACK source** reveals the original XML file contents. Both panels start closed; they are available for inspecting and copying a working example.
 
-The options are `file` and `question` (required), `seed` (signed integer, default 1), `variants` (1–20, default 1), `review` (`true` or `false`, default false), and `diagnostics` (`true` or `false`, default false). A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle's Maxima backend.
+The options are `file` and `question` (required), `seed` (signed integer, default 1), `variants` (1–20, default 1), `review` (`true` or `false`, default false), and `diagnostics` (`true` or `false`, default false). `feedback: true` opts a card into the [shared AI Feedback extension](https://github.com/Erasmus-CTM/ai-feedback); cards without it need no AI dependency. Install both extensions in the same project. `context: auto` (default) uses nearby visible prose; `context: none` omits it; `context: id1,id2` includes tagged blocks such as `::: {#id1 .ai-context}` (`.ai-feedback-context` and `.math-exercise-context` are shared aliases). `feedback-language` sets the explanation language (default document `lang`). `feedback-policy` selects an existing named policy from `ai-feedback.policy-files` or page policy files. A stable `label` targets exercise-specific policy settings; otherwise the card ID is used. The shared mathematics policy (`math-exercise`) supplies the default hints and is also the YAML integration namespace for STACK cards. A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle's Maxima backend.
+
+Feedback uses a learner's current answer, visible question text and selected context. A preceding matching **Check answer** can contribute minimal result status, finite score; XML, source panels, teacher answers, qtests, grader configuration, grader feedback messages and answer notes are excluded. It never grades a response or replaces **Validate answers** and **Check answer**. The shared settings panel lets a learner choose copy-prompt mode or configure their own compatible provider; no API key is placed in the page. The same [nested YAML policy layers](https://github.com/Erasmus-CTM/ai-feedback/blob/main/docs/feedback-policies.md) are inherited across integrations, using `math-exercise` for STACK's mathematics policy namespace.
 
 ## What the adapter checks
 

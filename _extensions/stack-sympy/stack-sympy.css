@@ -42,6 +42,20 @@
   cursor: pointer;
 }
 .stack-sympy button.stack-tests { color: var(--stack-accent); background: white; }
+.stack-sympy button.ai-feedback-gear {
+  color: var(--stack-accent);
+  background: transparent;
+  border-color: transparent;
+  font-size: 1.2rem;
+  padding-inline: .55rem;
+}
+.stack-sympy > .ai-feedback-output:not(:empty) {
+  margin-top: .8rem;
+  padding: .8rem .9rem;
+  border: 1px solid var(--stack-line);
+  border-radius: .35rem;
+  background: #f0f5f7;
+}
 .stack-sympy button:hover { filter: brightness(.91); }
 .stack-sympy button:disabled { opacity: .55; cursor: progress; }
 .stack-sympy .stack-result:not(:empty) {

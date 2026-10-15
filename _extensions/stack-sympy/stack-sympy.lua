@@ -1,6 +1,9 @@
 -- Quarto HTML filter for trusted, authored STACK question XML.
 local installed = false
 local sequence = 0
+local feedbackRequested = false
+local feedback = nil
+local documentLanguage = 'en'
 
 local function fail(message)
   -- Quarto logs exceptions from block handlers yet can still return success.
@@ -38,7 +41,9 @@ local function authoredSource(block)
     if class ~= 'stack-question' then table.insert(attributes, '.' .. class) end
   end
   for key, value in pairs(block.attributes) do
-    table.insert(attributes, key .. '="' .. value:gsub('\\', '\\\\'):gsub('"', '\\"') .. '"')
+    if not key:match('^data%-ai%-feedback%-') then
+      table.insert(attributes, key .. '="' .. value:gsub('\\', '\\\\'):gsub('"', '\\"') .. '"')
+    end
   end
   return fence .. '{' .. table.concat(attributes, ' ') .. '}\n' .. block.text .. '\n' .. fence
 end
@@ -52,7 +57,7 @@ local function setup()
   if installed then return end
   installed = true
   quarto.doc.add_html_dependency({
-    name = 'stack-sympy', version = '0.1.3',
+    name = 'stack-sympy', version = '0.1.4',
     scripts = {{path = 'stack-sympy.js', afterBody = true}},
     stylesheets = {'stack-sympy.css'},
     resources = {
@@ -101,6 +106,7 @@ local function render(block)
   local seed = integerOption(opts, 'seed', 1, -2147483648, 2147483647)
   local review = booleanOption(opts, 'review')
   local diagnostics = booleanOption(opts, 'diagnostics')
+  local useFeedback = booleanOption(opts, 'feedback')
   sequence = sequence + 1
   local identifier = block.identifier ~= '' and block.identifier or ('stack-sympy-' .. sequence)
   local extensionPath = pathFromFilter()
@@ -136,13 +142,65 @@ local function render(block)
   if output:find('class="stack-sympy stack-diagnostic"', 1, true) then
     return pandoc.RawBlock('html', output)
   end
+  if useFeedback then
+    local selectionOpts = {['feedback-policy'] = opts['feedback-policy'],
+      label = opts.label and opts.label ~= '' and opts.label or identifier}
+    local explanationLanguage = opts['feedback-language']
+    if explanationLanguage == nil or explanationLanguage == '' then explanationLanguage = documentLanguage end
+    local data = {
+      context = feedback.context(block, opts, false),
+      policySelection = feedback.selection(block, selectionOpts),
+      language = explanationLanguage,
+      uiLanguage = documentLanguage
+    }
+    local attr = ' data-stack-feedback="' .. escape(quarto.json.encode(data)) .. '"'
+    local changed
+    output, changed = output:gsub('(<section class="stack%-sympy"[^>]*)(>)', function(prefix, closing)
+      return prefix .. attr .. closing
+    end, 1)
+    if changed ~= 1 then fail('stack-sympy: could not add feedback to question card') end
+  end
   local source = authoredSource(block)
   local xml = readFile(inputPath)
-  return pandoc.RawBlock('html', '<div class="stack-question-group">' .. output ..
+  -- The shared explicit-context resolver skips this generated group. It must
+  -- never collect source-panel XML or grading internals from a tagged parent.
+  return pandoc.RawBlock('html', '<div class="stack-question-group ai-feedback-ignore">' .. output ..
     '<div class="stack-source-panels">' ..
     sourcePanel('Show source', 'markdown', source) ..
     sourcePanel('Show STACK source', 'xml', xml) ..
     '</div></div>')
 end
 
-return { { CodeBlock = render } }
+local function detect(doc)
+  feedbackRequested = false
+  doc:walk({CodeBlock = function(b)
+    if b.classes:includes('stack-question') then
+      local opts = options(b.text)
+      if booleanOption(opts, 'feedback') then feedbackRequested = true end
+    end
+  end})
+  if feedbackRequested then
+    feedback = feedback or dofile(quarto.utils.resolve_path('feedback-loader.lua'))()
+  end
+  return doc
+end
+
+local function transform(doc)
+  if feedbackRequested then
+    feedback = feedback or dofile(quarto.utils.resolve_path('feedback-loader.lua'))()
+    -- This is idempotent when the explicit ai-feedback filter already ran.
+    doc = feedback.prepare(doc)
+  end
+  documentLanguage = doc.meta.lang and pandoc.utils.stringify(doc.meta.lang) or 'en'
+  doc.blocks = doc.blocks:walk({CodeBlock = render})
+  return doc
+end
+
+return {
+  {Pandoc = detect},
+  {Callout = function(c)
+    if feedbackRequested then return feedback.markCallout(c) end
+    return c
+  end},
+  {Pandoc = transform}
+}

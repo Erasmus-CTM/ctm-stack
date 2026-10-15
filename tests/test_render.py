@@ -3,14 +3,17 @@ from __future__ import annotations
 
 from functools import cache
 import html
+import json
 import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
 import tempfile
 
 
 ROOT = Path(__file__).resolve().parents[1]
+QUESTION = ROOT / "questions/polynomial-expansion.xml"
 
 
 @cache
@@ -84,3 +87,101 @@ def test_unsupported_question_stops_quarto_build():
         assert result.returncode != 0, "unsupported XML silently rendered"
         assert "could not render missing.xml / Missing" in result.stdout + result.stderr, (
             result.stdout + "\n" + result.stderr)
+
+
+def _fixture_render(source: str, *, shared: str | None = None,
+                    filters: tuple[str, ...] = ("stack-sympy",),
+                    files: dict[str, str] | None = None) -> tuple[subprocess.CompletedProcess, str]:
+    with tempfile.TemporaryDirectory(dir=ROOT.parent, prefix="stack_feedback_render_") as temporary:
+        project = Path(temporary)
+        ext = project / "_extensions"
+        ext.mkdir()
+        shutil.copytree(ROOT / "_extensions/stack-sympy", ext / "stack-sympy")
+        if shared:
+            installed = ROOT / "_extensions/ai-feedback"
+            assert installed.exists(), "install the shared AI Feedback extension before testing enabled cards"
+            target = ext / "ai-feedback" if shared == "flat" else ext / "Erasmus-CTM/ai-feedback"
+            target.parent.mkdir(exist_ok=True)
+            shutil.copytree(installed, target)
+        (project / "_quarto.yml").write_text(
+            "project:\n  type: default\nfilters:\n" + "".join(f"  - {name}\n" for name in filters))
+        (project / "test.qmd").write_text(source)
+        for name, content in (files or {}).items():
+            destination = project / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(content)
+        env = os.environ.copy()
+        env["PYTHONPATH"] = os.pathsep.join(filter(None, [str(ROOT / "_extensions/stack-sympy"), env.get("PYTHONPATH", "")]))
+        result = subprocess.run([os.environ.get("QUARTO", "quarto"), "render"], cwd=project,
+                                env=env, text=True, capture_output=True, timeout=90)
+        output = (project / "test.html").read_text() if (project / "test.html").exists() else ""
+        return result, output
+
+
+def _card(feedback: str = "", extra: str = "") -> str:
+    return ("```{.stack-question}\n"
+            f"#| file: {QUESTION}\n"
+            "#| question: Expand a product (form-sensitive)\n"
+            f"{feedback}{extra}```\n")
+
+
+def _feedback_cards(output: str) -> list[dict]:
+    return [json.loads(html.unescape(encoded)) for encoded in
+            re.findall(r'data-stack-feedback="([^"]+)"', output)]
+
+
+def test_feedback_is_optional_and_missing_dependency_errors_only_when_enabled():
+    result, output = _fixture_render("# Question\n\n" + _card())
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "data-stack-feedback" not in output
+    assert "feedback-core.js" not in output
+    result, _ = _fixture_render("# Question\n\n" + _card("#| feedback: true\n"))
+    assert result.returncode != 0
+    assert "Run: quarto add Erasmus-CTM/ai-feedback" in result.stdout + result.stderr
+
+
+def test_shared_feedback_context_and_policy_are_emitted_once_per_page():
+    source = ("---\nlang: de\n---\n"
+              "# Exercise\n\nImplicit lesson context before the card.\n\n"
+              "::: {.callout-note .ai-feedback-ignore}\nConfidential example answer in hidden callout.\n:::\n\n"
+              + _card("#| feedback: true\n", "#| feedback-language: es\n")
+              + "\n::: {#explanation .ai-context}\nUse $x^2$ in this explicit context.\n:::\n\n"
+              + _card("#| feedback: true\n", "#| context: explanation\n#| label: policy-key\n")
+              + "\n" + _card("#| feedback: true\n", "#| context: none\n"))
+    for location, filters in (("flat", ("stack-sympy",)),
+                              ("namespaced", ("stack-sympy", "ai-feedback")),
+                              ("flat", ("ai-feedback", "stack-sympy"))):
+        result, output = _fixture_render(source, shared=location, filters=filters)
+        assert result.returncode == 0, result.stdout + result.stderr
+        cards = _feedback_cards(output)
+        assert len(cards) == 3
+        assert output.count('feedback-core.js') == 1
+        assert cards[0]["context"]["mode"] == "auto"
+        assert "Implicit lesson context" in cards[0]["context"]["text"]
+        assert "Confidential example answer" not in cards[0]["context"]["text"]
+        assert cards[0]["language"] == "es"
+        assert cards[0]["uiLanguage"] == "de"
+        assert cards[1]["context"]["mode"] == "explicit"
+        assert cards[1]["context"]["refs"] == "explanation"
+        assert cards[1]["policySelection"]["exercise"] == "policy-key"
+        assert cards[2]["context"]["mode"] == "none"
+        assert "ai-feedback-ignore" in output
+        assert "data-ai-feedback-context=&quot;" not in output
+        assert "data-stack-feedback&quot;" not in output  # source panes are authored only
+
+
+def test_named_policy_uses_shared_yaml_selection():
+    source = ("---\nai-feedback:\n  page-policy-files: feedback/chapter.yml\n---\n"
+              + _card("#| feedback: true\n", "#| label: expansion-practice\n#| feedback-policy: short-hints\n"))
+    policy = ("ai-feedback:\n  integrations:\n    math-exercise:\n"
+              "      max-words: 120\n  policies:\n    short-hints:\n"
+              "      prompt: Ask for the next step.\n")
+    result, output = _fixture_render(source, shared="flat", files={"feedback/chapter.yml": policy})
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert _feedback_cards(output)[0]["policySelection"] == {
+        "exercise": "expansion-practice", "name": "short-hints"}
+    assert "short-hints" in output  # shared policy payload is emitted on the page
+    result, _ = _fixture_render(source.replace("short-hints", "missing"), shared="flat",
+                                files={"feedback/chapter.yml": policy})
+    assert result.returncode != 0
+    assert "unknown feedback-policy missing" in result.stdout + result.stderr

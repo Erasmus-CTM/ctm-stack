@@ -235,6 +235,24 @@
     output.appendChild(list);
   }
 
+  // The frozen question HTML is the learner's task. The card itself also
+  // contains authored tests and the original XML in source panels.
+  function feedbackTask(variant) {
+    var template = document.createElement('template');
+    template.innerHTML = variant.question_html;
+    template.content.querySelectorAll('.stack-answer[data-name]').forEach(function (input) {
+      input.replaceWith(document.createTextNode('[Answer ' + input.dataset.name + ']'));
+    });
+    template.content.querySelectorAll('.stack-validation, .stack-feedback').forEach(function (item) { item.remove(); });
+    return window.AIFeedback.contextText(template.content);
+  }
+
+  function safeCheckEvidence(result) {
+    var summary = { status: result.status === 'graded' ? 'graded' : 'invalid' };
+    if (typeof result.score === 'number' && Number.isFinite(result.score)) summary.score = result.score;
+    return [{ label: 'Previous check assessment', text: JSON.stringify(summary) }];
+  }
+
   function initialize(card) {
     var data = card.querySelector('script.stack-sympy-data');
     if (!data) return;
@@ -247,6 +265,8 @@
     var selector = card.querySelector('.stack-variant');
     var version = 0;
     var validatedSnapshot = null;
+    var checkedEvidence = null;
+    var feedbackHandle = null;
     var check = card.querySelector('.stack-check');
     var validate = card.querySelector('.stack-validate');
     if (check) check.disabled = true;
@@ -259,9 +279,70 @@
       var index = selector ? Number(selector.value) : 0;
       return payload.variants[index] || payload.variants[0];
     };
+    function responseIdentity() {
+      return JSON.stringify([version, selector ? selector.value : '0', readAnswers()]);
+    }
+    if (card.hasAttribute('data-stack-feedback')) {
+      var config;
+      try { config = JSON.parse(card.dataset.stackFeedback); }
+      catch (error) { config = {}; }
+      var actions = card.querySelector('.stack-actions');
+      var uiCode = String(config.uiLanguage || document.documentElement.lang || 'en').split('-')[0];
+      if (uiCode === 'no') uiCode = 'nb';
+      var feedbackButton = node('button', 'stack-feedback-button ai-feedback-button',
+        window.AIFeedback && window.AIFeedback.locales && window.AIFeedback.locales[uiCode]
+          ? window.AIFeedback.locales[uiCode].button : 'Feedback');
+      feedbackButton.type = 'button';
+      var feedbackOutput = node('div', 'ai-feedback-output');
+      feedbackOutput.setAttribute('aria-live', 'polite');
+      if (actions) {
+        actions.appendChild(feedbackButton);
+        actions.after(feedbackOutput);
+      } else card.append(feedbackButton, feedbackOutput);
+      var F = window.AIFeedback;
+      var versionParts = F && String(F.version || '').split('.').map(Number);
+      if (!F || !F.attach || !F.contextText || !F.contextMaterials || !F.settingsButton ||
+          !versionParts || versionParts[0] < 1 && versionParts[1] < 6) {
+        feedbackButton.addEventListener('click', function () {
+          feedbackOutput.textContent = 'AI feedback requires ai-feedback 0.6.0 or later. Install or update the shared extension and render this page again. Native checking is still available.';
+        });
+      } else {
+        var gear = F.settingsButton(config.uiLanguage);
+        if (actions) actions.appendChild(gear); else feedbackButton.after(gear);
+        feedbackHandle = F.attach({
+          id: 'stack-' + card.dataset.stackId,
+          integration: 'math-exercise',
+          policySelection: config.policySelection || {},
+          uiLanguage: config.uiLanguage,
+          button: feedbackButton,
+          output: feedbackOutput,
+          getRequest: function () {
+            var answers = readAnswers();
+            var names = Object.keys(answers);
+            if (!names.some(function (name) { return answers[name].trim(); })) {
+              throw new Error('Enter an answer before requesting feedback.');
+            }
+            var identity = responseIdentity();
+            return {
+              _responseIdentity: identity,
+              profile: 'mathematics',
+              task: feedbackTask(variantAt()),
+              responses: names.map(function (name) {
+                return { id: name, label: name, value: answers[name], format: 'text' };
+              }),
+              materials: F.contextMaterials(config.context || {}),
+              evidence: checkedEvidence && checkedEvidence.identity === identity ? checkedEvidence.summary : [],
+              feedback: { language: config.language || config.uiLanguage || document.documentElement.lang || 'en' }
+            };
+          }
+        });
+      }
+    }
     function clear() {
       version++;
       validatedSnapshot = null;
+      checkedEvidence = null;
+      if (feedbackHandle) feedbackHandle.reset();
       if (check) check.disabled = true;
       card.querySelectorAll('.stack-answer[data-name]').forEach(function (item) {
         item.value = '';
@@ -292,6 +373,8 @@
       if (event.target.matches('.stack-answer[data-name]')) {
         version++;
         validatedSnapshot = null;
+        checkedEvidence = null;
+        if (feedbackHandle) feedbackHandle.cancel({ clearOutput: true });
         if (check) check.disabled = true;
         event.target.removeAttribute('aria-invalid');
         var output = card.querySelector('.stack-result');
@@ -307,6 +390,10 @@
     });
     async function act(type, button) {
       var resultBox = card.querySelector('.stack-result');
+      if (type === 'grade') {
+        checkedEvidence = null;
+        if (feedbackHandle) feedbackHandle.reset('run');
+      }
       var generation = version;
       var variant = variantAt();
       var answers = readAnswers();
@@ -322,7 +409,10 @@
       try {
         var result = await evaluate({ type: type, question: payload.question, variant: variant, answers: answers });
         if (generation !== version || JSON.stringify(readAnswers()) !== snapshot) return;
-        if (type === 'grade') showGrade(card, result);
+        if (type === 'grade') {
+          showGrade(card, result);
+          checkedEvidence = { identity: responseIdentity(), summary: safeCheckEvidence(result) };
+        }
         else if (type === 'validate') {
           showValidation(card, result);
           validatedSnapshot = result.status === 'valid' ? snapshot : null;

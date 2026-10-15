@@ -17,12 +17,13 @@ The three new questions in [`questions/`](questions/) are ordinary Moodle `<quiz
 
 ## Install in a Quarto project
 
-Install the extension with `quarto add Erasmus-CTM/stack-sympy`, or copy this repository's `_extensions/stack-sympy` folder into your project. In a project installed via `quarto add`, also run `python -m pip install 'sympy==1.13.3'` in the Python environment Quarto uses; that project does not receive this repository's requirements file. Build-time rendering uses Python 3.11+ and Quarto 1.4+. For a local checkout:
+Install the extension with `quarto add Erasmus-CTM/stack-sympy`, or copy this repository's `_extensions/stack-sympy` folder into your project. To use `#| feedback: true`, also install the independently maintained [AI Feedback extension](https://github.com/Erasmus-CTM/ai-feedback) once in the same project with `quarto add Erasmus-CTM/ai-feedback` (version 0.6.0 or newer). Questions without feedback do not require it. In a project installed via `quarto add`, also run `python -m pip install 'sympy==1.13.3'` in the Python environment Quarto uses; that project does not receive this repository's requirements file. Build-time rendering uses Python 3.11+ and Quarto 1.4+. For a local checkout of this example site, install both extensions before rendering:
 
 ```sh
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -r requirements.txt
+quarto add Erasmus-CTM/ai-feedback
 quarto render
 python -m http.server --directory _site 8000
 ```
@@ -45,6 +46,7 @@ In a `.qmd` file, use the exact XML question name:
 #| variants: 3
 #| seed: 17
 #| review: true
+#| feedback: true
 ```
 ````
 
@@ -53,6 +55,31 @@ A learner enters answers, presses **Validate answers** to inspect how each expre
 Each rendered question also has closed **Show source** and **Show STACK source** panels below it. They show the authored Quarto fenced block and the original XML file, respectively, for inspection or copying. Opening either panel does not affect the question or its grading.
 
 `file` and `question` are required. `variants` is 1–20 (default 1); `seed` is a signed integer (default 1). `review: true` exposes the authored qtests for inspection. `diagnostics: true` displays build errors in the rendered page during authoring. Remove diagnostics for publishing, so unsupported content fails the build. A seed produces repeatable variants in this adapter, but is **not** expected to match Maxima's random sequence for the same seed.
+
+## AI feedback and context
+
+`feedback: true` enables optional AI hints for a card (default false). The shared `math-exercise` policy supplies the hint sequence and is the YAML integration namespace for STACK. `context: auto` is the default; `context: id1,id2` references tagged blocks; `context: none` omits context. `feedback-language` chooses the explanation language, defaulting to document `lang`. `feedback-policy` selects an existing named policy. Use `label` for a stable exercise key in policy YAML; otherwise the card ID is used.
+
+Automatic context comes from visible prose in the preceding section. To share a specific concept, tag it and reference its ID instead:
+
+````markdown
+::: {#expansion-hint .ai-context}
+Distributivity gives $a(b+c)=ab+ac$.
+:::
+
+```{.stack-question}
+#| file: questions/polynomial-expansion.xml
+#| question: Expand a product (form-sensitive)
+#| feedback: true
+#| context: expansion-hint
+```
+````
+
+`context: none` turns context off for that card. `.ai-feedback-context` and legacy `.math-exercise-context` are aliases of `.ai-context`. The [live examples](https://erasmus-ctm.github.io/stack-sympy/examples.html) include all three modes. The shared resolver handles explicit aliases, LaTeX and context limits; STACK does not implement a second resolver.
+
+Feedback policies inherit from the same shared YAML layers as other integrations: shipped defaults, project common and `math-exercise` settings, page common and `math-exercise` settings, exercise settings keyed by `label`, an explicitly selected named policy, then the current hint step. For example, configure `ai-feedback: {policy-files: feedback/course.yml}` in `_quarto.yml` and define `ai-feedback.integrations.math-exercise` in that file; STACK and math-exercise cards then use the same central mathematics policy. A page may set `ai-feedback.page-policy-files` to add its own layer. See the [AI Feedback policy documentation](https://github.com/Erasmus-CTM/ai-feedback/blob/main/docs/feedback-policies.md) for the exact fields, file formats and precedence; STACK does not duplicate the policy engine.
+
+The learner's current answer, visible question text and selected context form the feedback request. A preceding matching **Check answer** can supply minimal result status and a finite score as evidence. Original XML, source panels, teacher answers, qtests, grader configuration, feedback messages and answer notes are excluded. Feedback does not run or replace the deterministic grader. The shared settings panel defaults to copy-prompt mode and can use a learner-configured provider; provider keys are not embedded in the page. The shared extension owns the provider client, settings, policies and feedback UI. STACK SymPy supplies only its question/response adapter.
 
 ## Supported subset and grading behavior
 
