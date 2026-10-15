@@ -1,0 +1,16 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Native STACK answer-test compliance",
+    "section": "",
+    "text": "This report replays static answer-test rows from the pinned upstream STACK fixture against this project’s Python implementation, official STACK/Maxima, and the same Python core running under Pyodide. The three checks answer different questions. Upstream negative sentinels annotate expected native deviations; only case-specific reviewed comparisons are labeled known native mathematical failures here. Agreement with such a failure is not mathematical correctness. A native answer note may be unavailable or not comparable even when the CAS validity and correctness booleans agree.\nThe parity inventory covers every static row, including unsupported rows that agree only in preflight classification. The eligible grading count appears separately below. Raw answer notes are displayed for inspection but are not generally compared as equivalent feedback. A comparable authored -1 controlled-error row must match its asserted STACK error note exactly, apart from surrounding output whitespace.\nThe “native vs desired” axis compares a direct Maxima answer-test call with an upstream fixture expectation. An unexpected deviation there can reflect PHP-side preparation, option defaults, or CAS state that this direct-call oracle does not reproduce; it is a case for investigation, not proof of a Moodle grading bug. Final-mark agreement and CAS applicability are reported separately, since both engines can reject an answer while disagreeing about whether their equivalence test applies.\nFixture score codes: 0 means desired reject, 1 desired accept, and -1 an asserted controlled error. -2 means desired reject despite an upstream annotated native acceptance; -3 means desired accept despite an upstream annotated native rejection. These negative codes record source-authored expectations, not approvals of this report’s direct-CAS observations.\nThe scope is CAS answer-test behavior for the imported static rows. PHP question/controller behavior, Moodle attempt state, dynamically appended fixture cases, complete input validation, and all STACK functionality are outside this comparison. Unsupported and out-of-contract rows remain visible in the inventory. An unavailable runner is shown as unavailable, never treated as a pass.\nDownload complete JSON report · Fixture commit link unavailable until report loads · Source repository"
+  },
+  {
+    "objectID": "index.html#inspect-cases",
+    "href": "index.html#inspect-cases",
+    "title": "Native STACK answer-test compliance",
+    "section": "Inspect cases",
+    "text": "Inspect cases\n\nExpression or case ID  Answer test All tests Desired result All statuses Native comparison All statuses Native final mark All statuses Native CAS applicability All statuses Native vs desired All statuses Browser parity All statuses\n\n\n\n\n\n\n\nShow more"
+  }
+]
