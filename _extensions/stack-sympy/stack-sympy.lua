@@ -22,7 +22,7 @@ local function setup()
   if installed then return end
   installed = true
   quarto.doc.add_html_dependency({
-    name = 'stack-sympy', version = '0.1.0',
+    name = 'stack-sympy', version = '0.1.1',
     scripts = {{path = 'stack-sympy.js', afterBody = true}},
     stylesheets = {'stack-sympy.css'},
     resources = {
