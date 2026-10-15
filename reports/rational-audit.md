@@ -1,0 +1,19 @@
+# Rational-form milestone audit
+
+Audited code: [`582e91e`](https://github.com/Erasmus-CTM/stack-sympy/commit/582e91ed3c210f957fe3daf10997f12bd2d98830), version 0.1.9, on 2026-10-15. The reference source is official STACK at `10d323311b7f39fb7b092dd10ce75f7d8632f525`. The original corpus XML, manifest, and authored qtest expectations were not edited.
+
+`SingleFrac` checks equivalence and the student's written top-level fraction shape. Equivalent atoms and unreduced fractions can pass; a sum of fractions, product containing a fraction, or a division found directly or through sums/products in the numerator or denominator cannot. Its native helper does not descend into powers or function calls. `LowestTerms` examines written numeric fractions and disallowed denominators without checking the teacher's value. It does not use polynomial GCD to reject a symbolic fraction such as `x^2/x`. These decisions follow upstream `ATSingleFrac` and `ATLowestTerms` and their official fixtures. The input-level lowest-terms validator now follows the same numeric-fraction distinction.
+
+The 0.1.9 follow-up preserves function and radical syntax for `EqualComAss`: `cos(0)` versus `1`, `sqrt(3)` versus `3^(1/2)`, and `2*sqrt(2)` versus `sqrt(8)` are rejected, while `exp(x)` and `%e^x` remain the same Maxima form. These are checked in focused unit tests and added to the live native reference fixture, alongside function-sum and `sin(0)` boundaries.
+
+| Check | Verified result |
+|---|---|
+| Python unit suite | 54 tests passed on commit `582e91e` with pinned SymPy 1.13.3. |
+| Runtime bundle and source diff | `python scripts/bundle_runtime.py --check` and `git diff --check` passed; Lua and extension metadata both say 0.1.9. |
+| Corpus replay | The recorded 30-question baseline has 16 qtest passes, one mismatch, and 13 unsupported questions; 114 seed/case combinations were replayed and two failed. |
+| Earlier native reference | The prior commit [`e8c41f5`](https://github.com/Erasmus-CTM/stack-sympy/commit/e8c41f595bd80aa44ec72d42c5d2e655240e351e) matched 43/43 curated tests against official STACK with Maxima 5.46.0 in [CI run 38771741066](https://github.com/Erasmus-CTM/stack-sympy/actions/runs/38771741066). This is evidence for that earlier revision only. |
+| Expanded native reference | **49/49 passed** for `582e91e` in [CI job 116553163850](https://github.com/Erasmus-CTM/stack-sympy/actions/runs/38772935336/job/116553163850), using official STACK `10d3233`, Maxima 5.46.0, and SymPy 1.13.3. The [result artifact](https://github.com/Erasmus-CTM/stack-sympy/actions/runs/38772935336/artifacts/11991893506) contains the case-level comparison. |
+
+The native comparison calls official `AT*` functions through the pinned STACK loader and compares both CAS applicability and correctness. It records input validation separately because a well-formed, wrong `EqualComAss` answer can have valid input while native CAS applicability is false. Missing Maxima, wrong source SHA, incomplete output, a timeout, or any mismatch fails the job; site publication depends on that job. The comparison covers its curated expressions, not all STACK syntax, answer tests, or random variants.
+
+Two corpus boundaries remain visible. `AlgMap-8.10` is not an interactive passing card: Python's generated variant for seed `1856951054` produces `7*(t+y)`, and two of its 12 authored seed/case replays expect `SingleFrac` to accept that nonfraction. The adapter correctly leaves those outcomes as mismatches rather than changing the upstream tests or relaxing the predicate. In `AlgMap-2.5`, the unchanged upstream PRT gives full credit for a reduced answer before checking value equivalence; a wrong reduced answer such as `123/127` receives score 1. The gallery flags this behavior and unit and browser checks exercise it. `AlgMap-14.1` remains unsupported because its later `gcd(num(ans),denom(ans))` node requires a written-form calculation that the adapter cannot preserve.
