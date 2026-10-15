@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 from stack_sympy.cli import render
-from stack_sympy.engine import _qtest_answer, grade, instantiate, run_question_tests, validate
+from stack_sympy.engine import _answer_note_matches, _qtest_answer, grade, instantiate, run_question_tests, validate
 from stack_sympy.expressions import assignments
 from stack_sympy.importer import UnsupportedQuestion, import_xml
 
@@ -94,6 +94,44 @@ class EngineTests(unittest.TestCase):
     def test_qtest_alias_preserves_unsimplified_form(self):
         q = {"name": "raw", "variables": "raw:x+x", "simplify": False}
         self.assertEqual(_qtest_answer(q, "raw", assignments(q["variables"]), preserve_form=True), "x+x")
+
+    def test_qtest_note_order_and_anchors(self):
+        notes = ["first", "middle", "last"]
+        self.assertTrue(_answer_note_matches("middle|last", notes))
+        self.assertFalse(_answer_note_matches("last|middle", notes))
+        self.assertTrue(_answer_note_matches("(middle)", notes))
+        self.assertFalse(_answer_note_matches("middle", notes))
+        self.assertTrue(_answer_note_matches("[first|last]", notes))
+        self.assertFalse(_answer_note_matches("[middle|last]", notes))
+        self.assertTrue(_answer_note_matches("NULL", []))
+        self.assertFalse(_answer_note_matches("NULL", notes))
+        self.assertTrue(_answer_note_matches("()", notes))
+        self.assertFalse(_answer_note_matches("", []))
+
+    def test_native_form_sensitive_corpus_qtests(self):
+        for stem in ("AlgMap-1-5", "AlgMap-2-1", "AlgMap-4-1", "AlgMap-6-4",
+                     "AlgMap-6-7", "AlgMap-8-5", "AlgMap-10-1", "AlgMap-13-1-"):
+            q = import_xml(ROOT / "questions/corpus" / f"{stem}.xml")[0]
+            with self.subTest(stem=stem):
+                result = run_question_tests(q, seeds=q["deployedseeds"][:3] or [17, 29, 47])
+                self.assertTrue(result["passed"], [(row["testcase"], row["seed"], row["checks"])
+                                                   for row in result["results"] if not row["passed"]])
+
+    def test_unsimplified_castext_shows_written_powers(self):
+        q = import_xml(ROOT / "questions/corpus/AlgMap-1-5.xml")[0]
+        variant = instantiate(q, q["deployedseeds"][0])
+        html = variant["question_html"]
+        self.assertIn("c^{", html)
+        self.assertIn(r"\cdot", html)
+
+    def test_castext_retains_tex_grouping_for_fraction_and_exponent(self):
+        q = import_xml(ROOT / "questions/corpus/AlgMap-8-5.xml")[0]
+        html = instantiate(q, 17)["question_html"]
+        self.assertIn(r"\frac{", html)
+        self.assertIn("}{", html)
+        q = self.question("polynomial-expansion.xml")
+        q["questiontext"] += r"\(x^{@12@}\)"
+        self.assertIn(r"x^{12}", instantiate(q, 17)["question_html"])
 
     def test_castext_uses_question_assumptions(self):
         q = self.question("rational-equivalence.xml")

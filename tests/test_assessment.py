@@ -20,6 +20,36 @@ class AssessmentTest(unittest.TestCase):
         self.assertFalse(answer_test("EqualComAss", "(x+1)^2", "x^2+2*x+1")["correct"])
         self.assertTrue(answer_test("EqualComAss", "x-z", "x+(-z)")["correct"])
         self.assertTrue(answer_test("EqualComAss", "-2*x", "ta", env={"ta": -2*sp.Symbol("x")})["correct"])
+        self.assertTrue(answer_test("EqualComAss", "3/4", "ta", env={"ta": sp.Rational(3, 4)})["correct"])
+        self.assertFalse(answer_test("EqualComAss", "2/4", "ta", env={"ta": sp.Rational(1, 2)})["correct"])
+        self.assertFalse(answer_test("EqualComAss", "0.75", "3/4")["correct"])
+
+    def test_facform_polynomial_factorisation(self):
+        accepted = (("(x-1)*(x+1)", "x^2-1"), ("(x+1)^2", "x^2+2*x+1"),
+                    ("4*(1-x/2)^2", "(x-2)^2"), ("2*(x+0.5)", "2*x+1"),
+                    ("(x^2+1)*(x-3)", "(x^2+1)*(x-3)"),
+                    ("(x+1)*(x-1)", "x^2-1"), ("(x-1)*(x+1)", "x^2-1"))
+        for student, teacher in accepted:
+            with self.subTest(student=student):
+                self.assertTrue(answer_test("FacForm", student, teacher, "x")["correct"])
+        rejected = (("x^2-1", "x^2-1"), ("2*x-2", "2*x-2"),
+                    ("(x+1)*(x+2)", "x^2-1"), ("(x-1)*(x-1)", "x^2-1"))
+        for student, teacher in rejected:
+            with self.subTest(student=student):
+                self.assertFalse(answer_test("FacForm", student, teacher, "x")["correct"])
+        self.assertTrue(answer_test("FacForm", "(y-1)*(y+1)", "y^2-1", "v", env={"v": sp.Symbol("y")})["correct"])
+        with self.assertRaisesRegex(Unsupported, "univariate rational"):
+            answer_test("FacForm", "(x+y)*(x-y)", "x^2-y^2", "x")
+        with self.assertRaisesRegex(Unsupported, "polynomial variable"):
+            answer_test("FacForm", "x^2-1", "x^2-1", "")
+        with self.assertRaisesRegex(Unsupported, "supported bounds"):
+            answer_test("FacForm", "(x+1)^100*(x+1)^100", "1", "x")
+        for cancelled in ("x/x", "(x-1)/(x-1)", "0/x", "x*(1/x)",
+                          "(x^2-1)*(x/x)", "x^2-1+0/x", "(x/x)+(x^2-1)"):
+            with self.subTest(cancelled=cancelled), self.assertRaisesRegex(Unsupported, "numeric denominators"):
+                answer_test("FacForm", cancelled, "1", "x")
+        with self.assertRaisesRegex(Unsupported, "nonnegative integer powers"):
+            answer_test("FacForm", "x^2-1+0*x^(-1)", "x^2-1", "x")
 
     def test_numeric_threshold_and_zero(self):
         self.assertTrue(answer_test("NumAbsolute", "1.0000000009", "1", "0")["correct"])

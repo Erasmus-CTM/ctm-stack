@@ -11,7 +11,7 @@ from typing import Mapping
 import sympy as sp
 
 from .assessment import answer_test
-from .expressions import InvalidAnswer, Unsupported, assignments, canonical_form, evaluate, form_latex, parse
+from .expressions import InvalidAnswer, Node, Unsupported, assignments, canonical_form, evaluate, form_latex, parse
 from .importer import UnsupportedQuestion
 from .rendering import render_castext
 
@@ -23,7 +23,9 @@ def _assumptions(question):
 def _environment(question, variant):
     if not variant:
         raise ValueError("A frozen question variant is required")
-    return {name: evaluate(value, assumptions=_assumptions(question))
+    definitions = _definitions(question)
+    return {name: evaluate(value, assumptions=_assumptions(question),
+                           simplify=not bool(re.search(r"\bfactor\s*\(", definitions.get(name, ""))))
             for name, value in variant["env"].items()}
 
 
@@ -65,7 +67,9 @@ def _validate_references(question, definitions):
 
 def _render(question, field, env, inputs, prts):
     return render_castext(question.get(field, ""), env, question["name"], field, inputs=inputs, feedback=prts,
-                           assumptions=_assumptions(question))
+                           assumptions=_assumptions(question),
+                           form_expression=(lambda expr: _qtest_answer(question, expr, env, preserve_form=True))
+                           if not question.get("simplify", True) else None)
 
 
 def instantiate(question: dict, seed: int = 1) -> dict:
@@ -89,6 +93,11 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                     for key in set(re.findall(r"\b[A-Za-z_]\w*\b", node["teacher"])) & definitions.keys():
                         original = definitions[key]
                         value = env[key]
+                        if re.search(r"\b(?:factor|ev|expand|ratsimp|cancel)\s*\(", original):
+                            # Explicit CAS transformations produce the frozen
+                            # value; the assignment's input syntax is not its
+                            # answer syntax under simp:false.
+                            continue
                         if "rand(" in original or "rand_with_step(" in original:
                             if not value.is_number:
                                 raise UnsupportedQuestion(name, where, "random symbolic answer form cannot be frozen")
@@ -128,7 +137,9 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                             raise UnsupportedQuestion(name, where + "/testoptions", "NumDecPlaces requires 1–50 places")
                 for branch in ("true", "false"):
                     render_castext(node[branch]["feedback"], env, name, where + "/" + branch + "feedback",
-                                   inputs=inputmap, feedback=prtmap, assumptions=assumptions)
+                                   inputs=inputmap, feedback=prtmap, assumptions=assumptions,
+                                   form_expression=(lambda expr: _qtest_answer(question, expr, env, preserve_form=True))
+                                   if not question.get("simplify", True) else None)
         for field in ("questiontext", "generalfeedback", "specificfeedback", "questionnote"):
             _render(question, field, env, inputmap, prtmap)
         frozen = {key: _source(value) for key, value in env.items()}
@@ -213,16 +224,73 @@ def _qtest_answer(question, expression, env, *, preserve_form=False):
         return source.strip()
     if preserve_form:
         if expression in env:
-            plain = not re.search(r"\b(?:rand|rand_with_step|expand|factor|ratsimp|cancel|ev|diff|float|dispdp|displaydp|decimalplaces|dispsf|significantfigures)\s*\(", source)
-            text = source if not question.get("simplify", True) and plain else _source(env[expression])
+            text = (_source(env[expression]) if ((question.get("simplify", True)
+                                                  and not re.search(r"\bfactor\s*\(", source))
+                                                 or re.search(r"\b(?:rand|rand_with_step)\s*\(", source))
+                    else _author_form(source, env, _assumptions(question)))
         else:
-            text = expression
-        for key in sorted(env, key=len, reverse=True):
-            if key == expression:
-                continue
-            text = re.sub(rf"\b{re.escape(key)}\b", lambda _m: f"({_source(env[key])})", text)
+            text = _author_form(expression, env, _assumptions(question))
         return text
     return _source(evaluate(expression, env, assumptions=_assumptions(question)))
+
+
+def _author_form(source, env, assumptions):
+    """Resolve trusted qtest aliases but preserve operations outside CAS calls."""
+    def render(n: Node):
+        if n.kind == "name":
+            return f"({_source(env[n.value])})" if n.value in env else n.value
+        if n.kind == "number":
+            return n.value
+        if n.kind == "unary":
+            return f"({n.value}{render(n.children[0])})"
+        if n.kind == "binary":
+            return f"({render(n.children[0])}{'^' if n.value == '**' else n.value}{render(n.children[1])})"
+        if n.kind == "call":
+            if n.value == "factor" and len(n.children) == 1:
+                value = evaluate(n.children[0], env, assumptions=assumptions)
+                if value.is_Integer and value > 1:
+                    if int(value).bit_length() > 40:
+                        raise Unsupported("Integer factorization exceeds supported bound")
+                    coefficients = sp.factorint(int(value))
+                    return "*".join(f"{p}^{power}" if power != 1 else str(p)
+                                    for p, power in coefficients.items())
+            return f"({_source(evaluate(n, env, assumptions=assumptions))})"
+        raise Unsupported("Unsupported form-sensitive qtest expression")
+    tree = parse(source)
+    result = render(tree)
+    return result[1:-1] if tree.kind in {"binary", "unary"} else result
+
+
+def _answer_note_matches(expected: str, actual: list[str]) -> bool:
+    """STACK questiontestresult::test_answer_note ordered-subsequence rules."""
+    expected = expected.strip()
+    if not expected:
+        return False
+    if expected == "()":
+        return True
+    if not actual:
+        return expected == "NULL"
+    if expected == "NULL":
+        return False
+    start = expected.startswith("[")
+    if expected[:1] in "[(":
+        expected = expected[1:]
+    end = not expected.endswith(")")
+    if expected.endswith(("]", ")")):
+        expected = expected[:-1]
+    wanted = [note.strip() for note in expected.split("|")]
+    if start and wanted[0] != actual[0].strip():
+        return False
+    if end and wanted[-1] != actual[-1].strip():
+        return False
+    position = 0
+    for note in wanted:
+        while position < len(actual) and actual[position].strip() != note:
+            position += 1
+        if position == len(actual):
+            return False
+        position += 1
+    return True
 
 
 def validate(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant: dict | None = None) -> dict:
@@ -275,7 +343,10 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
                     tested_student = student_trees[node["student"]]
                 else:
                     tested_student = _source(evaluate(node["student"], penv, assumptions=assumptions))
-                result = answer_test(node["test"], tested_student, node["teacher"], node["options"],
+                teacher = node["teacher"]
+                if node["test"] == "EqualComAss" and not question.get("simplify", True):
+                    teacher = _qtest_answer(question, teacher, env, preserve_form=True)
+                result = answer_test(node["test"], tested_student, teacher, node["options"],
                                      env=penv, raw=raw_student or (tested_student if isinstance(tested_student, str) else ""), assumptions=assumptions)
             except (InvalidAnswer, Unsupported, TypeError, ZeroDivisionError) as exc:
                 raise UnsupportedQuestion(question["name"], f"prt[{prt['name']}]/node[{current}]", str(exc)) from exc
@@ -290,7 +361,9 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
                 rendered = render_castext(branch["feedback"], penv, question["name"],
                                           f"prt[{prt['name']}]/node[{current}]/{branch_name}feedback",
                                           inputs={i["name"]: i for i in question["inputs"]},
-                                          feedback={p["name"]: p for p in question["prts"]}, assumptions=assumptions)
+                                          feedback={p["name"]: p for p in question["prts"]}, assumptions=assumptions,
+                                          form_expression=(lambda expr: _qtest_answer(question, expr, penv, preserve_form=True))
+                                          if not question.get("simplify", True) else None)
                 if rendered:
                     feedback.append(rendered)
                 if result["feedback"]:
@@ -318,7 +391,7 @@ def run_question_tests(question: dict, seeds=(1,), variants=None) -> dict:
             raw = {}
             for key, expression in test["inputs"].items():
                 try:
-                    form = any(n["test"] == "EqualComAss" and re.search(rf"\b{re.escape(key)}\b", n["student"])
+                    form = any(n["test"] in {"EqualComAss", "FacForm"} and re.search(rf"\b{re.escape(key)}\b", n["student"])
                                for p in question["prts"] for n in p["nodes"])
                     raw[key] = _qtest_answer(question, expression, env, preserve_form=form)
                 except (Unsupported, InvalidAnswer, ValueError) as exc:
@@ -334,7 +407,7 @@ def run_question_tests(question: dict, seeds=(1,), variants=None) -> dict:
                 observed_penalty = question["penalty"] if observed_score is not None and observed_score < 1 else 0.0
                 ok = (observed_score is not None and abs(observed_score - expected["score"]) < 1e-8
                       and abs(observed_penalty - expected["penalty"]) < 1e-8
-                      and observed_note == expected["note"])
+                      and _answer_note_matches(expected["note"], [n for n in result.get("notes", []) if n]))
                 checks.append({"prt": name, "passed": ok, "expected": expected,
                                "actual": {"score": observed_score, "penalty": observed_penalty, "note": observed_note}})
             results.append({"testcase": test["testcase"], "seed": variant["seed"],

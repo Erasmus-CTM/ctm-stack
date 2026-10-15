@@ -86,12 +86,12 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
     assert re.search(r'href="(?:\./|/)?corpus\.html"', navbar)
     assert "Question corpus" in navbar
     assert len(entries) == len(reports) == 30
-    assert output.count('class="stack-sympy-data"') == 6
+    passing = [entry for entry in entries if reports[entry["id"]]["status"] == "qtests_pass"]
+    assert output.count('class="stack-sympy-data"') == len(passing)
     assert 'class="stack-sympy stack-diagnostic"' not in output
-    assert output.count('<details class="stack-source">') == 12
+    assert output.count('<details class="stack-source">') == 2 * len(passing)
     assert '<details class="stack-source" open' not in output
     rendered_xml = re.findall(r'<code class="language-xml">(.*?)</code>', output, re.S)
-    passing = [entry for entry in entries if reports[entry["id"]]["status"] == "qtests_pass"]
     assert len(rendered_xml) == len(passing)
     for entry, source in zip(passing, rendered_xml):
         assert html.unescape(source) == (ROOT / "questions/corpus" / entry["file"]).read_text()

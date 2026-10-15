@@ -9,7 +9,7 @@ import secrets
 
 import sympy as sp
 
-from .expressions import evaluate, parse
+from .expressions import evaluate, form_latex, parse
 from .importer import UnsupportedQuestion
 
 
@@ -62,7 +62,7 @@ class _Sanitizer(HTMLParser):
 
 
 def render_castext(source: str, env: dict, question: str, location: str, *, inputs=(), feedback=None,
-                   assumptions=None) -> str:
+                   assumptions=None, form_expression=None) -> str:
     """Substitute CASText tokens, then allowlist sanitize the HTML.
 
     Literal source text never enters an HTML attribute through a token.
@@ -86,8 +86,11 @@ def render_castext(source: str, env: dict, question: str, location: str, *, inpu
                     return (node.kind == "call" and node.value in {"rand", "rand_with_step"}) or any(random_call(c) for c in node.children)
                 if random_call(tree):
                     raise UnsupportedQuestion(question, location, "random CASText expressions must be assigned in question variables")
-                value = evaluate(tree, env=env, assumptions=assumptions)
-                latex = sp.latex(value)
+                if form_expression is not None:
+                    latex = form_latex(parse(form_expression(expr)))
+                else:
+                    value = evaluate(tree, env=env, assumptions=assumptions)
+                    latex = sp.latex(value)
             except UnsupportedQuestion:
                 raise
             except Exception as exc:
@@ -96,7 +99,9 @@ def render_castext(source: str, env: dict, question: str, location: str, *, inpu
             # Nested \( ... \) would make MathJax render literal markup.
             math_delimiters = list(re.finditer(r"\\(?:\(|\)|\[|\])", prefix))
             in_math = bool(math_delimiters and math_delimiters[-1].group() in {r"\(", r"\["})
-            rendered = html.escape(latex) if in_math else r"\(" + html.escape(latex) + r"\)"
+            # The braces in {@expr@} are TeX grouping when already inside
+            # math, e.g. \frac{@a+b@}{@c@} or ^{@power@}.
+            rendered = "{" + html.escape(latex) + "}" if in_math else r"\(" + html.escape(latex) + r"\)"
         else:
             kind, sep, name = directive.partition(":")
             if not sep or (kind in {"input", "validation"} and name not in inputs) or (kind == "feedback" and name not in (feedback or ())):

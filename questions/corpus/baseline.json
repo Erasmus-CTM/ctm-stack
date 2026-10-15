@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "engine_revision": "307da7d460454885046df3b1475f07b723f252d3",
-  "adapter_source_sha256": "9955a9c514d2cf45782b98253c141a42ca16eef390e37cab353f05d0c0e01902",
+  "engine_revision": "dfcf6bf83a2d045d193ad29e6b4204063e692510",
+  "adapter_source_sha256": "05d3be45d7baece2d59d8f540d4910040f401bda645211f524037bc06bc5adb9",
   "python_version": "3.12.14",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",
@@ -9,21 +9,20 @@
   "summary": {
     "total": 30,
     "stages": {
-      "qtests_mismatch": 6,
-      "qtests_pass": 6,
-      "unsupported_import": 11,
-      "unsupported_instantiate": 7
+      "qtests_pass": 14,
+      "unsupported_import": 8,
+      "unsupported_instantiate": 8
     },
-    "imported": 19,
-    "instantiated_all_seeds": 12,
-    "replayed_cases": 72,
-    "failed_cases": 27,
-    "failed_checks": 27
+    "imported": 22,
+    "instantiated_all_seeds": 14,
+    "replayed_cases": 84,
+    "failed_cases": 0,
+    "failed_checks": 0
   },
   "questions": [
     {
-      "failed_cases": 3,
-      "failed_checks": 3,
+      "failed_cases": 0,
+      "failed_checks": 0,
       "file": "AlgMap-1-5.xml",
       "id": "algmap-1-5",
       "imported_questions": 1,
@@ -32,77 +31,7 @@
         2051957692,
         1375878840
       ],
-      "mismatches": [
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-T",
-                "penalty": 0.0,
-                "score": 1.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "c**13"
-          },
-          "seed": 128137392,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-T",
-                "penalty": 0.0,
-                "score": 1.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "c**7"
-          },
-          "seed": 2051957692,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-T",
-                "penalty": 0.0,
-                "score": 1.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "c**12"
-          },
-          "seed": 1375878840,
-          "testcase": "2"
-        }
-      ],
+      "mismatches": [],
       "native_qtests": 2,
       "replayed_cases": 6,
       "seeds": [
@@ -110,7 +39,7 @@
         2051957692,
         1375878840
       ],
-      "status": "qtests_mismatch"
+      "status": "qtests_pass"
     },
     {
       "failed_cases": 0,
@@ -134,27 +63,25 @@
       "status": "qtests_pass"
     },
     {
-      "diagnostic": {
-        "location": "prt[prt1]/node[0]/answertest",
-        "message": "AlgMap-10.1: prt[prt1]/node[0]/answertest: unsupported answer test 'FacForm'",
-        "reason": "unsupported answer test 'FacForm'",
-        "type": "UnsupportedQuestion"
-      },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "AlgMap-10-1.xml",
       "id": "algmap-10-1",
-      "imported_questions": 0,
-      "instantiated_seeds": [],
+      "imported_questions": 1,
+      "instantiated_seeds": [
+        1910622122,
+        1142759260,
+        91955274
+      ],
       "mismatches": [],
       "native_qtests": 2,
-      "replayed_cases": 0,
+      "replayed_cases": 6,
       "seeds": [
         1910622122,
         1142759260,
         91955274
       ],
-      "status": "unsupported_import"
+      "status": "qtests_pass"
     },
     {
       "failed_cases": 0,
@@ -222,27 +149,25 @@
       "status": "unsupported_import"
     },
     {
-      "diagnostic": {
-        "location": "prt[prt1]/node[0]/answertest",
-        "message": "AlgMap-13.1: prt[prt1]/node[0]/answertest: unsupported answer test 'FacForm'",
-        "reason": "unsupported answer test 'FacForm'",
-        "type": "UnsupportedQuestion"
-      },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "AlgMap-13-1-.xml",
       "id": "algmap-13-1",
-      "imported_questions": 0,
-      "instantiated_seeds": [],
+      "imported_questions": 1,
+      "instantiated_seeds": [
+        1874421384,
+        1770560704,
+        1402158234
+      ],
       "mismatches": [],
       "native_qtests": 2,
-      "replayed_cases": 0,
+      "replayed_cases": 6,
       "seeds": [
         1874421384,
         1770560704,
         1402158234
       ],
-      "status": "unsupported_import"
+      "status": "qtests_pass"
     },
     {
       "diagnostic": {
@@ -269,16 +194,17 @@
     },
     {
       "diagnostic": {
-        "location": "prt[fac]/node[0]/answertest",
-        "message": "AlgMap-15.1: prt[fac]/node[0]/answertest: unsupported answer test 'FacForm'",
-        "reason": "unsupported answer test 'FacForm'",
+        "location": "instantiation",
+        "message": "AlgMap-15.1: instantiation: Unexpected character at position 0",
+        "reason": "Unexpected character at position 0",
+        "seed": 2060820372,
         "type": "UnsupportedQuestion"
       },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "AlgMap-15-1.xml",
       "id": "algmap-15-1",
-      "imported_questions": 0,
+      "imported_questions": 1,
       "instantiated_seeds": [],
       "mismatches": [],
       "native_qtests": 2,
@@ -288,11 +214,11 @@
         1584668898,
         584521279
       ],
-      "status": "unsupported_import"
+      "status": "unsupported_instantiate"
     },
     {
-      "failed_cases": 3,
-      "failed_checks": 3,
+      "failed_cases": 0,
+      "failed_checks": 0,
       "file": "AlgMap-2-1.xml",
       "id": "algmap-2-1",
       "imported_questions": 1,
@@ -301,77 +227,7 @@
         1779049407,
         302075276
       ],
-      "mismatches": [
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-T",
-                "penalty": 0.0,
-                "score": 1.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "2520"
-          },
-          "seed": 675382660,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-T",
-                "penalty": 0.0,
-                "score": 1.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "120"
-          },
-          "seed": 1779049407,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-T",
-                "penalty": 0.0,
-                "score": 1.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "84"
-          },
-          "seed": 302075276,
-          "testcase": "2"
-        }
-      ],
+      "mismatches": [],
       "native_qtests": 2,
       "replayed_cases": 6,
       "seeds": [
@@ -379,7 +235,7 @@
         1779049407,
         302075276
       ],
-      "status": "qtests_mismatch"
+      "status": "qtests_pass"
     },
     {
       "diagnostic": {
@@ -452,8 +308,8 @@
       "status": "unsupported_instantiate"
     },
     {
-      "failed_cases": 3,
-      "failed_checks": 3,
+      "failed_cases": 0,
+      "failed_checks": 0,
       "file": "AlgMap-4-1.xml",
       "id": "algmap-4-1",
       "imported_questions": 1,
@@ -462,77 +318,7 @@
         482559703,
         774333379
       ],
-      "mismatches": [
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-T",
-                "penalty": 0.0,
-                "score": 1.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "((8)/(15))*(8)"
-          },
-          "seed": 167731690,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-T",
-                "penalty": 0.0,
-                "score": 1.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "((6)/(9))*(12)"
-          },
-          "seed": 482559703,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-T",
-                "penalty": 0.0,
-                "score": 1.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "((4)/(15))*(9)"
-          },
-          "seed": 774333379,
-          "testcase": "2"
-        }
-      ],
+      "mismatches": [],
       "native_qtests": 2,
       "replayed_cases": 6,
       "seeds": [
@@ -540,7 +326,7 @@
         482559703,
         774333379
       ],
-      "status": "qtests_mismatch"
+      "status": "qtests_pass"
     },
     {
       "diagnostic": {
@@ -590,8 +376,8 @@
       "status": "unsupported_instantiate"
     },
     {
-      "failed_cases": 6,
-      "failed_checks": 6,
+      "failed_cases": 0,
+      "failed_checks": 0,
       "file": "AlgMap-6-4.xml",
       "id": "algmap-6-4",
       "imported_questions": 1,
@@ -600,146 +386,7 @@
         29,
         47
       ],
-      "mismatches": [
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "(c^a)*(c^b)"
-          },
-          "seed": 17,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-F",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-F",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "c^(a*b)"
-          },
-          "seed": 17,
-          "testcase": "3"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "(c^a)*(c^b)"
-          },
-          "seed": 29,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-F",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-F",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "c^(a*b)"
-          },
-          "seed": 29,
-          "testcase": "3"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "(c^a)*(c^b)"
-          },
-          "seed": 47,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-F",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-F",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "c^(a*b)"
-          },
-          "seed": 47,
-          "testcase": "3"
-        }
-      ],
+      "mismatches": [],
       "native_qtests": 3,
       "replayed_cases": 9,
       "seeds": [
@@ -747,11 +394,11 @@
         29,
         47
       ],
-      "status": "qtests_mismatch"
+      "status": "qtests_pass"
     },
     {
-      "failed_cases": 3,
-      "failed_checks": 3,
+      "failed_cases": 0,
+      "failed_checks": 0,
       "file": "AlgMap-6-7.xml",
       "id": "algmap-6-7",
       "imported_questions": 1,
@@ -760,77 +407,7 @@
         536649773,
         971070137
       ],
-      "mismatches": [
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "(5)*(x)^(3)"
-          },
-          "seed": 1214045767,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "(4)*(t)^(2)"
-          },
-          "seed": 536649773,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "(7)*(x)^(2)"
-          },
-          "seed": 971070137,
-          "testcase": "2"
-        }
-      ],
+      "mismatches": [],
       "native_qtests": 2,
       "replayed_cases": 6,
       "seeds": [
@@ -838,7 +415,7 @@
         536649773,
         971070137
       ],
-      "status": "qtests_mismatch"
+      "status": "qtests_pass"
     },
     {
       "failed_cases": 0,
@@ -909,8 +486,8 @@
       "status": "unsupported_import"
     },
     {
-      "failed_cases": 9,
-      "failed_checks": 9,
+      "failed_cases": 0,
+      "failed_checks": 0,
       "file": "AlgMap-8-5.xml",
       "id": "algmap-8-5",
       "imported_questions": 1,
@@ -919,215 +496,7 @@
         29,
         47
       ],
-      "mismatches": [
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "(b-a)/(a-b)"
-          },
-          "seed": 17,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-F | 1-2-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-2-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "1"
-          },
-          "seed": 17,
-          "testcase": "3"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-F | 1-2-F | 1-3-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-3-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "0"
-          },
-          "seed": 17,
-          "testcase": "4"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "(b-a)/(a-b)"
-          },
-          "seed": 29,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-F | 1-2-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-2-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "1"
-          },
-          "seed": 29,
-          "testcase": "3"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-F | 1-2-F | 1-3-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-3-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "0"
-          },
-          "seed": 29,
-          "testcase": "4"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-1-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "(b-a)/(a-b)"
-          },
-          "seed": 47,
-          "testcase": "2"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-F | 1-2-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-2-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "1"
-          },
-          "seed": 47,
-          "testcase": "3"
-        },
-        {
-          "checks": [
-            {
-              "actual": {
-                "note": "1-0-F | 1-1-F | 1-2-F | 1-3-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "expected": {
-                "note": "1-3-T",
-                "penalty": 0.1,
-                "score": 0.0
-              },
-              "passed": false,
-              "prt": "prt1"
-            }
-          ],
-          "inputs": {
-            "ans": "0"
-          },
-          "seed": 47,
-          "testcase": "4"
-        }
-      ],
+      "mismatches": [],
       "native_qtests": 4,
       "replayed_cases": 12,
       "seeds": [
@@ -1135,7 +504,7 @@
         29,
         47
       ],
-      "status": "qtests_mismatch"
+      "status": "qtests_pass"
     },
     {
       "failed_cases": 0,

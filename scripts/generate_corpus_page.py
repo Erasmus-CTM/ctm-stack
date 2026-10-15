@@ -40,7 +40,7 @@ def generate() -> str:
     out = [
         '---\ntitle: "Question corpus"\nsubtitle: "Thirty unchanged STACK exports, with a measured adapter boundary"\n---',
         "",
-        "These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **Only the six questions whose authored tests passed on all three replayed seeds have interactive cards.** The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.",
+        f"These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **Only the {len(passing)} questions whose authored tests passed on every replayed seed have interactive cards.** The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.",
         "",
         f"The [reproducible baseline](questions/corpus/baseline.json) reports **{len(passing)} passed**, **{len(mismatched)} with test mismatches**, and **{len(blocked)} blocked** ({counts.get('unsupported_import', 0)} at import, {counts.get('unsupported_instantiate', 0)} at instantiation). It retained **{sum(e['qtest_count'] for e in entries)} authored test cases** and replayed **{baseline['summary']['replayed_cases']} seed/case combinations** across {baseline['summary']['instantiated_all_seeds']} instantiated questions; {baseline['summary']['failed_cases']} combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.",
         "",
@@ -60,7 +60,7 @@ def generate() -> str:
         "",
         "## Ready to try",
         "",
-        "These six cards use the first seed from each three-seed replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the original XML test cases on the displayed seed; the [baseline](questions/corpus/baseline.json) covers all three recorded seeds. Their source panels start closed and expose both the authored block and unchanged STACK XML.",
+        f"These {len(passing)} cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the original XML test cases on the displayed seed; the [baseline](questions/corpus/baseline.json) covers every recorded seed. Their source panels start closed and expose both the authored block and unchanged STACK XML.",
         "",
     ]
     for entry in passing:
@@ -83,7 +83,8 @@ def generate() -> str:
     out += [
         "## Authored test mismatches",
         "",
-        "These six questions import and instantiate, but the adapter's replay disagrees with outcomes authored in the XML. Their grading is therefore not presented as a working exercise. The [baseline JSON](questions/corpus/baseline.json) lists every failed seed, input, PRT, expected result, and observed result.",
+        (f"These {len(mismatched)} questions import and instantiate, but the adapter's replay disagrees with outcomes authored in the XML. Their grading is therefore not presented as a working exercise. The [baseline JSON](questions/corpus/baseline.json) lists every failed seed, input, PRT, expected result, and observed result."
+         if mismatched else "None among the questions replayed on every recorded seed. The [baseline JSON](questions/corpus/baseline.json) retains individual seed and test results; unsupported questions remain listed below."),
         "",
     ]
     for entry in mismatched:

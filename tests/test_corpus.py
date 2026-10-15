@@ -15,26 +15,21 @@ class CorpusTests(unittest.TestCase):
         self.assertTrue(all(len(seeds_for(e)) <= 3 for e in entries))
         self.assertEqual(len(list(MANIFEST.parent.glob("*.xml"))), 30)
 
-    def test_supported_author_qtests_and_visible_mismatch(self):
+    def test_corrected_authored_qtests_replay(self):
         entries = {e["file"]: e for e in validate_manifest()}
-        passing = replay_one(entries["AlgMap-1-6.xml"])
-        self.assertEqual(passing["status"], "qtests_pass")
-        self.assertEqual(passing["replayed_cases"], passing["native_qtests"] * len(passing["seeds"]))
-        self.assertEqual(passing["instantiated_seeds"], passing["seeds"])
-
-        mismatch = replay_one(entries["AlgMap-1-5.xml"])
-        self.assertEqual(mismatch["status"], "qtests_mismatch")
-        self.assertGreater(mismatch["failed_checks"], 0)
-        check = mismatch["mismatches"][0]["checks"][0]
-        self.assertIn("expected", check)
-        self.assertIn("actual", check)
-        self.assertNotEqual(check["actual"], check["expected"])
+        for file in ("AlgMap-1-6.xml", "AlgMap-1-5.xml", "AlgMap-10-1.xml", "AlgMap-13-1-.xml"):
+            passing = replay_one(entries[file])
+            self.assertEqual(passing["status"], "qtests_pass", file)
+            self.assertEqual(passing["replayed_cases"], passing["native_qtests"] * len(passing["seeds"]))
+            self.assertEqual(passing["instantiated_seeds"], passing["seeds"])
 
     def test_report_retains_unsupported_context(self):
         report = json.loads(BASELINE.read_text(encoding="utf-8"))
         by_file = {q["file"]: q for q in report["questions"]}
-        self.assertEqual(by_file["AlgMap-10-1.xml"]["status"], "unsupported_import")
-        self.assertIn("answertest", by_file["AlgMap-10-1.xml"]["diagnostic"]["location"])
+        for file in ("AlgMap-10-1.xml", "AlgMap-13-1-.xml"):
+            row = by_file[file]
+            self.assertEqual(row["status"], "qtests_pass", file)
+            self.assertEqual(row["replayed_cases"], row["native_qtests"] * len(row["seeds"]))
         self.assertEqual(by_file["AlgMap-3-3.xml"]["status"], "unsupported_instantiate")
         self.assertIn("questionvariables", by_file["AlgMap-3-3.xml"]["diagnostic"]["location"])
 

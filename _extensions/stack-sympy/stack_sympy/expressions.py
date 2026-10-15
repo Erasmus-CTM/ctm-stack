@@ -440,12 +440,9 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
                 flattened.extend(term[1])
             else:
                 flattened.append(term)
-        numeric = [sp.Rational(x[1]) for x in flattened if x[0] == "number"]
-        flattened = [x for x in flattened if x[0] != "number"]
-        if numeric:
-            aggregate = sum(numeric) if op == "add" else sp.prod(numeric)
-            if (op == "add" and aggregate != 0) or (op == "mul" and aggregate != 1) or not flattened:
-                flattened.append(("number", str(aggregate)))
+        # STACK's noun arithmetic compares written numeric operations too:
+        # (8/15)*8 differs from its reduced rational, and 1/2 from 3/6.
+        # Flatten commutative operations without collecting the numbers.
         return (op, tuple(sorted(flattened, key=repr))) if len(flattened) > 1 else flattened[0]
 
     def negative(term):
@@ -455,7 +452,11 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
             factors = list(term[1])
             for i, factor in enumerate(factors):
                 if factor[0] == "number":
-                    factors[i] = negative(factor)
+                    flipped = negative(factor)
+                    if flipped == ("number", "1"):
+                        factors.pop(i)
+                        return combine("mul", factors)
+                    factors[i] = flipped
                     return combine("mul", factors)
         return combine("mul", [("number", "-1"), term])
 
@@ -468,6 +469,8 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
 
     def visit(n):
         if n.kind == "number":
+            if "." in n.value or "e" in n.value.lower():
+                return ("decimal", n.value)
             return ("number", str(_number(n.value)))
         if n.kind == "name":
             if n.value in env:
@@ -485,6 +488,10 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
             return a if n.value == "+" else negative(a)
         if n.kind == "binary":
             a, b = (visit(x) for x in n.children)
+            if (n.value == "/" and a[0] == b[0] == "number"
+                    and sp.Rational(a[1]).is_Integer and sp.Rational(b[1]).is_Integer
+                    and sp.igcd(int(sp.Rational(a[1])), int(sp.Rational(b[1]))) == 1):
+                return ("number", str(sp.Rational(a[1]) / sp.Rational(b[1])))
             return {"+": lambda: combine("add", [a, b]), "-": lambda: combine("add", [a, negative(b)]),
                     "*": lambda: combine("mul", [a, b]), "/": lambda: combine("mul", [a, reciprocal(b)]),
                     "^": lambda: ("pow", a, b), "**": lambda: ("pow", a, b)}[n.value]()

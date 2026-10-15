@@ -4,6 +4,8 @@ from __future__ import annotations
 from contextlib import contextmanager
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import json
+import math
 import os
 from pathlib import Path
 from threading import Thread
@@ -11,6 +13,9 @@ from threading import Thread
 from playwright.sync_api import sync_playwright
 
 from test_render import render_site
+
+
+CORPUS = Path(__file__).resolve().parents[1] / "questions/corpus"
 
 
 @contextmanager
@@ -123,3 +128,102 @@ def test_browser_worker_grades_and_runs_authored_tests():
         page.screenshot(path=str(site.parent / "test-results/example.png"), full_page=True)
         assert not errors, errors
         browser.close()
+
+
+def _prime_power_answer(number: int) -> str:
+    """Build a written prime product independently of the CAS's factor form."""
+    assert number > 1
+    factors = []
+    divisor = 2
+    while divisor * divisor <= number:
+        exponent = 0
+        while number % divisor == 0:
+            number //= divisor
+            exponent += 1
+        if exponent:
+            factors.append(f"{divisor}^{exponent}" if exponent > 1 else str(divisor))
+        divisor += 1
+    if number > 1:
+        factors.append(str(number))
+    assert len(factors) > 1, "the displayed integer should have multiple prime factors"
+    return "*".join(factors)
+
+
+def _check_corpus_answer(card, answer: str, expected_state: str) -> None:
+    response = card.locator('.stack-answer[data-name="ans"]')
+    assert response.count() == 1
+    response.fill(answer)
+    card.locator(".stack-validate").click()
+    card.locator('.stack-result[data-state="valid"] .stack-verdict').wait_for(timeout=120000)
+    assert card.locator(".stack-check").is_enabled(), answer
+    card.locator(".stack-check").click()
+    card.locator(f'.stack-result[data-state="{expected_state}"] .stack-verdict').wait_for(timeout=120000)
+
+
+def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
+    """Exercise the actual published cards with the bundled Worker/Pyodide CAS."""
+    baseline = json.loads((CORPUS / "baseline.json").read_text())
+    manifest = json.loads((CORPUS / "manifest.json").read_text())
+    reports = {item["id"]: item for item in baseline["questions"]}
+    expected = {
+        item["question_name"]: (item, reports[item["id"]])
+        for item in manifest["questions"] if reports[item["id"]]["status"] == "qtests_pass"
+    }
+    assert {"AlgMap-2.1", "AlgMap-10.1"} <= expected.keys()
+
+    site = render_site()
+    with serve(site) as url, sync_playwright() as pw:
+        browser_options = {"headless": True}
+        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+            browser_options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
+        browser = pw.chromium.launch(**browser_options)
+        try:
+            page = browser.new_page()
+            errors = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            page.goto(url + "/corpus.html", wait_until="domcontentloaded")
+            cards = page.locator(".stack-sympy:not(.stack-diagnostic)")
+            assert cards.count() == len(expected)
+            by_name = {}
+            for index in range(cards.count()):
+                card = cards.nth(index)
+                payload = json.loads(card.locator("script.stack-sympy-data").text_content())
+                name = payload["question"]["name"]
+                assert name in expected and name not in by_name, name
+                entry, report = expected[name]
+                assert payload["variants"][0]["seed"] == report["seeds"][0], name
+                assert card.locator(".stack-answer").count() == entry["input_count"], name
+                by_name[name] = (card, payload["variants"][0]["env"])
+
+                prompt = card.locator(".stack-prompt")
+                prompt.locator("mjx-container").first.wait_for(timeout=60000)
+                assert prompt.locator("mjx-merror").count() == 0, name
+
+                card.locator(".stack-tests").click()
+                card.locator(".stack-result .stack-verdict").wait_for(timeout=180000)
+                assert card.locator(".stack-result").get_attribute("data-state") == "correct", name
+                assert "All authored tests passed" in card.locator(".stack-result").inner_text(), name
+                cases = card.locator(".stack-test-list li").all_inner_texts()
+                assert len(cases) == entry["qtest_count"], name
+                assert all(case.startswith("Pass · ") for case in cases), (name, cases)
+
+            assert set(by_name) == set(expected)
+
+            factor_card, env = by_name["AlgMap-10.1"]
+            k, coefficient, variable = int(env["k1"]), int(env["cf1"]), env["v"]
+            assert variable in {"x", "y", "z", "t"}
+            common = math.gcd(k, coefficient)
+            assert common > 1
+            _check_corpus_answer(factor_card,
+                                 f"{common}*({k // common}-{coefficient // common}*{variable})",
+                                 "correct")
+            _check_corpus_answer(factor_card, f"{k}-{coefficient}*{variable}", "retry")
+
+            primes_card, env = by_name["AlgMap-2.1"]
+            number = int(env["n"])
+            _check_corpus_answer(primes_card, _prime_power_answer(number), "correct")
+            _check_corpus_answer(primes_card, str(number), "retry")
+            assert "not fully factored" in primes_card.locator(".stack-result .stack-prt-feedback").inner_text()
+            assert not errors, errors
+        finally:
+            browser.close()
