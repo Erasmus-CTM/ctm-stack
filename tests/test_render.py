@@ -81,7 +81,10 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
     reports = {row["id"]: row for row in baseline["questions"]}
     authored = (ROOT / "corpus.qmd").read_text()
     assert authored == generate(), "regenerate with python scripts/generate_corpus_page.py"
+    upstream_note = "A reduced answer with the wrong value can receive full credit."
+    assert upstream_note in authored
     output = (render_site() / "corpus.html").read_text()
+    assert upstream_note in output
     navbar = output
     assert re.search(r'href="(?:\./|/)?corpus\.html"', navbar)
     assert "Question corpus" in navbar

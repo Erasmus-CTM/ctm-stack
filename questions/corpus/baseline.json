@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "engine_revision": "2c3269a32ab81058c8ed568b6c890b9c480eb548",
-  "adapter_source_sha256": "df7f0f928ca20e3d4a86d9c60f8312280edfc6065d2e78e8b7962d54888cef71",
+  "engine_revision": "96cf783bf1e05f5068391f344c0abc42d215b434",
+  "adapter_source_sha256": "fb2678bc0650b003339daca21cee59625d2cab56c74c0b8538489b89581c044c",
   "python_version": "3.12.14",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",
@@ -9,15 +9,16 @@
   "summary": {
     "total": 30,
     "stages": {
-      "qtests_pass": 14,
-      "unsupported_import": 8,
-      "unsupported_instantiate": 8
+      "qtests_mismatch": 1,
+      "qtests_pass": 16,
+      "unsupported_import": 4,
+      "unsupported_instantiate": 9
     },
-    "imported": 22,
-    "instantiated_all_seeds": 14,
-    "replayed_cases": 84,
-    "failed_cases": 0,
-    "failed_checks": 0
+    "imported": 26,
+    "instantiated_all_seeds": 17,
+    "replayed_cases": 114,
+    "failed_cases": 2,
+    "failed_checks": 2
   },
   "questions": [
     {
@@ -171,16 +172,17 @@
     },
     {
       "diagnostic": {
-        "location": "prt[prt1]/node[1]/answertest",
-        "message": "AlgMap-14.1: prt[prt1]/node[1]/answertest: unsupported answer test 'SingleFrac'",
-        "reason": "unsupported answer test 'SingleFrac'",
+        "location": "instantiation",
+        "message": "AlgMap-14.1: instantiation: Function gcd is not allowed; use gcd*(...) for multiplication",
+        "reason": "Function gcd is not allowed; use gcd*(...) for multiplication",
+        "seed": 1720352247,
         "type": "UnsupportedQuestion"
       },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "AlgMap-14-1.xml",
       "id": "algmap-14-1",
-      "imported_questions": 0,
+      "imported_questions": 1,
       "instantiated_seeds": [],
       "mismatches": [],
       "native_qtests": 3,
@@ -190,7 +192,7 @@
         1847020159,
         410204508
       ],
-      "status": "unsupported_import"
+      "status": "unsupported_instantiate"
     },
     {
       "diagnostic": {
@@ -238,27 +240,25 @@
       "status": "qtests_pass"
     },
     {
-      "diagnostic": {
-        "location": "prt[prt1]/node[0]/answertest",
-        "message": "AlgMap-2.5: prt[prt1]/node[0]/answertest: unsupported answer test 'LowestTerms'",
-        "reason": "unsupported answer test 'LowestTerms'",
-        "type": "UnsupportedQuestion"
-      },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "AlgMap-2-5.xml",
       "id": "algmap-2-5",
-      "imported_questions": 0,
-      "instantiated_seeds": [],
+      "imported_questions": 1,
+      "instantiated_seeds": [
+        554625703,
+        2004313867,
+        1257826844
+      ],
       "mismatches": [],
       "native_qtests": 2,
-      "replayed_cases": 0,
+      "replayed_cases": 6,
       "seeds": [
         554625703,
         2004313867,
         1257826844
       ],
-      "status": "unsupported_import"
+      "status": "qtests_pass"
     },
     {
       "diagnostic": {
@@ -329,27 +329,25 @@
       "status": "qtests_pass"
     },
     {
-      "diagnostic": {
-        "location": "prt[prt1]/node[0]/answertest",
-        "message": "AlgMap-4.13: prt[prt1]/node[0]/answertest: unsupported answer test 'SingleFrac'",
-        "reason": "unsupported answer test 'SingleFrac'",
-        "type": "UnsupportedQuestion"
-      },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "AlgMap-4-13.xml",
       "id": "algmap-4-13",
-      "imported_questions": 0,
-      "instantiated_seeds": [],
+      "imported_questions": 1,
+      "instantiated_seeds": [
+        1088093467,
+        276430126,
+        1612320671
+      ],
       "mismatches": [],
       "native_qtests": 4,
-      "replayed_cases": 0,
+      "replayed_cases": 12,
       "seeds": [
         1088093467,
         276430126,
         1612320671
       ],
-      "status": "unsupported_import"
+      "status": "qtests_pass"
     },
     {
       "diagnostic": {
@@ -463,27 +461,72 @@
       "status": "unsupported_instantiate"
     },
     {
-      "diagnostic": {
-        "location": "prt[prt1]/node[0]/answertest",
-        "message": "AlgMap-8.10: prt[prt1]/node[0]/answertest: unsupported answer test 'SingleFrac'",
-        "reason": "unsupported answer test 'SingleFrac'",
-        "type": "UnsupportedQuestion"
-      },
-      "failed_cases": 0,
-      "failed_checks": 0,
+      "failed_cases": 2,
+      "failed_checks": 2,
       "file": "AlgMap-8-10.xml",
       "id": "algmap-8-10",
-      "imported_questions": 0,
-      "instantiated_seeds": [],
-      "mismatches": [],
+      "imported_questions": 1,
+      "instantiated_seeds": [
+        496178535,
+        1856951054,
+        1715030049
+      ],
+      "mismatches": [
+        {
+          "checks": [
+            {
+              "actual": {
+                "note": "1-0-F | 1-1-F",
+                "penalty": 0.1,
+                "score": 0.0
+              },
+              "expected": {
+                "note": "1-0-T",
+                "penalty": 0.0,
+                "score": 1.0
+              },
+              "passed": false,
+              "prt": "prt1"
+            }
+          ],
+          "inputs": {
+            "ans": "(7*(t + y))"
+          },
+          "seed": 1856951054,
+          "testcase": "1"
+        },
+        {
+          "checks": [
+            {
+              "actual": {
+                "note": "1-0-F | 1-1-F",
+                "penalty": 0.1,
+                "score": 0.0
+              },
+              "expected": {
+                "note": "1-0-T",
+                "penalty": 0.0,
+                "score": 1.0
+              },
+              "passed": false,
+              "prt": "prt1"
+            }
+          ],
+          "inputs": {
+            "ans": "(7*(t + y))"
+          },
+          "seed": 1856951054,
+          "testcase": "2"
+        }
+      ],
       "native_qtests": 4,
-      "replayed_cases": 0,
+      "replayed_cases": 12,
       "seeds": [
         496178535,
         1856951054,
         1715030049
       ],
-      "status": "unsupported_import"
+      "status": "qtests_mismatch"
     },
     {
       "failed_cases": 0,

@@ -23,6 +23,9 @@ class AssessmentTest(unittest.TestCase):
         self.assertTrue(answer_test("EqualComAss", "3/4", "ta", env={"ta": sp.Rational(3, 4)})["correct"])
         self.assertFalse(answer_test("EqualComAss", "2/4", "ta", env={"ta": sp.Rational(1, 2)})["correct"])
         self.assertFalse(answer_test("EqualComAss", "0.75", "3/4")["correct"])
+        wrong = answer_test("EqualComAss", "1+x", "1+2*x")
+        self.assertEqual((wrong["valid"], wrong["cas_valid"], wrong["correct"]), (True, False, False))
+        self.assertEqual(answer_test("EqualComAss", "x+x", "2*x")["cas_valid"], True)
 
     def test_facform_polynomial_factorisation(self):
         accepted = (("(x-1)*(x+1)", "x^2-1"), ("(x+1)^2", "x^2+2*x+1"),
@@ -50,6 +53,30 @@ class AssessmentTest(unittest.TestCase):
                 answer_test("FacForm", cancelled, "1", "x")
         with self.assertRaisesRegex(Unsupported, "nonnegative integer powers"):
             answer_test("FacForm", "x^2-1+0*x^(-1)", "x^2-1", "x")
+
+    def test_singlefrac_equivalence_and_written_shape(self):
+        accepted = (("2/n", "2/n"), ("-((x+1)/(x-1))", "-(x+1)/(x-1)"),
+                    ("(x-1)/(x^2-1)", "1/(x+1)"), ("2/4", "1/2"),
+                    ("x/(y/2)^2", "4*x/y^2"), ("2", "4/2"), ("x", "x"))
+        for student, teacher in accepted:
+            with self.subTest(student=student):
+                self.assertTrue(answer_test("SingleFrac", student, teacher)["correct"])
+        rejected = (("2*(1/n)", "2/n"), ("1/n+1/(n+1)", "(2*n+1)/(n*(n+1))"),
+                    ("x/(2*(y/2))", "x/y"), ("x/(1/2)", "2*x"),
+                    ("x/y", "y/x"), ("x+1/2", "(2*x+1)/2"))
+        for student, teacher in rejected:
+            with self.subTest(student=student):
+                self.assertFalse(answer_test("SingleFrac", student, teacher)["correct"])
+
+    def test_lowestterms_numeric_fractions_not_polynomial_cancellation(self):
+        for student in ("1/2", "-1/2", "1/2+1/3", "1/(1/2)", "x/(x^2+x)",
+                        "(x^2-1)/(x-1)", "0.5", "-3/5"):
+            with self.subTest(student=student):
+                self.assertTrue(answer_test("LowestTerms", student, "0")["correct"])
+        for student in ("2/4", "-1/-2", "1/(2/4)", "x+3/6", "x*(6/9)",
+                        "1/sqrt(2)", "1/(1+%i)", "1/(1+sqrt(2)-sqrt(2))"):
+            with self.subTest(student=student):
+                self.assertFalse(answer_test("LowestTerms", student, "not_the_answer")["correct"])
 
     def test_numeric_threshold_and_zero(self):
         self.assertTrue(answer_test("NumAbsolute", "1.0000000009", "1", "0")["correct"])

@@ -3,9 +3,9 @@ title: "Question corpus"
 subtitle: "Thirty unchanged STACK exports, with a measured adapter boundary"
 ---
 
-These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **Only the 14 questions whose authored tests passed on every replayed seed have interactive cards.** The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.
+These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **Only the 16 questions whose authored tests passed on every replayed seed have interactive cards.** The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.
 
-The [reproducible baseline](questions/corpus/baseline.json) reports **14 passed**, **0 with test mismatches**, and **16 blocked** (8 at import, 8 at instantiation). It retained **73 authored test cases** and replayed **84 seed/case combinations** across 14 instantiated questions; 0 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.
+The [reproducible baseline](questions/corpus/baseline.json) reports **16 passed**, **1 with test mismatches**, and **13 blocked** (4 at import, 9 at instantiation). It retained **73 authored test cases** and replayed **114 seed/case combinations** across 17 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.
 
 **Attribution and reuse.** Questions are from [STACK / maths/moodle-qtype_stack](https://github.com/maths/moodle-qtype_stack), pinned at commit [`10d323311b7f39fb7b092dd10ce75f7d8632f525`](https://github.com/maths/moodle-qtype_stack/commit/10d323311b7f39fb7b092dd10ce75f7d8632f525). The unchanged question exports carry the [CC BY-SA 4.0 license](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/COPYING.txt), also [included locally](questions/corpus/COPYING.txt); see each pinned source link below. The [manifest](questions/corpus/manifest.json) records the exact upstream path and SHA-256 for every XML file.
 
@@ -16,18 +16,18 @@ The [reproducible baseline](questions/corpus/baseline.json) reports **14 passed*
 | [AlgMap-1.5](#algmap-1-5) | Algebra Refresher / 01 Combinations of arithmetic operations | Passed authored tests | [Download](questions/corpus/AlgMap-1-5.xml) |
 | [AlgMap-1.6](#algmap-1-6) | Algebra Refresher / 01 Combinations of arithmetic operations | Passed authored tests | [Download](questions/corpus/AlgMap-1-6.xml) |
 | [AlgMap-2.1](#algmap-2-1) | Algebra Refresher / 02 Factorisation of whole numbers | Passed authored tests | [Download](questions/corpus/AlgMap-2-1.xml) |
-| [AlgMap-2.5](#algmap-2-5) | Algebra Refresher / 02 Factorisation of whole numbers | Unsupported at import | [Download](questions/corpus/AlgMap-2-5.xml) |
+| [AlgMap-2.5](#algmap-2-5) | Algebra Refresher / 02 Factorisation of whole numbers | Passed authored tests | [Download](questions/corpus/AlgMap-2-5.xml) |
 | [AlgMap-3.1](#algmap-3-1) | Algebra Refresher / 03 Addition and subtraction of fractions | Unsupported at import | [Download](questions/corpus/AlgMap-3-1.xml) |
 | [AlgMap-3.3](#algmap-3-3) | Algebra Refresher / 03 Addition and subtraction of fractions | Unsupported at instantiation | [Download](questions/corpus/AlgMap-3-3.xml) |
 | [AlgMap-4.1](#algmap-4-1) | Algebra Refresher / 04 Multiplication and division of fractions | Passed authored tests | [Download](questions/corpus/AlgMap-4-1.xml) |
-| [AlgMap-4.13](#algmap-4-13) | Algebra Refresher / 04 Multiplication and division of fractions | Unsupported at import | [Download](questions/corpus/AlgMap-4-13.xml) |
+| [AlgMap-4.13](#algmap-4-13) | Algebra Refresher / 04 Multiplication and division of fractions | Passed authored tests | [Download](questions/corpus/AlgMap-4-13.xml) |
 | [AlgMap-5.1](#algmap-5-1) | Algebra Refresher / 05 Combinations of arithmetic operations on fractions | Unsupported at instantiation | [Download](questions/corpus/AlgMap-5-1.xml) |
 | [AlgMap-6.4](#algmap-6-4) | Algebra Refresher / 06 Simplifying algebraic expressions | Passed authored tests | [Download](questions/corpus/AlgMap-6-4.xml) |
 | [AlgMap-6.7](#algmap-6-7) | Algebra Refresher / 06 Simplifying algebraic expressions | Passed authored tests | [Download](questions/corpus/AlgMap-6-7.xml) |
 | [AlgMap-7.1](#algmap-7-1) | Algebra Refresher / 07 Removing brackets | Passed authored tests | [Download](questions/corpus/AlgMap-7-1.xml) |
 | [AlgMap-7.10](#algmap-7-10) | Algebra Refresher / 07 Removing brackets | Unsupported at instantiation | [Download](questions/corpus/AlgMap-7-10.xml) |
 | [AlgMap-8.5](#algmap-8-5) | Algebra Refresher / 08 Algebraic fractions | Passed authored tests | [Download](questions/corpus/AlgMap-8-5.xml) |
-| [AlgMap-8.10](#algmap-8-10) | Algebra Refresher / 08 Algebraic fractions | Unsupported at import | [Download](questions/corpus/AlgMap-8-10.xml) |
+| [AlgMap-8.10](#algmap-8-10) | Algebra Refresher / 08 Algebraic fractions | Authored test mismatch | [Download](questions/corpus/AlgMap-8-10.xml) |
 | [AlgMap-9.1](#algmap-9-1) | Algebra Refresher / 09 Linear equations | Passed authored tests | [Download](questions/corpus/AlgMap-9-1.xml) |
 | [AlgMap-9.6](#algmap-9-6) | Algebra Refresher / 09 Linear equations | Passed authored tests | [Download](questions/corpus/AlgMap-9-6.xml) |
 | [AlgMap-10.1](#algmap-10-1) | Algebra Refresher / 10 Expressions single term common factors | Passed authored tests | [Download](questions/corpus/AlgMap-10-1.xml) |
@@ -35,7 +35,7 @@ The [reproducible baseline](questions/corpus/baseline.json) reports **14 passed*
 | [AlgMap-11.8](#algmap-11-8) | Algebra Refresher / 11 Rearranging algebraic formulae | Passed authored tests | [Download](questions/corpus/AlgMap-11-8.xml) |
 | [AlgMap-12.1](#algmap-12-1) | Algebra Refresher / 12 Simultaneous linear equations | Unsupported at import | [Download](questions/corpus/AlgMap-12-1.xml) |
 | [AlgMap-13.1](#algmap-13-1) | Algebra Refresher / 13 Factorising algebraic expressions | Passed authored tests | [Download](questions/corpus/AlgMap-13-1-.xml) |
-| [AlgMap-14.1](#algmap-14-1) | Algebra Refresher / 14 Algebraic fractions involving factorising | Unsupported at import | [Download](questions/corpus/AlgMap-14-1.xml) |
+| [AlgMap-14.1](#algmap-14-1) | Algebra Refresher / 14 Algebraic fractions involving factorising | Unsupported at instantiation | [Download](questions/corpus/AlgMap-14-1.xml) |
 | [AlgMap-15.1](#algmap-15-1) | Algebra Refresher / 15 Quadratic equations | Unsupported at instantiation | [Download](questions/corpus/AlgMap-15-1.xml) |
 | [Complex_Convert_1](#complex-convert-1) | Topics / Complex Numbers | Unsupported at instantiation | [Download](questions/corpus/Complex_Convert_1.xml) |
 | [Limits_1](#limits-1) | Topics / Limits | Unsupported at import | [Download](questions/corpus/Limits_1.xml) |
@@ -46,7 +46,7 @@ The [reproducible baseline](questions/corpus/baseline.json) reports **14 passed*
 
 ## Ready to try
 
-These 14 cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the original XML test cases on the displayed seed; the [baseline](questions/corpus/baseline.json) covers every recorded seed. Their source panels start closed and expose both the authored block and unchanged STACK XML.
+These 16 cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the original XML test cases on the displayed seed; the [baseline](questions/corpus/baseline.json) covers every recorded seed. Their source panels start closed and expose both the authored block and unchanged STACK XML.
 
 ### AlgMap-1.5 {#algmap-1-5}
 
@@ -87,6 +87,21 @@ Algebra Refresher / 02 Factorisation of whole numbers · 1 input · 2 authored t
 
 [Download original XML](questions/corpus/AlgMap-2-1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/02-Factorisation-of-whole-numbers/AlgMap-2-1.xml)
 
+### AlgMap-2.5 {#algmap-2-5}
+
+Algebra Refresher / 02 Factorisation of whole numbers · 1 input · 2 authored tests · baseline seeds `554625703`, `2004313867`, `1257826844`.
+
+> **Upstream grading note:** This original response tree checks lowest-terms form without checking equivalence first. A reduced answer with the wrong value can receive full credit. The XML and its authored tests are unchanged.
+
+```{.stack-question}
+#| file: questions/corpus/AlgMap-2-5.xml
+#| question: AlgMap-2.5
+#| seed: 554625703
+#| review: true
+```
+
+[Download original XML](questions/corpus/AlgMap-2-5.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/02-Factorisation-of-whole-numbers/AlgMap-2-5.xml)
+
 ### AlgMap-4.1 {#algmap-4-1}
 
 Algebra Refresher / 04 Multiplication and division of fractions · 1 input · 2 authored tests · baseline seeds `167731690`, `482559703`, `774333379`.
@@ -99,6 +114,19 @@ Algebra Refresher / 04 Multiplication and division of fractions · 1 input · 2 
 ```
 
 [Download original XML](questions/corpus/AlgMap-4-1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/04-Multiplication-and-division-of-fractions/AlgMap-4-1.xml)
+
+### AlgMap-4.13 {#algmap-4-13}
+
+Algebra Refresher / 04 Multiplication and division of fractions · 1 input · 4 authored tests · baseline seeds `1088093467`, `276430126`, `1612320671`.
+
+```{.stack-question}
+#| file: questions/corpus/AlgMap-4-13.xml
+#| question: AlgMap-4.13
+#| seed: 1088093467
+#| review: true
+```
+
+[Download original XML](questions/corpus/AlgMap-4-13.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/04-Multiplication-and-division-of-fractions/AlgMap-4-13.xml)
 
 ### AlgMap-6.4 {#algmap-6-4}
 
@@ -232,17 +260,17 @@ Algebra Refresher / 13 Factorising algebraic expressions · 1 input · 2 authore
 
 ## Authored test mismatches
 
-None among the questions replayed on every recorded seed. The [baseline JSON](questions/corpus/baseline.json) retains individual seed and test results; unsupported questions remain listed below.
+This question imports and instantiates, but the adapter's replay disagrees with outcomes authored in the XML. Its grading is therefore not presented as a working exercise. Seeded values in this adapter need not match Maxima's values for the same seed, so a mismatch may arise from a different generated variant. The [baseline JSON](questions/corpus/baseline.json) lists every failed seed, input, PRT, expected result, and observed result.
+
+### AlgMap-8.10 {#algmap-8-10}
+
+Algebra Refresher / 08 Algebraic fractions · **2 failed of 12 replayed seed/case combinations.** For seed `1856951054`, case `1`, input `ans = (7*(t + y))`: `prt1` expected score `1.0` and answer note `1-0-T`, but produced score `0.0` and answer note `1-0-F | 1-1-F`.
+
+[Download original XML](questions/corpus/AlgMap-8-10.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/08-Algebraic-fractions/AlgMap-8-10.xml) · [Full replay](questions/corpus/baseline.json)
 
 ## Unsupported by this adapter
 
 These original questions remain inspectable. Each reason is the first recorded failure at the indicated import or instantiation stage; later features have not been assessed.
-
-### AlgMap-2.5 {#algmap-2-5}
-
-Algebra Refresher / 02 Factorisation of whole numbers · **Unsupported at import.** `prt[prt1]/node[0]/answertest`: unsupported answer test &#x27;LowestTerms&#x27;.
-
-[Download original XML](questions/corpus/AlgMap-2-5.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/02-Factorisation-of-whole-numbers/AlgMap-2-5.xml) · [Replay record](questions/corpus/baseline.json)
 
 ### AlgMap-3.1 {#algmap-3-1}
 
@@ -256,12 +284,6 @@ Algebra Refresher / 03 Addition and subtraction of fractions · **Unsupported at
 
 [Download original XML](questions/corpus/AlgMap-3-3.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/03-Addition-and-subtraction-of-fractions/AlgMap-3-3.xml) · [Replay record](questions/corpus/baseline.json)
 
-### AlgMap-4.13 {#algmap-4-13}
-
-Algebra Refresher / 04 Multiplication and division of fractions · **Unsupported at import.** `prt[prt1]/node[0]/answertest`: unsupported answer test &#x27;SingleFrac&#x27;.
-
-[Download original XML](questions/corpus/AlgMap-4-13.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/04-Multiplication-and-division-of-fractions/AlgMap-4-13.xml) · [Replay record](questions/corpus/baseline.json)
-
 ### AlgMap-5.1 {#algmap-5-1}
 
 Algebra Refresher / 05 Combinations of arithmetic operations on fractions · **Unsupported at instantiation at seed `1965111916`.** `questionvariables[simp]`: reassigned variable is unsupported.
@@ -274,12 +296,6 @@ Algebra Refresher / 07 Removing brackets · **Unsupported at instantiation at se
 
 [Download original XML](questions/corpus/AlgMap-7-10.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/07-Removing-brackets/AlgMap-7-10.xml) · [Replay record](questions/corpus/baseline.json)
 
-### AlgMap-8.10 {#algmap-8-10}
-
-Algebra Refresher / 08 Algebraic fractions · **Unsupported at import.** `prt[prt1]/node[0]/answertest`: unsupported answer test &#x27;SingleFrac&#x27;.
-
-[Download original XML](questions/corpus/AlgMap-8-10.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/08-Algebraic-fractions/AlgMap-8-10.xml) · [Replay record](questions/corpus/baseline.json)
-
 ### AlgMap-12.1 {#algmap-12-1}
 
 Algebra Refresher / 12 Simultaneous linear equations · **Unsupported at import.** `input[ans]`: unsupported input name or type &#x27;ans&#x27;/&#x27;matrix&#x27;.
@@ -288,7 +304,7 @@ Algebra Refresher / 12 Simultaneous linear equations · **Unsupported at import.
 
 ### AlgMap-14.1 {#algmap-14-1}
 
-Algebra Refresher / 14 Algebraic fractions involving factorising · **Unsupported at import.** `prt[prt1]/node[1]/answertest`: unsupported answer test &#x27;SingleFrac&#x27;.
+Algebra Refresher / 14 Algebraic fractions involving factorising · **Unsupported at instantiation at seed `1720352247`.** `instantiation`: Function gcd is not allowed; use gcd*(...) for multiplication.
 
 [Download original XML](questions/corpus/AlgMap-14-1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/14-Algebraic-fractions-involving-factorising/AlgMap-14-1.xml) · [Replay record](questions/corpus/baseline.json)
 

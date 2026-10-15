@@ -178,10 +178,11 @@ def _input_validation(inp, raw, env, assumptions):
                 if node.kind == "binary" and node.value == "/":
                     num = evaluate(node.children[0], env, assumptions=assumptions, student=True, simplify=False)
                     den = evaluate(node.children[1], env, assumptions=assumptions, student=True, simplify=False)
-                    if num.is_Integer and den.is_Integer and math.gcd(int(num), int(den)) > 1:
+                    if num.is_Integer and den.is_Integer and (math.gcd(int(num), int(den)) > 1
+                                                              or num < 0 and den < 0):
                         raise InvalidAnswer("Write fractions in lowest terms")
-                    if num.is_polynomial() and den.is_polynomial() and den.free_symbols and sp.degree(sp.gcd(num, den)) > 0:
-                        raise InvalidAnswer("Write fractions in lowest terms")
+                    # STACK's all_lowest_termsex examines written numeric
+                    # fractions; polynomial cancellation is a separate test.
         evaluate(tree, env, assumptions=assumptions, student=True, simplify=False)
         value = evaluate(tree, env, assumptions=assumptions, student=True)
         if not isinstance(value, sp.Basic):
@@ -400,7 +401,7 @@ def run_question_tests(question: dict, seeds=(1,), variants=None) -> dict:
             raw = {}
             for key, expression in test["inputs"].items():
                 try:
-                    form = any(n["test"] in {"EqualComAss", "FacForm"} and re.search(rf"\b{re.escape(key)}\b", n["student"])
+                    form = any(n["test"] in {"EqualComAss", "FacForm", "SingleFrac", "LowestTerms"} and re.search(rf"\b{re.escape(key)}\b", n["student"])
                                for p in question["prts"] for n in p["nodes"])
                     raw[key] = _qtest_answer(question, expression, env, preserve_form=form)
                 except (Unsupported, InvalidAnswer, ValueError) as exc:

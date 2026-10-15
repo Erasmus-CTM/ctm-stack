@@ -178,17 +178,93 @@ def _facform_preflight(node, env, assumptions):
             raise Unsupported("FacForm supports nonnegative integer powers")
 
 
+def _fraction_parts(node: Node):
+    """Preserve the division operators STACK sees with simp:false."""
+    while node.kind == "unary":
+        node = node.children[0]
+    return node.children if node.kind == "binary" and node.value == "/" else None
+
+
+def _division_in_sum_or_product(node: Node) -> bool:
+    """Mirror ATSingleFrac_helper: powers and function calls are opaque."""
+    if _fraction_parts(node) is not None:
+        return True
+    if node.kind == "unary":
+        return _division_in_sum_or_product(node.children[0])
+    if node.kind == "binary" and node.value in {"+", "-", "*"}:
+        return any(_division_in_sum_or_product(child) for child in node.children)
+    return False
+
+
+def _single_fraction(node: Node) -> bool:
+    parts = _fraction_parts(node)
+    return parts is not None and not any(_division_in_sum_or_product(part) for part in parts)
+
+
+def _written_integer(node: Node, env, assumptions):
+    """Only a literal, its sign, or a frozen integer author value is a numberp atom."""
+    if node.kind == "unary":
+        value = _written_integer(node.children[0], env, assumptions)
+        return -value if value is not None and node.value == "-" else value
+    if node.kind == "number" or node.kind == "name" and node.value in env:
+        value = evaluate(node, env, assumptions=assumptions, student=True)
+        if value.is_Integer is True:
+            return int(value)
+    return None
+
+
+def _unrationalized_denominator(node: Node, env, assumptions) -> bool:
+    """Inspect the unsimplified denominator before cancellations erase surds."""
+    if node.kind == "call" and node.value == "sqrt":
+        return True
+    if node.kind == "name" and node.value in {"%i", "i", "I"}:
+        return True
+    if node.kind == "binary" and node.value in {"^", "**"}:
+        exponent = node.children[1]
+        written_fraction = _fraction_parts(exponent)
+        if written_fraction is not None and all(_written_integer(part, env, assumptions) is not None
+                                               for part in written_fraction):
+            return True
+    if node.kind == "name" and node.value in env:
+        value = env[node.value]
+        if isinstance(value, sp.Basic) and (value.has(sp.I) or any(
+                power.exp.is_Rational and not power.exp.is_Integer for power in value.atoms(sp.Pow))):
+            return True
+    return any(_unrationalized_denominator(child, env, assumptions) for child in node.children)
+
+
+def _lowest_terms(node: Node, env, assumptions) -> bool:
+    """Check written numeric fractions, never cancel polynomial factors."""
+    if node.kind == "binary" and node.value == "/":
+        numerator = _written_integer(node.children[0], env, assumptions)
+        denominator = _written_integer(node.children[1], env, assumptions)
+        if numerator is not None and denominator is not None:
+            if (numerator < 0 and denominator < 0) or sp.igcd(numerator, denominator) != 1:
+                return False
+        # STACK's rationalized predicate rejects imaginary units and
+        # fractional powers (including sqrt) in denominators.
+        denominator_value = evaluate(node.children[1], env, assumptions=assumptions, student=True)
+        if (_unrationalized_denominator(node.children[1], env, assumptions)
+                or denominator_value.has(sp.I) or any(
+                    power.exp.is_Rational and not power.exp.is_Integer
+                    for power in denominator_value.atoms(sp.Pow))):
+            return False
+    return all(_lowest_terms(child, env, assumptions) for child in node.children)
+
+
 def answer_test(name: str, student: Node | str, teacher: str, options: str = "", *,
                 env: Mapping[str, Any] | None = None, raw: str | None = None,
                 assumptions: Mapping[str, bool] | None = None) -> dict:
     """Evaluate one supported STACK test; return valid/correct/note/feedback.
 
-    Supported: AlgEquiv, EqualComAss, FacForm, NumAbsolute, NumRelative, NumDecPlaces
+    Supported: AlgEquiv, EqualComAss, FacForm, SingleFrac, LowestTerms,
+    NumAbsolute, NumRelative, NumDecPlaces
     (one to fifty decimal places).
     Student lists and sets, units, equations, matrices, and feedback-tree CAS
     features are outside this intentionally limited implementation.
     """
-    if name not in {"AlgEquiv", "EqualComAss", "FacForm", "NumAbsolute", "NumRelative", "NumDecPlaces"}:
+    if name not in {"AlgEquiv", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
+                    "NumAbsolute", "NumRelative", "NumDecPlaces"}:
         raise Unsupported(f"Answer test {name!r} is unsupported")
     env = {} if env is None else env
     try:
@@ -206,12 +282,29 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
     if name == "AlgEquiv":
         return _result(True, _equiv(student_value, teacher_value))
 
+    if name == "SingleFrac":
+        # STACK accepts equivalent atomic answers without requiring a '/'.
+        # Otherwise the expression itself must be a single written fraction.
+        if student_ast.kind in {"number", "name"}:
+            return _result(True, _equiv(student_value, teacher_value))
+        form = _single_fraction(student_ast)
+        return _result(True, form and _equiv(student_value, teacher_value))
+
+    if name == "LowestTerms":
+        # The teacher is deliberately ignored by STACK's ATLowestTerms.
+        return _result(True, _lowest_terms(student_ast, env, assumptions))
+
     if name == "EqualComAss":
+        # STACK's CAS test marks unequal values as inapplicable (first
+        # return flag false). The adapter's `valid` remains input syntax
+        # validity so an ordinary wrong answer can follow its PRT branch.
+        if not _equiv(student_value, teacher_value):
+            return {**_result(True, False), "cas_valid": False}
         try:
             correct = canonical_form(student_ast, env, assumptions) == canonical_form(teacher, env, assumptions)
         except InvalidAnswer as exc:
             return _result(False, False, "invalid", str(exc))
-        return _result(True, correct)
+        return {**_result(True, correct), "cas_valid": True}
 
     if name == "FacForm":
         if not options.strip():

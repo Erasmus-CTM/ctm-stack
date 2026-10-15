@@ -81,16 +81,22 @@ def render_castext(source: str, env: dict, question: str, location: str, *, inpu
         expr, directive = match.groups()
         if expr is not None:
             try:
-                tree = parse(expr)
+                # STACK CASText also prints scalar equations, e.g. {@p=ta@}.
+                # Keep equation parsing local to display; student/author CAS
+                # expressions still have the stricter scalar grammar.
+                sides = [part.strip() for part in expr.split("=")]
+                if len(sides) not in (1, 2) or any(not side for side in sides):
+                    raise ValueError("Only a scalar equality is supported")
+                trees = [parse(side) for side in sides]
                 def random_call(node):
                     return (node.kind == "call" and node.value in {"rand", "rand_with_step"}) or any(random_call(c) for c in node.children)
-                if random_call(tree):
+                if any(random_call(tree) for tree in trees):
                     raise UnsupportedQuestion(question, location, "random CASText expressions must be assigned in question variables")
                 if form_expression is not None:
-                    latex = form_latex(parse(form_expression(expr)))
+                    rendered_sides = [form_latex(parse(form_expression(side))) for side in sides]
                 else:
-                    value = evaluate(tree, env=env, assumptions=assumptions)
-                    latex = sp.latex(value)
+                    rendered_sides = [sp.latex(evaluate(tree, env=env, assumptions=assumptions)) for tree in trees]
+                latex = " = ".join(rendered_sides)
             except UnsupportedQuestion:
                 raise
             except Exception as exc:

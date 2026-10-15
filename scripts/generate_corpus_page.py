@@ -70,6 +70,13 @@ def generate() -> str:
             "",
             f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · {entry['input_count']} input{'s' if entry['input_count'] != 1 else ''} · {entry['qtest_count']} authored tests · baseline seeds {', '.join(f'`{s}`' for s in row['seeds'])}.",
             "",
+        ]
+        if entry["file"] == "AlgMap-2-5.xml":
+            out += [
+                "> **Upstream grading note:** This original response tree checks lowest-terms form without checking equivalence first. A reduced answer with the wrong value can receive full credit. The XML and its authored tests are unchanged.",
+                "",
+            ]
+        out += [
             "```{.stack-question}",
             f"#| file: questions/corpus/{entry['file']}",
             f"#| question: {entry['question_name']}",
@@ -83,7 +90,7 @@ def generate() -> str:
     out += [
         "## Authored test mismatches",
         "",
-        (f"These {len(mismatched)} questions import and instantiate, but the adapter's replay disagrees with outcomes authored in the XML. Their grading is therefore not presented as a working exercise. The [baseline JSON](questions/corpus/baseline.json) lists every failed seed, input, PRT, expected result, and observed result."
+        (f"{'This question imports and instantiates' if len(mismatched) == 1 else f'These {len(mismatched)} questions import and instantiate'}, but the adapter's replay disagrees with outcomes authored in the XML. {'Its grading is' if len(mismatched) == 1 else 'Their grading is'} therefore not presented as a working exercise. Seeded values in this adapter need not match Maxima's values for the same seed, so a mismatch may arise from a different generated variant. The [baseline JSON](questions/corpus/baseline.json) lists every failed seed, input, PRT, expected result, and observed result."
          if mismatched else "None among the questions replayed on every recorded seed. The [baseline JSON](questions/corpus/baseline.json) retains individual seed and test results; unsupported questions remain listed below."),
         "",
     ]

@@ -32,7 +32,7 @@ _LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(
 _NAMES = {"pi": sp.pi, "%pi": sp.pi, "e": sp.E, "E": sp.E, "%e": sp.E,
           "i": sp.I, "I": sp.I, "%i": sp.I}
 _STUDENT_FUNCTIONS = {"sqrt", "sin", "cos", "tan", "exp", "log", "abs"}
-_AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
+_AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "lcm", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
 
 
 @dataclass(frozen=True)
@@ -371,6 +371,10 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                 if start > end or step <= 0:
                     raise Unsupported("Invalid random range")
                 return sp.Integer(rng.choice(range(start, end + 1, step)))
+            if name == "lcm":
+                if len(args) != 2 or any(not isinstance(x, sp.Basic) or x.is_Integer is not True for x in args):
+                    raise Unsupported("lcm requires two integer arguments")
+                return sp.Integer(sp.ilcm(*args))
             if name in {"decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}:
                 if len(args) != 2:
                     raise Unsupported(f"{name} takes two arguments")
@@ -381,7 +385,8 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                 return sp.diff(args[0], args[1], *([_integer(args[2], lower=0, upper=10)] if len(args) == 3 else []))
             funcs = {"sqrt": sp.sqrt, "sin": sp.sin, "cos": sp.cos, "tan": sp.tan, "exp": sp.exp,
                      "log": sp.log, "abs": sp.Abs, "expand": sp.expand, "factor": sp.factor,
-                     "ratsimp": sp.cancel, "cancel": sp.cancel, "float": lambda x: sp.N(x, 17)}
+                     "ratsimp": lambda x: sp.together(sp.cancel(x)), "cancel": sp.cancel,
+                     "float": lambda x: sp.N(x, 17)}
             if name not in funcs or len(args) != 1 or isinstance(args[0], list):
                 raise Unsupported(f"Unsupported call to {name}")
             return _finite(funcs[name](args[0]))

@@ -13,7 +13,37 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  maxima-reference:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: maths/moodle-qtype_stack
+          ref: 10d323311b7f39fb7b092dd10ce75f7d8632f525
+          path: .stack-upstream-reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - name: Install Ubuntu Maxima and pinned SymPy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y maxima maxima-share
+          python -m pip install -r requirements.txt
+      - name: Compare against native STACK answer tests
+        run: python scripts/compare_stack_maxima.py --stack-source .stack-upstream-reference
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: maxima-reference-results
+          path: test-results/maxima-reference.json
+          if-no-files-found: error
+
   site:
+    needs: maxima-reference
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from contextlib import contextmanager
+from fractions import Fraction
 from functools import partial
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 import json
@@ -169,7 +170,7 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
         item["question_name"]: (item, reports[item["id"]])
         for item in manifest["questions"] if reports[item["id"]]["status"] == "qtests_pass"
     }
-    assert {"AlgMap-2.1", "AlgMap-10.1", "AlgMap-13.1"} <= expected.keys()
+    assert {"AlgMap-2.1", "AlgMap-2.5", "AlgMap-4.13", "AlgMap-10.1", "AlgMap-13.1"} <= expected.keys()
 
     site = render_site()
     with serve(site) as url, sync_playwright() as pw:
@@ -251,6 +252,27 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             _check_corpus_answer(primes_card, _prime_power_answer(number), "correct")
             _check_corpus_answer(primes_card, str(number), "retry")
             assert "not fully factored" in primes_card.locator(".stack-result .stack-prt-feedback").inner_text()
+
+            lowest_card, env = by_name["AlgMap-2.5"]
+            numerator, denominator, multiplier = int(env["a"]), int(env["b"]), int(env["c"])
+            assert denominator != 0 and multiplier > 1
+            reduced = Fraction(numerator, denominator)
+            _check_corpus_answer(lowest_card, f"{reduced.numerator}/{reduced.denominator}", "correct")
+            _check_corpus_answer(lowest_card, f"({numerator * multiplier})/({denominator * multiplier})", "retry")
+            assert "equivalent to the correct answer" in lowest_card.locator(
+                ".stack-result .stack-prt-feedback").inner_text()
+            # The pinned upstream PRT awards full credit for reduced form alone:
+            # its LowestTerms true branch ends before checking the answer value.
+            assert reduced != 1  # odd a / even b cannot equal one
+            _check_corpus_answer(lowest_card, "1", "correct")
+
+            single_card, env = by_name["AlgMap-4.13"]
+            linear, constant, fraction = int(env["A"]), int(env["B"]), int(env["C"])
+            assert fraction > 0 and env["D"].replace(" ", "") == "x+1"
+            _check_corpus_answer(single_card,
+                                 f"({linear}*x^2+{linear + constant}*x+{constant + fraction})/(x+1)",
+                                 "correct")
+            _check_corpus_answer(single_card, f"{linear}*x+{constant}+{fraction}/(x+1)", "retry")
             assert not errors, errors
         finally:
             browser.close()

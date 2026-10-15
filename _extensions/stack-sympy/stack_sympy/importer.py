@@ -13,7 +13,8 @@ from xml.etree import ElementTree as ET
 
 
 NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
-TESTS = {"AlgEquiv", "EqualComAss", "FacForm", "NumAbsolute", "NumRelative", "NumDecPlaces"}
+TESTS = {"AlgEquiv", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
+         "NumAbsolute", "NumRelative", "NumDecPlaces"}
 INPUT_TYPES = {"algebraic", "numerical"}
 
 
@@ -161,7 +162,7 @@ def _question(element):
     for prt in prts:
         for node in prt["nodes"]:
             _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans", bool(node["student"]), "empty student expression")
-            if node["test"] in {"EqualComAss", "FacForm"}:
+            if node["test"] in {"EqualComAss", "FacForm", "SingleFrac", "LowestTerms"}:
                 _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans",
                        node["student"] in {inp["name"] for inp in inputs},
                        f"{node['test']} requires a direct input to preserve answer form")

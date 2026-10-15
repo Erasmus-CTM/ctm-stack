@@ -117,6 +117,32 @@ class EngineTests(unittest.TestCase):
                 self.assertTrue(result["passed"], [(row["testcase"], row["seed"], row["checks"])
                                                    for row in result["results"] if not row["passed"]])
 
+    def test_native_single_fraction_and_lowest_terms_qtests(self):
+        for stem in ("AlgMap-2-5", "AlgMap-4-13"):
+            q = import_xml(ROOT / "questions/corpus" / f"{stem}.xml")[0]
+            with self.subTest(stem=stem):
+                result = run_question_tests(q, seeds=q["deployedseeds"][:3] or [17, 29, 47])
+                self.assertTrue(result["passed"], [(row["testcase"], row["seed"], row["checks"])
+                                                   for row in result["results"] if not row["passed"]])
+        # The Python RNG can produce a fully integral coefficient for 8.10;
+        # its author qtest then expects the nonfraction 7*(t+y) to pass
+        # SingleFrac. Do not broaden the predicate to award that form.
+        q = import_xml(ROOT / "questions/corpus/AlgMap-8-10.xml")[0]
+        result = run_question_tests(q, seeds=[q["deployedseeds"][0], q["deployedseeds"][2]])
+        self.assertTrue(result["passed"])
+        integral = run_question_tests(q, seeds=[q["deployedseeds"][1]])
+        self.assertFalse(integral["passed"])
+        self.assertEqual([row["testcase"] for row in integral["results"] if not row["passed"]], ["1", "2"])
+
+    def test_requirelowestterms_validates_written_numeric_fractions(self):
+        from stack_sympy.engine import _input_validation
+        inp = {"insertstars": 0, "forbidwords": [], "forbidfloat": False,
+               "requirelowestterms": True, "type": "algebraic"}
+        for response in ("x^2/x", "(2*x)/(4*t)", "1/-3"):
+            self.assertTrue(_input_validation(inp, response, {}, {})[0]["valid"], response)
+        for response in ("2/4", "-1/-3"):
+            self.assertFalse(_input_validation(inp, response, {}, {})[0]["valid"], response)
+
     def test_unsimplified_castext_shows_written_powers(self):
         q = import_xml(ROOT / "questions/corpus/AlgMap-1-5.xml")[0]
         variant = instantiate(q, q["deployedseeds"][0])
