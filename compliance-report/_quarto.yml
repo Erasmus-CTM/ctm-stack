@@ -13,7 +13,7 @@ website:
   navbar:
     left:
       - text: Back to example site
-        href: https://erasmus-ctm.github.io/stack-sympy/
+        href: ../
 
 format:
   html:

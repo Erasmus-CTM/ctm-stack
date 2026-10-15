@@ -1,33 +1,7 @@
 name: Native STACK compliance report
 
 on:
-  push:
-    branches: [main, 'feature/**']
-    paths:
-      - '.github/workflows/native-compliance.yml'
-      - '_quarto.yml'
-      - '_extensions/stack-sympy/**'
-      - 'scripts/import_stack_fixtures.py'
-      - 'scripts/native_compliance/**'
-      - 'scripts/run_compliance_*.py'
-      - 'tests/native_compliance/**'
-      - 'tests/test_compliance_*.py'
-      - 'tests/test_fixture_import.py'
-      - 'compliance-report/**'
-      - 'requirements*.txt'
-  pull_request:
-    paths:
-      - '.github/workflows/native-compliance.yml'
-      - '_quarto.yml'
-      - '_extensions/stack-sympy/**'
-      - 'scripts/import_stack_fixtures.py'
-      - 'scripts/native_compliance/**'
-      - 'scripts/run_compliance_*.py'
-      - 'tests/native_compliance/**'
-      - 'tests/test_compliance_*.py'
-      - 'tests/test_fixture_import.py'
-      - 'compliance-report/**'
-      - 'requirements*.txt'
+  workflow_call:
 
 permissions:
   contents: read
@@ -75,6 +49,14 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Verify imported rows against exact upstream bytes
         run: python scripts/import_stack_fixtures.py --upstream .stack-upstream-reference --check
+      - name: Probe standalone official Maxima loader
+        run: python scripts/run_compliance_maxima.py --stack-source .stack-upstream-reference --probe-only
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: maxima-loader-probe
+          path: test-results/compliance/maxima-loader-probe.json
+          if-no-files-found: warn
       - run: python scripts/run_compliance_maxima.py --stack-source .stack-upstream-reference
       - uses: actions/upload-artifact@v4
         if: always()
@@ -174,25 +156,3 @@ jobs:
           path: compliance-report/_site/
           if-no-files-found: warn
 
-  publish:
-    name: Publish main report independently
-    needs: report
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.report.result == 'success'
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    concurrency:
-      group: stack-sympy-pages
-      cancel-in-progress: false
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: native-compliance-html
-          path: ./report-site
-      - uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./report-site
-          publish_branch: gh-pages
-          destination_dir: compliance
-          keep_files: true

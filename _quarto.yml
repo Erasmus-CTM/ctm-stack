@@ -21,7 +21,7 @@ website:
         text: Question corpus
       - href: docs/authoring.qmd
         text: Authoring guide
-      - href: https://erasmus-ctm.github.io/stack-sympy/compliance/
+      - href: compliance/
         text: Native compliance
     right:
       - icon: github

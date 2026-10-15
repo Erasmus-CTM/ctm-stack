@@ -80,6 +80,83 @@ class NativeMaximaTests(unittest.TestCase):
         with self.assertRaises(native.NativeProtocolError):
             native.parse_probe_output("STACKNATIVE-BEGIN|0|0\nSTACKNATIVE-END|0|0\n")
 
+    def test_standalone_probe_has_two_stage_and_inline_controls(self):
+        with tempfile.TemporaryDirectory() as directory:
+            batch = native.make_standalone_probe_batch(ROOT, Path(directory))
+        self.assertIn('ATLowestTerms(1/(1+i),(1-i)/2)', batch)
+        self.assertIn('ATLowestTerms(eval_string("1/(1+i)"),eval_string("(1-i)/2"))', batch)
+        self.assertIn('_probe_sa:parse_string("1/(1+i)"),_probe_ta:parse_string("(1-i)/2")', batch)
+        self.assertIn('_probe_sa:eval_string("1/(1+i)"),_probe_ta:eval_string("(1-i)/2")', batch)
+        self.assertIn('ATEqualComAss(_probe_sa,_probe_ta)', batch)
+        self.assertIn('block([simp:true,_probe_result],_probe_result:errcatch(ATAlgEquiv', batch)
+        self.assertIn('makelist(significantfigures(%pi,i),i,8)', batch)
+        self.assertIn('STACKNATIVE-PROBE|', batch)
+        self.assertNotIn('STACKNATIVE-DIAG|', batch)
+        self.assertEqual(batch.count('STACKNATIVE-END|0|0'), 1)
+
+    def test_standalone_probe_protocol_and_cli_are_independent_of_fixture(self):
+        names = native.STANDALONE_PROBE_KEYS
+        values = [[name, name] for name in names]
+        output = ("STACKNATIVE-BEGIN|0|0\n"
+                  + "STACKNATIVE-PROBE|" + json.dumps(values, separators=(",", ":"))
+                  + "\nSTACKNATIVE-END|0|0\n")
+        self.assertEqual(native.parse_output(output, [], 0), [])
+        self.assertEqual(native.parse_standalone_probe_output(output)["i_binding"], "i_binding")
+        for invalid in (output.replace("STACKNATIVE-PROBE|", "print(\"STACKNATIVE-PROBE|"),
+                        output.replace("\nSTACKNATIVE-END", "\nSTACKNATIVE-PROBE|[]\nSTACKNATIVE-END"),
+                        output.replace('[["i_binding","i_binding"]', '[["i_binding","wrong"]')
+                        .replace('["parse_i","parse_i"]', '["i_binding","duplicate"]'),
+                        "STACKNATIVE-PROBE|{broken}\n"):
+            with self.subTest(invalid=invalid[-80:]), self.assertRaises(native.NativeProtocolError):
+                native.parse_standalone_probe_output(invalid)
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "probe.json"
+            bogus_fixture = Path(directory) / "missing-fixture.json"
+            fake = {"schema_version": 1, "engine": "maxima_diagnostic", "probe": {"i_binding": "%i"}}
+            with patch.object(run_compliance_maxima, "run_standalone_probe", return_value=fake) as run:
+                status = run_compliance_maxima.main([
+                    "--probe-only", "--fixture", str(bogus_fixture),
+                    "--stack-source", str(ROOT), "--output", str(destination)])
+            self.assertEqual(status, 0)
+            self.assertEqual(json.loads(destination.read_text()), fake)
+            run.assert_called_once()
+            with patch.object(run_compliance_maxima, "ROOT", Path(directory)), patch.object(
+                    run_compliance_maxima, "run_standalone_probe", return_value=fake):
+                status = run_compliance_maxima.main([
+                    "--probe-only", "--fixture", str(bogus_fixture),
+                    "--stack-source", str(ROOT)])
+            self.assertEqual(status, 0)
+            self.assertEqual(json.loads((Path(directory) / "test-results/compliance/maxima-loader-probe.json")
+                                        .read_text()), fake)
+            self.assertFalse((Path(directory) / "test-results/compliance/maxima.json").exists())
+
+    def test_standalone_probe_runs_only_one_pinned_loader(self):
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory)
+            maxima_dir = source / "stack/maxima"
+            maxima_dir.mkdir(parents=True)
+            (maxima_dir / "stacklocallinux.mac").write_text("", encoding="utf-8")
+            batches = []
+
+            def command(argv, timeout):
+                if argv[0] == "git":
+                    return native.STACK_SHA + "\n"
+                if "--version" in argv:
+                    return "Maxima 5.x\n"
+                batches.append(Path(argv[-1].removeprefix("--batch=")).read_text())
+                values = [[name, name] for name in native.STANDALONE_PROBE_KEYS]
+                return ("STACKNATIVE-BEGIN|0|0\nSTACKNATIVE-PROBE|"
+                        + json.dumps(values) + "\nSTACKNATIVE-END|0|0\n")
+
+            with patch.object(native, "_command", side_effect=command), patch.object(
+                    native.shutil, "which", return_value="/usr/bin/maxima"):
+                report = native.run_standalone_probe(source)
+        self.assertEqual(report["engine"], "maxima_diagnostic")
+        self.assertEqual(report["metadata"]["stack_sha"], native.STACK_SHA)
+        self.assertEqual(len(batches), 1)
+        self.assertEqual(batches[0].count('load("'), 1)
+        self.assertNotIn("STACKNATIVE|", batches[0])
+
     def test_protocol_preserves_note_and_controlled_native_error(self):
         rows = [case(), case("2")]
         output = ("Maxima startup\nSTACKNATIVE-BEGIN|0|2\n"

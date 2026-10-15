@@ -6,9 +6,13 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
+  compliance:
+    name: Native compliance checks and report
+    uses: ./.github/workflows/native-compliance.yml
+
   maxima-reference:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
@@ -39,11 +43,7 @@ jobs:
           if-no-files-found: error
 
   site:
-    needs: maxima-reference
     runs-on: ubuntu-latest
-    concurrency:
-      group: stack-sympy-pages
-      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
@@ -81,12 +81,56 @@ jobs:
           name: browser-ui-example
           path: test-results/example.png
           if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-html
+          path: _site/
+          if-no-files-found: error
+
+  publish:
+    name: Publish tested site and compliance report together
+    needs: [maxima-reference, site, compliance]
+    if: github.event_name == 'push' && needs['maxima-reference'].result == 'success' && needs.site.result == 'success' && needs.compliance.result == 'success'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    concurrency:
+      group: stack-sympy-pages
+      cancel-in-progress: false
+    steps:
+      - name: Check branch head under publication lock
+        id: head
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = context.ref.replace(/^refs\/heads\//, '');
+            const {data} = await github.rest.git.getRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: `heads/${branch}`
+            });
+            const current = data.object.sha === context.sha;
+            core.info(current ? `Publishing current commit ${context.sha}` :
+              `Skipping stale commit ${context.sha}; branch is now ${data.object.sha}`);
+            core.setOutput('current', String(current));
+      - name: Download tested site
+        if: steps.head.outputs.current == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: site-html
+          path: ./publish-site
+      - name: Add matching compliance report
+        if: steps.head.outputs.current == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: native-compliance-html
+          path: ./publish-site/compliance
       - name: Publish main site and feature previews
-        if: github.event_name == 'push'
+        if: steps.head.outputs.current == 'true'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+          publish_dir: ./publish-site
           publish_branch: gh-pages
           destination_dir: ${{ github.ref == 'refs/heads/main' && '.' || format('previews/{0}', github.ref_name) }}
           keep_files: true

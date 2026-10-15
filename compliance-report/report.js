@@ -35,7 +35,7 @@ function summary(report) {
   if (p.run_url) metadata.append(safeLink(p.run_url, "CI run and artifacts"));
   provenance.append(metadata, details("Fixture inventory and provenance", {inventory:p.fixture_inventory,upstream:p.fixture_upstream,scope:report.scope}));
   const eligible = report.results.parity.summary;
-  if (eligible) provenance.append(node("p", `Browser grading parity: ${eligible.eligible_matched ?? "unavailable"} matching eligible executions of ${eligible.eligible ?? "unavailable"}; whole-inventory classification includes unsupported cases. Native direct-CAS observations: ${report.results.native.summary?.ok ?? "unavailable"} of ${report.cases.length} imported rows. Answer notes are not compared.`));
+  if (eligible) provenance.append(node("p", `Browser grading parity: ${eligible.eligible_matched ?? "unavailable"} matching eligible executions of ${eligible.eligible ?? "unavailable"}; whole-inventory classification includes unsupported cases. Native direct-CAS observations: ${report.results.native.summary?.ok ?? "unavailable"} of ${report.cases.length} imported rows. Ordinary feedback notes are not compared; authored controlled-error notes are checked separately.`));
   const verdicts = node("p", undefined, "report-verdicts");
   for (const [key,title] of [["python","Desired outcome"],["compatibility","Native compatibility"],["parity","Browser parity"]]) {
     const result = report.results[key];

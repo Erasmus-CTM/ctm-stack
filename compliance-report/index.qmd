@@ -9,6 +9,8 @@ The parity inventory covers every static row, including unsupported rows that ag
 
 The “native vs desired” axis compares a direct Maxima answer-test call with an upstream fixture expectation. An unexpected deviation there can reflect PHP-side preparation, option defaults, or CAS state that this direct-call oracle does not reproduce; it is a case for investigation, not proof of a Moodle grading bug. Final-mark agreement and CAS applicability are reported separately, since both engines can reject an answer while disagreeing about whether their equivalence test applies.
 
+Fixture score codes: `0` means desired reject, `1` desired accept, and `-1` an asserted controlled error. `-2` means desired reject despite an upstream annotated native acceptance; `-3` means desired accept despite an upstream annotated native rejection. These negative codes record source-authored expectations, not approvals of this report's direct-CAS observations.
+
 The scope is **CAS answer-test behavior** for the imported static rows. PHP question/controller behavior, Moodle attempt state, dynamically appended fixture cases, complete input validation, and all STACK functionality are outside this comparison. Unsupported and out-of-contract rows remain visible in the inventory. An unavailable runner is shown as unavailable, never treated as a pass.
 
 <p><a href="report.json" download>Download complete JSON report</a> · <a href="https://github.com/Erasmus-CTM/stack-sympy/blob/main/tests/native_compliance/fixtures.json">Pinned fixture</a> · <a href="https://github.com/Erasmus-CTM/stack-sympy">Source repository</a></p>

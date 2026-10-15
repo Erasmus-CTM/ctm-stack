@@ -197,3 +197,23 @@ def test_native_controlled_error_requires_exact_asserted_note(tmp_path, monkeypa
     result = assess(fixture, python, maxima, policy)
     assert not result["passed"]
     assert result["observations"][0]["status"] == "unexpected_mismatch"
+
+
+def test_note_display_is_independent_of_python_error_origin(tmp_path):
+    fixture, python, maxima, parity, reference = inputs(tmp_path)
+    fixture_data = json.loads(fixture.read_text())
+    fixture_data["cases"][0].update(expected_score=-1, answer_note="ATAlgEquiv_STACKERROR_SAns.")
+    write(fixture, fixture_data)
+    digest = hashlib.sha256(fixture.read_bytes()).hexdigest()
+    python_data = json.loads(python.read_text())
+    python_data["metadata"]["fixture_sha256"] = digest
+    python_data["observations"][0].update(kind="invalid_option", desired_match=False, policy_status="unexpected")
+    write(python, python_data)
+    native_data = json.loads(maxima.read_text())
+    native_data["metadata"]["fixture_sha256"] = digest
+    native_data["observations"][0].update(cas_valid=False, correct=False, controlled_error=True,
+                                           answer_note="ATAlgEquiv_STACKERROR_SAns.  ")
+    write(maxima, native_data)
+    report = assemble(fixture, python, maxima, parity, reference)
+    assert report["cases"][0]["answer_note_status"] == "controlled_error_note_matched"
+    assert report["cases"][0]["desired_status"] == "unexpected"

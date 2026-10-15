@@ -36,6 +36,7 @@ RESULT = re.compile(r"^\s*STACKNATIVE\|([0-9a-f]{64}-[1-9][0-9]*)\|(.+?)\s*$")
 BEGIN = re.compile(r"^\s*STACKNATIVE-BEGIN\|(\d+)\|(\d+)\s*$")
 END = re.compile(r"^\s*STACKNATIVE-END\|(\d+)\|(\d+)\s*$")
 DIAG = re.compile(r"^\s*STACKNATIVE-DIAG\|(.+?)\s*$")
+STANDALONE_PROBE = re.compile(r"^\s*STACKNATIVE-PROBE\|(.+?)\s*$")
 CONTROLLED_AT_ERROR = re.compile(
     r"(?:AT[A-Za-z0-9]+_STACKERROR_(?:SAns|TAns|Opt|Raw|tol)"
     r"|ATNumDecPlaces_OptNotInt|STACKERROR_OPTION)\.\Z"
@@ -46,6 +47,16 @@ PROBE_KEYS = (
     "i_binding", "parsed_i", "parsed_fraction", "ev_parsed_fraction",
     "literal_lowest_terms", "parsed_lowest_terms", "ev_parsed_lowest_terms",
     "eca_cos_evaluated", "eca_sqrt_evaluated",
+)
+STANDALONE_PROBE_KEYS = (
+    "i_binding", "parse_i", "eval_i", "parse_fraction", "eval_fraction",
+    "literal_lowest_terms", "inline_parse_lowest_terms", "inline_eval_lowest_terms",
+    "assigned_parse_lowest_terms", "assigned_eval_lowest_terms",
+    "inline_eval_eca_cos", "assigned_parse_eca_cos", "assigned_eval_eca_cos",
+    "inline_eval_eca_sqrt", "assigned_parse_eca_sqrt", "assigned_eval_eca_sqrt",
+    "simp_true_alg_equiv", "assigned_parse_alg_i", "assigned_eval_alg_i",
+    "assigned_parse_eca_i", "assigned_eval_eca_i",
+    "assigned_parse_bound_i", "assigned_eval_bound_i",
 )
 
 
@@ -185,10 +196,104 @@ def make_batch(source: Path, cases: list[dict], home: Path, batch_number: int) -
     return "\n".join(lines) + "\n"
 
 
-def _probe_call(call: str) -> str:
-    return ("block([simp:false,_probe_result],_probe_result:errcatch(" + call + "),"
+def _probe_call(call: str, *, simp: bool = False) -> str:
+    flag = "true" if simp else "false"
+    return (f"block([simp:{flag},_probe_result],_probe_result:errcatch(" + call + "),"
             "if _probe_result=[] then [\"cas_error\"] else "
             "[first(_probe_result)[1],first(_probe_result)[2],first(_probe_result)[3]])")
+
+
+def _probe_assigned(test: str, student: str, teacher: str, *, parse: bool = True,
+                    simp: bool = False) -> str:
+    """Evaluate two arguments as separate assignments before the AT call."""
+    constructor = "parse_string" if parse else "eval_string"
+    flag = "true" if simp else "false"
+    call = f"AT{test}(_probe_sa,_probe_ta)"
+    return (f"block([simp:{flag},_probe_sa,_probe_ta,_probe_result],"
+            f"_probe_sa:{constructor}({_literal(student)}),"
+            f"_probe_ta:{constructor}({_literal(teacher)}),"
+            f"_probe_result:errcatch({call}),"
+            "if _probe_result=[] then [\"cas_error\"] else "
+            "[first(_probe_result)[1],first(_probe_result)[2],first(_probe_result)[3]])")
+
+
+def make_standalone_probe_batch(source: Path, home: Path) -> str:
+    """A one-process diagnostic, independent of fixture observations."""
+    batch = make_batch(source, [], home, 0)
+    experiments = {
+        "i_binding": "string(i)",
+        "parse_i": 'string(parse_string("i"))',
+        "eval_i": 'string(eval_string("i"))',
+        "parse_fraction": 'string(parse_string("1/(1+i)"))',
+        "eval_fraction": 'string(eval_string("1/(1+i)"))',
+        "literal_lowest_terms": _probe_call("ATLowestTerms(1/(1+i),(1-i)/2)"),
+        "inline_parse_lowest_terms": _probe_call(
+            'ATLowestTerms(parse_string("1/(1+i)"),parse_string("(1-i)/2"))'),
+        "inline_eval_lowest_terms": _probe_call(
+            'ATLowestTerms(eval_string("1/(1+i)"),eval_string("(1-i)/2"))'),
+        "assigned_parse_lowest_terms": _probe_assigned(
+            "LowestTerms", "1/(1+i)", "(1-i)/2"),
+        "assigned_eval_lowest_terms": _probe_assigned(
+            "LowestTerms", "1/(1+i)", "(1-i)/2", parse=False),
+        "inline_eval_eca_cos": _probe_call(
+            'ATEqualComAss(eval_string("cos(0)"),eval_string("1"))'),
+        "assigned_parse_eca_cos": _probe_assigned(
+            "EqualComAss", "cos(0)", "1"),
+        "assigned_eval_eca_cos": _probe_assigned(
+            "EqualComAss", "cos(0)", "1", parse=False),
+        "inline_eval_eca_sqrt": _probe_call(
+            'ATEqualComAss(eval_string("sqrt(3)"),eval_string("3^(1/2)"))'),
+        "assigned_parse_eca_sqrt": _probe_assigned(
+            "EqualComAss", "sqrt(3)", "3^(1/2)"),
+        "assigned_eval_eca_sqrt": _probe_assigned(
+            "EqualComAss", "sqrt(3)", "3^(1/2)", parse=False),
+        "simp_true_alg_equiv": _probe_call('ATAlgEquiv(eval_string("i"),%i)', simp=True),
+        "assigned_parse_alg_i": _probe_assigned(
+            "AlgEquiv", "i", "disp_complex(0,1)", simp=True),
+        "assigned_eval_alg_i": _probe_assigned(
+            "AlgEquiv", "i", "disp_complex(0,1)", parse=False, simp=True),
+        "assigned_parse_eca_i": _probe_assigned(
+            "EqualComAss", "-1/4*%pi*i", "-(%i*%pi)/4"),
+        "assigned_eval_eca_i": _probe_assigned(
+            "EqualComAss", "-1/4*%pi*i", "-(%i*%pi)/4", parse=False),
+        "assigned_parse_bound_i": _probe_assigned(
+            "AlgEquiv", "[3,3.1,3.14,3.142,3.1416,3.14159,3.141593,3.1415927]",
+            "makelist(significantfigures(%pi,i),i,8)", simp=True),
+        "assigned_eval_bound_i": _probe_assigned(
+            "AlgEquiv", "[3,3.1,3.14,3.142,3.1416,3.14159,3.141593,3.1415927]",
+            "makelist(significantfigures(%pi,i),i,8)", parse=False, simp=True),
+    }
+    assert tuple(experiments) == STANDALONE_PROBE_KEYS
+    pairs = ",".join(f"[{_literal(key)},{value}]" for key, value in experiments.items())
+    diagnostic = ('simp:false$\nprint(sconcat("STACKNATIVE-PROBE|",'
+                  'stackjson_stringify([' + pairs + '])))$\n')
+    end = 'print("STACKNATIVE-END|0|0")$\n'
+    if batch.count(end) != 1:
+        raise NativeProtocolError("Cannot locate diagnostic end marker")
+    return batch.replace(end, diagnostic + end)
+
+
+def parse_standalone_probe_output(output: str) -> dict:
+    payloads = []
+    for line in output.splitlines():
+        match = STANDALONE_PROBE.fullmatch(line)
+        if match:
+            payloads.append(match.group(1))
+        elif line.lstrip().startswith("STACKNATIVE-PROBE|"):
+            raise NativeProtocolError(f"Malformed standalone diagnostic: {line[:300]}")
+    if len(payloads) != 1:
+        raise NativeProtocolError(f"Expected one standalone diagnostic, got {len(payloads)}")
+    try:
+        pairs = json.loads(payloads[0])
+    except json.JSONDecodeError as exc:
+        raise NativeProtocolError(f"Malformed standalone diagnostic JSON: {exc}") from exc
+    if not isinstance(pairs, list) or any(not isinstance(pair, list) or len(pair) != 2 or
+                                          not isinstance(pair[0], str) for pair in pairs):
+        raise NativeProtocolError(f"Unexpected standalone diagnostic shape: {pairs!r}")
+    data = dict(pairs)
+    if len(data) != len(pairs) or tuple(data) != STANDALONE_PROBE_KEYS:
+        raise NativeProtocolError("Missing or duplicate standalone diagnostic keys")
+    return data
 
 
 def make_warmup_batch(source: Path, home: Path) -> str:
@@ -301,6 +406,33 @@ def _command(command: list[str], timeout: int) -> str:
     if proc.returncode:
         raise NativeProcessError(f"Maxima exit {proc.returncode}: {(proc.stdout + proc.stderr)[-3000:]}")
     return proc.stdout + proc.stderr
+
+
+def run_standalone_probe(source: Path, maxima: str = "maxima", *, timeout: int = 300) -> dict:
+    """Run loader and argument-evaluation experiments without fixture data."""
+    if timeout < 1:
+        raise ValueError("timeout must be positive")
+    source = source.resolve()
+    if not (source / "stack/maxima/stacklocallinux.mac").is_file():
+        raise NativeProcessError(f"Not a STACK Maxima source checkout: {source}")
+    checkout = _command(["git", "-C", str(source), "rev-parse", "HEAD"], 10).strip()
+    if checkout != STACK_SHA:
+        raise NativeProcessError(f"Expected pinned STACK {STACK_SHA}, got {checkout}")
+    executable = shutil.which(maxima)
+    if executable is None:
+        raise NativeProcessError(f"Maxima executable unavailable: {maxima!r}")
+    version = _command([executable, "--version"], 15).strip()
+    with tempfile.TemporaryDirectory(prefix="stack-compliance-probe-") as directory:
+        home = Path(directory)
+        batch = home / "probe.mac"
+        batch.write_text(make_standalone_probe_batch(source, home), encoding="utf-8")
+        output = _command([executable, "--very-quiet", f"--batch={batch}"], timeout)
+        parse_output(output, [], 0)
+        values = parse_standalone_probe_output(output)
+    return {"schema_version": 1, "engine": "maxima_diagnostic",
+            "metadata": {"reference_layer": "direct_official_maxima_AT",
+                         "stack_sha": checkout, "maxima_version": version},
+            "probe": values}
 
 
 def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs: int = DEFAULT_JOBS,

@@ -246,10 +246,10 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
             "native_mark_status": _native_dimension(n, p, "correct"),
             "native_applicability_status": _native_dimension(n, p, "cas_valid"),
             "native_desired_status": _native_desired(case, n, ref),
-            "answer_note_status": ("controlled_error_note_matched" if ref and ref.get("status") == "match_controlled_error"
-                                   else "controlled_error_note_mismatch" if case.get("expected_score") == -1 and
-                                   ref and ref.get("status") == "unexpected_mismatch" and
-                                   p and p.get("kind") in {"invalid_student", "invalid_teacher", "invalid_option"}
+            "answer_note_status": (("controlled_error_note_matched" if n["answer_note"].strip() == case["answer_note"].strip()
+                                    else "controlled_error_note_mismatch")
+                                   if case.get("expected_score") == -1 and n and n.get("status") == "ok" and
+                                   isinstance(n.get("answer_note"), str) and isinstance(case.get("answer_note"), str)
                                    else "not_compared"),
             "parity_status": _parity_status(b),
         })
