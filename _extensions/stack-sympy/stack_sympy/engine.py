@@ -11,7 +11,7 @@ from typing import Mapping
 import sympy as sp
 
 from .assessment import answer_test
-from .expressions import InvalidAnswer, Unsupported, assignments, canonical_form, evaluate, parse
+from .expressions import InvalidAnswer, Unsupported, assignments, canonical_form, evaluate, form_latex, parse
 from .importer import UnsupportedQuestion
 from .rendering import render_castext
 
@@ -146,9 +146,9 @@ def instantiate(question: dict, seed: int = 1) -> dict:
 def _input_validation(inp, raw, env, assumptions):
     raw = str(raw or "").strip()
     if not raw:
-        return {"valid": False, "latex": "", "feedback": "Enter an answer"}, None
+        return {"valid": False, "latex": "", "feedback": "Enter an answer"}, None, None
     try:
-        tree = parse(raw)
+        tree = parse(raw, insertstars=inp.get("insertstars", 0))
         if any(n.value.lower() in {w.lower() for w in inp["forbidwords"]} for n in _walk(tree) if n.kind in {"name", "call"}):
             raise InvalidAnswer("Contains a forbidden word")
         if inp["forbidfloat"] and any(n.kind == "number" and ("." in n.value or "e" in n.value.lower()) for n in _walk(tree)):
@@ -162,15 +162,15 @@ def _input_validation(inp, raw, env, assumptions):
                         raise InvalidAnswer("Write fractions in lowest terms")
                     if num.is_polynomial() and den.is_polynomial() and den.free_symbols and sp.degree(sp.gcd(num, den)) > 0:
                         raise InvalidAnswer("Write fractions in lowest terms")
-        preview = evaluate(tree, env, assumptions=assumptions, student=True, simplify=False)
+        evaluate(tree, env, assumptions=assumptions, student=True, simplify=False)
         value = evaluate(tree, env, assumptions=assumptions, student=True)
         if not isinstance(value, sp.Basic):
             raise InvalidAnswer("Only scalar answers are supported")
         if inp["type"] == "numerical" and value.is_number is not True:
             raise InvalidAnswer("Enter a numerical answer")
-        return {"valid": True, "latex": sp.latex(preview), "feedback": ""}, value
+        return {"valid": True, "latex": form_latex(tree, env), "feedback": ""}, value, tree
     except (InvalidAnswer, TypeError, ValueError, ZeroDivisionError) as exc:
-        return {"valid": False, "latex": "", "feedback": str(exc)}, None
+        return {"valid": False, "latex": "", "feedback": str(exc)}, None, None
 
 
 def _walk(node):
@@ -243,12 +243,14 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
     assumptions = _assumptions(question)
     input_results = {}
     student_values = {}
+    student_trees = {}
     for inp in question["inputs"]:
         key = inp["name"]
-        result, value = _input_validation(inp, answers.get(key, ""), env, assumptions)
+        result, value, tree = _input_validation(inp, answers.get(key, ""), env, assumptions)
         input_results[key] = result
         if result["valid"]:
             student_values[key] = value
+            student_trees[key] = tree
     if any(not item["valid"] for item in input_results.values()):
         return {"status": "invalid", "score": 0.0, "inputs": input_results, "prts": {},
                 "feedback": "Check your answers before grading"}
@@ -269,12 +271,12 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
             # using one or more inputs. The answer-test parser sees a safe string.
             try:
                 raw_student = answers.get(node["student"], "")
-                if raw_student:
-                    tested_student = raw_student
+                if node["student"] in student_trees:
+                    tested_student = student_trees[node["student"]]
                 else:
                     tested_student = _source(evaluate(node["student"], penv, assumptions=assumptions))
                 result = answer_test(node["test"], tested_student, node["teacher"], node["options"],
-                                     env=penv, raw=raw_student or tested_student, assumptions=assumptions)
+                                     env=penv, raw=raw_student or (tested_student if isinstance(tested_student, str) else ""), assumptions=assumptions)
             except (InvalidAnswer, Unsupported, TypeError, ZeroDivisionError) as exc:
                 raise UnsupportedQuestion(question["name"], f"prt[{prt['name']}]/node[{current}]", str(exc)) from exc
             if not result["valid"]:

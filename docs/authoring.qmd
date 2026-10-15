@@ -14,7 +14,7 @@ Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<quest
 #| review: true
 ```
 
-The learner submits in two steps: **Validate answers** parses the current fields and displays the exact expression form (for example, `x+x` rather than a simplified `2*x`), then **Check answer** grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading.
+The learner submits in two steps: **Validate answers** parses the current fields and displays the expression form (for example, `x+x` rather than a simplified `2*x`), then **Check answer** grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading. The polynomial example sets `<insertstars>1</insertstars>`, so `x**2+8x+15` previews as one sum and receives full credit in its first variant.
 
 Below a rendered question, **Show source** reveals its authored Quarto fenced block and **Show STACK source** reveals the original XML file contents. Both panels start closed; they are available for inspecting and copying a working example.
 
@@ -25,7 +25,7 @@ The options are `file` and `question` (required), `seed` (signed integer, defaul
 | Supported here | Scope |
 |---|---|
 | Source | Moodle STACK XML `<quiz>` with named STACK questions; category and description entries are skipped. |
-| Inputs | Scalar algebraic and numerical text answers, with strict syntax and the implemented input flags. |
+| Inputs | Scalar algebraic and numerical text answers, with strict syntax and `<insertstars>0</insertstars>` or `<insertstars>1</insertstars>`. Mode 0 requires `*`; mode 1 also accepts adjacent `2x`, `2(x+1)`, `(x+1)(x-1)`, and `(x+1)x`. Both keep `xy` as one symbol; whitespace alone never means multiplication. Other insertstars modes fail at import. |
 | Variables | A small, safely parsed Maxima-like assignment and arithmetic subset, including `rand(n)` for seeded variants. |
 | Tests | `AlgEquiv`, `EqualComAss`, `NumAbsolute`, `NumRelative`, `NumDecPlaces`; blank absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist. |
 | PRTs | Acyclic node graphs with `=`, `+`, and `−` score operations, weighted response trees, branch feedback and notes. |

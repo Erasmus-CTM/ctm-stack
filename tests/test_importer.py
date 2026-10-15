@@ -19,6 +19,16 @@ class ImporterTests(unittest.TestCase):
                 self.assertTrue(question["prts"])
                 self.assertTrue(question["qtests"])
 
+    def test_insertstars_modes_and_unsupported_diagnostic(self):
+        xml = (ROOT / "questions/polynomial-expansion.xml").read_text()
+        self.assertEqual(import_xml(xml)[0]["inputs"][0]["insertstars"], 1)
+        strict = xml.replace("<insertstars>1</insertstars>", "<insertstars>0</insertstars>")
+        self.assertEqual(import_xml(strict)[0]["inputs"][0]["insertstars"], 0)
+        for mode in ("2", "3", "4", "6", "bogus"):
+            with self.subTest(mode=mode), self.assertRaisesRegex(
+                    UnsupportedQuestion, r"input\[ans\]/insertstars.*only 0.*and 1"):
+                import_xml(xml.replace("<insertstars>1</insertstars>", f"<insertstars>{mode}</insertstars>"))
+
     def test_reject_unsupported_answer_test_with_location(self):
         path = ROOT / "questions/upstream/bodmas.xml"
         xml = path.read_text().replace("<answertest>NumRelative</answertest>",

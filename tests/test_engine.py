@@ -74,6 +74,23 @@ class EngineTests(unittest.TestCase):
         self.assertIn("x + x", result["inputs"]["ans"]["latex"])
         self.assertNotIn("score", result)
 
+    def test_input_star_modes_share_validation_and_form_grading(self):
+        q = self.question("polynomial-expansion.xml")
+        variant = instantiate(q, 17)
+        implied = "x**2+8x+15"
+        result = validate(q, {"ans": implied}, variant=variant)
+        self.assertEqual(result["inputs"]["ans"]["latex"], r"x^{2} + 8x + 15")
+        self.assertEqual(grade(q, {"ans": implied}, variant=variant)["score"], 1)
+        self.assertEqual(grade(q, {"ans": "(x+3)(x+5)"}, variant=variant)["score"], 0.5)
+        self.assertEqual(grade(q, {"ans": "x+x"}, variant=variant)["inputs"]["ans"]["latex"], "x + x")
+
+        q["inputs"][0]["insertstars"] = 0
+        strict = validate(q, {"ans": implied}, variant=variant)
+        self.assertEqual(strict["status"], "invalid")
+        self.assertIn("Missing *", strict["inputs"]["ans"]["feedback"])
+        self.assertEqual(grade(q, {"ans": implied}, variant=variant)["status"], "invalid")
+        self.assertEqual(grade(q, {"ans": "x**2+8*x+15"}, variant=variant)["score"], 1)
+
     def test_qtest_alias_preserves_unsimplified_form(self):
         q = {"name": "raw", "variables": "raw:x+x", "simplify": False}
         self.assertEqual(_qtest_answer(q, "raw", assignments(q["variables"]), preserve_form=True), "x+x")

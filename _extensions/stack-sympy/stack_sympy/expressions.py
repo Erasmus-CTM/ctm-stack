@@ -42,7 +42,7 @@ class Node:
     children: tuple["Node", ...] = ()
 
 
-def _tokens(source: str) -> list[tuple[str, str]]:
+def _tokens(source: str) -> list[tuple[str, str, int, int]]:
     if not isinstance(source, str) or not source.strip() or len(source) > MAX_CHARS:
         raise InvalidAnswer("Empty or oversized expression")
     out = []
@@ -57,18 +57,21 @@ def _tokens(source: str) -> list[tuple[str, str]]:
         value = match.group(kind)
         if kind == "number" and len(value) > MAX_DIGITS:
             raise InvalidAnswer("Number too long")
-        out.append((kind, value))
+        out.append((kind, value, match.start(kind), match.end(kind)))
         pos = match.end()
         if len(out) > MAX_TOKENS:
             raise InvalidAnswer("Too many tokens")
-    out.append(("end", ""))
+    out.append(("end", "", len(source), len(source)))
     return out
 
 
 class _Parser:
-    def __init__(self, source: str):
+    def __init__(self, source: str, insertstars: int = 0):
+        if insertstars not in (0, 1):
+            raise Unsupported(f"Unsupported insertstars mode {insertstars!r}")
         self.tokens = _tokens(source)
         self.pos = 0
+        self.insertstars = insertstars
 
     @property
     def current(self):
@@ -82,14 +85,14 @@ class _Parser:
     def expression(self, minimum: int = 0, depth: int = 0) -> Node:
         if depth > MAX_DEPTH:
             raise InvalidAnswer("Expression nested too deeply")
-        kind, val = self.tokens[self.pos]
+        kind, val = self.tokens[self.pos][:2]
         self.pos += 1
         if kind == "number":
             lhs = Node("number", val)
         elif kind == "name":
             if self.current == "(":
                 if val.lower() not in _AUTHOR_FUNCTIONS:
-                    raise InvalidAnswer(f"Function {val} is not allowed")
+                    raise InvalidAnswer(f"Function {val} is not allowed; use {val}*(...) for multiplication")
                 self.take("(")
                 args = []
                 if self.current != ")":
@@ -127,21 +130,112 @@ class _Parser:
                 self.take("]")
                 lhs = Node("index", children=(lhs, idx))
                 continue
-            bp = {"+": 10, "-": 10, "*": 20, "/": 20, "^": 30, "**": 30}.get(op, -1)
+            # Mode 1 inserts stars only at unambiguous adjacent token
+            # boundaries. Names remain whole (xy is one symbol), and an
+            # unknown name followed by '(' is never guessed to be a product.
+            previous = self.tokens[self.pos - 1]
+            following = self.tokens[self.pos]
+            implied = (previous[3] == following[2]
+                       and (previous[0] == "number" or previous[1] == ")")
+                       and (following[0] == "name" or following[1] == "("
+                            or (previous[1] == ")" and following[0] == "number")))
+            bp = 20 if implied else {"+": 10, "-": 10, "*": 20, "/": 20, "^": 30, "**": 30}.get(op, -1)
             if bp < minimum:
                 break
-            self.pos += 1
+            if implied and not self.insertstars:
+                raise InvalidAnswer("Missing * for multiplication (this input requires an explicit *)")
+            if not implied:
+                self.pos += 1
             rhs = self.expression(bp if op in ("^", "**") else bp + 1, depth + 1)
-            lhs = Node("binary", op, (lhs, rhs))
+            lhs = Node("binary", "*" if implied else op, (lhs, rhs))
         return lhs
 
 
-def parse(text: str) -> Node:
-    parser = _Parser(text)
+def parse(text: str, *, insertstars: int = 0) -> Node:
+    parser = _Parser(text, insertstars)
     node = parser.expression()
     if parser.tokens[parser.pos][0] != "end":
         raise InvalidAnswer("Unexpected trailing text")
     return node
+
+
+def form_latex(node: Node, env: Mapping[str, Any] | None = None) -> str:
+    """Print the submitted tree without SymPy's automatic term collection.
+
+    The parser has no grouping node, so precedence and right-hand grouping
+    determine the parentheses necessary to represent its exact operation tree.
+    """
+    env = env or {}
+
+    def precedence(n):
+        if n.kind == "number" and "e" in n.value.lower():
+            return 20  # Displayed as mantissa times ten to a power.
+        if n.kind == "name" and n.value in env:
+            value = env[n.value]
+            if getattr(value, "is_Add", False):
+                return 10
+            if getattr(value, "could_extract_minus_sign", lambda: False)():
+                return 25
+            if getattr(value, "is_Mul", False):
+                return 20
+            if getattr(value, "is_Pow", False):
+                return 30
+        if n.kind == "unary":
+            return 25
+        if n.kind == "binary":
+            return {"+": 10, "-": 10, "*": 20, "/": 20, "^": 30, "**": 30}[n.value]
+        return 40
+
+    def wrap(content):
+        return r"\left(" + content + r"\right)"
+
+    def show(n):
+        if n.kind == "number":
+            if "e" in n.value.lower():
+                coefficient, exponent = re.split("[eE]", n.value)
+                return coefficient + r" \times 10^{" + str(int(exponent)) + "}"
+            return n.value
+        if n.kind == "name":
+            if n.value in env:
+                return sp.latex(env[n.value])
+            return sp.latex(_NAMES[n.value] if n.value in _NAMES else sp.Symbol(n.value))
+        if n.kind == "unary":
+            child = n.children[0]
+            rendered = show(child)
+            return n.value + (wrap(rendered) if precedence(child) <= 25 else rendered)
+        if n.kind == "call":
+            name = "\\" + n.value if n.value in {"sin", "cos", "tan", "exp", "log"} else r"\operatorname{" + n.value + "}"
+            if n.value == "sqrt" and len(n.children) == 1:
+                return r"\sqrt{" + show(n.children[0]) + "}"
+            return name + wrap(", ".join(show(c) for c in n.children))
+        if n.kind != "binary":
+            raise Unsupported("Preview supports scalar expressions")
+        left, right = n.children
+        op = n.value
+        a, b = show(left), show(right)
+        if op in {"^", "**"}:
+            if precedence(left) <= 30:
+                a = wrap(a)
+            return a + "^{" + b + "}"
+        if op == "/":
+            return r"\frac{" + a + "}{" + b + "}"
+        if precedence(left) < precedence(n):
+            a = wrap(a)
+        if (precedence(right) < precedence(n) or (op == "-" and precedence(right) == 10)
+                or (op in {"+", "-", "*"} and precedence(right) == 25)
+                or (op == "*" and right.kind == "binary" and right.value == "/")):
+            b = wrap(b)
+        if op == "*":
+            # A numeric coefficient next to a symbol reads naturally as 8x.
+            separator = ("" if left.kind == "number" and right.kind in {"name", "call"}
+                         and not (right.kind == "name" and right.value in env)
+                         else r" \cdot ")
+            return a + separator + b
+        return a + (" + " if op == "+" else " - ") + b
+
+    if not isinstance(node, Node):
+        raise Unsupported("Preview requires a parsed expression")
+    return show(node)
 
 
 def _finite(value: Any):

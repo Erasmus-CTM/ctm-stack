@@ -125,7 +125,8 @@ def _input(q, element):
     _check(q, where, bool(NAME.fullmatch(name)) and typ in INPUT_TYPES,
            f"unsupported input name or type {name!r}/{typ!r}")
     stars = _text(element, "insertstars", "0").strip()
-    _check(q, where + "/insertstars", stars == "0", "automatic multiplication insertion is unsupported")
+    _check(q, where + "/insertstars", stars in {"0", "1"},
+           f"unsupported multiplication insertion mode {stars!r}; only 0 (explicit *) and 1 (adjacent implied products) are supported")
     _check(q, where + "/strictsyntax", _text(element, "strictsyntax", "1").strip() == "1", "non-strict syntax is unsupported")
     _check(q, where + "/allowwords", not _text(element, "allowwords").strip(), "allowwords is unsupported")
     _check(q, where + "/syntaxattribute", _text(element, "syntaxattribute", "0").strip() == "0", "syntax attributes are unsupported")
@@ -139,6 +140,7 @@ def _input(q, element):
     return {"name": name, "type": typ, "teacher": _text(element, "tans").strip(),
             "boxsize": int(box),
             "strictsyntax": _boolean(q, element, "strictsyntax", "1"),
+            "insertstars": int(stars),
             "forbidwords": forbidwords,
             "forbidfloat": _boolean(q, element, "forbidfloat"),
             "requirelowestterms": _boolean(q, element, "requirelowestterms"),

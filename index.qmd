@@ -7,7 +7,7 @@ STACK SymPy reads an ordinary Moodle STACK XML export at build time. The Quarto 
 
 ## Expand and collect
 
-This question rewards an expanded polynomial. A mathematically equivalent factored answer earns partial credit, with feedback explaining which form was requested. Press **Validate answers** to inspect the parsed answer, then **Check answer** to grade it. Editing an answer requires validation again. Change the variant to see fresh coefficients.
+This question rewards an expanded polynomial. Try `x**2+8x+15` on the first variant: this input accepts omitted multiplication signs in forms such as `8x` and `2(x+1)`, and the preview displays the whole polynomial without extra grouping. A mathematically equivalent factored answer earns partial credit. Press **Validate answers** to inspect the parsed answer, then **Check answer** to grade it. Editing an answer requires validation again. Change the variant to see fresh coefficients.
 
 ```{.stack-question}
 #| file: questions/polynomial-expansion.xml

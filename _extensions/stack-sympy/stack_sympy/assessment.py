@@ -13,7 +13,7 @@ from typing import Any, Mapping
 
 import sympy as sp
 
-from .expressions import InvalidAnswer, Unsupported, canonical_form, evaluate, parse
+from .expressions import InvalidAnswer, Node, Unsupported, canonical_form, evaluate, parse
 
 MAX_DECIMAL_PLACES = 50
 
@@ -77,7 +77,7 @@ def _decimal_places(raw: str) -> tuple[Decimal, int]:
     return value, -value.as_tuple().exponent
 
 
-def answer_test(name: str, student: str, teacher: str, options: str = "", *,
+def answer_test(name: str, student: Node | str, teacher: str, options: str = "", *,
                 env: Mapping[str, Any] | None = None, raw: str | None = None,
                 assumptions: Mapping[str, bool] | None = None) -> dict:
     """Evaluate one supported STACK test; return valid/correct/note/feedback.
@@ -91,7 +91,7 @@ def answer_test(name: str, student: str, teacher: str, options: str = "", *,
         raise Unsupported(f"Answer test {name!r} is unsupported")
     env = {} if env is None else env
     try:
-        student_ast = parse(student)
+        student_ast = parse(student) if isinstance(student, str) else student
         student_value = evaluate(student_ast, env, assumptions=assumptions, student=True)
         if not isinstance(student_value, sp.Basic):
             raise InvalidAnswer("Only scalar student answers are supported")
@@ -148,7 +148,7 @@ def answer_test(name: str, student: str, teacher: str, options: str = "", *,
     try:
         _number(student_value, "Student answer")
         teacher_decimal = _decimal(_number(teacher_value, "Teacher answer"))
-        written, places = _decimal_places(raw if raw is not None else student)
+        written, places = _decimal_places(raw if raw is not None else student if isinstance(student, str) else "")
     except InvalidAnswer as exc:
         return _result(False, False, "invalid", str(exc))
     if places != int(required):

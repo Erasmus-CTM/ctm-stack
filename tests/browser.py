@@ -59,6 +59,19 @@ def test_browser_worker_grades_and_runs_authored_tests():
         assert card.locator(".stack-result").get_attribute("data-state") == "invalid"
         assert card.locator(".stack-check").is_disabled()
 
+        # The demo opts into STACK's implied-multiplication input setting.
+        # Validation must display the same polynomial without artificial
+        # parentheses from the parser's left-associated addition tree.
+        card.locator(".stack-answer").first.fill("x**2+8x+15")
+        card.locator(".stack-validate").click()
+        card.locator('.stack-validation[data-state="valid"]').wait_for(timeout=120000)
+        preview = card.locator('.stack-validation').first
+        preview.locator('mjx-container').first.wait_for(timeout=60000)
+        assert preview.get_attribute('data-latex') == r'x^{2} + 8x + 15'
+        card.locator(".stack-check").click()
+        card.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
+        assert card.locator(".stack-result").get_attribute("data-state") == "correct"
+
         card.locator(".stack-answer").first.fill("x+x")
         card.locator(".stack-validate").click()
         card.locator('.stack-validation[data-state="valid"]').wait_for(timeout=120000)

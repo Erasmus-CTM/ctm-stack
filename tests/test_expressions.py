@@ -4,6 +4,7 @@ import unittest
 import sympy as sp
 
 from stack_sympy import InvalidAnswer, Unsupported, assignments, canonical_form, evaluate, parse
+from stack_sympy.expressions import MAX_TOKENS, form_latex
 
 
 class ExpressionsTest(unittest.TestCase):
@@ -53,6 +54,64 @@ class ExpressionsTest(unittest.TestCase):
         x = sp.Symbol("x")
         self.assertEqual(evaluate("sqrt(x^2)"), sp.sqrt(x**2))
         self.assertEqual(evaluate("sqrt(x^2)", assumptions={"positive": True}), sp.Symbol("x", positive=True))
+
+    def test_insertstars_modes_and_ambiguous_names(self):
+        x = sp.Symbol("x")
+        for source, explicit in (("2x", "2*x"), ("2(x+1)", "2*(x+1)"),
+                                 ("(x+1)(x-1)", "(x+1)*(x-1)"),
+                                 ("(x+1)x", "(x+1)*x"), ("sin(x)2", "sin(x)*2")):
+            with self.subTest(source=source):
+                tree = parse(source, insertstars=1)
+                self.assertEqual(evaluate(tree), evaluate(explicit))
+                self.assertEqual(canonical_form(tree), canonical_form(explicit))
+                with self.assertRaises(InvalidAnswer):
+                    parse(source, insertstars=0)
+        self.assertEqual(parse("xy", insertstars=1).value, "xy")
+        self.assertEqual(parse("x2", insertstars=1).value, "x2")
+        self.assertEqual(evaluate(parse("sin(x)", insertstars=1)), sp.sin(x))
+        for source in ("x(y+1)", "x y", "sin x", "2 x"):
+            with self.subTest(source=source), self.assertRaises(InvalidAnswer):
+                parse(source, insertstars=1)
+        with self.assertRaisesRegex(Unsupported, "insertstars mode"):
+            parse("2x", insertstars=3)
+        with self.assertRaisesRegex(InvalidAnswer, r"Missing \*"):
+            parse("2x", insertstars=0)
+
+    def test_form_latex_keeps_terms_and_precedence(self):
+        examples = {
+            "x**2+8x+15": r"x^{2} + 8x + 15",
+            "x+x": "x + x",
+            "x-(y-z)": r"x - \left(y - z\right)",
+            "(x+y)*z": r"\left(x + y\right) \cdot z",
+            "x/(y/z)": r"\frac{x}{\frac{y}{z}}",
+            "(-x)^2": r"\left(-x\right)^{2}",
+            "x^(y^z)": r"x^{y^{z}}",
+            "1.50+x": "1.50 + x",
+            "1.2e-3+x": r"1.2 \times 10^{-3} + x",
+            "1e-3^2": r"\left(1 \times 10^{-3}\right)^{2}",
+        }
+        for source, expected in examples.items():
+            with self.subTest(source=source):
+                self.assertEqual(form_latex(parse(source, insertstars=1)), expected)
+        self.assertNotEqual(form_latex(parse("xy", insertstars=1)), form_latex(parse("x*y")))
+        self.assertEqual(form_latex(parse("a^2"), {"a": sp.Integer(-3)}),
+                         r"\left(-3\right)^{2}")
+        self.assertEqual(form_latex(parse("a*y"), {"a": sp.Symbol("x") + 1}),
+                         r"\left(x + 1\right) \cdot y")
+        self.assertEqual(form_latex(parse("-a"), {"a": sp.Integer(-3)}),
+                         r"-\left(-3\right)")
+        self.assertEqual(form_latex(parse("x-a"), {"a": sp.Integer(-3)}),
+                         r"x - \left(-3\right)")
+        self.assertEqual(form_latex(parse("2*a"), {"a": sp.Integer(3)}),
+                         r"2 \cdot 3")
+        self.assertEqual(form_latex(parse("2*a"), {"a": 3 * sp.Symbol("x")}),
+                         r"2 \cdot 3 x")
+        self.assertEqual(form_latex(parse("a*b"), {"a": sp.Integer(3), "b": sp.Integer(5)}),
+                         r"3 \cdot 5")
+        self.assertEqual(form_latex(parse("-(-x)")), r"-\left(-x\right)")
+        # Insertion may add operation nodes, but cannot evade the original token bound.
+        with self.assertRaisesRegex(InvalidAnswer, "Too many tokens"):
+            parse("2x+" * (MAX_TOKENS // 3 + 1), insertstars=1)
 
     def test_invalid_and_unsupported_constructs(self):
         for source in ("__import__('os')", "x.__class__", "x; y", "lambda x:x", "x=2", "x**100000", "2^100000", "[1,2]", "rand(5)", "%foo"):
