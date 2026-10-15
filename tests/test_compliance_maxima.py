@@ -56,12 +56,14 @@ class NativeMaximaTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             home = Path(directory)
             batch = native.make_batch(ROOT, cases, home, 7)
-        self.assertIn('ATAlgEquiv(parse_string("x+1"),parse_string("1+x"))', batch)
+        self.assertIn('ATAlgEquiv(eval_string("x+1"),eval_string("1+x"))', batch)
         self.assertIn('block([simp:true', batch)
         self.assertEqual(batch.count('block([simp:false'), 3)
-        self.assertIn('ATNumAbsolute(parse_string("x+1"),parse_string("1+x"),parse_string("0.05"))', batch)
-        self.assertIn('ATNumRelative(parse_string("x+1"),parse_string("1+x"),parse_string("0.1"))', batch)
-        self.assertIn('ATNumDecPlaces(parse_string("1.200"),parse_string("1.2"),parse_string("3"),"1.200")', batch)
+        self.assertIn('ATNumAbsolute(eval_string("x+1"),eval_string("1+x"),eval_string("0.05"))', batch)
+        self.assertIn('ATNumRelative(eval_string("x+1"),eval_string("1+x"),eval_string("0.1"))', batch)
+        self.assertIn('ATNumDecPlaces(eval_string("1.200"),eval_string("1.2"),eval_string("3"),"1.200")', batch)
+        self.assertIn('ATLowestTerms(eval_string("1/(1+i)"),eval_string("(1-i)/2"))',
+                      native._call(case(test="LowestTerms", student="1/(1+i)", teacher="(1-i)/2")))
         self.assertIn('STACKNATIVE-BEGIN|7|6', batch)
         self.assertIn('STACKNATIVE-END|7|6', batch)
         self.assertIn('[\\\"error\\\",\\\"cas_evaluation\\\",null]', batch)
@@ -243,7 +245,7 @@ class NativeMaximaTests(unittest.TestCase):
                     calls.append("warmup")
                     return warmup_output()
                 calls.append("case")
-                self.assertEqual(len(re.findall(r'ATAlgEquiv\(parse_string\("x\+1"\),parse_string\("1\+x"\)\)', batch)), 1)
+                self.assertEqual(len(re.findall(r'ATAlgEquiv\(eval_string\("x\+1"\),eval_string\("1\+x"\)\)', batch)), 1)
                 number = int(re.search(r"STACKNATIVE-BEGIN\|(\d+)\|1", batch).group(1))
                 current = rows[1] if number == 0 else rows[3]
                 mark = "true" if number == 0 else "false"

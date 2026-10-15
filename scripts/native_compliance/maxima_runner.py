@@ -137,10 +137,14 @@ def scope_sha256(cases: list[dict]) -> str:
 def _call(case: dict) -> str:
     test = case["test"]
     requires_option, simplifying, raw = TESTS[test]
-    args = [f"parse_string({_literal(case['student'])})", f"parse_string({_literal(case['teacher'])})"]
+    # STACK emits the parsed answer AST as evaluated CAS assignments before
+    # invoking AT*.  Maxima parse_string alone leaves configured names such
+    # as i symbolic; eval_string evaluates their bindings while simp:false
+    # retains form-sensitive expressions (checked by the loader probe).
+    args = [f"eval_string({_literal(case['student'])})", f"eval_string({_literal(case['teacher'])})"]
     if requires_option:
         option = case["options"] or "0.05"  # controller default for NumAbsolute/Relative
-        args.append(f"parse_string({_literal(option)})")
+        args.append(f"eval_string({_literal(option)})")
     if raw:
         # PHP uses get_inputform(true, 1).  For supported plain numeric input
         # the fixture's spelling is the pertinent raw input; nontrivial AST
