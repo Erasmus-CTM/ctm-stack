@@ -124,3 +124,13 @@ This unmodified STACK sample has multiple answer fields and checks decimal-place
 ```
 
 [Download XML](questions/boolean-equivalence.xml)
+
+## Finite lists and sets
+
+```{#finite-collections .stack-question}
+#| file: questions/finite-collections.xml
+#| question: Finite scalar collections
+#| variants: 2
+#| seed: 17
+#| review: true
+```

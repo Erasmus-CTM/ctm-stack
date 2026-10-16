@@ -7,7 +7,7 @@ from execution are observations, never an automatic excuse for a wrong mark.
 from __future__ import annotations
 
 from stack_sympy import InvalidAnswer, Unsupported, answer_test, evaluate, parse
-from stack_sympy.expressions import MAX_CHARS, _STUDENT_FUNCTIONS, is_logical, symbolic_complex_log
+from stack_sympy.expressions import MAX_CHARS, MAX_COLLECTION_ITEMS, _STUDENT_FUNCTIONS, is_logical, symbolic_complex_log
 from stack_sympy.assessment import numeric_option_source
 from stack_sympy.logic import validate_logic
 import sympy as sp
@@ -30,7 +30,7 @@ def _walk(node):
         yield from _walk(child)
 
 
-def _preflight_expression(source: str, role: str):
+def _preflight_expression(source: str, role: str, *, collections=False):
     """Return AST or a controlled classification of syntax outside the API."""
     if not isinstance(source, str):
         return None, ("unsupported", f"{role} must be an expression string")
@@ -55,8 +55,15 @@ def _preflight_expression(source: str, role: str):
     for item in _walk(node):
         if symbolic_complex_log(item):
             return None, ("unsupported", "Symbolic complex logarithms require branch-aware proof")
-        if item.kind in {"list", "index"}:
-            return None, ("unsupported", f"{role} list or index expression outside scalar subset")
+        if item.kind in {"list", "set"}:
+            if not collections or item is not node:
+                return None, ("unsupported", f"{role} requires a top-level flat scalar collection with AlgEquiv or Sets")
+            if len(item.children) > MAX_COLLECTION_ITEMS:
+                return None, ("unsupported", f"{role} collection exceeds {MAX_COLLECTION_ITEMS} entries")
+            if any(child.kind in {"logical", "boolean", "equation"} for child in _walk(item)):
+                return None, ("unsupported", "Collections must contain only scalar expressions")
+        if item.kind == "index":
+            return None, ("unsupported", f"{role} indexing is outside the student collection subset")
         if role == "student" and item.kind == "call" and item.value not in _STUDENT_FUNCTIONS:
             return None, ("unsupported", f"student function {item.value} outside scalar subset")
     return node, None
@@ -70,13 +77,13 @@ def classify_case(case: dict) -> dict:
     """
     name = case.get("test")
     if name not in SUPPORTED_TESTS:
-        return {"kind": "unsupported", "reason": f"answer test {name!r} outside eight-family scalar subset"}
+        return {"kind": "unsupported", "reason": f"answer test {name!r} outside supported answer-test families"}
     # Upstream's optional eighth field is a display-table header, not an
     # answer-test argument. It remains in the inventory but does not affect
     # classification, including when its value is nonempty.
     parsed = {}
     for role in ("student", "teacher"):
-        node, issue = _preflight_expression(case.get(role), role)
+        node, issue = _preflight_expression(case.get(role), role, collections=name in {"AlgEquiv", "Sets"})
         if issue:
             return {"kind": issue[0], "reason": issue[1]}
         parsed[role] = node

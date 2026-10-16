@@ -147,3 +147,36 @@ report distinguishes **Domain/branch difference** from **Unproved identity** and
 shows each case's explanation, evidence, source links, and question for STACK.
 Changing a label does not turn a difference into a compatibility pass. Any
 changed result invalidates its old exception and must be reviewed.
+
+## Finite sets {#finite-sets}
+
+STACK explicitly distinguishes list and set comparison in its
+[equivalence documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md).
+Lists compare corresponding entries with `AlgEquiv`. Sets compare members after
+preparation, rather than running scalar `AlgEquiv` on every possible pairing.
+This avoids an expensive matching search and makes canonical forms material.
+The separate [`Sets` test](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Other.md)
+provides duplicate, extra, and missing-entry feedback. The port preserves submitted
+repetitions until this test runs. Feedback wording is brief English; full localized
+STACK feedback and exact ordinary notes are not claimed compatible.
+
+The port uses SymPy's scalar canonical forms. It does not use general scalar proofs to match set members:
+`{(x+1)^2}` and `{x^2+2*x+1}` remain distinct. A bounded rational multiple of
+`exp(i*pi*q)` can use its exact rectangular form. The port does not expand trigonometric set members: both native set tests reject
+`{sin(x)^2+cos(x)^2}` against `{1}`, while a scalar/list `AlgEquiv` proof accepts
+the corresponding scalar identity. Rectangular constant conversion is limited
+to `AlgEquiv`; `Sets` retains structural scalar members.
+
+| Case | Observation | Interpretation |
+|---|---|---|
+| 201 | `{-sqrt(2)/sqrt(3)}` and `{-2/sqrt(6)}` have the same SymPy canonical member. | Upstream marks this a desired acceptance (`-3`); the pinned native test rejects it. This is recorded separately as a known native mathematical failure. |
+| 203 | `{5/4*exp(i*pi/6)}` and `{5*sqrt(3)/8+5*i/8}` have identical rectangular members. | Also a desired acceptance (`-3`) distinguished from native rejection. |
+| 212 | `{(2-2^(5/2))/2,(2^(5/2)+2)/2}` and `{1-2^(3/2),2^(3/2)+1}` collapse to the same SymPy members. | Upstream expects rejection (`0`), and Maxima keeps distinct prepared forms. The port accepts; this remains an explicitly counted known port difference, **not a compatibility pass**. |
+
+For case 212, `2^(5/2)/2 = 2^(3/2)` for these positive numeric constants.
+The disagreement is about set normalization, not a disputed complex identity.
+**Question for STACK:** should the port preserve Maxima's normalization artifacts,
+or use its own canonical scalar members? A faithful Maxima-form emulation would
+need held member provenance before SymPy canonicalization. No one-off expression
+exception is used. Nested collections and collection form/type tests are deferred
+to a separate increment.

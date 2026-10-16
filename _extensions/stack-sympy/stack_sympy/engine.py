@@ -13,7 +13,7 @@ import sympy as sp
 from .assessment import answer_test
 from .expressions import InvalidAnswer, Node, Unsupported, assignments, canonical_form, evaluate, form_latex, parse
 from .importer import UnsupportedQuestion
-from .expressions import is_logical
+from .expressions import is_logical, is_collection, validate_collection, collection_items
 from .logic import validate_logic
 from .rendering import render_castext
 
@@ -82,8 +82,28 @@ def instantiate(question: dict, seed: int = 1) -> dict:
         definitions = _definitions(question)
         _validate_references(question, definitions)
         env = assignments(question.get("variables", ""), rng=random.Random(int(seed)), assumptions=assumptions)
-        if any(isinstance(value, sp.Float) for value in env.values()):
+        def has_float(value):
+            return (any(has_float(x) for x in collection_items(value)) if is_collection(value)
+                    else isinstance(value, sp.Basic) and value.has(sp.Float))
+        if any(has_float(value) for value in env.values()):
             raise UnsupportedQuestion(name, "questionvariables", "floating-point variables are unsupported in frozen variants")
+        def decimal_definition(key):
+            pending, seen = [key], set()
+            while pending:
+                current = pending.pop()
+                if current in seen:
+                    continue
+                seen.add(current)
+                for n in _walk(parse(definitions[current])):
+                    if n.kind == "number" and ("." in n.value or "e" in n.value.lower()):
+                        return True
+                    if n.kind == "name" and n.value in definitions:
+                        pending.append(n.value)
+            return False
+        for key, value in env.items():
+            if is_collection(value) and decimal_definition(key):
+                raise UnsupportedQuestion(name, f"questionvariables[{key}]",
+                                          "decimal collection variables cannot preserve literal precision when frozen; use exact fractions")
         if not question.get("simplify", True):
             for prt in question["prts"]:
                 for node in prt["nodes"]:
@@ -119,22 +139,30 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                 teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
             except (InvalidAnswer, Unsupported) as exc:
                 raise UnsupportedQuestion(name, where + "/tans", str(exc)) from exc
-            if not isinstance(teacher, sp.Basic):
-                raise UnsupportedQuestion(name, where + "/tans", "only scalar teacher answers are supported")
+            validate_collection(teacher)
             if is_logical(teacher):
                 validate_logic(teacher)
-            if inp["type"] == "numerical" and teacher.is_number is not True:
+            if inp["type"] == "numerical" and getattr(teacher, "is_number", None) is not True:
                 raise UnsupportedQuestion(name, where + "/tans", "numerical answer requires a number")
             if inp["syntaxhint"]:
                 evaluate(inp["syntaxhint"], env, assumptions=assumptions)
         for prt in question["prts"]:
+            placeholders = {n: evaluate(i["teacher"], env, assumptions=assumptions) for n, i in inputmap.items()}
+            preview_env = {**env, **placeholders}
             if prt["feedbackvariables"].strip():
                 # Names can depend on student inputs. Syntax is checked at grade time.
-                assignments(prt["feedbackvariables"], env={**env, **{n: sp.Symbol(n) for n in inputmap}}, assumptions=assumptions)
+                preview_env = assignments(prt["feedbackvariables"], preview_env, assumptions=assumptions)
             for node in prt["nodes"]:
                 where = f"prt[{prt['name']}]/node[{node['name']}]"
-                evaluate(node["student"], {**env, **{n: sp.Symbol(n) for n in inputmap}}, assumptions=assumptions)
-                teacher_value = evaluate(node["teacher"], env, assumptions=assumptions)
+                # Use actual typed teacher placeholders so collection arithmetic
+                # and unsupported tests are rejected while building the question.
+                student_value = evaluate(node["student"], preview_env, assumptions=assumptions)
+                teacher_value = evaluate(node["teacher"], preview_env, assumptions=assumptions)
+                for value in (student_value, teacher_value):
+                    validate_collection(value)
+                if (any(is_collection(x) for x in (student_value, teacher_value))
+                        and node["test"] not in {"AlgEquiv", "Sets"}):
+                    raise UnsupportedQuestion(name, where, "Collections require AlgEquiv or Sets")
                 if is_logical(teacher_value):
                     validate_logic(teacher_value)
                     if node["test"] != "AlgEquiv":
@@ -189,6 +217,8 @@ def _input_validation(inp, raw, env, assumptions):
                 if node.kind == "binary" and node.value == "/":
                     num = evaluate(node.children[0], env, assumptions=assumptions, student=True, simplify=False)
                     den = evaluate(node.children[1], env, assumptions=assumptions, student=True, simplify=False)
+                    if not isinstance(num, sp.Expr) or not isinstance(den, sp.Expr):
+                        raise InvalidAnswer("Arithmetic requires scalar expressions")
                     if num.is_Integer and den.is_Integer and (math.gcd(int(num), int(den)) > 1
                                                               or num < 0 and den < 0):
                         raise InvalidAnswer("Write fractions in lowest terms")
@@ -196,11 +226,14 @@ def _input_validation(inp, raw, env, assumptions):
                     # fractions; polynomial cancellation is a separate test.
         evaluate(tree, env, assumptions=assumptions, student=True, simplify=False)
         value = evaluate(tree, env, assumptions=assumptions, student=True)
-        if not isinstance(value, sp.Basic):
-            raise InvalidAnswer("Only scalar answers are supported")
+        validate_collection(value)
+        if inp.get("checkanswertype"):
+            teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
+            if (is_collection(value) or is_collection(teacher)) and type(value) is not type(teacher):
+                raise InvalidAnswer("Use the same collection type as the teacher answer")
         if is_logical(value):
             validate_logic(value)
-        if inp["type"] == "numerical" and value.is_number is not True:
+        if inp["type"] == "numerical" and getattr(value, "is_number", None) is not True:
             raise InvalidAnswer("Enter a numerical answer")
         return {"valid": True, "latex": form_latex(tree, env), "feedback": ""}, value, tree
     except (InvalidAnswer, TypeError, ValueError, ZeroDivisionError) as exc:
@@ -264,6 +297,9 @@ def _author_form(source, env, assumptions):
             return f"({_source(env[n.value])})" if n.value in env else n.value
         if n.kind == "number":
             return n.value
+        if n.kind in {"list", "set"}:
+            opening, closing = ("[", "]") if n.kind == "list" else ("{", "}")
+            return opening + ",".join(render(c) for c in n.children) + closing
         if n.kind == "unary":
             return f"({n.value}{render(n.children[0])})"
         if n.kind == "binary":

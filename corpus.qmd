@@ -3,9 +3,9 @@ title: "Question corpus"
 subtitle: "Thirty unchanged STACK exports, with a measured adapter boundary"
 ---
 
-These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **Only the 18 questions whose authored tests passed on every replayed seed have interactive cards.** The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.
+These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **Only the 19 questions whose authored tests passed on every replayed seed have interactive cards.** The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.
 
-The [reproducible baseline](questions/corpus/baseline.json) reports **18 passed**, **1 with test mismatches**, and **11 blocked** (4 at import, 7 at instantiation). It retained **73 authored test cases** and replayed **132 seed/case combinations** across 19 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.
+The [reproducible baseline](questions/corpus/baseline.json) reports **19 passed**, **1 with test mismatches**, and **10 blocked** (4 at import, 6 at instantiation). It retained **73 authored test cases** and replayed **138 seed/case combinations** across 20 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.
 
 **Attribution and reuse.** Questions are from [STACK / maths/moodle-qtype_stack](https://github.com/maths/moodle-qtype_stack), pinned at commit [`10d323311b7f39fb7b092dd10ce75f7d8632f525`](https://github.com/maths/moodle-qtype_stack/commit/10d323311b7f39fb7b092dd10ce75f7d8632f525). The unchanged question exports carry the [CC BY-SA 4.0 license](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/COPYING.txt), also [included locally](questions/corpus/COPYING.txt); see each pinned source link below. The [manifest](questions/corpus/manifest.json) records the exact upstream path and SHA-256 for every XML file.
 
@@ -37,7 +37,7 @@ The [reproducible baseline](questions/corpus/baseline.json) reports **18 passed*
 | [AlgMap-13.1](#algmap-13-1) | Algebra Refresher / 13 Factorising algebraic expressions | Passed authored tests | [Download](questions/corpus/AlgMap-13-1-.xml) |
 | [AlgMap-14.1](#algmap-14-1) | Algebra Refresher / 14 Algebraic fractions involving factorising | Passed authored tests | [Download](questions/corpus/AlgMap-14-1.xml) |
 | [AlgMap-15.1](#algmap-15-1) | Algebra Refresher / 15 Quadratic equations | Unsupported at instantiation | [Download](questions/corpus/AlgMap-15-1.xml) |
-| [Complex_Convert_1](#complex-convert-1) | Topics / Complex Numbers | Unsupported at instantiation | [Download](questions/corpus/Complex_Convert_1.xml) |
+| [Complex_Convert_1](#complex-convert-1) | Topics / Complex Numbers | Passed authored tests | [Download](questions/corpus/Complex_Convert_1.xml) |
 | [Limits_1](#limits-1) | Topics / Limits | Unsupported at import | [Download](questions/corpus/Limits_1.xml) |
 | [Logs_1](#logs-1) | Topics / Logs and Exponentials | Passed authored tests | [Download](questions/corpus/Logs_1.xml) |
 | [Matrices_find det 2*2](#matrices-find-det-2-2) | Topics / LinearAlgebra / Matrix Calculations | Unsupported at instantiation | [Download](questions/corpus/Matrices_find-det-2-2.xml) |
@@ -46,7 +46,7 @@ The [reproducible baseline](questions/corpus/baseline.json) reports **18 passed*
 
 ## Ready to try
 
-These 18 cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the card's XML tests on the displayed seed; the [baseline](questions/corpus/baseline.json) describes the unchanged imports. Three cards explicitly use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.
+These 19 cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the card's XML tests on the displayed seed; the [baseline](questions/corpus/baseline.json) describes the unchanged imports. Three cards explicitly use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.
 
 ### AlgMap-1.5 {#algmap-1-5}
 
@@ -278,6 +278,19 @@ Algebra Refresher / 14 Algebraic fractions involving factorising · 1 input · 3
 
 [Download original XML](questions/corpus/AlgMap-14-1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/14-Algebraic-fractions-involving-factorising/AlgMap-14-1.xml)
 
+### Complex_Convert_1 {#complex-convert-1}
+
+Topics / Complex Numbers · 1 input · 2 authored tests · baseline seeds `817828831`, `1302743320`, `2023109718`.
+
+```{.stack-question}
+#| file: questions/corpus/Complex_Convert_1.xml
+#| question: Complex_Convert_1
+#| seed: 817828831
+#| review: true
+```
+
+[Download original XML](questions/corpus/Complex_Convert_1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Complex-Numbers/Complex_Convert_1.xml)
+
 ### Logs_1 {#logs-1}
 
 Topics / Logs and Exponentials · 1 input · 3 authored tests · baseline seeds `1531295862`, `864648734`, `1099277693`.
@@ -339,15 +352,9 @@ Algebra Refresher / 12 Simultaneous linear equations · **Unsupported at import.
 
 ### AlgMap-15.1 {#algmap-15-1}
 
-Algebra Refresher / 15 Quadratic equations · **Unsupported at instantiation at seed `2060820372`.** `input[ans]/tans`: Set expressions {...} are not yet supported.
+Algebra Refresher / 15 Quadratic equations · **Unsupported at instantiation at seed `2060820372`.** `instantiation`: Unexpected character &#x27;?&#x27; (U+003F) at position 9.
 
 [Download original XML](questions/corpus/AlgMap-15-1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/15-Quadratic-equations/AlgMap-15-1.xml) · [Replay record](questions/corpus/baseline.json)
-
-### Complex_Convert_1 {#complex-convert-1}
-
-Topics / Complex Numbers · **Unsupported at instantiation at seed `817828831`.** `input[ans1]/tans`: only scalar teacher answers are supported.
-
-[Download original XML](questions/corpus/Complex_Convert_1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Complex-Numbers/Complex_Convert_1.xml) · [Replay record](questions/corpus/baseline.json)
 
 ### Limits_1 {#limits-1}
 

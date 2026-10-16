@@ -83,7 +83,7 @@ class PythonConformanceTests(unittest.TestCase):
         self.assertEqual(classify_case(case)["kind"], "supported")
         self.assertTrue(evaluate_case(case)["correct"])
         self.assertEqual(classify_case(sample(test="Units"))["kind"], "unsupported")
-        self.assertEqual(classify_case(sample(student="[x]"))["kind"], "unsupported")
+        self.assertEqual(classify_case(sample(student="[[x]]"))["kind"], "unsupported")
 
     def test_case_specific_policy_is_exact_and_stale_entries_fail(self):
         case = sample(expected_score=1)

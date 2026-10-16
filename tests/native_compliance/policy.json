@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scope_sha256": "0fac73dce2ba064ebd9a0f71b9ac813404d68f67bc14055bf450fb0d47c26e42",
+  "scope_sha256": "b7e3f67e45262c4de71b5e5f9e111eba936b14c2200788a27678f503c78a4bba",
   "cases": {
     "de0885f7d37d2ae319116b55bbeb142975a2298c65f19be7a7d0c90b0ca82980-1": {
       "expected_observation": {
@@ -270,6 +270,33 @@
           {
             "label": "Pinned STACK equivalence implementation",
             "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          }
+        ]
+      }
+    },
+    "fdb5a055188937d86d472411e496c50bbc867dccb66920bd862a03e0ab3dbc98-1": {
+      "expected_observation": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": ""
+      },
+      "reason": "Set row 212 expects false after Maxima set preparation, although the two sets are mathematically identical: 2^(5/2)/2 = 2^(3/2). SymPy canonicalizes these positive rational powers before structural set comparison and returns true. This is a reviewed normalization difference, not a compatibility pass; no pairwise scalar equivalence search is performed.",
+      "discussion": {
+        "category": "domain_review",
+        "evidence": "documented_context",
+        "explanation": "Set row 212 expects false after Maxima set preparation, although the two sets are mathematically identical: 2^(5/2)/2 = 2^(3/2). SymPy canonicalizes these positive rational powers before structural set comparison and returns true. This is a reviewed normalization difference, not a compatibility pass; no pairwise scalar equivalence search is performed.",
+        "question": "Should finite sets use mathematical equality for these positive radical constants, or should the port preserve Maxima normalization artifacts? The STACK set documentation explicitly permits equal scalar forms to remain distinct.",
+        "sources": [
+          {
+            "label": "STACK set equivalence and normalization",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md"
+          },
+          {
+            "label": "Pinned ATSet and ATSets_prepare implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac"
           }
         ]
       }

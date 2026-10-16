@@ -59,10 +59,10 @@ def test_newly_supported_corpus_questions_replay_all_deployed_seeds(filename):
     assert report['passed'], report
 
 
-def test_complex_question_passes_function_evaluation_but_still_requires_list_answers():
+def test_complex_question_now_replays_with_flat_list_answers():
     question = import_xml(ROOT/'questions/corpus/Complex_Convert_1.xml')[0]
-    with pytest.raises(UnsupportedQuestion, match='only scalar teacher answers'):
-        instantiate(question, question['deployedseeds'][0])
+    result = run_question_tests(question, seeds=question['deployedseeds'])
+    assert result['passed'], result
 
 
 def test_upstream_algmap_8_10_prt_rejects_a_correct_integral_answer():
@@ -79,10 +79,10 @@ def test_upstream_algmap_8_10_prt_rejects_a_correct_integral_answer():
     assert all(node['true']['score'] == node['false']['score'] == 0 for node in nodes[1:])
 
 
-def test_algmap_15_1_requires_sets_not_xml_sanitization():
+def test_algmap_15_1_passes_sets_but_still_requires_unknown_qmark_syntax():
     question = import_xml(ROOT/'questions/corpus/AlgMap-15-1.xml')[0]
     assert question['inputs'][0]['teacher'] == '{ta1,ta2}'
-    with pytest.raises(UnsupportedQuestion, match=r'input\[ans\]/tans: Set expressions'):
+    with pytest.raises(UnsupportedQuestion, match=r"Unexpected character '\?'"):
         instantiate(question, question['deployedseeds'][0])
 
 

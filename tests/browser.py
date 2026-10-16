@@ -154,6 +154,29 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
             example.locator(".stack-check").click()
             example.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
             assert example.locator(".stack-result").get_attribute("data-state") == ("correct" if correct else "retry")
+        collection = page.locator('[data-stack-id="finite-collections"]')
+        payload = json.loads(collection.locator('.stack-sympy-data').text_content())
+        a = payload['variants'][0]['env']['a']
+        for name, response in {'sequence':f'[{a},x+x]', 'members':f'{{2*x,{a}}}',
+                               'explained':f'{{{a},2*x,2*x}}'}.items():
+            collection.locator(f'.stack-answer[data-name="{name}"]').fill(response)
+        collection.locator('.stack-validate').click()
+        collection.locator('.stack-result[data-state="valid"]').wait_for(timeout=120000)
+        assert collection.locator('.stack-validation[data-name="explained"]').get_attribute('data-latex').count('2') >= 2
+        collection.locator('.stack-check').click()
+        collection.locator('.stack-result[data-state="correct"]').wait_for(timeout=120000)
+        assert 'Repeated elements' in collection.locator('.stack-result').inner_text()
+        collection.locator('.stack-answer[data-name="explained"]').fill(f'{{{a},3*x}}')
+        collection.locator('.stack-validate').click()
+        collection.locator('.stack-result[data-state="valid"]').wait_for(timeout=120000)
+        collection.locator('.stack-check').click()
+        collection.locator('.stack-result[data-state="retry"]').wait_for(timeout=120000)
+        text = collection.locator('.stack-result').inner_text()
+        assert 'Extra elements' in text and 'Missing elements' in text
+        collection.locator('.stack-answer[data-name="sequence"]').fill('[[1]]')
+        collection.locator('.stack-validate').click()
+        collection.locator('.stack-result[data-state="invalid"]').wait_for(timeout=120000)
+        assert collection.locator('.stack-check').is_disabled()
         multi = page.locator('[data-stack-id="measurements"]')
         for answer in multi.locator(".stack-answer").all():
             answer.fill("0.00")

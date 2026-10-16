@@ -83,3 +83,13 @@ Visible measurement context for the explicit-context activity.
 #| seed: 17
 #| review: true
 ```
+
+## Finite lists and sets
+
+```{#finite-collections .stack-question}
+#| file: questions/finite-collections.xml
+#| question: Finite scalar collections
+#| variants: 2
+#| seed: 17
+#| review: true
+```

@@ -26,7 +26,7 @@ BASELINE = CORPUS / "baseline.json"
 UPSTREAM = ROOT.parent / "stack-upstream"
 DEFAULT_SEEDS = (17, 29, 47)
 TIMEOUT_SECONDS = 10
-SOURCE_FILES = ("importer.py", "engine.py", "expressions.py", "assessment.py", "rendering.py")
+SOURCE_FILES = ("importer.py", "engine.py", "expressions.py", "assessment.py", "rendering.py", "collections.py")
 
 
 def _text(element: ET.Element, path: str) -> str:
