@@ -357,10 +357,10 @@ def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
             assert page.locator('#port-regressions-list .case').count() == sum(
                 row['python_status'] == status for row in project['cases'])
         page.locator('#clear-filters').click()
-        page.locator('#port-search').fill('complex-root-form')
+        selected = next(c for c in cases if c['id']=='port-complex-root-form')
+        page.locator('#port-search').fill(selected['id'])
         assert page.locator('#port-regressions-list .case').count()==1
         page.locator('#port-regressions-list .case').first.locator('summary').first.click()
-        selected = next(c for c in cases if c['id']=='complex-root-form')
         raw = page.locator('#port-regressions-list .case-body > .technical-details')
         raw.locator('summary').first.click()
         for detail in raw.locator('details').all():
