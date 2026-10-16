@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -41,11 +76,11 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-4f504391229830b406574e462f7afa43.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
-<script src="../site_libs/quarto-contrib/ai-feedback-0.6.0/feedback-core.js"></script>
-<script src="../site_libs/quarto-contrib/ai-feedback-0.6.0/feedback-dom.js"></script>
-<script src="../site_libs/quarto-contrib/ai-feedback-0.6.0/ai-feedback.js"></script>
-<link href="../site_libs/quarto-contrib/ai-feedback-0.6.0/ai-feedback.css" rel="stylesheet">
-<link href="../site_libs/quarto-contrib/stack-sympy-0.1.9/stack-sympy.css" rel="stylesheet">
+<script src="../site_libs/quarto-contrib/ai-feedback-0.7.0/feedback-core.js"></script>
+<script src="../site_libs/quarto-contrib/ai-feedback-0.7.0/feedback-dom.js"></script>
+<script src="../site_libs/quarto-contrib/ai-feedback-0.7.0/ai-feedback.js"></script>
+<link href="../site_libs/quarto-contrib/ai-feedback-0.7.0/ai-feedback.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/stack-sympy-0.1.10/stack-sympy.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -138,6 +173,7 @@ ul.task-list li input[type="checkbox"] {
    
   <ul>
   <li><a href="#start-with-a-native-export" id="toc-start-with-a-native-export" class="nav-link active" data-scroll-target="#start-with-a-native-export">Start with a native export</a></li>
+  <li><a href="#choose-a-teaching-policy" id="toc-choose-a-teaching-policy" class="nav-link" data-scroll-target="#choose-a-teaching-policy">Choose a teaching policy</a></li>
   <li><a href="#what-the-adapter-checks" id="toc-what-the-adapter-checks" class="nav-link" data-scroll-target="#what-the-adapter-checks">What the adapter checks</a></li>
   <li><a href="#validate-and-publish" id="toc-validate-and-publish" class="nav-link" data-scroll-target="#validate-and-publish">Validate and publish</a></li>
   </ul>
@@ -145,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
-<script>window.__aiFeedbackPolicies = {"layers":[],"pageLayers":[]};</script>
+<script>window.__aiFeedbackPolicies = {"layers":[{"policies":{"course-mathematics":{"max-words":120,"reset-on-run":true},"brief-mathematics":{"extends":"course-mathematics","max-words":90},"two-step-practice":{"extends":"brief-mathematics","steps":[{"step-prompt":"Ask one guiding question without giving a formula or answer."},{"step-prompt":"Give a concise worked explanation of this task.","allow-full-solution":true}]}}}],"pageLayers":[],"projectPolicy":{"math-exercise":"course-mathematics"}};</script>
 <script>window.__aiFeedbackConfig = {"baseUrl":"","mode":"copy","model":"","storage":"local"};</script>
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -350,8 +386,37 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
 </code></pre></details></div></div>
 <p>The learner submits in two steps: <strong>Validate answers</strong> parses the current fields and displays the expression form (for example, <code>x+x</code> rather than a simplified <code>2*x</code>), then <strong>Check answer</strong> grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading. The polynomial example sets <code>&lt;insertstars&gt;1&lt;/insertstars&gt;</code>, so <code>x**2+8x+15</code> previews as one sum and receives full credit in its first variant.</p>
 <p>Below a rendered question, <strong>Show source</strong> reveals its authored Quarto fenced block and <strong>Show STACK source</strong> reveals the original XML file contents. Both panels start closed; they are available for inspecting and copying a working example.</p>
-<p>The options are <code>file</code> and <code>question</code> (required), <code>seed</code> (signed integer, default 1), <code>variants</code> (1–20, default 1), <code>review</code> (<code>true</code> or <code>false</code>, default false), and <code>diagnostics</code> (<code>true</code> or <code>false</code>, default false). <code>feedback: true</code> opts a card into the <a href="https://github.com/Erasmus-CTM/ai-feedback">shared AI Feedback extension</a>; cards without it need no AI dependency. Install both extensions in the same project. <code>context: auto</code> (default) uses nearby visible prose; <code>context: none</code> omits it; <code>context: id1,id2</code> includes tagged blocks such as <code>::: {#id1 .ai-context}</code> (<code>.ai-feedback-context</code> and <code>.math-exercise-context</code> are shared aliases). <code>feedback-language</code> sets the explanation language (default document <code>lang</code>). <code>feedback-policy</code> selects an existing named policy from <code>ai-feedback.policy-files</code> or page policy files. A stable <code>label</code> targets exercise-specific policy settings; otherwise the card ID is used. The shared mathematics policy (<code>math-exercise</code>) supplies the default hints and is also the YAML integration namespace for STACK cards. A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle’s Maxima backend.</p>
-<p>Feedback uses a learner’s current answer, visible question text and selected context. A preceding matching <strong>Check answer</strong> can contribute minimal result status, finite score; XML, source panels, teacher answers, qtests, grader configuration, grader feedback messages and answer notes are excluded. It never grades a response or replaces <strong>Validate answers</strong> and <strong>Check answer</strong>. The shared settings panel lets a learner choose copy-prompt mode or configure their own compatible provider; no API key is placed in the page. The same <a href="https://github.com/Erasmus-CTM/ai-feedback/blob/main/docs/feedback-policies.md">nested YAML policy layers</a> are inherited across integrations, using <code>math-exercise</code> for STACK’s mathematics policy namespace.</p>
+<p>The options are <code>file</code> and <code>question</code> (required), <code>seed</code> (signed integer, default 1), <code>variants</code> (1–20, default 1), <code>review</code> (<code>true</code> or <code>false</code>, default false), and <code>diagnostics</code> (<code>true</code> or <code>false</code>, default false). <code>feedback: true</code> opts a card into the <a href="https://github.com/Erasmus-CTM/ai-feedback">shared AI Feedback extension</a>; cards without it need no AI dependency. Install both extensions in the same project; feedback requires AI Feedback 0.8.0+ and Quarto 1.8.27+. <code>context: auto</code> (default) uses nearby visible prose; <code>context: none</code> omits it; <code>context: id1,id2</code> includes tagged blocks such as <code>::: {#id1 .ai-context}</code> (<code>.ai-feedback-context</code> and <code>.math-exercise-context</code> are shared aliases). <code>feedback-language</code> sets the explanation language (default document <code>lang</code>). <code>feedback-policy</code> selects an existing named policy from <code>ai-feedback.policy-files</code> or page policy files. A stable <code>label</code> targets exercise-specific policy settings; otherwise the card ID is used. The shared mathematics policy (<code>math-exercise</code>) supplies the default hints and is also the YAML integration namespace for STACK cards. A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle’s Maxima backend.</p>
+<p>Feedback uses a learner’s current answer, visible question text and selected context. A preceding matching <strong>Check answer</strong> can contribute minimal result status, finite score; XML, source panels, teacher answers, qtests, grader configuration, grader feedback messages and answer notes are excluded. It never grades a response or replaces <strong>Validate answers</strong> and <strong>Check answer</strong>. The shared settings panel lets a learner choose copy-prompt mode or configure their own compatible provider; no API key is placed in the page. The same <a href="https://github.com/Erasmus-CTM/ai-feedback/blob/main/docs/feedback-policies.md">explicit teaching policies</a> are inherited across integrations, using <code>math-exercise</code> for STACK’s mathematics policy namespace.</p>
+</section>
+<section id="choose-a-teaching-policy" class="level2">
+<h2 class="anchored" data-anchor-id="choose-a-teaching-policy">Choose a teaching policy</h2>
+<p>The shared <code>math-exercise</code> defaults offer four steps, ending with a worked solution. Loading policy definitions does not select them. The example site loads <a href="../feedback/course.yml">feedback/course.yml</a> and explicitly selects its course policy in <code>_quarto.yml</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-ai-feedback-context="Choose a teaching policy
+The shared math-exercise defaults offer four steps, ending with a worked solution. Loading policy definitions does not select them. The example site loads feedback/course.yml and explicitly selects its course policy in _quarto.yml:"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ai-feedback</span><span class="kw">:</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">policy-files</span><span class="kw">:</span><span class="at"> feedback/course.yml</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">project-policy</span><span class="kw">:</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">math-exercise</span><span class="kw">:</span><span class="at"> course-mathematics</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A policy can inherit those defaults and specialize them by name:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-ai-feedback-context="Choose a teaching policy
+The shared math-exercise defaults offer four steps, ending with a worked solution. Loading policy definitions does not select them. The example site loads feedback/course.yml and explicitly selects its course policy in _quarto.yml:
+A policy can inherit those defaults and specialize them by name:"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># feedback/course.yml</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ai-feedback</span><span class="kw">:</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">policies</span><span class="kw">:</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">course-mathematics</span><span class="kw">:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">max-words</span><span class="kw">:</span><span class="at"> </span><span class="dv">120</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">reset-on-run</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">brief-mathematics</span><span class="kw">:</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">extends</span><span class="kw">:</span><span class="at"> course-mathematics</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">max-words</span><span class="kw">:</span><span class="at"> </span><span class="dv">90</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">two-step-practice</span><span class="kw">:</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">extends</span><span class="kw">:</span><span class="at"> brief-mathematics</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">step-prompt</span><span class="kw">:</span><span class="at"> Ask one guiding question without giving a formula or answer.</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">step-prompt</span><span class="kw">:</span><span class="at"> Give a concise worked explanation of this task.</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">allow-full-solution</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Select the specialization with <code>#| feedback-policy: two-step-practice</code> on a feedback-enabled STACK block. <code>#| label: rational-practice</code> gives it a stable key for YAML <code>exercises.math-exercise</code> overrides. <code>examples.qmd</code> also selects <code>page-policy: {math-exercise: brief-mathematics}</code> in its front matter. Its other cards inherit four steps; only the selected card replaces the sequence with two. Omitted fields inherit, while a supplied <code>steps</code> list replaces every step and its permissions. <code>base-prompt</code> changes the continuing teaching instructions; <code>step-prompt</code> describes one step. Use neither the retired <code>prompt</code> field nor an authored <code>integrations</code>/<code>defaults</code> section.</p>
+<p>Edits clear stale feedback and Check evidence while preserving hint progress. Check resets progress by default; a selected policy can set <code>reset-on-run: false</code> to preserve it. Selecting a different variant always restarts progress. Feedback collects a snapshot without running validation, grading, or authored tests.</p>
 </section>
 <section id="what-the-adapter-checks" class="level2">
 <h2 class="anchored" data-anchor-id="what-the-adapter-checks">What the adapter checks</h2>
@@ -822,5 +887,5 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
 
 
 
-<script src="../site_libs/quarto-contrib/stack-sympy-0.1.9/stack-sympy.js"></script>
+<script src="../site_libs/quarto-contrib/stack-sympy-0.1.10/stack-sympy.js"></script>
 </body></html>
