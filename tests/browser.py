@@ -163,8 +163,8 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         multi.locator(".stack-check").click()
         multi.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
         assert multi.locator(".stack-result").get_attribute("data-state") == "retry"
-        (site.parent / "test-results").mkdir(exist_ok=True)
-        page.screenshot(path=str(site.parent / "test-results/example.png"), full_page=True)
+        (ROOT / "test-results").mkdir(exist_ok=True)
+        page.screenshot(path=str(ROOT / "test-results/example.png"), full_page=True)
         assert not errors, errors
         browser.close()
 
