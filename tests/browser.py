@@ -312,6 +312,7 @@ def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
     project.update(available=True,provenance={'fixture':'synthetic UI test'},runners={})
     legacy_count = len(json.loads((root/'tests/native_compliance/fixtures.json').read_text())['cases'])
     (tmp_path/'port-regressions.json').write_text(json.dumps(project))
+    (tmp_path/'report-ui.js').write_text((root/'compliance-report/report-ui.js').read_text())
     (tmp_path/'port-regressions.js').write_text((root/'compliance-report/port-regressions.js').read_text())
     body = (root/'compliance-report/port-regressions.qmd').read_text().split('<div id="port-regressions-status"',1)[1]
     (tmp_path/'index.html').write_text('<!doctype html><div id="port-regressions-status"'+body)
@@ -327,10 +328,11 @@ def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
         assert page.locator('#report-provenance').count()==0
         assert legacy_count==2303
         assert 'boundary checks' in page.locator('#port-regressions-status').inner_text()
-        assert 'known defects' in page.locator('#port-regressions-status').inner_text()
+        assert 'known port issue' in page.locator('#port-regressions-status').inner_text()
         page.locator('#port-search').fill('complex-root-form')
         assert page.locator('#port-regressions-list .case').count()==1
         page.locator('#port-regressions-list .case').first.locator('summary').first.click()
+        page.locator('#port-regressions-list').get_by_text('Raw observations and source',exact=True).click()
         page.locator('#port-regressions-list').get_by_text('Expected behavior and origin',exact=True).click()
         assert '668' in page.locator('#port-regressions-list').inner_text()
         page.locator('#port-search').fill('')

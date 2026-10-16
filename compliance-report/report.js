@@ -1,128 +1,61 @@
-"use strict";
-
-const $ = id => document.getElementById(id);
-const node = (tag, text, className) => {
-  const el = document.createElement(tag);
-  if (text !== undefined && text !== null) el.textContent = String(text);
-  if (className) el.className = className;
-  return el;
-};
-const pretty = value => JSON.stringify(value === undefined ? null : value, null, 2);
-const label = text => String(text).replaceAll("_", " ");
-function safeLink(url, text) {
-  if (!url || !/^https:\/\/github\.com\//.test(url)) return node("span", text);
-  const a = node("a", text);
-  a.href = url;
-  a.rel = "noopener noreferrer";
-  return a;
-}
-function badge(axis, status) {
-  const el = node("span", `${axis}: ${label(status)}`, "badge");
-  el.dataset.status = status;
-  return el;
-}
-function details(title, content) {
-  const box = node("details");
-  box.append(node("summary", title), node("pre", pretty(content)));
-  return box;
-}
-function summary(report) {
-  const p = report.provenance;
-  const provenance = $("report-provenance");
-  const fixtureLink = $("fixture-link");
-  if (/^[0-9a-f]{40}$/.test(p.code_sha || "")) {
-    fixtureLink.replaceChildren(safeLink(`https://github.com/Erasmus-CTM/stack-sympy/blob/${p.code_sha}/tests/native_compliance/fixtures.json`, "Fixture at report commit"));
-  } else {
-    fixtureLink.textContent = "Fixture commit link unavailable";
-  }
-  provenance.append(node("strong", `Generated ${report.generated_at} · ${report.cases.length} imported static rows`));
-  const metadata = node("p");
-  metadata.append(`Code ${p.code_sha || "unavailable"} · Fixture SHA-256 ${p.fixture_sha256} · Upstream ${p.fixture_upstream?.commit || "unavailable"} · Python ${p.python_version || "unavailable"}. `);
-  if (p.run_url) metadata.append(safeLink(p.run_url, "CI run and artifacts"));
-  provenance.append(metadata, details("Fixture inventory and provenance", {inventory:p.fixture_inventory,upstream:p.fixture_upstream,scope:report.scope}));
-  const eligible = report.results.parity.summary;
-  if (eligible) provenance.append(node("p", `Browser grading parity: ${eligible.eligible_matched ?? "unavailable"} matching eligible executions of ${eligible.eligible ?? "unavailable"}; whole-inventory classification includes unsupported cases. Native direct-CAS observations: ${report.results.native.summary?.ok ?? "unavailable"} of ${report.cases.length} imported rows. Ordinary feedback notes are not compared; authored controlled-error notes are checked separately.`));
-  const verdicts = node("p", undefined, "report-verdicts");
-  for (const [key,title] of [["python","Desired outcome"],["compatibility","Native compatibility"],["parity","Browser parity"]]) {
-    const result = report.results[key];
-    verdicts.append(badge(title, !result.available ? "unavailable" : result.passed === true ? "pass" : "failed"), " ");
-  }
-  provenance.append(verdicts);
-
-  for (const [axis,title] of [["desired","Python vs desired result"],["native","Reviewed native comparison"],["native_mark","Python vs native final mark"],["native_applicability","Python vs native CAS applicability"],["native_desired","Native vs desired result"],["parity","Pyodide vs CPython"]]) {
-    const section = node("section");
-    section.append(node("h3", title));
-    const dl = node("dl");
-    for (const [status,count] of Object.entries(report.summary[axis]).sort()) {
-      dl.append(node("dt", label(status)), node("dd", count));
-    }
-    section.append(dl);
-    $("report-summary").append(section);
-  }
-  for (const [engine,result] of Object.entries(report.results)) {
-    const state = !result.available ? "unavailable" : result.error ? "reported error" :
-                  result.passed === false ? "check failed" : "result available";
-    $("report-runners").append(details(`${engine}: ${state}`, result));
-  }
-}
-function optionValues(id, rows, key) {
-  const values = [...new Set(rows.map(row => row[key]))].sort();
-  for (const value of values) {
-    const option = node("option", label(value));
-    option.value = value;
-    $(id).append(option);
-  }
+'use strict';
+const U=ReportUI, {$,node,specs}=U;
+const primary=['desired','native','parity'];
+const extra=['native_mark','native_applicability','native_desired'];
+const controls={};
+let report, visible=60;
+function update() {
+  const query=$('case-search').value.trim().toLowerCase();
+  const rows=report.cases.filter(r => (!$('test-filter').value || r.test===$('test-filter').value) &&
+    [...primary,...extra].every(k => !controls[k].value || specs[k].get(r)===controls[k].value) &&
+    (!query || [r.ordinal,r.id,r.test,r.student,r.teacher,r.options,r.notes,r.answer_note].some(x=>String(x??'').toLowerCase().includes(query))));
+  $('case-count').textContent=`${rows.length.toLocaleString()} of ${report.cases.length.toLocaleString()} source cases · showing ${Math.min(visible,rows.length)}`;
+  $('case-list').replaceChildren(...rows.slice(0,visible).map(caseElement));
+  $('show-more').hidden=rows.length<=visible;
 }
 function caseElement(row) {
-  const box = node("details", undefined, "case");
-  const head = node("summary");
-  head.append(node("span", `#${row.ordinal} · ${row.test}`, "case-test"),
-              badge("desired", row.desired_status), badge("native", row.native_status),
-              badge("mark", row.native_mark_status), badge("CAS applicable", row.native_applicability_status),
-              badge("native vs desired", row.native_desired_status),
-              badge("parity", row.parity_status), node("span", `${row.student} → ${row.teacher}`));
-  box.append(head);
-  const body = node("div", undefined, "case-detail");
-  for (const [title,value] of [
-    ["Raw upstream row", {student:row.student,teacher:row.teacher,options:row.options,expected_score:row.expected_score,answer_note:row.answer_note,notes:row.notes,extra_fields:row.extra_fields}],
-    ["Python observation", row.python], ["Native STACK observation", row.native],
-    ["Native compatibility verdict", {verdict:row.compatibility,raw_boolean_comparison:row.native_boolean_status}],
-    ["Browser parity", row.parity], ["Answer-note comparison", row.answer_note_status]]) {
-    const section = node("section");
-    section.append(node("h4", title), node("pre", pretty(value)));
-    body.append(section);
-  }
-  const provenance = node("p");
-  provenance.append(`Case ID: ${row.id} · Upstream line ${row.source_line ?? "unknown"} · `,
-                    safeLink(row.source_url, "View upstream source"));
-  box.append(body, provenance);
-  return box;
+  const box=node('details',undefined,'case');const head=node('summary');
+  const title=node('span',`#${row.ordinal} · ${row.test}`,'case-test');
+  const badges=node('span',undefined,'case-badges');
+  for(const key of primary)badges.append(U.badge(specs[key].name,specs[key].get(row)));
+  head.append(title,badges,U.expressions(row.student,row.teacher));box.append(head);
+  const body=node('div',undefined,'case-body');
+  body.append(node('p',U.conclusion(row),'case-conclusion'),node('p',U.testHelp(row.test),'test-help'));
+  body.append(U.outcomes(row.python?.desired,row.python,row.native,row.parity));
+  const reason=row.python?.reason || row.compatibility?.reason;
+  if(reason)body.append(node('p',reason,'case-explanation'));
+  if(row.test==='EqualComAss' && /AlgEquiv-true/.test(row.native?.answer_note || ''))body.append(node('p','STACK proves the values equivalent, but rejects their written forms under EqualComAss.'));
+  const comparisons=node('div',undefined,'additional-badges');for(const key of extra)comparisons.append(U.badge(specs[key].name,specs[key].get(row)));body.append(comparisons);
+  const raw=node('details',undefined,'technical-details');raw.append(node('summary','Raw observations and source'));
+  raw.append(U.details('Source fixture',{student:row.student,teacher:row.teacher,options:row.options,expected_score:row.expected_score,answer_note:row.answer_note,notes:row.notes,extra_fields:row.extra_fields}),
+    U.details('Port observation',row.python),U.details('STACK observation',row.native),U.details('Reviewed comparison',row.compatibility),U.details('Browser observation',row.parity),U.details('Answer-note handling',row.answer_note_status));
+  const source=node('p');source.append(`Case ID: ${row.id} · `,U.link(row.source_url,`Upstream source, line ${row.source_line ?? 'unknown'}`));raw.append(source);body.append(raw);box.append(body);return box;
 }
-fetch("report.json", {cache:"no-store"}).then(response => {
-  if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  return response.json();
-}).then(report => {
-  $("report-loading").hidden = true;
-  $("report-root").hidden = false;
-  summary(report);
-  optionValues("test-filter", report.cases, "test");
-  for (const axis of ["desired","native","native_mark","native_applicability","native_desired","parity"]) optionValues(`${axis}-filter`, report.cases, `${axis}_status`);
-  let visible = 80;
-  function update() {
-    const query = $("case-search").value.trim().toLowerCase();
-    const matches = report.cases.filter(row =>
-      (!$("test-filter").value || row.test === $("test-filter").value) &&
-      ["desired","native","native_mark","native_applicability","native_desired","parity"].every(axis => !$(axis+"-filter").value || row[axis+"_status"] === $(axis+"-filter").value) &&
-      (!query || [row.id,row.test,row.student,row.teacher,row.options,row.notes,row.answer_note,pretty(row.extra_fields)].some(value => String(value ?? "").toLowerCase().includes(query))));
-    $("case-count").textContent = `${matches.length} matching rows; showing ${Math.min(visible,matches.length)}`;
-    $("case-list").replaceChildren(...matches.slice(0,visible).map(caseElement));
-    $("show-more").hidden = matches.length <= visible;
-  }
-  for (const id of ["case-search","test-filter","desired-filter","native-filter","native_mark-filter","native_applicability-filter","native_desired-filter","parity-filter"]) {
-    $(id).addEventListener("input", () => { visible = 80; update(); });
-  }
-  $("show-more").addEventListener("click", () => { visible += 80; update(); });
+function initialize(data) {
+  report=data;$('report-loading').hidden=true;$('report-root').hidden=false;
+  const issues=report.summary.desired.known_defect||0;
+  const overview=$('report-overview');
+  overview.append(node('strong',`${report.cases.length.toLocaleString()} source cases · ${issues} known port issues`));
+  const outside=report.cases.filter(r=>r.desired_status==='out_of_contract');
+  const missingTests=outside.filter(r=>specs.desired.get(r)==='port_test_unsupported').length;
+  const missingInputs=outside.filter(r=>specs.desired.get(r)==='port_not_supported').length;
+  const inputErrors=outside.filter(r=>specs.desired.get(r)==='port_input_error').length;
+  overview.append(node('p',`Port coverage gaps: ${missingTests.toLocaleString()} cases use answer tests not yet implemented; ${missingInputs.toLocaleString()} use inputs or features not yet supported. A further ${inputErrors} cases produced input/reference errors instead of a comparable mark.`));
+  if(report.results.python.passed && report.results.compatibility.passed)overview.append(node('p','The saved checks found no unexpected port results or unreviewed port/STACK disagreements among compared cases. Known issues remain listed below.'));
+  const change=()=>{visible=60;update();};
+  for(const key of primary)controls[key]=U.comparison(key,specs[key],report.cases,$('report-summary'),$('comparison-filters'),change);
+  for(const key of extra)controls[key]=U.comparison(key,specs[key],report.cases,$('extra-summary'),$('extra-filters'),change);
+  for(const test of [...new Set(report.cases.map(r=>r.test))].sort()){const option=node('option',test);option.value=test;$('test-filter').append(option);}
+  $('case-search').addEventListener('input',change);$('test-filter').addEventListener('change',change);
+  $('show-more').addEventListener('click',()=>{visible+=60;update();});
+  $('clear-filters').addEventListener('click',()=>{for(const el of Object.values(controls))el.value='';$('case-search').value='';$('test-filter').value='';change();});
+  const p=report.provenance;
+  $('report-provenance').append(U.details('Saved run and provenance',{generated_at:report.generated_at,...p,scope:report.scope}));
+  if(p.run_url)$('report-provenance').append(U.link(p.run_url,'Original run and artifacts'));
+  for(const [name,result] of Object.entries(report.results))$('report-runners').append(U.details(`${name}: saved runner details`,result));
+  if(/^[0-9a-f]{40}$/.test(p.code_sha || ''))$('fixture-link').append(U.link(`https://github.com/Erasmus-CTM/stack-sympy/blob/${p.code_sha}/tests/native_compliance/fixtures.json`,'Source fixture at this run'));
   update();
-}).catch(error => {
-  $("report-loading").textContent = `Report data unavailable: ${error.message}`;
+}
+fetch('report.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(`HTTP ${r.status}`);return r.json();}).then(initialize).catch(error=>{
+  $('report-loading').hidden=false;$('report-loading').textContent=`Saved results unavailable: ${error.message}`;
 });
