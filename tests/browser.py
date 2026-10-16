@@ -163,6 +163,8 @@ def _check_corpus_answer(card, answer: str, expected_state: str) -> None:
 
 def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
     """Exercise the actual published cards with the bundled Worker/Pyodide CAS."""
+    from scripts.generate_corpus_page import teaching_source
+
     baseline = json.loads((CORPUS / "baseline.json").read_text())
     manifest = json.loads((CORPUS / "manifest.json").read_text())
     reports = {item["id"]: item for item in baseline["questions"]}
@@ -189,9 +191,10 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             for index in range(cards.count()):
                 card = cards.nth(index)
                 payload = json.loads(card.locator("script.stack-sympy-data").text_content())
-                name = payload["question"]["name"]
+                name = payload["question"]["name"].removesuffix(" (corrected teaching copy)")
                 assert name in expected and name not in by_name, name
                 entry, report = expected[name]
+                assert payload["question"]["name"] == teaching_source(entry)[1]
                 assert payload["variants"][0]["seed"] == report["seeds"][0], name
                 assert card.locator(".stack-answer").count() == entry["input_count"], name
                 by_name[name] = (card, payload["variants"][0]["env"])
@@ -205,7 +208,8 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
                 assert card.locator(".stack-result").get_attribute("data-state") == "correct", name
                 assert "All authored tests passed" in card.locator(".stack-result").inner_text(), name
                 cases = card.locator(".stack-test-list li").all_inner_texts()
-                assert len(cases) == entry["qtest_count"], name
+                added_cases = 1 if entry["file"] == "AlgMap-2-5.xml" else 0
+                assert len(cases) == entry["qtest_count"] + added_cases, name
                 assert all(case.startswith("Pass · ") for case in cases), (name, cases)
 
             assert set(by_name) == set(expected)
@@ -259,12 +263,13 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             reduced = Fraction(numerator, denominator)
             _check_corpus_answer(lowest_card, f"{reduced.numerator}/{reduced.denominator}", "correct")
             _check_corpus_answer(lowest_card, f"({numerator * multiplier})/({denominator * multiplier})", "retry")
-            assert "equivalent to the correct answer" in lowest_card.locator(
+            assert "cancel common factors" in lowest_card.locator(
                 ".stack-result .stack-prt-feedback").inner_text()
-            # The pinned upstream PRT awards full credit for reduced form alone:
-            # its LowestTerms true branch ends before checking the answer value.
+            # The live teaching copy must check value before reduced form.
             assert reduced != 1  # odd a / even b cannot equal one
-            _check_corpus_answer(lowest_card, "1", "correct")
+            _check_corpus_answer(lowest_card, "1", "retry")
+            _check_corpus_answer(lowest_card, "123/127", "retry")
+            assert "same value" in lowest_card.locator(".stack-result .stack-prt-feedback").inner_text()
 
             single_card, env = by_name["AlgMap-4.13"]
             linear, constant, fraction = int(env["A"]), int(env["B"]), int(env["C"])
