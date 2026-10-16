@@ -8,7 +8,6 @@ import re
 
 from playwright.sync_api import sync_playwright
 
-from test_render import render_site
 from browser import serve
 
 
@@ -25,15 +24,15 @@ def prompt_data(card):
     return json.loads(text.split("\n\nUSER\n", 1)[1])
 
 
-def test_feedback_copy_prompt_and_context_modes():
-    site = render_site()
+def test_feedback_copy_prompt_and_context_modes(browser_site):
+    site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
         page = browser.new_page()
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto(url + "/index.html", wait_until="domcontentloaded")
-        card = page.locator(".stack-sympy:not(.stack-diagnostic)").first
+        card = page.locator('[data-stack-id="expansion"]')
         assert card.locator(".stack-feedback-button").count() == 1
         assert card.locator(".ai-feedback-gear").count() == 1
         assert page.locator("#ai-feedback-settings").count() == 0
@@ -52,7 +51,7 @@ def test_feedback_copy_prompt_and_context_modes():
         assert "questionvariables" not in json.dumps(first)
         assert first["responses"][0]["value"] == "x**2+8x+15"
         assert first["evidence"] == []
-        assert first["materials"] and "omitted multiplication" in first["materials"][0]["text"]
+        assert first["materials"] and "Visible course context for the expansion activity." in first["materials"][0]["text"]
         assert "CURRENT HINT LEVEL: 1 OF 4" in card.locator(".ai-feedback-prompt").inner_text()
         card.locator(".stack-answer").first.fill("x+1")
         assert card.locator(".ai-feedback-output").inner_text() == ""
@@ -74,30 +73,33 @@ def test_feedback_copy_prompt_and_context_modes():
 
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
         cards = page.locator(".stack-sympy[data-stack-feedback]")
-        assert cards.count() >= 3
+        assert cards.count() > 0
+        seen_modes = set()
         assert page.locator("#ai-feedback-settings").count() == 0
         for index in range(cards.count()):
             card = cards.nth(index)
             card.locator(".stack-answer").first.fill("1")
             data = prompt_data(card)
             context = json.loads(card.get_attribute("data-stack-feedback"))["context"]
+            seen_modes.add(context["mode"])
             if context["mode"] == "explicit":
-                assert any("absolute tolerance" in m["text"] for m in data["materials"])
+                assert any("Visible measurement context" in m["text"] for m in data["materials"])
             elif context["mode"] == "none":
                 assert data["materials"] == []
             assert "<quiz>" not in json.dumps(data)
             assert "expectedanswernote" not in json.dumps(data)
+        assert seen_modes == {"auto", "explicit", "none"}
         assert not errors, errors
         browser.close()
 
 
-def test_inherited_policy_steps_permissions_and_parent_changes():
-    site = render_site()
+def test_inherited_policy_steps_permissions_and_parent_changes(browser_site):
+    site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
         page = browser.new_page()
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
-        card = page.locator(".stack-sympy[data-stack-feedback]").first
+        card = page.locator('[data-stack-id="rational"]')
         card.locator(".stack-answer").first.fill("x+1")
         prompt_data(card)
         first = card.locator(".ai-feedback-prompt").inner_text()
@@ -124,15 +126,15 @@ def test_inherited_policy_steps_permissions_and_parent_changes():
         assert "Do not supply a complete rewritten response or finished solution" in changed
 
         # A definition without an explicit selection does not override the page baseline.
-        other = page.locator(".stack-sympy[data-stack-feedback]").nth(1)
+        other = page.locator('[data-stack-id="measurements"]')
         other.locator(".stack-answer").first.fill("1")
         prompt_data(other)
         assert "CURRENT HINT LEVEL: 1 OF 4" in other.locator(".ai-feedback-prompt").inner_text()
         browser.close()
 
 
-def test_explicit_diagram_context_uses_shared_collector():
-    site = render_site()
+def test_explicit_diagram_context_uses_shared_collector(browser_site):
+    site = browser_site
     output = (site / "index.html").read_text()
     match = re.search(r'data-stack-feedback="([^"]+)"', output)
     config = json.loads(html.unescape(match[1]))
@@ -151,7 +153,7 @@ def test_explicit_diagram_context_uses_shared_collector():
         page = browser.new_page()
         page.route("**/index.html", lambda route: route.fulfill(body=output, content_type="text/html"))
         page.goto(url + "/index.html", wait_until="domcontentloaded")
-        card = page.locator(".stack-sympy[data-stack-feedback]").first
+        card = page.locator('[data-stack-id="expansion"]')
         card.locator(".stack-answer").first.fill("x+1")
         card.locator(".stack-feedback-button").click()
         prompt = card.locator(".ai-feedback-prompt").inner_text()
@@ -199,14 +201,14 @@ def user_data(request):
     return json.loads(request["messages"][-1]["content"])
 
 
-def test_feedback_api_evidence_and_stale_cancellation():
-    site = render_site()
+def test_feedback_api_evidence_and_stale_cancellation(browser_site):
+    site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
         page = browser.new_page()
         page.add_init_script(API_STUB)
         page.goto(url + "/index.html", wait_until="domcontentloaded")
-        card = page.locator(".stack-sympy[data-stack-feedback]").first
+        card = page.locator('[data-stack-id="expansion"]')
         answer = card.locator(".stack-answer").first
         button = card.locator(".stack-feedback-button")
         answer.fill("x**2+8x+15")
@@ -277,8 +279,8 @@ def test_feedback_api_evidence_and_stale_cancellation():
         browser.close()
 
 
-def test_check_can_preserve_hints_but_variant_selection_always_resets():
-    site = render_site()
+def test_check_can_preserve_hints_but_variant_selection_always_resets(browser_site):
+    site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
         page = browser.new_page()
@@ -291,7 +293,7 @@ def test_check_can_preserve_hints_but_variant_selection_always_resets():
             [key]: {'reset-on-run': false, language: 'nb', 'max-words': 80}
           }}});
         }""")
-        card = page.locator(".stack-sympy[data-stack-feedback]").first
+        card = page.locator('[data-stack-id="expansion"]')
         card.locator(".stack-answer").first.fill("x**2+8x+15")
         prompt_data(card)
         first = card.locator(".ai-feedback-prompt").inner_text()

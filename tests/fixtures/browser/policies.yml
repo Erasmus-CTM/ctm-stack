@@ -1,0 +1,14 @@
+ai-feedback:
+  policies:
+    course-mathematics:
+      max-words: 120
+      reset-on-run: true
+    brief-mathematics:
+      extends: course-mathematics
+      max-words: 90
+    two-step-practice:
+      extends: brief-mathematics
+      steps:
+        - step-prompt: Ask one guiding question without giving a formula or answer.
+        - step-prompt: Give a concise worked explanation of this task.
+          allow-full-solution: true

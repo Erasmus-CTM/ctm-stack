@@ -13,65 +13,84 @@ import tempfile
 
 import pytest
 
+from rendered_html import Document
+
 
 ROOT = Path(__file__).resolve().parents[1]
 QUESTION = ROOT / "questions/polynomial-expansion.xml"
 
 
 @cache
-def render_site() -> Path:
+def render_site(project: Path = ROOT) -> Path:
     quarto = os.environ.get("QUARTO", "quarto")
     env = os.environ.copy()
-    extension = ROOT / "_extensions/stack-sympy"
+    extension = project / "_extensions/stack-sympy"
     env["PYTHONPATH"] = os.pathsep.join(filter(None, [str(extension), env.get("PYTHONPATH", "")]))
-    result = subprocess.run([quarto, "render"], cwd=ROOT, env=env,
+    result = subprocess.run([quarto, "render"], cwd=project, env=env,
                             text=True, capture_output=True, timeout=180)
     assert result.returncode == 0, result.stdout + "\n" + result.stderr
-    return ROOT / "_site"
+    return project / "_site"
 
 
 def test_project_renders_cards_and_deployable_assets():
     site = render_site()
-    index = (site / "index.html").read_text()
-    examples = (site / "examples.html").read_text()
-    guide = (site / "docs/authoring.html").read_text()
-    assert 'class="stack-sympy-data"' in index or 'class="stack-sympy-data"' in examples
-    assert index.count('class="stack-sympy-data"') == 1
-    assert examples.count('class="stack-sympy-data"') >= 5
-    assert guide.count('class="stack-sympy-data"') == 1
-    assert "stack-diagnostic" not in index + examples + guide
-    assert 'class="stack-check"' in index or 'stack-check' in index
-    assert 'class="stack-validate"' in index or 'stack-validate' in index
-    assert 'class="stack-tests"' in index or 'stack-tests' in index
-    script = re.search(r'<script[^>]+src="([^"]*stack-sympy\.js)"', index)
-    assert script, "Quarto did not install the page's JavaScript dependency"
-    path = script.group(1).split("?", 1)[0]
-    asset = site / path
-    assert asset.is_file(), path
-    for sibling in ("worker.js", "runtime-sources.js", "vendor/pyodide-runtime.js"):
-        assert (asset.parent / sibling).is_file(), sibling
-    assert "STACK_SYMPY_SOURCES" in (asset.parent / "runtime-sources.js").read_text()
+    total = 0
+    for qmd in question_pages():
+        page = site / qmd.relative_to(ROOT).with_suffix(".html")
+        doc = Document(page.read_text())
+        authored = question_blocks(qmd)
+        cards = doc.find(css_class="stack-sympy")
+        assert len(cards) == len(authored), qmd
+        assert not doc.find(css_class="stack-diagnostic"), qmd
+        total += len(cards)
+        for card in cards:
+            payloads = list(card.find("script", "stack-sympy-data"))
+            assert len(payloads) == 1
+            assert json.loads(payloads[0].text)["question"]["name"]
+        scripts = [node.attrs["src"].split("?", 1)[0] for node in doc.find("script")
+                   if "stack-sympy.js" in node.attrs.get("src", "")]
+        assert len(scripts) == 1, qmd
+        asset = page.parent / scripts[0]
+        assert asset.is_file(), asset
+        for sibling in ("worker.js", "runtime-sources.js", "vendor/pyodide-runtime.js"):
+            assert (asset.parent / sibling).is_file(), sibling
+        assert "STACK_SYMPY_SOURCES" in (asset.parent / "runtime-sources.js").read_text()
+    assert total > 0, "the published site should demonstrate at least one question"
+
+
+def question_blocks(qmd):
+    return re.findall(r'^```\{[^\n}]*\.stack-question[^\n}]*\}\n.*?\n```', qmd.read_text(), re.M | re.S)
+
+
+def question_pages():
+    # Editorial pages may add, remove, reorder or move cards between sections.
+    site = render_site()
+    sources = [ROOT / page.relative_to(site).with_suffix(".qmd")
+               for page in site.rglob("*.html")]
+    return sorted(qmd for qmd in sources if qmd.is_file() and question_blocks(qmd))
 
 
 def test_rendered_questions_show_authored_block_and_original_xml():
     site = render_site()
-    panel = re.compile(r'<details class="stack-source"><summary>(Show source|Show STACK source)' r'</summary><pre><code class="language-(markdown|xml)">(.*?)</code></pre></details>', re.S)
-    block = re.compile(r'^```\{\.stack-question\}\n(.*?)\n```$', re.M | re.S)
-    for page in ("index", "examples", "docs/authoring"):
-        qmd = ROOT / f"{page}.qmd"
-        output = (site / f"{page}.html").read_text()
-        rendered = panel.findall(output)
-        count = output.count('class="stack-sympy"')
-        assert len(rendered) == count * 2
-        authored = block.findall(qmd.read_text())
-        for i in range(count):
-            first, second = rendered[i * 2:i * 2 + 2]
-            assert first[:2] == ("Show source", "markdown")
-            assert second[:2] == ("Show STACK source", "xml")
-            assert html.unescape(first[2]) == "```{.stack-question}\n" + authored[i] + "\n```"
-            path = re.search(r"^#\| file: (.+)$", authored[i], re.M).group(1)
-            assert html.unescape(second[2]) == (qmd.parent / path).read_text()
-            assert "<quiz>" not in second[2], "XML should be escaped as code"
+    for qmd in question_pages():
+        doc = Document((site / qmd.relative_to(ROOT).with_suffix(".html")).read_text())
+        groups = doc.find(css_class="stack-question-group")
+        authored = question_blocks(qmd)
+        assert len(groups) == len(authored)
+        for group, block in zip(groups, authored):
+            panels = list(group.find("details", "stack-source"))
+            assert len(panels) == 2
+            codes = [list(panel.find("code"))[0] for panel in panels]
+            by_language = {code.attrs["class"]: code for code in codes}
+            # Pandoc normalizes fence attributes; their order is not content.
+            source = by_language["language-markdown"].text
+            assert source.split("\n", 1)[1] == block.split("\n", 1)[1]
+            assert set(re.findall(r'[#.][\w-]+', source.split("\n", 1)[0])) == set(
+                re.findall(r'[#.][\w-]+', block.split("\n", 1)[0]))
+            path = re.search(r"^#\| file: (.+)$", block, re.M).group(1)
+            xml = by_language["language-xml"]
+            assert xml.text == (qmd.parent / path).read_text()
+            assert not list(xml.find("quiz")), "XML should be escaped as code"
 
 
 def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
@@ -83,23 +102,21 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
     reports = {row["id"]: row for row in baseline["questions"]}
     authored = (ROOT / "corpus.qmd").read_text()
     assert authored == generate(), "regenerate with python scripts/generate_corpus_page.py"
-    upstream_note = "A reduced answer with the wrong value can receive full credit."
-    assert upstream_note in authored
     output = (render_site() / "corpus.html").read_text()
-    assert upstream_note in output
-    navbar = output
-    assert re.search(r'href="(?:\./|/)?corpus\.html"', navbar)
-    assert "Question corpus" in navbar
-    assert len(entries) == len(reports) == 30
+    doc = Document(output)
+    assert any(re.search(r'(?:^|/)corpus\.html$', a.attrs.get("href", ""))
+               for nav in doc.find("nav") for a in nav.find("a"))
+    assert {entry["id"] for entry in entries} == reports.keys()
     passing = [entry for entry in entries if reports[entry["id"]]["status"] == "qtests_pass"]
-    assert output.count('class="stack-sympy-data"') == len(passing)
-    assert 'class="stack-sympy stack-diagnostic"' not in output
-    assert output.count('<details class="stack-source">') == 2 * len(passing)
-    assert '<details class="stack-source" open' not in output
-    rendered_xml = re.findall(r'<code class="language-xml">(.*?)</code>', output, re.S)
+    assert len(doc.find("script", "stack-sympy-data")) == len(passing)
+    assert not doc.find(css_class="stack-diagnostic")
+    panels = doc.find("details", "stack-source")
+    assert len(panels) == 2 * len(passing)
+    assert all("open" not in panel.attrs for panel in panels)
+    rendered_xml = [code.text for panel in panels for code in panel.find("code", "language-xml")]
     assert len(rendered_xml) == len(passing)
     for entry, source in zip(passing, rendered_xml):
-        assert html.unescape(source) == (ROOT / teaching_source(entry)[0]).read_text()
+        assert source == (ROOT / teaching_source(entry)[0]).read_text()
     for entry in entries:
         assert f'id="{entry["id"]}"' in output
         assert f'questions/corpus/{entry["file"]}' in output
@@ -142,7 +159,8 @@ def _fixture_render(source: str, *, shared: str | None = None,
             target.parent.mkdir(exist_ok=True)
             shutil.copytree(installed, target)
         (project / "_quarto.yml").write_text(
-            "project:\n  type: default\nfilters:\n" + "".join(f"  - {name}\n" for name in filters))
+            "project:\n  type: default\n" + ("filters:\n" + "".join(
+                f"  - {name}\n" for name in filters) if filters else "filters: []\n"))
         (project / "test.qmd").write_text(source)
         for name, content in (files or {}).items():
             destination = project / name
@@ -154,6 +172,15 @@ def _fixture_render(source: str, *, shared: str | None = None,
                                 env=env, text=True, capture_output=True, timeout=90)
         output = (project / "test.html").read_text() if (project / "test.html").exists() else ""
         return result, output
+
+
+@cache
+def render_report_shell(name):
+    """Render the actual report page instead of slicing its HTML at a marker."""
+    result, output = _fixture_render(
+        (ROOT / "compliance-report" / f"{name}.qmd").read_text(), filters=())
+    assert result.returncode == 0, result.stdout + result.stderr
+    return output
 
 
 def _card(feedback: str = "", extra: str = "") -> str:

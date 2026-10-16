@@ -1,0 +1,85 @@
+---
+title: Browser example fixtures
+ai-feedback:
+  page-policy:
+    math-exercise: brief-mathematics
+---
+
+## Inherited policy
+
+```{#rational .stack-question}
+#| file: questions/rational-equivalence.xml
+#| question: Equivalent rational expression
+#| variants: 3
+#| seed: 29
+#| review: true
+#| feedback: true
+#| label: rational-practice
+#| feedback-policy: two-step-practice
+```
+
+## Explicit context
+
+::: {#measurement-context .ai-context}
+Visible measurement context for the explicit-context activity.
+:::
+
+```{#measurements .stack-question}
+#| file: questions/numerical-measurement.xml
+#| question: Rectangle and triangle measurements
+#| seed: 47
+#| review: true
+#| feedback: true
+#| context: measurement-context
+```
+
+## No context
+
+```{#upstream .stack-question}
+#| file: questions/upstream/algmap-6-1.xml
+#| question: AlgMap-6.1
+#| variants: 2
+#| seed: 17
+#| review: true
+#| feedback: true
+#| context: none
+```
+
+## Numerical imports
+
+```{#bodmas .stack-question}
+#| file: questions/upstream/bodmas.xml
+#| question: 1.1.4.T2 BODMAS
+#| seed: 29
+#| review: true
+```
+
+```{#rounding .stack-question}
+#| file: questions/upstream/rounding-three-dp.xml
+#| question: 1.1.3.T1 Rounding to n Decimal Places
+#| seed: 47
+#| review: true
+```
+
+## Functions and logic
+
+```{#hyperbolic .stack-question}
+#| file: questions/hyperbolic-equivalence.xml
+#| question: Hyperbolic equivalence
+#| seed: 17
+#| review: true
+```
+
+```{#zero-product .stack-question}
+#| file: questions/zero-product.xml
+#| question: Zero product equations
+#| seed: 17
+#| review: true
+```
+
+```{#boolean .stack-question}
+#| file: questions/boolean-equivalence.xml
+#| question: Boolean equivalence
+#| seed: 17
+#| review: true
+```
