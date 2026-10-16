@@ -40,3 +40,9 @@ invalid option with `0.05`; the port follows that behavior for malformed
 syntax in its supported grammar. A parseable but invalid tolerance such as
 `1/0`, `x`, or `%i` is still an error. Acceptance controls prevent implementing
 the malformed-option cases as unconditional rejection.
+
+Corpus function regressions cover the `ln` alias, polynomial GCD numeric
+content, signed/zero-divisor modulo, and reduction modulo a real multiple of
+pi. An integral `SingleFrac` control reproduces the native form behavior
+behind the AlgMap-8.10 upstream PRT authoring bug. Symbolic complex logarithms
+retain an explicit boundary until branch-aware proof machinery is available.

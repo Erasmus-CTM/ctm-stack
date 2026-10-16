@@ -337,5 +337,5 @@ def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
         assert '668' in page.locator('#port-regressions-list').inner_text()
         page.locator('#port-search').fill('')
         page.locator('#port-group').select_option('declared boundaries')
-        assert page.locator('#port-regressions-list .case').count()==6
+        assert page.locator('#port-regressions-list .case').count()==sum(c['group']=='declared boundaries' for c in cases)
         browser.close()

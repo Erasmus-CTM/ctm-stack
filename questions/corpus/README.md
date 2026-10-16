@@ -9,3 +9,14 @@ Authorship and license: credit the STACK question authors and the original autho
 The corpus is a compatibility target, not a claim that all questions work in this limited adapter. Some exports exercise Maxima, input types, CASText, and answer tests outside the current supported subset; authored qtests remain upstream expectations until independently run and checked. Use the recorded [compatibility baseline](baseline.json) to distinguish imports, successful qtest runs, mismatches, and explicit unsupported diagnostics. From the repository root, run `PYTHONPATH=_extensions/stack-sympy python scripts/check_corpus.py --check` to compare a fresh replay, or omit `--check` to refresh the baseline after an adapter change; then run `python scripts/generate_corpus_page.py` to update the gallery. Each original XML runs in an isolated, time-limited worker. The replay uses the first three deployed seeds where present, otherwise local seeds 17, 29, and 47. A question with a disagreement on any replayed seed stays out of the interactive gallery, even if another seed passes. Passing these cases does not establish Moodle/Maxima parity: the adapter's seeded choices need not match Maxima's choices for the same number. For a single XML file, run `PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test --file questions/corpus/AlgMap-1-6.xml`.
 
 Passing authored qtests also does not certify the original grading design. In `AlgMap-2.5`, the response tree awards credit for `LowestTerms` before checking value equivalence; a reduced answer with the wrong value can receive full credit. The [gallery](../../corpus.qmd) flags that card. We leave the original XML and authored expectations unchanged.
+
+`AlgMap-8.10` has a reproduced upstream PRT authoring bug: the variant with
+`a=8`, `b=9`, `c=2`, `d=3` has correct answer `7*(t+y)`, which its only
+full-credit branch rejects under `SingleFrac`. The pinned native STACK test
+rejects that same written form. The original XML and authored test expectations
+remain unchanged; the gallery names the authoring cause explicitly.
+
+`AlgMap-15.1` uses `{ta1,ta2}` as a set-valued answer and `elementp(?,ans)`
+in its response tree. Its opening `{` is valid ASCII Maxima syntax, rather than
+an encoding defect. It remains outside the scalar-input subset, with a specific
+set-support diagnostic; no XML sanitization is applied.

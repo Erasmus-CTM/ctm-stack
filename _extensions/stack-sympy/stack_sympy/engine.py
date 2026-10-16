@@ -115,7 +115,10 @@ def instantiate(question: dict, seed: int = 1) -> dict:
         prtmap = {p["name"]: p for p in question["prts"]}
         for inp in question["inputs"]:
             where = f"input[{inp['name']}]"
-            teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
+            try:
+                teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
+            except (InvalidAnswer, Unsupported) as exc:
+                raise UnsupportedQuestion(name, where + "/tans", str(exc)) from exc
             if not isinstance(teacher, sp.Basic):
                 raise UnsupportedQuestion(name, where + "/tans", "only scalar teacher answers are supported")
             if is_logical(teacher):

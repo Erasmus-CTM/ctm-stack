@@ -29,7 +29,8 @@ MAX_DEPTH = 40
 MAX_POWER = 100
 MAX_DIGITS = 100
 _LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(?P<name>%?[A-Za-z_][A-Za-z_0-9]*)|(?P<op>\*\*|\+\-|[=+*/^(),\[\]-]))", re.ASCII)
-_NAMES = {"pi": sp.pi, "%pi": sp.pi, "e": sp.E, "E": sp.E, "%e": sp.E,
+_NAMES = {"pi": sp.pi, "%pi": sp.pi, "Pi": sp.pi, "PI": sp.pi,
+          "e": sp.E, "E": sp.E, "%e": sp.E,
           "i": sp.I, "I": sp.I, "%i": sp.I}
 SCALAR_FUNCTIONS = {
     "sqrt": sp.sqrt, "sin": sp.sin, "cos": sp.cos, "tan": sp.tan,
@@ -38,15 +39,15 @@ SCALAR_FUNCTIONS = {
     "sech": sp.sech, "csch": sp.csch, "coth": sp.coth,
     "exp": sp.exp, "log": sp.log, "abs": sp.Abs,
 }
-FUNCTION_ALIASES = {"cosec": "csc", "cosech": "csch"}
-_STUDENT_FUNCTIONS = frozenset(SCALAR_FUNCTIONS) | FUNCTION_ALIASES.keys()
+FUNCTION_ALIASES = {"cosec": "csc", "cosech": "csch", "ln": "log"}
+_STUDENT_FUNCTIONS = frozenset(SCALAR_FUNCTIONS) | FUNCTION_ALIASES.keys() | {"gcd", "mod"}
 LOGIC_OPERATORS = {"and": "and", "or": "or", "not": "not",
                    "implies": "implies", "xor": "xor", "xnor": "xnor",
                    "nounand": "and", "nounor": "or", "nounnot": "not"}
 LOGIC_PRECEDENCE = {"xor": 0, "xnor": 0, "implies": 1, "or": 2, "and": 4, "not": 5}
 LOGIC_LATEX = {"and": r" \land ", "or": r" \lor ", "implies": r" \rightarrow ",
                "xor": r" \oplus ", "xnor": r" \leftrightarrow "}
-_AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "lcm", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
+_AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "lcm", "num", "denom", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
 
 
 @dataclass(frozen=True)
@@ -54,6 +55,17 @@ class Node:
     kind: str
     value: str = ""
     children: tuple["Node", ...] = ()
+
+
+def symbolic_complex_log(node: Node) -> bool:
+    """Declared boundary: symbolic complex logarithms need branch proofs."""
+    if node.kind != "call" or node.value not in {"log", "ln"}:
+        return False
+    def names(tree):
+        return ({tree.value} if tree.kind == "name" else set()).union(
+            *(names(child) for child in tree.children))
+    symbols = set().union(*(names(child) for child in node.children))
+    return bool(symbols & {"i", "I", "%i"}) and bool(symbols - _NAMES.keys())
 
 
 class Equation(sp.Basic):
@@ -113,7 +125,11 @@ def _tokens(source: str) -> list[tuple[str, str, int, int]]:
             break
         match = _LEX.match(source, pos)
         if match is None:
-            raise InvalidAnswer(f"Unexpected character at position {pos}")
+            position = pos + re.match(r"\s*", source[pos:], re.ASCII).end()
+            character = source[position]
+            if character in "{}":
+                raise Unsupported("Set expressions {...} are not yet supported")
+            raise InvalidAnswer(f"Unexpected character {character!r} (U+{ord(character):04X}) at position {position}")
         kind = match.lastgroup
         value = match.group(kind)
         if value == "+-":
@@ -295,7 +311,7 @@ def form_latex(node: Node, env: Mapping[str, Any] | None = None) -> str:
             rendered = show(child)
             return n.value + (wrap(rendered) if precedence(child) <= 25 else rendered)
         if n.kind == "call":
-            name = "\\" + n.value if n.value in {"sin", "cos", "tan", "exp", "log"} else r"\operatorname{" + n.value + "}"
+            name = "\\" + n.value if n.value in {"sin", "cos", "tan", "exp", "log", "ln", "gcd"} else r"\operatorname{" + n.value + "}"
             if n.value == "sqrt" and len(n.children) == 1:
                 return r"\sqrt{" + show(n.children[0]) + "}"
             return name + wrap(", ".join(show(c) for c in n.children))
@@ -355,6 +371,28 @@ def _integer(value: Any, *, lower: int | None = None, upper: int = 100000) -> in
     if (lower is not None and result < lower) or abs(result) > upper:
         raise Unsupported("Integer outside supported range")
     return result
+
+
+def _polynomial_gcd(left, right):
+    """Keep polynomial GCD bounded and retain numeric coefficient content."""
+    from .logic import MAX_VARIABLES, _polynomial_shape
+    if any(not isinstance(x, sp.Expr) for x in (left, right)):
+        raise InvalidAnswer("gcd requires scalar arguments")
+    symbols = sorted(left.free_symbols | right.free_symbols, key=str)
+    if len(symbols) > MAX_VARIABLES:
+        raise Unsupported("gcd exceeds the polynomial variable bound")
+    for value in (left, right):
+        _polynomial_shape(value)
+        try:
+            if symbols:
+                sp.Poly(value, *symbols, domain=sp.QQ)
+            elif value.is_Rational is not True:
+                raise Unsupported("gcd requires rational polynomial coefficients")
+        except (sp.PolynomialError, sp.CoercionFailed) as exc:
+            raise Unsupported("gcd requires rational polynomial coefficients") from exc
+    # Poly(..., domain=QQ).gcd would make the result monic and lose integer
+    # content, e.g. gcd(2*x+2, 4*x+4) must be 2*x+2, as in Maxima.
+    return sp.gcd(left, right)
 
 
 def _decimal_round(value: sp.Expr, digits: int, *, significant: bool = False):
@@ -457,11 +495,31 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
             name = n.value
             if student and name not in _STUDENT_FUNCTIONS:
                 raise InvalidAnswer(f"Function {name} is not allowed in student input")
+            if symbolic_complex_log(n):
+                raise Unsupported("Symbolic complex logarithms require branch-aware proof")
             if name == "ev":
-                if len(n.children) != 2 or n.children[1] != Node("name", "simp"):
-                    raise Unsupported("Only ev(expr,simp) is supported")
+                if len(n.children) not in (1, 2) or (
+                        len(n.children) == 2 and n.children[1] != Node("name", "simp")):
+                    raise Unsupported("Only ev(expr) and ev(expr,simp) are supported")
                 return visit(n.children[0], depth + 1)
             args = [visit(c, depth + 1) for c in n.children]
+            if name in {"gcd", "mod"}:
+                if len(args) != 2:
+                    raise Unsupported(f"{name} requires two arguments")
+                if name == "gcd":
+                    return _polynomial_gcd(*args)
+                if any(not isinstance(x, sp.Expr) or x.is_real is False for x in args):
+                    raise InvalidAnswer("mod requires real scalar arguments")
+                if sum(sp.count_ops(x) for x in args) > 100:
+                    raise Unsupported("mod exceeds the expression bound")
+                # Maxima explicitly defines mod(x,0)=x. SymPy Mod raises.
+                return args[0] if args[1] == 0 else _finite(sp.Mod(*args))
+            if name in {"num", "denom"}:
+                if len(args) != 1 or not isinstance(args[0], sp.Expr):
+                    raise Unsupported(f"{name} requires one scalar argument")
+                # Extract the top-level written fraction, without combining
+                # sums or cancelling factors before a gcd form check.
+                return sp.fraction(args[0])[name == "denom"]
             if name == "rand":
                 if len(args) != 1:
                     raise Unsupported("rand takes one argument")
