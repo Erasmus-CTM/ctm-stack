@@ -1,6 +1,7 @@
 """Hosted browser checks against the installed ai-feedback runtime, without a provider."""
 from __future__ import annotations
 
+import html
 import json
 import os
 import re
@@ -127,6 +128,41 @@ def test_inherited_policy_steps_permissions_and_parent_changes():
         other.locator(".stack-answer").first.fill("1")
         prompt_data(other)
         assert "CURRENT HINT LEVEL: 1 OF 4" in other.locator(".ai-feedback-prompt").inner_text()
+        browser.close()
+
+
+def test_explicit_diagram_context_uses_shared_collector():
+    site = render_site()
+    output = (site / "index.html").read_text()
+    match = re.search(r'data-stack-feedback="([^"]+)"', output)
+    config = json.loads(html.unescape(match[1]))
+    config["context"] = {"mode": "explicit", "refs": "jsxgraph:lesson-board,jsxgraph:lesson-board"}
+    output = output[:match.start(1)] + html.escape(json.dumps(config), quote=True) + output[match.end(1):]
+    # A real iframe implements the shared request/response protocol. No provider
+    # or Python execution is involved in collecting this explicit context.
+    image = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jRZkAAAAASUVORK5CYII="
+    frame = "<script>addEventListener('message', e => { const d = e.data; " + (
+        "if (d.type !== 'request') return; parent.postMessage({...d, type:'response', "
+        "payload:{radius:3}, ai:{summary:'Circle radius 3', image:" + json.dumps(image) + "}}, '*'); });</script>"
+    )
+    output = output.replace("</body>", '<iframe id="lesson-board" srcdoc="' + html.escape(frame, quote=True) + '"></iframe></body>')
+    with serve(site) as url, sync_playwright() as pw:
+        browser = browser_for(pw)
+        page = browser.new_page()
+        page.route("**/index.html", lambda route: route.fulfill(body=output, content_type="text/html"))
+        page.goto(url + "/index.html", wait_until="domcontentloaded")
+        card = page.locator(".stack-sympy[data-stack-feedback]").first
+        card.locator(".stack-answer").first.fill("x+1")
+        card.locator(".stack-feedback-button").click()
+        prompt = card.locator(".ai-feedback-prompt").inner_text()
+        data, _ = json.JSONDecoder().raw_decode(prompt.split("\n\nUSER\n", 1)[1])
+        assert len(data["materials"]) == len(data["attachments"]) == 1
+        assert json.loads(data["materials"][0]["text"])["state"] == {"radius": 3}
+        assert data["attachments"][0]["role"] == "context"
+        assert "ATTACH THE ORIGINAL IMAGES" in prompt
+        assert image not in prompt
+        assert card.locator(".ai-feedback-images img").count() == 1
+        assert card.locator(".stack-result").inner_text() == ""
         browser.close()
 
 
