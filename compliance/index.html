@@ -98,6 +98,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./port-regressions.html"> 
 <span class="menu-text">Port regressions</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./semantics.html"> 
+<span class="menu-text">Semantics and open questions</span></a>
+  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
@@ -142,6 +146,7 @@ ul.task-list li input[type="checkbox"] {
 
 <p>Each source case compares a submitted answer with a reference using a named STACK answer test. The SymPy port implements a subset of STACK; this page shows its coverage gaps, expected behavior, and agreement with STACK and the browser.</p>
 <p><strong>Port</strong> is this SymPy implementation. <strong>STACK</strong> is the reference Maxima implementation. <strong>Expected</strong> is the source fixture’s intended accept, reject, or error result. Only STACK tests with a fully supported equivalent in the Python port were run.</p>
+<p><a href="./semantics.html">Semantics and open questions</a> explains the implemented conventions and the remaining case-specific questions for discussion with STACK. Recorded domain differences and unproved identities remain visible and individually pinned; browser agreement does not resolve them.</p>
 <div class="status-legend" aria-label="How to read the colors">
 <p><span class="tone-good">Green: expected behavior or agreement</span> <span class="tone-notice">Amber: known issue or explained difference</span> <span class="tone-bad">Red: unexpected result</span> <span class="tone-neutral">Gray: not graded, outside scope, or unavailable</span></p>
 </div>
