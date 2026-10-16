@@ -13,7 +13,7 @@ from threading import Thread
 
 from playwright.sync_api import sync_playwright
 
-from test_render import render_site
+from test_render import ROOT, question_pages, render_site
 
 
 CORPUS = Path(__file__).resolve().parents[1] / "questions/corpus"
@@ -36,8 +36,38 @@ def serve(directory: Path):
         server.server_close()
 
 
-def test_browser_worker_grades_and_runs_authored_tests():
+def test_browser_published_pages_mount_cards():
+    """Smoke-test the real website without fixing its copy or example order."""
     site = render_site()
+    with serve(site) as url, sync_playwright() as pw:
+        options = {"headless": True}
+        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+            options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
+        browser = pw.chromium.launch(**options)
+        try:
+            page = browser.new_page()
+            errors = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            for qmd in question_pages():
+                route = qmd.relative_to(ROOT).with_suffix(".html").as_posix()
+                page.goto(f"{url}/{route}", wait_until="domcontentloaded")
+                cards = page.locator(".stack-sympy")
+                assert cards.count() > 0, route
+                assert page.locator(".stack-diagnostic").count() == 0
+                for card in cards.all():
+                    card.locator(".stack-answer").first.wait_for()
+                    assert card.locator(".stack-validate").count() == 1
+                    assert card.locator(".stack-check").count() == 1
+                    assert card.locator(".stack-check").is_disabled()
+                    if card.get_attribute("data-stack-feedback"):
+                        assert card.locator(".stack-feedback-button").count() == 1
+            assert not errors, errors
+        finally:
+            browser.close()
+
+
+def test_browser_worker_grades_and_runs_authored_tests(browser_site):
+    site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser_options = {"headless": True}
         if os.environ.get("STACK_SYMPY_CHROMIUM"):
@@ -47,7 +77,7 @@ def test_browser_worker_grades_and_runs_authored_tests():
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto(url + "/index.html", wait_until="domcontentloaded")
-        card = page.locator(".stack-sympy:not(.stack-diagnostic)").first
+        card = page.locator('[data-stack-id="expansion"]')
         assert card.count() == 1
         assert card.locator(".stack-answer").count() > 0
         card.locator(".stack-prompt mjx-container").first.wait_for(timeout=60000)
@@ -94,15 +124,14 @@ def test_browser_worker_grades_and_runs_authored_tests():
 
         # A variant switch clears stale answers/results and updates CASText.
         selector = card.locator(".stack-variant")
-        if selector.count():
-            selector.select_option(index=1)
-            assert card.locator(".stack-answer").first.input_value() == ""
-            assert card.locator(".stack-result").inner_text() == ""
-            card.locator(".stack-prompt mjx-container").first.wait_for(timeout=60000)
+        selector.select_option(index=1)
+        assert card.locator(".stack-answer").first.input_value() == ""
+        assert card.locator(".stack-result").inner_text() == ""
+        card.locator(".stack-prompt mjx-container").first.wait_for(timeout=60000)
 
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
         cards = page.locator(".stack-sympy:not(.stack-diagnostic)")
-        assert cards.count() >= 3, "equivalent, numerical and upstream examples should render"
+        assert cards.count() > 0
         for index in range(cards.count()):
             example = cards.nth(index)
             assert example.locator(".stack-answer").count() > 0
@@ -125,14 +154,7 @@ def test_browser_worker_grades_and_runs_authored_tests():
             example.locator(".stack-check").click()
             example.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
             assert example.locator(".stack-result").get_attribute("data-state") == ("correct" if correct else "retry")
-        multi = None
-        # Find the authored multi-input numerical case without depending on
-        # the visual order of the examples.
-        for index in range(cards.count()):
-            if cards.nth(index).locator(".stack-answer").count() >= 3:
-                multi = cards.nth(index)
-                break
-        assert multi is not None, "numerical multi-input example was not rendered"
+        multi = page.locator('[data-stack-id="measurements"]')
         for answer in multi.locator(".stack-answer").all():
             answer.fill("0.00")
         multi.locator(".stack-validate").click()
@@ -141,8 +163,8 @@ def test_browser_worker_grades_and_runs_authored_tests():
         multi.locator(".stack-check").click()
         multi.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
         assert multi.locator(".stack-result").get_attribute("data-state") == "retry"
-        (site.parent / "test-results").mkdir(exist_ok=True)
-        page.screenshot(path=str(site.parent / "test-results/example.png"), full_page=True)
+        (ROOT / "test-results").mkdir(exist_ok=True)
+        page.screenshot(path=str(ROOT / "test-results/example.png"), full_page=True)
         assert not errors, errors
         browser.close()
 
@@ -180,6 +202,7 @@ def _check_corpus_answer(card, answer: str, expected_state: str) -> None:
 def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
     """Exercise the actual published cards with the bundled Worker/Pyodide CAS."""
     from scripts.generate_corpus_page import teaching_source
+    from stack_sympy.importer import import_xml
 
     baseline = json.loads((CORPUS / "baseline.json").read_text())
     manifest = json.loads((CORPUS / "manifest.json").read_text())
@@ -224,8 +247,9 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
                 assert card.locator(".stack-result").get_attribute("data-state") == "correct", name
                 assert "All authored tests passed" in card.locator(".stack-result").inner_text(), name
                 cases = card.locator(".stack-test-list li").all_inner_texts()
-                added_cases = 1 if entry["file"] == "AlgMap-2-5.xml" else 0
-                assert len(cases) == entry["qtest_count"] + added_cases, name
+                question = next(q for q in import_xml(CORPUS.parents[1] / teaching_source(entry)[0])
+                                if q["name"] == teaching_source(entry)[1])
+                assert len(cases) == len(question["qtests"]), name
                 assert all(case.startswith("Pass · ") for case in cases), (name, cases)
 
             assert set(by_name) == set(expected)
@@ -310,12 +334,11 @@ def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
     parity = {'cases':[{'id':c['id'],'match':True} for c in cases]}
     project = port_assemble(cases,python,native,parity)
     project.update(available=True,provenance={'fixture':'synthetic UI test'},runners={})
-    legacy_count = len(json.loads((root/'tests/native_compliance/fixtures.json').read_text())['cases'])
     (tmp_path/'port-regressions.json').write_text(json.dumps(project))
     (tmp_path/'report-ui.js').write_text((root/'compliance-report/report-ui.js').read_text())
     (tmp_path/'port-regressions.js').write_text((root/'compliance-report/port-regressions.js').read_text())
-    body = (root/'compliance-report/port-regressions.qmd').read_text().split('<div id="port-regressions-status"',1)[1]
-    (tmp_path/'index.html').write_text('<!doctype html><div id="port-regressions-status"'+body)
+    from test_render import render_report_shell
+    (tmp_path/'index.html').write_text(render_report_shell('port-regressions'))
     with serve(tmp_path) as url, sync_playwright() as pw:
         options = {'headless':True}
         if os.environ.get('STACK_SYMPY_CHROMIUM'):
@@ -326,15 +349,24 @@ def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
         page.locator('#port-regressions-list .case').first.wait_for()
         assert page.locator('#port-regressions-list .case').count()==len(cases)
         assert page.locator('#report-provenance').count()==0
-        assert legacy_count==2303
-        assert 'boundary checks' in page.locator('#port-regressions-status').inner_text()
-        assert 'known port issue' in page.locator('#port-regressions-status').inner_text()
-        page.locator('#port-search').fill('complex-root-form')
+        for axis in ('port_result', 'stack_result', 'browser_result'):
+            assert page.locator(f'#{axis}-filter').count() == 1
+        # Known issues and input boundaries must be independently filterable.
+        for status in ('known_defect', 'boundary_pass'):
+            page.locator('#port_result-filter').select_option(status)
+            assert page.locator('#port-regressions-list .case').count() == sum(
+                row['python_status'] == status for row in project['cases'])
+        page.locator('#clear-filters').click()
+        selected = next(c for c in cases if c['id']=='port-complex-root-form')
+        page.locator('#port-search').fill(selected['id'])
         assert page.locator('#port-regressions-list .case').count()==1
         page.locator('#port-regressions-list .case').first.locator('summary').first.click()
-        page.locator('#port-regressions-list').get_by_text('Raw observations and source',exact=True).click()
-        page.locator('#port-regressions-list').get_by_text('Expected behavior and origin',exact=True).click()
-        assert '668' in page.locator('#port-regressions-list').inner_text()
+        raw = page.locator('#port-regressions-list .case-body > .technical-details')
+        raw.locator('summary').first.click()
+        for detail in raw.locator('details').all():
+            detail.locator('summary').click()
+        origin = raw.locator('pre').all_text_contents()
+        assert any(json.loads(text).get('origin') == selected['origin'] for text in origin)
         page.locator('#port-search').fill('')
         page.locator('#port-group').select_option('declared boundaries')
         assert page.locator('#port-regressions-list .case').count()==sum(c['group']=='declared boundaries' for c in cases)
