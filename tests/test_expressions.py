@@ -42,7 +42,7 @@ class ExpressionsTest(unittest.TestCase):
         self.assertEqual(canonical_form("x-y"), canonical_form("-y+x"))
         self.assertEqual(canonical_form("x-2*y"), canonical_form("x+(-2)*y"))
         self.assertEqual(canonical_form("-(-x)"), canonical_form("x"))
-        self.assertEqual(canonical_form("x/(y*z)"), canonical_form("x/y/z"))
+        self.assertNotEqual(canonical_form("x/(y*z)"), canonical_form("x/y/z"))
         self.assertNotEqual(canonical_form("x*(y+z)"), canonical_form("x*y+x*z"))
         self.assertNotEqual(canonical_form("x^2+(5+3)*x+5*3"), canonical_form("x^2+8*x+15"))
         self.assertNotEqual(canonical_form("(8/15)*8"), canonical_form("64/15"))

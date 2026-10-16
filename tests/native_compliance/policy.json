@@ -2,36 +2,6 @@
   "schema_version": 1,
   "scope_sha256": "0fac73dce2ba064ebd9a0f71b9ac813404d68f67bc14055bf450fb0d47c26e42",
   "cases": {
-    "73f1c53aebb5c7784de24bf9c93f219444fe25261d946988d4859c679e4d67fe-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": true,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Exact rational conversion of decimal/scientific notation yields equality where the upstream mark rejects this floating form."
-    },
-    "8db999728c5891d5dc837a93fa4ef7c2fb7346f5249e3fb427e180229a030612-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": false,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "The adapter uses exact decimal rationals and rejects a near-equality accepted by the upstream CAS."
-    },
-    "28716491082916afad6611be65e0066dce1b6a1ef62d24fa874fffd0868f9ed0-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": true,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "The adapter cancels decimal rationals exactly where upstream floating arithmetic rejects equality."
-    },
     "de0885f7d37d2ae319116b55bbeb142975a2298c65f19be7a7d0c90b0ca82980-1": {
       "expected_observation": {
         "kind": "result",
@@ -40,7 +10,23 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "Symbolic complex radical branch relation is not proven without assumptions."
+      "reason": "STACK accepts i/sqrt(x) = sqrt(-1/x); the port uses principal complex square roots and rejects the unconstrained identity. It holds for nonzero real x, but at x=-i the two sides are exp(3*pi*i/4) and exp(-pi*i/4), with opposite signs. No case-specific upstream rationale was located.",
+      "discussion": {
+        "category": "domain_review",
+        "evidence": "observed_behavior",
+        "explanation": "STACK accepts i/sqrt(x) = sqrt(-1/x); the port uses principal complex square roots and rejects the unconstrained identity. It holds for nonzero real x, but at x=-i the two sides are exp(3*pi*i/4) and exp(-pi*i/4), with opposite signs. No case-specific upstream rationale was located.",
+        "question": "Should this case assume real x, or is a specific non-principal symbolic root convention intended?",
+        "sources": [
+          {
+            "label": "STACK assumptions documentation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md"
+          },
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          }
+        ]
+      }
     },
     "7dd189100bebb6726704e227d799e548b676352e6caeb870ff5b6050530c5304-1": {
       "expected_observation": {
@@ -50,17 +36,23 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "SymPy keeps abs(x) distinct from sqrt(x^2) for an unconstrained complex symbol."
-    },
-    "90bcd27c20e256124e3ec664b909fd24dc7fef446f813f38efbb9f9585161abd-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": false,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Symbolic square-root reciprocal branch relation is not proven without assumptions."
+      "reason": "STACK accepts abs(x) = sqrt(x^2). This is true for real x, and the port accepts it with its explicit real assumption. For complex x=i the sides are 1 and i. The bare imported row supplies no real assumption; STACK documentation describes the real-style identity but is not a complete principal-complex specification.",
+      "discussion": {
+        "category": "domain_review",
+        "evidence": "documented_context",
+        "explanation": "STACK accepts abs(x) = sqrt(x^2). This is true for real x, and the port accepts it with its explicit real assumption. For complex x=i the sides are 1 and i. The bare imported row supplies no real assumption; STACK documentation describes the real-style identity but is not a complete principal-complex specification.",
+        "question": "Is an implicit real-variable convention intended for this row, and should the fixture state it explicitly?",
+        "sources": [
+          {
+            "label": "STACK assumptions documentation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md"
+          },
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          }
+        ]
+      }
     },
     "7cc7fe4d69064bc378805e57bc6d1942331e8f18ee7c858ddebd3f13dad427e6-1": {
       "expected_observation": {
@@ -70,7 +62,23 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "Conservative symbolic power nesting avoids an unsafe general branch rewrite."
+      "reason": "STACK accepts 6*((x-2)^3)^k = 6*(x-2)^(3*k), while the port retains principal powers. At x=1, k=1/2 the sides are 6*i and -6*i. STACK documentation explicitly warns that generic nested-power denesting needs assumptions, but no explanation for this particular odd-inner-power acceptance was located.",
+      "discussion": {
+        "category": "domain_review",
+        "evidence": "documented_context",
+        "explanation": "STACK accepts 6*((x-2)^3)^k = 6*(x-2)^(3*k), while the port retains principal powers. At x=1, k=1/2 the sides are 6*i and -6*i. STACK documentation explicitly warns that generic nested-power denesting needs assumptions, but no explanation for this particular odd-inner-power acceptance was located.",
+        "question": "Is k intended to be integral, x>2 intended, or is this deliberately a different symbolic power convention?",
+        "sources": [
+          {
+            "label": "STACK simplification rationale",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Simplification.md"
+          },
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          }
+        ]
+      }
     },
     "f66655f7b6c0165e98f86c6aad3637485b540b83dd55e3f6abbb4894290d01d3-1": {
       "expected_observation": {
@@ -80,7 +88,23 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "Conservative branch and zero-domain treatment cannot prove reciprocal radicals."
+      "reason": "STACK accepts sqrt(k/m)*sqrt(m/k) = 1. With positive real k/m this holds; at k=-1,m=1 both principal roots are i and their product is -1. The port therefore rejects the unconstrained identity. The fixture records native acceptance; no specific upstream rationale was located.",
+      "discussion": {
+        "category": "domain_review",
+        "evidence": "observed_behavior",
+        "explanation": "STACK accepts sqrt(k/m)*sqrt(m/k) = 1. With positive real k/m this holds; at k=-1,m=1 both principal roots are i and their product is -1. The port therefore rejects the unconstrained identity. The fixture records native acceptance; no specific upstream rationale was located.",
+        "question": "Should k/m be positive real, or should the port reproduce an explicitly defined root-combination convention?",
+        "sources": [
+          {
+            "label": "STACK assumptions documentation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md"
+          },
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          }
+        ]
+      }
     },
     "55edaf8e957bd553c0cce7674f2cd9a1142014ac1e7cce60c85125c3c7db2150-1": {
       "expected_observation": {
@@ -90,7 +114,27 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "Conservative radical reciprocal branch handling cannot prove equivalence."
+      "reason": "STACK accepts 2*pi*sqrt(m/k) = 2*pi/sqrt(k/m). With positive real m/k this holds. At m=-1,k=1 the principal values are 2*pi*i and -2*pi*i. The port rejects the unconstrained identity; the documented reciprocal-square-root convention for a single symbol does not by itself specify arbitrary ratio transformations.",
+      "discussion": {
+        "category": "domain_review",
+        "evidence": "observed_behavior",
+        "explanation": "STACK accepts 2*pi*sqrt(m/k) = 2*pi/sqrt(k/m). With positive real m/k this holds. At m=-1,k=1 the principal values are 2*pi*i and -2*pi*i. The port rejects the unconstrained identity; the documented reciprocal-square-root convention for a single symbol does not by itself specify arbitrary ratio transformations.",
+        "question": "Is positivity of m/k intended, or should STACK specify a broader reciprocal-root convention for ratios?",
+        "sources": [
+          {
+            "label": "STACK assumptions documentation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md"
+          },
+          {
+            "label": "STACK reciprocal-square-root convention",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Installation/index.md"
+          },
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          }
+        ]
+      }
     },
     "77daf5b4753e8bf0a0f678286f4be1f04af493e4eba2c4aa5c8086a02206eb11-1": {
       "expected_observation": {
@@ -100,7 +144,27 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "Conservative symbolic exponent distribution cannot prove the native mark."
+      "reason": "STACK accepts (-1)^n*cos(x)^n = (-cos(x))^n. For integer n this is a valid power rule. At n=1/2,x=pi the principal values are -1 and 1. The port does not assume n is an integer. Native acceptance is recorded, but no per-case justification was located.",
+      "discussion": {
+        "category": "domain_review",
+        "evidence": "observed_behavior",
+        "explanation": "STACK accepts (-1)^n*cos(x)^n = (-cos(x))^n. For integer n this is a valid power rule. At n=1/2,x=pi the principal values are -1 and 1. The port does not assume n is an integer. Native acceptance is recorded, but no per-case justification was located.",
+        "question": "Is n implicitly integral in this row? If so, can that declaration be made part of the fixture?",
+        "sources": [
+          {
+            "label": "STACK simplification rationale",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Simplification.md"
+          },
+          {
+            "label": "STACK assumptions documentation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md"
+          },
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          }
+        ]
+      }
     },
     "09b794b1ac17005f8c3d3beeafb27b7ff112300d112025ee60d87d1d7a0f67ff-1": {
       "expected_observation": {
@@ -110,17 +174,23 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "Log product and power identities need assumptions about domains/branches."
-    },
-    "f1dca5c75970ecf0739a0956d8a892b4d7e191b290c12acd5f90362ddb3b05a5-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": false,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Exponential-log symmetry requires branch assumptions absent from the adapter."
+      "reason": "STACK accepts log(a^2*b) = 2*log(a)+log(b); its equivalence routine enables logexpand:super and later radcan. For positive real a,b the identity holds. For a=-1,b=1 the principal values are 0 and 2*pi*i. The implementation mechanism is explicit; a published per-case branch rationale was not located.",
+      "discussion": {
+        "category": "domain_review",
+        "evidence": "observed_behavior",
+        "explanation": "STACK accepts log(a^2*b) = 2*log(a)+log(b); its equivalence routine enables logexpand:super and later radcan. For positive real a,b the identity holds. For a=-1,b=1 the principal values are 0 and 2*pi*i. The implementation mechanism is explicit; a published per-case branch rationale was not located.",
+        "question": "Should the identity require positive real variables, or is equivalence modulo logarithmic branch constants intended?",
+        "sources": [
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          },
+          {
+            "label": "STACK assumptions documentation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md"
+          }
+        ]
+      }
     },
     "b0150283d015a2e855187aff7012cb796346166fb09616eae94001edfd94f07f-1": {
       "expected_observation": {
@@ -130,7 +200,23 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "Log of reciprocal/sign transformation is not proven without branch assumptions."
+      "reason": "STACK accepts log((x+1)/(1-x)) = -log((1-x)/(x+1)). It holds on the real interval -1<x<1; at x=2 the two principal values are log(3)+i*pi and log(3)-i*pi. STACK uses logexpand:super/radcan; no per-case branch justification was located.",
+      "discussion": {
+        "category": "domain_review",
+        "evidence": "observed_behavior",
+        "explanation": "STACK accepts log((x+1)/(1-x)) = -log((1-x)/(x+1)). It holds on the real interval -1<x<1; at x=2 the two principal values are log(3)+i*pi and log(3)-i*pi. STACK uses logexpand:super/radcan; no per-case branch justification was located.",
+        "question": "Is -1<x<1 intended, or should this comparison identify logarithms modulo 2*pi*i?",
+        "sources": [
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          },
+          {
+            "label": "STACK assumptions documentation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md"
+          }
+        ]
+      }
     },
     "50e89b5e4156bcfe2222e365a60ffe80a9e2fc217c9a9d1c077d9ecf42a7c8cf-1": {
       "expected_observation": {
@@ -140,7 +226,27 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "Nested radical identity cannot be proven by the conservative symbolic simplifier; upstream -3 is a known native wrong mark."
+      "reason": "The source marks this nested-radical identity as a desired acceptance with native failure (-3); the port also returns false. For real x, sqrt(x^2+1)+x is positive, and the inner radicand is its square, proving the expression equals zero. For complex x=-i the expression is 2*i. A real-domain assumption plus a bounded exact sign proof is missing; this is not an approved STACK convention.",
+      "discussion": {
+        "category": "proof_limitation",
+        "evidence": "documented_context",
+        "explanation": "The source marks this nested-radical identity as a desired acceptance with native failure (-3); the port also returns false. For real x, sqrt(x^2+1)+x is positive, and the inner radicand is its square, proving the expression equals zero. For complex x=-i the expression is 2*i. A real-domain assumption plus a bounded exact sign proof is missing; this is not an approved STACK convention.",
+        "question": "Should this fixture explicitly assume real x, and which sign-aware radical proof should an implementation use?",
+        "sources": [
+          {
+            "label": "STACK documented proof/performance limits",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md"
+          },
+          {
+            "label": "STACK simplification rationale",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Simplification.md"
+          },
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          }
+        ]
+      }
     },
     "8b4153c4faae07165759c5758ddbbdd3a592985ceaf987e0a6fadc3e198b36da-1": {
       "expected_observation": {
@@ -150,61 +256,23 @@
         "note": "",
         "feedback": ""
       },
-      "reason": "Nested exact radical representation of cos(2*pi/17) is not proven; upstream -3 is a known native wrong mark."
-    },
-    "38bbb580cb92aa78ed53247ee195a94843378d7dad052f4e58b00d72fbbf9d64-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": true,
-        "cas_valid": true,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Written negative denominator and outer negation collapse in canonical form but upstream distinguishes their form."
-    },
-    "1234b6532aaa483340b47716979885675ebca626cf7abd37e43d6862cebf3a00-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": true,
-        "cas_valid": true,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Numeric reciprocal factor grouping collapses in canonical form but upstream distinguishes the written structure."
-    },
-    "3dc25cfb522593985f555fa77096fd736408d7d594de1ca2ab1595f757852181-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": true,
-        "cas_valid": true,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Numeric reciprocal factor association collapses in canonical form but upstream distinguishes the written structure."
-    },
-    "adbfc222bf17d114a47f4eee4f53856bcaf84e62d876c36302c2f76d392d4861-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": true,
-        "cas_valid": true,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Imaginary-unit coefficient order/reciprocal form collapses in canonical form but upstream distinguishes the written structure."
-    },
-    "8c94d1f5286247f18132f81d3e7e29ad64dee9f07fa33d6efe8798af789419d6-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": true,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Written negative denominator is overlooked by the adapter lowest-terms check."
+      "reason": "The source marks the radical expression for cos(2*pi/17) as a desired acceptance with native failure (-3). Both expressions are exact real constants, but the port does not currently certify their equality. Numerical agreement cannot establish equivalence. A bounded algebraic-number/minimal-polynomial proof with root selection would be needed; no domain convention change is required.",
+      "discussion": {
+        "category": "proof_limitation",
+        "evidence": "documented_context",
+        "explanation": "The source marks the radical expression for cos(2*pi/17) as a desired acceptance with native failure (-3). Both expressions are exact real constants, but the port does not currently certify their equality. Numerical agreement cannot establish equivalence. A bounded algebraic-number/minimal-polynomial proof with root selection would be needed; no domain convention change is required.",
+        "question": "Is exact certification of this constructible cosine a useful target, and is there a preferred bounded proof strategy?",
+        "sources": [
+          {
+            "label": "STACK documented proof/performance limits",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md"
+          },
+          {
+            "label": "Pinned STACK equivalence implementation",
+            "url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180"
+          }
+        ]
+      }
     }
   }
 }

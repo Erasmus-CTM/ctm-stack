@@ -352,7 +352,7 @@ def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
         for axis in ('port_result', 'stack_result', 'browser_result'):
             assert page.locator(f'#{axis}-filter').count() == 1
         # Known issues and input boundaries must be independently filterable.
-        for status in ('known_defect', 'boundary_pass'):
+        for status in ('pass', 'boundary_pass'):
             page.locator('#port_result-filter').select_option(status)
             assert page.locator('#port-regressions-list .case').count() == sum(
                 row['python_status'] == status for row in project['cases'])

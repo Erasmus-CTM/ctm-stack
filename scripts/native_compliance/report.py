@@ -209,6 +209,9 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
     pyodide, pyodide_error = validated_run(*read_json(pyodide_path), fixture_hash, cases_by_id, "parity")
     reference, reference_error = validated_run(*read_json(reference_path), fixture_hash, cases_by_id, "compatibility")
     policy_path = ROOT / "tests/native_compliance/policy.json"
+    policy, policy_error = read_json(policy_path)
+    if policy_error:
+        raise ValueError(f"Cannot load case explanations: {policy_error}")
     if python is not None and python["metadata"].get("policy_sha256") != hashlib.sha256(policy_path.read_bytes()).hexdigest():
         python, python_error = None, "Python policy hash differs from checked-in policy"
     if reference is not None:
@@ -245,6 +248,7 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
             "answer_note": case.get("answer_note"), "notes": case.get("notes"),
             "extra_fields": case.get("extra_fields"), "source_line": line,
             "source_url": source_link, "python": p, "native": n, "parity": b, "compatibility": ref,
+            "discussion": policy.get("cases", {}).get(case_id, {}).get("discussion"),
             "desired_status": _desired_status(p), "native_status": ref["status"] if ref else "unavailable",
             "native_boolean_status": _native_status(n, p),
             "native_mark_status": _native_dimension(n, p, "correct"),

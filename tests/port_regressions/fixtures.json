@@ -825,17 +825,8 @@
         "kind": "project_regression",
         "upstream_ordinal": 645
       },
-      "reason": "held arithmetic regression from scalar helper audit",
-      "native_scope": true,
-      "known_defect": {
-        "observation": {
-          "kind": "result",
-          "valid": true,
-          "correct": true,
-          "cas_valid": true
-        },
-        "reason": "Existing scalar form limitation; separate desired behavior from observed behavior."
-      }
+      "reason": "Resolved native held-reciprocal rule: a minus inside the denominator is distinct from an outer minus.",
+      "native_scope": true
     },
     {
       "id": "port-implies-equivalent",
@@ -1275,6 +1266,486 @@
       },
       "reason": "Scalar ln is a log alias; symbolic complex-log branch proofs remain outside the declared subset.",
       "native_scope": false
+    },
+    {
+      "id": "port-native-32",
+      "group": "documented native semantics",
+      "test": "AlgEquiv",
+      "student": "452",
+      "teacher": "4.52*10^2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 32
+      },
+      "reason": "Native documented binary64 constant arithmetic, with no tolerance.",
+      "native_scope": true
+    },
+    {
+      "id": "port-native-37",
+      "group": "documented native semantics",
+      "test": "AlgEquiv",
+      "student": "0.99999999",
+      "teacher": "99999998/99999999",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 37
+      },
+      "reason": "Native documented binary64 constant arithmetic, with no tolerance.",
+      "native_scope": true
+    },
+    {
+      "id": "port-native-43",
+      "group": "documented native semantics",
+      "test": "AlgEquiv",
+      "student": "100.4-80.0",
+      "teacher": "20.4",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 43
+      },
+      "reason": "Native documented binary64 constant arithmetic, with no tolerance.",
+      "native_scope": true
+    },
+    {
+      "id": "port-native-80",
+      "group": "documented native semantics",
+      "test": "AlgEquiv",
+      "student": "1/sqrt(x)",
+      "teacher": "sqrt(1/x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 80
+      },
+      "reason": "Explicit STACK symbolic reciprocal-square-root convention.",
+      "native_scope": true
+    },
+    {
+      "id": "port-native-166",
+      "group": "documented native semantics",
+      "test": "AlgEquiv",
+      "student": "x^log(y)",
+      "teacher": "y^log(x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 166
+      },
+      "reason": "Principal powers exponentialize to exp(log(x)*log(y)) without log-product expansion.",
+      "native_scope": true
+    },
+    {
+      "id": "port-native-647",
+      "group": "held arithmetic",
+      "test": "EqualComAss",
+      "student": "1/2*1/x",
+      "teacher": "1/(2*x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 647
+      },
+      "reason": "Native written form and sign-context regression.",
+      "native_scope": true
+    },
+    {
+      "id": "port-native-658",
+      "group": "held arithmetic",
+      "test": "EqualComAss",
+      "student": "(1/2)*(a+b)",
+      "teacher": "(a+b)/2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 658
+      },
+      "reason": "Native written form and sign-context regression.",
+      "native_scope": true
+    },
+    {
+      "id": "port-native-665",
+      "group": "held arithmetic",
+      "test": "EqualComAss",
+      "student": "1/3*i",
+      "teacher": "i/3",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 665
+      },
+      "reason": "Native written form and sign-context regression.",
+      "native_scope": true
+    },
+    {
+      "id": "port-native-2278",
+      "group": "held arithmetic",
+      "test": "LowestTerms",
+      "student": "x-1/-4",
+      "teacher": "0",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 2278
+      },
+      "reason": "Native written form and sign-context regression.",
+      "native_scope": true
+    },
+    {
+      "id": "port-held-mul-div",
+      "group": "native semantics controls",
+      "test": "EqualComAss",
+      "student": "(a*b)/c",
+      "teacher": "a*(b/c)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-held-minus-numerator",
+      "group": "native semantics controls",
+      "test": "EqualComAss",
+      "student": "(-x)/y",
+      "teacher": "-(x/y)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-held-minus-fraction",
+      "group": "native semantics controls",
+      "test": "EqualComAss",
+      "student": "-1/4*x",
+      "teacher": "-x/4",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-held-reciprocal-power",
+      "group": "native semantics controls",
+      "test": "EqualComAss",
+      "student": "1/x",
+      "teacher": "x^(-1)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-held-quotient-chain",
+      "group": "native semantics controls",
+      "test": "EqualComAss",
+      "student": "x/(y*z)",
+      "teacher": "x/y/z",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Native held quotients keep separate UNARY_RECIP operands; combining denominators requires optional recipMul (upstream fixture lines 1250-1257).",
+      "native_scope": true
+    },
+    {
+      "id": "port-lowest-negative-denominator",
+      "group": "native semantics controls",
+      "test": "LowestTerms",
+      "student": "1/-3",
+      "teacher": "0",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-lowest-subtract-negative",
+      "group": "native semantics controls",
+      "test": "LowestTerms",
+      "student": "x+1/-4",
+      "teacher": "0",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-lowest-subtract-positive",
+      "group": "native semantics controls",
+      "test": "LowestTerms",
+      "student": "x-1/4",
+      "teacher": "0",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-float-near-one",
+      "group": "native semantics controls",
+      "test": "AlgEquiv",
+      "student": "0.99999999",
+      "teacher": "1",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-float-exact-rationals",
+      "group": "native semantics controls",
+      "test": "AlgEquiv",
+      "student": "99999999/10^8",
+      "teacher": "99999998/99999999",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-float-half",
+      "group": "native semantics controls",
+      "test": "AlgEquiv",
+      "student": "0.5",
+      "teacher": "1/2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-float-third",
+      "group": "native semantics controls",
+      "test": "AlgEquiv",
+      "student": "0.333333333333333",
+      "teacher": "1/3",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-float-sum",
+      "group": "native semantics controls",
+      "test": "AlgEquiv",
+      "student": "0.1+0.2",
+      "teacher": "0.3",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-reciprocal-sqrt-negative",
+      "group": "native semantics controls",
+      "test": "AlgEquiv",
+      "student": "1/sqrt(-1)",
+      "teacher": "sqrt(1/(-1))",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
+    },
+    {
+      "id": "port-log-power-negative",
+      "group": "native semantics controls",
+      "test": "AlgEquiv",
+      "student": "x^log(y)",
+      "teacher": "y^(2*log(x))",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Adjacent native acceptance/rejection control for the documented semantics fixes.",
+      "native_scope": true
     }
   ]
 }

@@ -7,6 +7,8 @@ Each source case compares a submitted answer with a reference using a named STAC
 
 **Port** is this SymPy implementation. **STACK** is the reference Maxima implementation. **Expected** is the source fixture’s intended accept, reject, or error result. Only STACK tests with a fully supported equivalent in the Python port were run.
 
+[Semantics and open questions](semantics.qmd) explains the implemented conventions and the remaining case-specific questions for discussion with STACK. Recorded domain differences and unproved identities remain visible and individually pinned; browser agreement does not resolve them.
+
 <div class="status-legend" aria-label="How to read the colors">
   <span class="tone-good">Green: expected behavior or agreement</span>
   <span class="tone-notice">Amber: known issue or explained difference</span>

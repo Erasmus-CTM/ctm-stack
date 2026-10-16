@@ -585,8 +585,9 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
                    assumptions: Mapping[str, bool] | None = None):
     """Canonical commutative/associative *syntax*, without algebraic collection.
 
-    Flatten and sort sums/products; rewrite subtraction and division as signed
-    terms and reciprocal factors. Named author values are inserted structurally.
+    Flatten and sort sums/products; preserve STACK's held UNARY_RECIP operand.
+    In particular, neither reciprocals of products nor identity factors are
+    simplified. Named author values are inserted structurally.
     """
     node = parse(node) if isinstance(node, str) else node
     env = env or {}
@@ -636,11 +637,9 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
         return combine("mul", [("number", "-1"), term])
 
     def reciprocal(term):
-        if term[0] == "number":
-            return ("number", str(1 / sp.Rational(term[1])))
-        if term[0] == "mul":
-            return combine("mul", [reciprocal(x) for x in term[1]])
-        return ("pow", term, ("number", "-1"))
+        # noun_simp.mac noun_arith_full keeps UNARY_RECIP as a noun:
+        # recip(a*b) is not recip(a)*recip(b), nor is recip(-a) -recip(a).
+        return ("reciprocal", term)
 
     def visit(n):
         if n.kind == "number":
@@ -662,11 +661,20 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
             a = visit(n.children[0])
             return a if n.value == "+" else negative(a)
         if n.kind == "binary":
+            if n.value == "/":
+                numerator, denominator = n.children
+                a, b = visit(numerator), visit(denominator)
+                # Maxima retains reduced integer fractions as rational atoms.
+                # Thus (1/2)*x has an explicit rational coefficient while x/2
+                # has UNARY_RECIP(2), without a written numerator 1.
+                if (a[0] == b[0] == "number"
+                        and sp.Rational(a[1]).is_Integer and sp.Rational(b[1]).is_Integer
+                        and sp.igcd(int(sp.Rational(a[1])), int(sp.Rational(b[1]))) == 1):
+                    return ("number", str(sp.Rational(a[1]) / sp.Rational(b[1])))
+                # Chained quotients keep separate held reciprocal operands.
+                # Combining them requires STACK's optional recipMul rule.
+                return combine("mul", [a, reciprocal(b)])
             a, b = (visit(x) for x in n.children)
-            if (n.value == "/" and a[0] == b[0] == "number"
-                    and sp.Rational(a[1]).is_Integer and sp.Rational(b[1]).is_Integer
-                    and sp.igcd(int(sp.Rational(a[1])), int(sp.Rational(b[1]))) == 1):
-                return ("number", str(sp.Rational(a[1]) / sp.Rational(b[1])))
             return {"+": lambda: combine("add", [a, b]), "-": lambda: combine("add", [a, negative(b)]),
                     "*": lambda: combine("mul", [a, b]), "/": lambda: combine("mul", [a, reciprocal(b)]),
                     "^": lambda: ("pow", a, b), "**": lambda: ("pow", a, b)}[n.value]()

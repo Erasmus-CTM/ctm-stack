@@ -1,0 +1,149 @@
+---
+title: "Semantics and open questions"
+subtitle: "What was implemented, what remains different, and what to ask STACK"
+toc: true
+---
+
+The comparison uses STACK revision `10d323311b7f39fb7b092dd10ce75f7d8632f525`.
+Case numbers below refer to the unchanged 2,303-row imported fixture. An expected
+acceptance is a statement in that fixture, not automatically a universally valid
+complex identity. Native agreement and mathematical correctness are separate axes.
+
+## Implemented behavior
+
+### Written form: cases 645, 647, 658, 665 and 2278
+
+`EqualComAss` checks more than mathematical value. STACK's
+[rule-based test documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Rule_based.md)
+explains that division is held as a numerator multiplied by an opaque reciprocal.
+The port now preserves that structure:
+
+| Cases | Submitted / reference | Expected result and reason |
+|---|---|---|
+| 645 | `x/(-y)` / `-(x/y)` | Reject: a minus inside the reciprocal differs from an outer minus. |
+| 647 | `1/2*1/x` / `1/(2*x)` | Reject: separately written fractions differ from one reciprocal of a product. |
+| 658 | `(1/2)*(a+b)` / `(a+b)/2` | Reject: a rational coefficient differs from a held division of the whole sum. |
+| 665 | `1/3*i` / `i/3` | Reject for the same written numerator/reciprocal distinction. |
+| 2278 | `x-1/-4` / an ignored reference | Reject: when extracting numerical fractions, the outer subtraction gives a negative numerator over a negative denominator. |
+
+The final case is **not** a ban on negative denominators. Native `LowestTerms`
+accepts `1/-3` and `x+1/-4`, while rejecting `-1/-3` and `x-1/-4`.
+This follows [list_expression_numbers and lowesttermsp](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L687-L713).
+It continues to ignore the reference value and does not cancel polynomial factors.
+
+### Floating-point constants: cases 32, 37 and 43
+
+STACK's [numerical-rounding documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Numerical_rounding.md)
+describes binary floating-point artifacts and recommends numerical tests for
+approximate answers. The port reproduces the following literal-constant cases
+with finite binary64 arithmetic and exact equality of the resulting machine values:
+
+| Case | Submitted / reference | Native-compatible result |
+|---|---|---|
+| 32 | `452` / `4.52*10^2` | Reject: the multiplication produces approximately `451.99999999999994`. |
+| 37 | `0.99999999` / `99999998/99999999` | Accept: both map to the same binary64 value; the exact rational values differ. |
+| 43 | `100.4-80.0` / `20.4` | Reject: the subtraction produces approximately `20.400000000000006`. |
+
+Case 37 also has a direct explanation from the STACK author in
+[issue 1581](https://github.com/maths/moodle-qtype_stack/issues/1581#issuecomment-3314961866):
+Maxima's rational conversion of a float need not recover its decimal fraction.
+The discussion separates exact mathematical notation, finite machine precision,
+and the difficulty of inferring a student's intention. The port's bounded
+binary64 comparison reproduces these cases; it does not implement Maxima's
+general `rat` algorithm or claim all floating-point behavior agrees.
+
+This compatibility path applies only to `AlgEquiv` with literal arithmetic,
+at least one decimal/scientific literal, and integer exponents. Symbols,
+functions, and frozen author values retain the symbolic path. The shared parser
+still evaluates decimals as exact rationals; numerical tolerance tests retain
+their own tolerances. There is no epsilon-based algebraic acceptance.
+
+### Reciprocal square roots: case 80
+
+The [installation notes](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Installation/index.md)
+explicitly require `1/sqrt(x)` and `sqrt(1/x)` to count as equivalent, while
+acknowledging the domain debate. The port now implements that symbolic convention
+for a top-level reciprocal square root of a **single symbol**. It does not
+propagate the convention into logarithms, larger products, or ratios. This is a documented STACK
+compatibility rule, not a general principal-complex identity: at a negative real
+value the two principal values have opposite signs. Explicit numeric inputs such
+as `1/sqrt(-1)` and `sqrt(1/(-1))` remain distinct. Ratios, arbitrary root products,
+and nested powers are not forced into the same convention.
+
+### Principal logarithmic powers: case 166
+
+For nonzero `x,y`, principal powers give
+
+$$x^{\log y}=\exp(\log y\,\log x)=\exp(\log x\,\log y)=y^{\log x}.$$
+
+The port now certifies this through bounded exponential rewriting, a strategy
+also used in [STACK's equivalence routine](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180).
+This proof is our mathematical explanation; we did not locate a published
+STACK rationale for this particular row. It does not expand a logarithm of a
+product and does not require positive-real assumptions. The earlier description
+of this case as requiring a different branch convention was too conservative.
+
+## Eight domain/branch differences for discussion
+
+All eight currently have a desired/native acceptance and a port rejection.
+The counterexamples below concern the port's principal-complex interpretation.
+They do not establish that STACK intended that interpretation. Where the sources
+give only a mechanism or nearby context, we explicitly leave the intended
+contract open rather than claiming the behavior is a deliberate design choice.
+
+| Case | Identity accepted by STACK | What happens under principal-complex semantics | Question for STACK |
+|---|---|---|---|
+| 50 | `i/sqrt(x) = sqrt(-1/x)` | True for nonzero real `x`. At `x=-i`, the sides are `exp(3*pi*i/4)` and `exp(-pi*i/4)`. | Is `x` implicitly real, or is another symbolic-root convention intended? |
+| 76 | `abs(x) = sqrt(x^2)` | True for real `x`; at `x=i`, the sides are `1` and `i`. The port already accepts the identity with its explicit real assumption. | Should the fixture declare real `x`? |
+| 92 | `6*((x-2)^3)^k = 6*(x-2)^(3*k)` | At `x=1,k=1/2`, the sides are `6*i` and `-6*i`. | Is `k` integral, is `x>2`, or is odd-inner-power denesting intentional? |
+| 99 | `sqrt(k/m)*sqrt(m/k) = 1` | True for positive real `k/m`; at `k=-1,m=1`, the product is `-1`. | Should positivity be explicit, or is a broader root-combination rule intended? |
+| 101 | `2*pi*sqrt(m/k) = 2*pi/sqrt(k/m)` | At `m=-1,k=1`, the sides are `2*pi*i` and `-2*pi*i`. | Is positivity intended, or does the documented single-symbol convention extend to ratios? |
+| 127 | `(-1)^n*cos(x)^n = (-cos(x))^n` | True for integer `n`; at `n=1/2,x=pi`, the sides are `-1` and `1`. | Is `n` implicitly integral? |
+| 155 | `log(a^2*b) = 2*log(a)+log(b)` | True for positive real `a,b`; at `a=-1,b=1`, the sides are `0` and `2*pi*i`. | Should positivity be required, or are branch constants ignored? |
+| 167 | `log((x+1)/(1-x)) = -log((1-x)/(x+1))` | True on the real interval `-1<x<1`; at `x=2`, the sides differ by `2*pi*i`. | Is that interval intended, or is equality modulo `2*pi*i` intended? |
+
+Evidence and limits:
+
+- [Defining variables](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md)
+  documents explicit `assume`/`declare` contexts and the real-style square-root
+  identity relevant to cases 50 and 76. It does not fully specify their bare rows.
+- [Simplification](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Simplification.md)
+  explicitly warns against general nested-power denesting without assumptions.
+  That makes case 92 a question to resolve, not permission for a blanket rewrite.
+- The [implementation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180)
+  sets `logexpand:super`, then applies several transformations including `radcan`.
+  This supplies an implementation mechanism for logarithmic differences, not a
+  per-case mathematical justification for ignoring branches.
+- For 50, 99, 101, 127, 155 and 167, we located fixture expectations and the
+  implementation but no case-specific published rationale. The explanations and
+  counterexamples above are the port team's analysis, offered for discussion.
+
+## Two missing exact proofs
+
+Both source rows use `-3`: desired acceptance despite a native rejection.
+The port also rejects them. Agreement between engines does not resolve either.
+
+**Case 471 — nested radical.** For real `x`, let
+`u=sqrt(x^2+1)+x`. Then `u>0` and
+`u^2=2*x*sqrt(x^2+1)+2*x^2+1`; hence the outer square root is `u` and
+the submitted expression is zero. For complex `x=-i` it is instead `2*i`.
+The missing work is an explicit real-domain contract and a bounded sign-aware
+proof. Ask STACK whether the real assumption should be stated in the fixture.
+
+**Case 474 — `cos(2*pi/17)`.** The reference is its constructible radical
+representation. This is an exact-real constant identity, not a branch-convention
+dispute. The port lacks a certified algebraic-number proof with root selection.
+Numerical agreement would not suffice. Ask whether this exact certification is
+a useful target and whether STACK has a preferred proof method.
+
+STACK's [equivalence documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md)
+acknowledges incomplete radical proofs and explains why more aggressive generic
+transformations can lead to expression growth and timeouts.
+
+## Reading the report
+
+The remaining ten observations stay case-pinned in the checker policy. The
+report distinguishes **Domain/branch difference** from **Unproved identity** and
+shows each case's explanation, evidence, source links, and question for STACK.
+Changing a label does not turn a difference into a compatibility pass. Any
+changed result invalidates its old exception and must be reviewed.

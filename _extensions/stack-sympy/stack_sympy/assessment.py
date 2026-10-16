@@ -249,14 +249,24 @@ def _unrationalized_denominator(node: Node, env, assumptions) -> bool:
     return any(_unrationalized_denominator(child, env, assumptions) for child in node.children)
 
 
-def _lowest_terms(node: Node, env, assumptions) -> bool:
+def _lowest_terms(node: Node, env, assumptions, negative: bool = False) -> bool:
     """Check written numeric fractions, never cancel polynomial factors."""
+    if node.kind == "unary":
+        return _lowest_terms(node.children[0], env, assumptions, negative ^ (node.value == "-"))
+    if node.kind == "binary" and node.value in {"+", "-"}:
+        return (_lowest_terms(node.children[0], env, assumptions, negative)
+                and _lowest_terms(node.children[1], env, assumptions, negative ^ (node.value == "-")))
     if node.kind == "binary" and node.value == "/":
         numerator = _written_integer(node.children[0], env, assumptions)
         denominator = _written_integer(node.children[1], env, assumptions)
         if numerator is not None and denominator is not None:
+            if negative:
+                numerator = -numerator
             if (numerator < 0 and denominator < 0) or sp.igcd(numerator, denominator) != 1:
                 return False
+            # list_expression_numbers stops at a written numerical fraction;
+            # outer unary minus applies to its numerator, not its denominator.
+            return True
         # STACK's rationalized predicate rejects imaginary units and
         # fractional powers (including sqrt) in denominators.
         denominator_value = evaluate(node.children[1], env, assumptions=assumptions, student=True)
@@ -265,7 +275,9 @@ def _lowest_terms(node: Node, env, assumptions) -> bool:
                     power.exp.is_Rational and not power.exp.is_Integer
                     for power in denominator_value.atoms(sp.Pow))):
             return False
-    return all(_lowest_terms(child, env, assumptions) for child in node.children)
+    # STACK's list_expression_numbers propagates an outer minus through all
+    # collected numeric entries, including entries inside a product/call.
+    return all(_lowest_terms(child, env, assumptions, negative) for child in node.children)
 
 
 def answer_test(name: str, student: Node | str, teacher: str, options: str = "", *,
@@ -310,6 +322,10 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
         if (is_logical(student_value) != is_logical(teacher_value)
                 or _has_equation(student_value) and not _has_equation(teacher_value)):
             return {**_result(True, False), "cas_valid": False}
+        from .equivalence import constant_float_equivalent
+        floating = constant_float_equivalent(student_ast, parse(teacher))
+        if floating is not None:
+            return _result(True, floating)
         return _result(True, _equiv(student_value, teacher_value))
 
     if name == "SingleFrac":

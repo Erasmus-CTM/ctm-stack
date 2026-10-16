@@ -30,7 +30,9 @@ def test_boundary_agreement_is_not_mathematical_coverage():
 
 
 def test_stale_exception_and_changed_observation_fail():
-    case = next(c for c in CASES if 'known_defect' in c)
+    case = {**CASES[0], 'known_defect': {'observation': {
+        'kind':'result','valid':True,'correct':False,'cas_valid':True},
+        'reason':'Synthetic stale-exception control'}}
     assert python_status(case,case['expected'])=='unexpected_stale_exception'
     assert python_status(case,{'kind':'result','valid':True,'correct':False,'cas_valid':False})=='unexpected'
 
