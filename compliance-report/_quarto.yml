@@ -4,6 +4,7 @@ project:
   render:
     - index.qmd
     - port-regressions.qmd
+    - semantics.qmd
   resources:
     - report.json
     - port-regressions.json
@@ -22,6 +23,8 @@ website:
         href: index.qmd
       - text: Port regressions
         href: port-regressions.qmd
+      - text: Semantics and open questions
+        href: semantics.qmd
     right:
       - text: Back to examples
         icon: arrow-left

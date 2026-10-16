@@ -323,6 +323,55 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             browser.close()
 
 
+def test_browser_legacy_report_explains_differences_without_marking_pass(tmp_path):
+    """Synthetic saved observations exercise the real report presentation."""
+    fixture = json.loads((ROOT/'tests/native_compliance/fixtures.json').read_text())
+    policy = json.loads((ROOT/'tests/native_compliance/policy.json').read_text())
+    rows = []
+    for ordinal in (50, 471):
+        case = next(c for c in fixture['cases'] if c['ordinal'] == ordinal)
+        entry = policy['cases'][case['id']]
+        observed = {'kind':'result','valid':True,'cas_valid':True,'correct':False}
+        rows.append({**case, 'discussion':entry['discussion'],
+            'python':{**observed,'reason':entry['reason'],
+                      'desired':{'kind':'result','correct':True}},
+            'native':{'status':'ok','cas_valid':True,'correct':ordinal == 50},
+            'parity':{'python':observed,'pyodide':observed},
+            'desired_status':'known_defect',
+            'native_status':'known_port_defect' if ordinal == 50 else 'match',
+            'native_mark_status':'mismatch' if ordinal == 50 else 'match',
+            'native_applicability_status':'match','native_desired_status':'matches_desired',
+            'parity_status':'match'})
+    report = {'cases':rows,'summary':{'desired':{'known_defect':2}},
+              'results':{'python':{'passed':True},'compatibility':{'passed':True}},
+              'provenance':{'code_sha':'0'*40},'scope':'synthetic UI fixture'}
+    (tmp_path/'report.json').write_text(json.dumps(report))
+    for name in ('report-ui.js','report.js'):
+        (tmp_path/name).write_text((ROOT/'compliance-report'/name).read_text())
+    from test_render import render_report_shell
+    (tmp_path/'index.html').write_text(render_report_shell('index'))
+    with serve(tmp_path) as url, sync_playwright() as pw:
+        options = {'headless':True}
+        if os.environ.get('STACK_SYMPY_CHROMIUM'):
+            options['executable_path'] = os.environ['STACK_SYMPY_CHROMIUM']
+        browser = pw.chromium.launch(**options)
+        page = browser.new_page()
+        page.goto(url+'/index.html')
+        page.locator('#case-list .case').first.wait_for()
+        for category in ('domain_review', 'proof_limitation'):
+            page.locator('#desired-filter').select_option(category)
+            assert page.locator('#case-list .case').count() == 1
+            page.locator('#case-list .case summary').first.click()
+            discussion = page.locator('.case-discussion')
+            assert discussion.is_visible()
+            assert 'Question for STACK:' in discussion.inner_text()
+            assert discussion.locator('a[href^="https://github.com/maths/moodle-qtype_stack/"]').count() > 0
+            outcomes = page.locator('.outcome-table').inner_text()
+            assert 'Accept' in outcomes and 'Reject' in outcomes
+        assert [r['desired_status'] for r in rows] == ['known_defect','known_defect']
+        browser.close()
+
+
 def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
     """UI fixture only: real runner observations are checked by the CI job."""
     from scripts.native_compliance.port_contract import load_fixture, assemble as port_assemble
@@ -352,7 +401,7 @@ def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
         for axis in ('port_result', 'stack_result', 'browser_result'):
             assert page.locator(f'#{axis}-filter').count() == 1
         # Known issues and input boundaries must be independently filterable.
-        for status in ('known_defect', 'boundary_pass'):
+        for status in ('pass', 'boundary_pass'):
             page.locator('#port_result-filter').select_option(status)
             assert page.locator('#port-regressions-list .case').count() == sum(
                 row['python_status'] == status for row in project['cases'])

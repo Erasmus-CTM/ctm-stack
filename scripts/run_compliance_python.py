@@ -50,6 +50,19 @@ def load_policy(path: Path, ids: set[str]) -> dict:
     for case_id, entry in policy["cases"].items():
         if not isinstance(entry, dict) or not isinstance(entry.get("reason"), str) or not entry["reason"].strip():
             raise ValueError(f"{case_id}: policy requires a nonempty reason")
+        discussion = entry.get("discussion")
+        if discussion is not None and (
+                not isinstance(discussion, dict)
+                or discussion.get("category") not in {"domain_review", "proof_limitation"}
+                or discussion.get("evidence") not in {"documented_context", "observed_behavior"}
+                or any(not isinstance(discussion.get(key), str) or not discussion[key].strip()
+                       for key in ("explanation", "question"))
+                or not isinstance(discussion.get("sources"), list) or not discussion["sources"]
+                or any(not isinstance(s, dict) or not isinstance(s.get("label"), str)
+                       or not isinstance(s.get("url"), str)
+                       or not s["url"].startswith("https://github.com/maths/moodle-qtype_stack/")
+                       for s in discussion["sources"])):
+            raise ValueError(f"{case_id}: malformed case discussion")
         expected = entry.get("expected_observation")
         if not isinstance(expected, dict) or not expected or "kind" not in expected:
             raise ValueError(f"{case_id}: policy requires an explicit expected observation")

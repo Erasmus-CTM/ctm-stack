@@ -4,11 +4,72 @@ Like STACK assessment.mac, numerical evaluation can reject a candidate; it
 cannot establish equivalence. Failed or singular probes are inconclusive.
 """
 import sympy as sp
+from fractions import Fraction
+import math
 from .expressions import Unsupported
 
 ELEMENTARY = (sp.sin, sp.cos, sp.tan, sp.sec, sp.csc, sp.cot,
               sp.sinh, sp.cosh, sp.tanh, sp.sech, sp.csch, sp.coth)
 NEW_FUNCTIONS = ELEMENTARY[3:]
+
+
+def constant_float_equivalent(left, right):
+    """STACK binary64 compatibility for literal rational arithmetic only.
+
+    Keep exact fractions until an operation contains a decimal/scientific
+    literal. Compare finite binary64 values exactly, with no tolerance. This
+    deliberately does not change the parser, symbolic coefficients, functions,
+    frozen author values, or the numerical answer tests.
+    """
+    has_float = False
+
+    def visit(node):
+        nonlocal has_float
+        if node.kind == "number":
+            if "." in node.value or "e" in node.value.lower():
+                has_float = True
+                return float(node.value)
+            return Fraction(node.value)
+        if node.kind == "unary":
+            value = visit(node.children[0])
+            return -value if node.value == "-" else value
+        if node.kind != "binary":
+            raise ValueError("Outside constant arithmetic")
+        a, b = (visit(child) for child in node.children)
+        if node.value == "+":
+            return a + b
+        if node.value == "-":
+            return a - b
+        if node.value == "*":
+            return a * b
+        if node.value == "/":
+            return a / b
+        # Transcendental and fractional powers retain the symbolic proof path.
+        if not isinstance(b, Fraction) or b.denominator != 1 or abs(b) > 100:
+            raise ValueError("Outside integer powers")
+        return a ** int(b)
+
+    try:
+        a, b = visit(left), visit(right)
+        if not has_float:
+            return None
+        a, b = float(a), float(b)
+        return a == b if math.isfinite(a) and math.isfinite(b) else None
+    except (ValueError, OverflowError, ZeroDivisionError):
+        return None
+
+
+def _stack_reciprocal_sqrt(expr):
+    """The explicit STACK convention sqrt(1/x) = 1/sqrt(x).
+
+    Installation docs require this symbolic equivalence despite the branch
+    debate. Restrict the convention to reciprocal roots of a symbol; numeric
+    negative/complex roots and other root/power rewrites keep principal branches.
+    """
+    if (expr.is_Pow and expr.exp == sp.S.Half and expr.base.is_Pow
+            and expr.base.exp == -1 and expr.base.base.is_Symbol):
+        return sp.Pow(expr.base.base, -sp.S.Half)
+    return expr
 
 
 def numerically_distinct(left, right):
@@ -69,6 +130,9 @@ def elementary_equivalent(left, right):
         return True
     if numerically_distinct(left, right):
         return False
+    left, right = (_stack_reciprocal_sqrt(value) for value in (left, right))
+    if left == right:
+        return True
     difference = left - right
     if difference.has(*NEW_FUNCTIONS):
         _rewrite_budget(difference)
@@ -76,6 +140,16 @@ def elementary_equivalent(left, right):
         for transform in (sp.cancel, sp.trigsimp, sp.simplify):
             if transform(difference) == 0:
                 return True
+        # For nonzero bases, principal powers are exp(exponent*log(base)).
+        # This proves x^log(y) = y^log(x) without expanding a logarithm of a
+        # product or denesting a power. STACK also exponentializes its residual.
+        if (sp.count_ops(difference) <= 180 and any(
+                p.exp.has(sp.log) for p in difference.atoms(sp.Pow))):
+            rewritten = difference.rewrite(sp.exp)
+            if sp.count_ops(rewritten) <= 700:
+                _rewrite_budget(rewritten)
+                if sp.cancel(rewritten) == 0:
+                    return True
         # STACK assessment.mac calls rectform when a difference contains i.
         # Start with bounded numeric constants: expand_complex respects the
         # principal branches, without introducing re(x)/im(x) or assumptions

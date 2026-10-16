@@ -24,6 +24,15 @@ function caseElement(row) {
   body.append(U.outcomes(row.python?.desired,row.python,row.native,row.parity));
   const reason=row.python?.reason || row.compatibility?.reason;
   if(reason)body.append(node('p',reason,'case-explanation'));
+  if(row.discussion) {
+    const discussion=node('section',undefined,'case-discussion');
+    if(!reason)discussion.append(node('p',row.discussion.explanation));
+    discussion.append(node('p',row.discussion.evidence==='observed_behavior'
+      ? 'Evidence: observed fixture/native behavior and implementation; no case-specific upstream rationale located.'
+      : 'Evidence: upstream documentation gives relevant context; it does not fully specify this case’s domain.'));
+    discussion.append(node('p',`Question for STACK: ${row.discussion.question}`));
+    const sources=node('ul');for(const source of row.discussion.sources){const li=node('li');li.append(U.link(source.url,source.label));sources.append(li);}discussion.append(sources);body.append(discussion);
+  }
   if(row.test==='EqualComAss' && /AlgEquiv-true/.test(row.native?.answer_note || ''))body.append(node('p','STACK proves the values equivalent, but rejects their written forms under EqualComAss.'));
   const comparisons=node('div',undefined,'additional-badges');for(const key of extra)comparisons.append(U.badge(specs[key].name,specs[key].get(row)));body.append(comparisons);
   const raw=node('details',undefined,'technical-details');raw.append(node('summary','Raw observations and source'));
@@ -35,7 +44,10 @@ function initialize(data) {
   report=data;$('report-loading').hidden=true;$('report-root').hidden=false;
   const issues=report.summary.desired.known_defect||0;
   const overview=$('report-overview');
-  overview.append(node('strong',`${report.cases.length.toLocaleString()} source cases · ${issues} known port issues`));
+  const domain=report.cases.filter(r=>r.desired_status==='known_defect' && r.discussion?.category==='domain_review').length;
+  const proofs=report.cases.filter(r=>r.desired_status==='known_defect' && r.discussion?.category==='proof_limitation').length;
+  overview.append(node('strong',`${report.cases.length.toLocaleString()} source cases · ${issues} recorded differences or limitations`));
+  if(domain || proofs)overview.append(node('p',`${domain} domain/branch differences need an explicit contract with STACK; ${proofs} identities still lack a certified proof. Open each case for the explanation, counterexample where applicable, sources, and question for discussion.`));
   const outside=report.cases.filter(r=>r.desired_status==='out_of_contract');
   const missingTests=outside.filter(r=>specs.desired.get(r)==='port_test_unsupported').length;
   const missingInputs=outside.filter(r=>specs.desired.get(r)==='port_not_supported').length;

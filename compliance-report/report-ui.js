@@ -14,6 +14,8 @@ globalThis.ReportUI = (() => {
     boundary_pass: ['Expected input handling', 'neutral', 'The case was correctly refused or reported as invalid; it was not a successful mathematical comparison.'],
     known_defect: ['Known port issue', 'notice', 'The port differs from the expected behavior. This is a recorded limitation.'],
     known_port_defect: ['Known port issue', 'notice', 'The port and STACK differ because of a recorded port limitation.'],
+    domain_review: ['Domain/branch difference', 'notice', 'The engines use different assumptions or symbolic conventions. The intended contract needs discussion with STACK.'],
+    proof_limitation: ['Unproved identity', 'notice', 'The port cannot certify the desired identity; its required domain and exact proof need review.'],
     known_native_mathematical_failure: ['Known STACK issue', 'notice', 'A reviewed case where STACK differs from the expected behavior.'],
     known_port_limitation: ['Known applicability difference', 'notice', 'The final mark agrees, but the engines differ about whether the answer test applies.'],
     approved_difference: ['Documented difference', 'notice', 'The engines differ in a specifically reviewed way.'],
@@ -71,6 +73,7 @@ globalThis.ReportUI = (() => {
     return r.native.reason==='test_family_not_implemented' ? 'port_test_unsupported' : 'reference_preparation_not_run';
   };
   const portStatus = r => {
+    if(r.desired_status==='known_defect' && ['domain_review','proof_limitation'].includes(r.discussion?.category)) return r.discussion.category;
     if(r.desired_status!=='out_of_contract') return r.desired_status;
     if((r.python?.reason || '').startsWith('answer test ')) return 'port_test_unsupported';
     return r.python?.kind==='unsupported' ? 'port_not_supported' : 'port_input_error';
@@ -79,6 +82,7 @@ globalThis.ReportUI = (() => {
     // Name the port coverage gap first, even when the saved native field only
     // says "unavailable" or "not_compared". Reference execution is secondary.
     if(r.desired_status==='out_of_contract') return portStatus(r);
+    if(r[key]==='known_port_defect' && ['domain_review','proof_limitation'].includes(r.discussion?.category)) return r.discussion.category;
     return nativeStatus(r,key);
   };
   const specs = {
@@ -142,7 +146,7 @@ globalThis.ReportUI = (() => {
     'port-principal-root-control':'Negative-number root convention',
     'port-complex-root-form':'Equivalent complex values, different written forms',
     'port-complex-principal-root':'Complex fifth-root identity',
-    'port-division-form-limitation':'Division form: a known port issue',
+    'port-division-form-limitation':'Division preserves written sign placement',
     'port-probe-collision':'Matching samples do not prove equivalence',
     'port-singular-probe':'Numerical screening near a pole',
     'port-exact-not-tolerance':'Equivalence requires exact equality',
@@ -155,6 +159,8 @@ globalThis.ReportUI = (() => {
   const testHelp = name => ({AlgEquiv:'AlgEquiv checks equivalence.',EqualComAss:'EqualComAss checks equivalence and written form; equivalent values may still be rejected.',FacForm:'FacForm checks equivalence and factorized form.',SingleFrac:'SingleFrac checks equivalence and a single written fraction.',LowestTerms:'LowestTerms checks the written fraction’s form, not its value against the reference.',NumAbsolute:'NumAbsolute uses an absolute numerical tolerance.',NumRelative:'NumRelative uses a relative numerical tolerance.',NumDecPlaces:'NumDecPlaces checks the value and the written decimal places.'}[name] || `${name} is the source answer test.`);
   function conclusion(row, port=false) {
     const status=port ? row.python_status : row.desired_status;
+    if (status==='known_defect' && row.discussion?.category==='domain_review') return 'Recorded domain/branch difference: the port rejects an unconstrained identity that STACK accepts. This needs an explicit convention or assumption, not a blanket rewrite.';
+    if (status==='known_defect' && row.discussion?.category==='proof_limitation') return 'Unproved identity: the desired acceptance is not yet certified by the port. This is separate from an intentional convention difference.';
     if (row.native_status==='branch_convention_difference') return 'Known compatibility difference: the port rejects this equality using the principal complex fifth root. STACK accepts it using the negative real fifth root. The browser agrees with the port. This is a difference in root conventions.';
     if (status==='known_defect') return 'Known port issue: the port does not produce the expected answer-test result. Browser agreement does not resolve this limitation.';
     if (status==='boundary_pass') return row.expected?.kind==='unsupported' ? 'Expected boundary behavior: this syntax is intentionally unsupported. No mathematical answer was graded.' : 'Expected boundary behavior: the input is correctly reported as invalid. No mathematical answer was graded.';

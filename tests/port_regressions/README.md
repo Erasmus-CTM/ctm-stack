@@ -8,9 +8,9 @@ without presenting the new case as upstream-authored.
 
 The fixture pins syntax validity, CAS applicability, and the mathematical mark
 separately. Explicit unsupported/error cases are **boundary checks**, not
-mathematical compatibility passes. A remaining `EqualComAss` division-form
-defect has a case-specific observation pin: silently fixing it fails the check
-until its exception is removed. The negative-real fifth-root case separately
+mathematical compatibility passes. The resolved `EqualComAss` division-form
+case now asserts the desired rejection, with nearby native acceptance controls.
+The negative-real fifth-root case separately
 records Maxima's real-root convention versus SymPy's principal-complex power
 convention; it is not labeled a native mathematical failure.
 
@@ -46,3 +46,10 @@ content, signed/zero-divisor modulo, and reduction modulo a real multiple of
 pi. An integral `SingleFrac` control reproduces the native form behavior
 behind the AlgMap-8.10 upstream PRT authoring bug. Symbolic complex logarithms
 retain an explicit boundary until branch-aware proof machinery is available.
+
+Documented native semantics cases cover held reciprocal structure, sign context
+in `LowestTerms`, bounded literal binary64 arithmetic, the symbolic reciprocal
+square-root convention, and a principal logarithmic-power proof. These include
+nearby rejection controls and do not change the upstream fixture. See
+`compliance-report/semantics.qmd` for the exact scope, upstream motivations, and
+the remaining questions for the STACK author.
