@@ -21,6 +21,20 @@ LABELS = {
     "error": "Replay error",
 }
 
+# Keep the pinned imports and their compatibility baseline unchanged. Live
+# teaching cards may use an explicitly attributed correction instead.
+CORRECTIONS = {
+    "AlgMap-1-5.xml": "The worked explanation now uses multiplication in the exponent product rule, rather than the incorrect addition rule.",
+    "AlgMap-6-4.xml": "The worked explanation now states c^a · c^b = c^(a+b); the original incorrectly used addition.",
+    "AlgMap-2-5.xml": "A reduced answer with the wrong value can receive full credit. This defect belongs to the original response tree. The corrected card checks value equivalence before lowest-terms form and adds a wrong-value author test.",
+}
+
+
+def teaching_source(entry: dict) -> tuple[str, str]:
+    if entry["file"] in CORRECTIONS:
+        return f"questions/corrected/{entry['file']}", entry["question_name"] + " (corrected teaching copy)"
+    return f"questions/corpus/{entry['file']}", entry["question_name"]
+
 
 def generate() -> str:
     manifest = json.loads((CORPUS / "manifest.json").read_text(encoding="utf-8"))
@@ -60,7 +74,7 @@ def generate() -> str:
         "",
         "## Ready to try",
         "",
-        f"These {len(passing)} cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the original XML test cases on the displayed seed; the [baseline](questions/corpus/baseline.json) covers every recorded seed. Their source panels start closed and expose both the authored block and unchanged STACK XML.",
+        f"These {len(passing)} cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the card's XML tests on the displayed seed; the [baseline](questions/corpus/baseline.json) describes the unchanged imports. Three cards explicitly use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.",
         "",
     ]
     for entry in passing:
@@ -71,20 +85,22 @@ def generate() -> str:
             f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · {entry['input_count']} input{'s' if entry['input_count'] != 1 else ''} · {entry['qtest_count']} authored tests · baseline seeds {', '.join(f'`{s}`' for s in row['seeds'])}.",
             "",
         ]
-        if entry["file"] == "AlgMap-2-5.xml":
+        path, question_name = teaching_source(entry)
+        if entry["file"] in CORRECTIONS:
             out += [
-                "> **Upstream grading note:** This original response tree checks lowest-terms form without checking equivalence first. A reduced answer with the wrong value can receive full credit. The XML and its authored tests are unchanged.",
+                "> **Corrected teaching copy:** " + CORRECTIONS[entry["file"]] + " The original XML is preserved unchanged; this card and its source panels use the corrected copy linked below.",
                 "",
             ]
         out += [
             "```{.stack-question}",
-            f"#| file: questions/corpus/{entry['file']}",
-            f"#| question: {entry['question_name']}",
+            f"#| file: {path}",
+            f"#| question: {question_name}",
             f"#| seed: {row['seeds'][0]}",
             "#| review: true",
             "```",
             "",
             f"[Download original XML](questions/corpus/{entry['file']}) · [Pinned upstream source]({entry['source_url']})",
+            *([f"[Download the corrected teaching XML]({path})"] if entry["file"] in CORRECTIONS else []),
             "",
         ]
     out += [
