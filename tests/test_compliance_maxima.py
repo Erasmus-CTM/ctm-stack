@@ -39,9 +39,9 @@ class NativeMaximaTests(unittest.TestCase):
         fixture = json.loads((ROOT / "tests/native_compliance/fixtures.json").read_text())
         native.validate_cases(fixture["cases"])
         self.assertEqual(len(fixture["cases"]), 2303)
-        self.assertEqual(sum(native._unavailable(row) is None for row in fixture["cases"]), 837)
+        self.assertEqual(sum(native._unavailable(row) is None for row in fixture["cases"]), 839)
         self.assertEqual(native.scope_sha256(fixture["cases"]),
-                         "375e45aa5b73d1dd4d514807d583b6f3322b915f0c73b19a706339d27b237fd7")
+                         "984ba90d138f79eaf4d81bb33da115e82f03b92633940e1bac9756601f0e2bd9")
         self.assertEqual(native._unavailable(case(test="NumAbsolute", options="")), None)
         self.assertEqual(native._unavailable(case(test="NotImplemented")), "test_family_not_implemented")
         self.assertEqual(native._unavailable(case(student="")), "empty_answer_requires_php_controller")
@@ -58,7 +58,7 @@ class NativeMaximaTests(unittest.TestCase):
         self.assertEqual(native.prepare_logic(preserved), preserved)
         self.assertIn('eval_string("a=0 nounor b=0")',
                       native._call(case(student='a=0 or b=0', teacher='a*b=0')))
-        self.assertEqual(native.INPUT_PREPARATION, 'stack-logic-nouns-v1')
+        self.assertEqual(native.INPUT_PREPARATION, 'stack-logic-nouns-numeric-default-v2')
 
     def test_batch_arguments_simplification_raw_and_default(self):
         cases = [case(), case("2", "EqualComAss"), case("3", "FacForm", options="x"),
@@ -70,14 +70,29 @@ class NativeMaximaTests(unittest.TestCase):
         self.assertIn('ATAlgEquiv(eval_string("x+1"),eval_string("1+x"))', batch)
         self.assertIn('block([simp:true', batch)
         self.assertEqual(batch.count('block([simp:false'), 3)
-        self.assertIn('ATNumAbsolute(eval_string("x+1"),eval_string("1+x"),eval_string("0.05"))', batch)
-        self.assertIn('ATNumRelative(eval_string("x+1"),eval_string("1+x"),eval_string("0.1"))', batch)
+        self.assertIn('ATNumAbsolute(eval_string("x+1"),eval_string("1+x"),block(', batch)
+        self.assertIn('errcatch(parse_string("0.05"))', batch)
+        self.assertIn('ATNumRelative(eval_string("x+1"),eval_string("1+x"),block(', batch)
+        self.assertIn('errcatch(parse_string("0.1"))', batch)
         self.assertIn('ATNumDecPlaces(eval_string("1.200"),eval_string("1.2"),eval_string("3"),"1.200")', batch)
         self.assertIn('ATLowestTerms(eval_string("1/(1+i)"),eval_string("(1-i)/2"))',
                       native._call(case(test="LowestTerms", student="1/(1+i)", teacher="(1-i)/2")))
         self.assertIn('STACKNATIVE-BEGIN|7|6', batch)
         self.assertIn('STACKNATIVE-END|7|6', batch)
         self.assertIn('[\\\"error\\\",\\\"cas_evaluation\\\",null]', batch)
+
+    def test_numeric_option_fallback_catches_parsing_not_evaluation(self):
+        for test in ("NumAbsolute", "NumRelative"):
+            malformed = case(test=test, student="1", teacher="0", options="(x")
+            self.assertIsNone(native._unavailable(malformed))
+            call = native._call(malformed)
+            self.assertIn('errcatch(parse_string("(x"))', call)
+            self.assertIn('then 0.05 else eval_string("(x")', call)
+            self.assertNotIn('errcatch(eval_string', call)
+            self.assertIn('else eval_string("1/0")', native._call(case(test=test, options="1/0")))
+            self.assertIsNotNone(native._unavailable(case(test=test, options='(x;quit()$')))
+        self.assertEqual(native._unavailable(case(test="NumDecPlaces", options="(x")),
+                         "malformed_expression_requires_php_parser_options")
 
     def test_warmup_probe_is_separate_from_fixture_results(self):
         with tempfile.TemporaryDirectory() as directory:

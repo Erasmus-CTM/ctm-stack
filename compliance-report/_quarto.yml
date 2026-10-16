@@ -13,20 +13,24 @@ project:
     - report.css
 
 website:
-  title: "STACK SymPy · Test reports"
+  title: "STACK SymPy"
   navbar:
+    background: light
+    logo-href: ../
     left:
       - text: STACK compliance
         href: index.qmd
       - text: Port regressions
         href: port-regressions.qmd
-      - text: Back to example site
+    right:
+      - text: Back to examples
+        icon: arrow-left
         href: ../
 
 format:
   html:
     theme: cosmo
-    toc: true
+    toc: false
     css: report.css
     html-math-method: mathjax
 

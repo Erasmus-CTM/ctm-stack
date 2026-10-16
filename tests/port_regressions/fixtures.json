@@ -836,6 +836,226 @@
         },
         "reason": "Existing scalar form limitation; separate desired behavior from observed behavior."
       }
+    },
+    {
+      "id": "port-implies-equivalent",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "not(A) or B",
+      "teacher": "A implies B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 495
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true
+    },
+    {
+      "id": "port-implies-negative",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "not(A) and B",
+      "teacher": "A implies B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 496
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true
+    },
+    {
+      "id": "port-xor-expanded",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "(not A and B) or (not B and A)",
+      "teacher": "A xor B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 497
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true
+    },
+    {
+      "id": "port-xnor-expanded",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "(A and B) or (not A and not B)",
+      "teacher": "A xnor B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 498
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true
+    },
+    {
+      "id": "port-xor-xnor-contradiction",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "(A xor B) nounand (A xnor B)",
+      "teacher": "false",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 500
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true
+    },
+    {
+      "id": "port-relative-malformed-option",
+      "group": "numeric option defaults",
+      "test": "NumRelative",
+      "student": "1",
+      "teacher": "0",
+      "options": "(x",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 1697
+      },
+      "reason": "STACK controller replaces a syntactically invalid numerical tolerance with 0.05 before grading.",
+      "native_scope": true
+    },
+    {
+      "id": "port-absolute-malformed-option",
+      "group": "numeric option defaults",
+      "test": "NumAbsolute",
+      "student": "1",
+      "teacher": "0",
+      "options": "(x",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 1735
+      },
+      "reason": "STACK controller replaces a syntactically invalid numerical tolerance with 0.05 before grading.",
+      "native_scope": true
+    },
+    {
+      "id": "port-implies-converse",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "A implies B",
+      "teacher": "B implies A",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Implication is directional; its converse is not equivalent.",
+      "native_scope": true
+    },
+    {
+      "id": "port-xnor-three-operands",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "A xnor B xnor C",
+      "teacher": "A xor B xor C",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "STACK xnor chains use parity equivalence, not an all-operands-equal test.",
+      "native_scope": true
+    },
+    {
+      "id": "port-absolute-default-accept",
+      "group": "numeric option defaults",
+      "test": "NumAbsolute",
+      "student": "1.049",
+      "teacher": "1",
+      "options": "(x",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Malformed numerical options use 0.05 even when this accepts the answer.",
+      "native_scope": true
+    },
+    {
+      "id": "port-relative-default-accept",
+      "group": "numeric option defaults",
+      "test": "NumRelative",
+      "student": "1.049",
+      "teacher": "1",
+      "options": "(x",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Malformed numerical options use 0.05 even when this accepts the answer.",
+      "native_scope": true
     }
   ]
 }

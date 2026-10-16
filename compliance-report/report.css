@@ -1,4 +1,10 @@
 :root { --good-bg:#e6f2e8; --good-fg:#245b36; --notice-bg:#fff2cf; --notice-fg:#76530d; --bad-bg:#fce4e4; --bad-fg:#8d2b2b; --neutral-bg:#edf0f4; --neutral-fg:#465366; }
+#quarto-header .navbar { border-bottom:1px solid #dbe1e8; }
+#quarto-header .navbar-title { font-size:1.1rem; font-weight:650; }
+#quarto-header .nav-link { font-size:.95rem; }
+#title-block-header { margin:1.5rem 0; }
+#title-block-header .title { font-size:clamp(1.7rem,4vw,2.2rem); font-weight:650; }
+#title-block-header .subtitle { font-size:1rem; color:#586477; }
 .tone-good { background:var(--good-bg); color:var(--good-fg); }
 .tone-notice { background:var(--notice-bg); color:var(--notice-fg); }
 .tone-bad { background:var(--bad-bg); color:var(--bad-fg); }

@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from stack_sympy import InvalidAnswer, Unsupported, answer_test, evaluate, parse
 from stack_sympy.expressions import MAX_CHARS, _STUDENT_FUNCTIONS, is_logical
+from stack_sympy.assessment import numeric_option_source
 from stack_sympy.logic import validate_logic
 import sympy as sp
 import re
@@ -19,7 +20,7 @@ except ImportError:  # Loaded as a standalone module into the Pyodide filesystem
 
 _NUMERIC_TESTS = frozenset({"NumAbsolute", "NumRelative", "NumDecPlaces"})
 _NONSCALAR_NAMES = frozenset({"true", "false", "all", "none", "and", "or", "not",
-                              "xor", "xnor", "nounand", "inf", "infinity"})
+                              "xor", "xnor", "implies", "nounand", "inf", "infinity"})
 _CONSTANT_NAMES = frozenset({"pi", "%pi", "e", "E", "%e", "i", "I", "%i"})
 
 
@@ -100,6 +101,11 @@ def classify_case(case: dict) -> dict:
     option = case.get("options", "")
     if not isinstance(option, str):
         return {"kind": "invalid_option", "reason": "option must be a string"}
+    if name in {"NumAbsolute", "NumRelative"}:
+        try:
+            option = numeric_option_source(option)
+        except (InvalidAnswer, Unsupported):
+            pass  # Preserve the normal preflight classification below.
     if name == "FacForm" and not option.strip():
         return {"kind": "unsupported", "reason": "FacForm without explicit variable requires native variable inference"}
     if name == "NumDecPlaces" and not option.strip():
@@ -156,6 +162,8 @@ def evaluate_case(case: dict) -> dict:
         except Unsupported:
             raise
         name, option = case["test"], case.get("options", "")
+        if name in {"NumAbsolute", "NumRelative"}:
+            option = numeric_option_source(option)
         if option.strip() or name in {"NumAbsolute", "NumRelative"}:
             try:
                 value = evaluate(option or "0.05")
