@@ -21,10 +21,12 @@ website:
         text: Question corpus
       - href: docs/authoring.qmd
         text: Authoring guide
-      - href: compliance/
-        text: Native compliance
-      - href: compliance/port-regressions.html
-        text: Port regressions
+      - text: Compatibility
+        menu:
+          - href: compliance/
+            text: STACK compliance
+          - href: compliance/port-regressions.html
+            text: Port regressions
     right:
       - icon: github
         href: https://github.com/Erasmus-CTM/stack-sympy

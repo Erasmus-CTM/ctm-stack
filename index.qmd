@@ -1,13 +1,17 @@
 ---
-title: "Try a STACK question on a static page"
-subtitle: "Native question exports, evaluated with SymPy in your browser"
+title: "STACK questions with AI Feedback"
+subtitle: "Interactive practice on Quarto teaching pages"
 ---
 
-STACK SymPy reads an ordinary Moodle STACK XML export at build time. The Quarto page contains an interactive question card; a browser worker uses the same bounded Python question model to check each response. No Moodle session is needed to try these examples. The review buttons here show the authored question tests and their expected PRT outcomes.
+Bring selected Moodle STACK questions to a teaching website, with SymPy answer checking and **AI Feedback for guided hints and explanations**. Supported questions run in the learner's browser without a Moodle session, retaining their XML, response trees and authored question tests.
 
-## Expand and collect
+**Quarto** turns plain-text teaching material into web pages. This extension adds interactive STACK question cards to those pages, which you can publish as a static website.
 
-This question rewards an expanded polynomial. The input accepts omitted multiplication signs in forms such as `8x` and `2(x+1)`, and the preview displays the whole polynomial without extra grouping. A mathematically equivalent factored answer earns partial credit. Press **Validate answers** to inspect the parsed answer, then **Check answer** to grade it. Editing an answer requires validation again. Change the variant to see fresh coefficients. This preceding prose supplies automatic feedback context.
+## Try a question
+
+Expand and collect the polynomial below. An equivalent factored answer earns partial credit. Press **Validate answers** to inspect your expression, then **Check answer** to grade it. Change the variant to try fresh coefficients.
+
+**AI Feedback** adds guided hints and explanations alongside the question's deterministic grading. Open its panel for help as you work. The review controls let STACK authors inspect the question's own tests.
 
 ```{.stack-question}
 #| file: questions/polynomial-expansion.xml
@@ -20,19 +24,26 @@ This question rewards an expanded polynomial. The input accepts omitted multipli
 
 [Download the native STACK XML](questions/polynomial-expansion.xml) · [See the other examples](examples.qmd)
 
-## How to use it in your own page
+## What is supported?
 
-Put the XML in your project, install the STACK SymPy and shared AI Feedback extensions, add `filters: [stack-sympy]` to `_quarto.yml`, and point a code block at one named question:
+This is a bounded port of STACK, with **scalar algebraic and numerical inputs** and eight answer tests:
 
-````text
-```{.stack-question}
-#| file: questions/polynomial-expansion.xml
-#| question: Expand a product (form-sensitive)
-#| variants: 3
-#| seed: 17
-#| review: true
-#| feedback: true
-```
-````
+`AlgEquiv`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, and `NumDecPlaces`.
 
-Render with `quarto render`, then serve the output over HTTP. The [authoring guide](docs/authoring.qmd) explains the XML subset, diagnostics, grading, and the test command. The [README](https://github.com/Erasmus-CTM/stack-sympy#readme) has installation and development instructions.
+`AlgEquiv` also handles supported Boolean expressions and polynomial equations. General set, list, matrix and units inputs, arbitrary Maxima code, and the full Moodle assessment workflow are outside the current scope. See the [precise support limits](docs/authoring.qmd#what-the-adapter-checks) before adapting a question.
+
+## Use your own question
+
+1. Export a supported question from Moodle as STACK XML.
+2. Add STACK SymPy and AI Feedback to a Quarto project, then embed the named question in a page.
+3. Render the project and publish the resulting website.
+
+The [authoring guide](docs/authoring.qmd) has the installation steps, embedding example and AI Feedback setup. It also explains how to replay your authored tests and inspect unsupported features.
+
+## Explore the port
+
+- [Worked examples](examples.qmd): grading different answer forms and using feedback.
+- [Question corpus](corpus.qmd): imported STACK questions, replay results and known authoring issues.
+- [STACK compliance](compliance/): comparisons with upstream answer-test cases.
+- [Port regressions](compliance/port-regressions.html): focused checks for discoveries made during the port.
+- [Source and development guide](https://github.com/Erasmus-CTM/stack-sympy#readme): installation details and implementation notes.

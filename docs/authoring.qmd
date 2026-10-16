@@ -4,6 +4,21 @@ title: "Authoring and support"
 
 ## Start with a native export
 
+Install STACK SymPy and AI Feedback in your Quarto project, and install SymPy in the Python environment Quarto uses:
+
+```bash
+quarto add Erasmus-CTM/stack-sympy
+quarto add Erasmus-CTM/ai-feedback
+python -m pip install 'sympy==1.13.3'
+```
+
+Add the question filter to `_quarto.yml`:
+
+```yaml
+filters:
+  - stack-sympy
+```
+
 Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<question type="stack">`. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a `stack-question` block at its XML path and exact `<name><text>…</text></name>`. The filter embeds a selected question and precomputes the requested variants when Quarto renders. The original XML remains the source of truth and can be imported back into Moodle.
 
 ```{.stack-question}
@@ -14,6 +29,8 @@ Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<quest
 #| review: true
 #| feedback: true
 ```
+
+Run `quarto render`, then serve the generated site over HTTP. The [README](https://github.com/Erasmus-CTM/stack-sympy#install-in-a-quarto-project) also covers local development setup.
 
 The learner submits in two steps: **Validate answers** parses the current fields and displays the expression form (for example, `x+x` rather than a simplified `2*x`), then **Check answer** grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading. The polynomial example sets `<insertstars>1</insertstars>`, so `x**2+8x+15` previews as one sum and receives full credit in its first variant.
 
