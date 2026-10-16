@@ -93,3 +93,21 @@ Visible measurement context for the explicit-context activity.
 #| seed: 17
 #| review: true
 ```
+
+## Nested collections and written form
+
+```{#nested-collections .stack-question}
+#| file: questions/nested-collections.xml
+#| question: Nested finite collections
+#| seed: 17
+#| review: true
+```
+
+## Finite author helpers
+
+```{#finite-author-helpers .stack-question}
+#| file: questions/finite-author-helpers.xml
+#| question: Finite author helpers
+#| seed: 17
+#| review: true
+```

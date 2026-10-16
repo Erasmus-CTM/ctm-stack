@@ -29,6 +29,8 @@ MAX_DEPTH = 40
 MAX_POWER = 100
 MAX_DIGITS = 100
 MAX_COLLECTION_ITEMS = 32
+MAX_COLLECTION_DEPTH = 6
+MAX_COLLECTION_NODES = 128
 _LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(?P<name>%?[A-Za-z_][A-Za-z_0-9]*)|(?P<op>\*\*|\+\-|[=+*/^(),{}\[\]-]))", re.ASCII)
 _NAMES = {"pi": sp.pi, "%pi": sp.pi, "Pi": sp.pi, "PI": sp.pi,
           "e": sp.E, "E": sp.E, "%e": sp.E,
@@ -48,7 +50,8 @@ LOGIC_OPERATORS = {"and": "and", "or": "or", "not": "not",
 LOGIC_PRECEDENCE = {"xor": 0, "xnor": 0, "implies": 1, "or": 2, "and": 4, "not": 5}
 LOGIC_LATEX = {"and": r" \land ", "or": r" \lor ", "implies": r" \rightarrow ",
                "xor": r" \oplus ", "xnor": r" \leftrightarrow "}
-_AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "lcm", "num", "denom", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
+AUTHOR_COLLECTION_FUNCTIONS = frozenset({"set", "setify", "listify", "union", "intersection", "setdifference", "member", "subsetp", "cardinality"})
+_AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | AUTHOR_COLLECTION_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "lcm", "num", "denom", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
 
 
 @dataclass(frozen=True)
@@ -58,12 +61,33 @@ class Node:
     children: tuple["Node", ...] = ()
 
 
+def _immutable_member(value):
+    return HeldList(*value) if isinstance(value, list) else value
+
+
+class HeldList(sp.Basic):
+    """Hashable list member inside a set; author Python lists remain available."""
+    def __new__(cls, *items):
+        validate_collection(list(items))
+        return sp.Basic.__new__(cls, *(_immutable_member(x) for x in items))
+
+    def _sympystr(self, printer):
+        return "[" + ",".join(printer.doprint(x) for x in self.args) + "]"
+
+    def _latex(self, printer):
+        return r"\left[" + ", ".join(printer.doprint(x) for x in self.args) + r"\right]"
+
+
 class HeldSet(sp.Basic):
     """Finite set syntax, retaining repetitions until answer-test dispatch.
 
     SymPy FiniteSet eagerly removes duplicates. STACK's Sets test needs the
     original entries to explain repetitions, even when the answer is correct.
     """
+    def __new__(cls, *items):
+        validate_collection(list(items))
+        return sp.Basic.__new__(cls, *(_immutable_member(x) for x in items))
+
     def _sympystr(self, printer):
         return "{" + ",".join(printer.doprint(x) for x in self.args) + "}"
 
@@ -72,27 +96,43 @@ class HeldSet(sp.Basic):
 
 
 def is_collection(value):
-    return isinstance(value, (list, HeldSet))
+    return isinstance(value, (list, HeldList, HeldSet))
+
+
+def collection_kind(value):
+    return "set" if isinstance(value, HeldSet) else "list" if isinstance(value, (list, HeldList)) else "scalar"
 
 
 def collection_items(value):
-    return value.args if isinstance(value, HeldSet) else value
+    return value.args if isinstance(value, (HeldList, HeldSet)) else value
 
 
 def validate_collection(value):
-    """The public input/answer boundary: flat, bounded, finite scalars only.
+    """The public input/answer boundary: bounded finite scalar collection trees.
 
     Author lists used by rand/index remain available outside this boundary.
     """
     if not is_collection(value):
         return
-    items = collection_items(value)
-    if len(items) > MAX_COLLECTION_ITEMS:
-        raise Unsupported(f"Collections support at most {MAX_COLLECTION_ITEMS} entries")
-    if any(not isinstance(x, sp.Expr) for x in items):
-        raise Unsupported("Collections must be flat and contain only scalar expressions")
-    for item in items:
-        _finite(item)
+    count = 0
+    def visit(item, depth):
+        nonlocal count
+        count += 1
+        if count > MAX_COLLECTION_NODES:
+            raise Unsupported(f"Collection trees support at most {MAX_COLLECTION_NODES} nodes")
+        if is_collection(item):
+            if depth > MAX_COLLECTION_DEPTH:
+                raise Unsupported(f"Collections support at most {MAX_COLLECTION_DEPTH} levels")
+            children = collection_items(item)
+            if len(children) > MAX_COLLECTION_ITEMS:
+                raise Unsupported(f"Collections support at most {MAX_COLLECTION_ITEMS} entries per container")
+            for child in children:
+                visit(child, depth + 1)
+        elif not isinstance(item, sp.Expr):
+            raise Unsupported("Collection leaves must be scalar expressions")
+        else:
+            _finite(item)
+    visit(value, 1)
 
 
 def symbolic_complex_log(node: Node) -> bool:
@@ -451,17 +491,45 @@ def _decimal_round(value: sp.Expr, digits: int, *, significant: bool = False):
         return sp.Rational(str(rounded))
 
 
+def contains_decimal(node: Node):
+    return (node.kind == "number" and ("." in node.value or "e" in node.value.lower())
+            or any(contains_decimal(child) for child in node.children))
+
+
+def decimal_set(node: Node):
+    """Decimals below a set need native float provenance we do not hold."""
+    return (node.kind == "set" and contains_decimal(node)
+            or any(decimal_set(child) for child in node.children))
+
+
+def transformed_decimal_collection(node: Node):
+    """Only literal constant arithmetic carries per-leaf binary64 provenance."""
+    if not contains_decimal(node):
+        return False
+    if node.kind in {"list", "set"}:
+        from .equivalence import constant_float_equivalent
+        return any(transformed_decimal_collection(child) if child.kind in {"list", "set"}
+                   else contains_decimal(child) and constant_float_equivalent(child, child) is None
+                   for child in node.children)
+    def collection(tree):
+        return tree.kind in {"list", "set"} or any(collection(child) for child in tree.children)
+    return collection(node)
+
+
 def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *, rng: random.Random | None = None,
              assumptions: Mapping[str, bool] | None = None, student: bool = False, simplify: bool = True):
     """Evaluate a parsed expression with a small explicit function whitelist.
 
     Student calls are limited to elementary scalar functions; random values,
     CAS transformations and indexing are author-only. Student collections
-    contain at most 32 scalar expressions, with no nesting.
+    have bounded depth, size, and scalar leaves.
     """
     node = parse(node_or_string) if isinstance(node_or_string, str) else node_or_string
     if not isinstance(node, Node):
         raise Unsupported("Expected a parsed expression")
+    if decimal_set(node):
+        error = InvalidAnswer if student else Unsupported
+        raise error("Decimal literals inside sets are unsupported; use exact fractions")
     env = {} if env is None else env
     assumptions = assumptions or {}
     rng = rng if rng is not None else random.Random()
@@ -507,9 +575,9 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                 raise InvalidAnswer("Only scalar student answers are supported")
             seq = visit(n.children[0], depth + 1)
             idx = _integer(visit(n.children[1], depth + 1), lower=1)
-            if not isinstance(seq, list) or idx > len(seq):
+            if not isinstance(seq, (list, HeldList)) or idx > len(collection_items(seq)):
                 raise Unsupported("Index outside list")
-            return seq[idx - 1]
+            return collection_items(seq)[idx - 1]
         if n.kind == "unary":
             value = visit(n.children[0], depth + 1)
             if not isinstance(value, sp.Expr):
@@ -540,6 +608,15 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                 raise InvalidAnswer(f"Function {name} is not allowed in student input")
             if symbolic_complex_log(n):
                 raise Unsupported("Symbolic complex logarithms require branch-aware proof")
+            if name in AUTHOR_COLLECTION_FUNCTIONS:
+                if not simplify:
+                    raise Unsupported("Finite collection helpers require simplification")
+                def decimal(tree):
+                    return (tree.kind == "number" and ("." in tree.value or "e" in tree.value.lower())) or any(decimal(c) for c in tree.children)
+                if decimal(n):
+                    raise Unsupported("Finite collection helpers require exact fractions rather than decimal literals")
+                from .collection_ops import collection_operation
+                return collection_operation(name, [visit(c, depth + 1) for c in n.children])
             if name == "ev":
                 if len(n.children) not in (1, 2) or (
                         len(n.children) == 2 and n.children[1] != Node("name", "simp")):
@@ -602,6 +679,9 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
         raise Unsupported("Unknown expression node")
 
     result = _finite(visit(node))
+    if is_collection(result) and transformed_decimal_collection(node):
+        error = InvalidAnswer if student else Unsupported
+        raise error("Nonliteral decimal collections lose literal precision; use exact fractions")
     if student:
         validate_collection(result)
     return result
@@ -639,6 +719,10 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
     env = env or {}
 
     def from_sympy(value):
+        if is_collection(value):
+            kind = collection_kind(value)
+            terms = [from_sympy(x) for x in collection_items(value)]
+            return (kind, tuple(sorted(terms, key=repr) if kind == "set" else terms))
         if value.is_Number:
             return ("number", str(sp.Rational(str(value))))
         if value.is_Symbol:
@@ -688,6 +772,9 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
         return ("reciprocal", term)
 
     def visit(n):
+        if n.kind in {"list", "set"}:
+            terms = [visit(x) for x in n.children]
+            return (n.kind, tuple(sorted(terms, key=repr) if n.kind == "set" else terms))
         if n.kind == "number":
             if "." in n.value or "e" in n.value.lower():
                 return ("decimal", n.value)
@@ -695,7 +782,7 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
         if n.kind == "name":
             if n.value in env:
                 value = env[n.value]
-                if not isinstance(value, sp.Basic):
+                if not isinstance(value, sp.Basic) and not is_collection(value):
                     raise Unsupported("EqualComAss supports scalar values")
                 return from_sympy(value)
             if n.value in _NAMES:

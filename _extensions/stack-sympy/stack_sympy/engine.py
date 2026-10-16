@@ -13,7 +13,10 @@ import sympy as sp
 from .assessment import answer_test
 from .expressions import InvalidAnswer, Node, Unsupported, assignments, canonical_form, evaluate, form_latex, parse
 from .importer import UnsupportedQuestion
-from .expressions import is_logical, is_collection, validate_collection, collection_items
+from .expressions import (is_logical, is_collection, validate_collection, collection_items,
+                          AUTHOR_COLLECTION_FUNCTIONS, SCALAR_FUNCTIONS, FUNCTION_ALIASES,
+                          decimal_set, contains_decimal, transformed_decimal_collection)
+from .collections import normalized_value, same_type
 from .logic import validate_logic
 from .rendering import render_castext
 
@@ -67,6 +70,21 @@ def _validate_references(question, definitions):
         future.remove(key)
 
 
+def _decimal_source(source, definitions):
+    pending, seen = [source], set()
+    while pending:
+        current = pending.pop()
+        if current in seen:
+            continue
+        seen.add(current)
+        tree = parse(current)
+        if contains_decimal(tree):
+            return True
+        pending.extend(definitions[n.value] for n in _walk(tree)
+                       if n.kind == "name" and n.value in definitions)
+    return False
+
+
 def _render(question, field, env, inputs, prts):
     return render_castext(question.get(field, ""), env, question["name"], field, inputs=inputs, feedback=prts,
                            assumptions=_assumptions(question),
@@ -82,28 +100,59 @@ def instantiate(question: dict, seed: int = 1) -> dict:
         definitions = _definitions(question)
         _validate_references(question, definitions)
         env = assignments(question.get("variables", ""), rng=random.Random(int(seed)), assumptions=assumptions)
+        if question.get("simplify", True):
+            # Author values were already simplified in native questionvariables.
+            # Keep repetitions only for held author forms and submitted answers.
+            env = {key: normalized_value(value) if is_collection(value) else value for key, value in env.items()}
+        elif any(_collection_helper(parse(source)) for source in definitions.values()):
+            raise UnsupportedQuestion(name, "questionvariables", "Finite collection helpers require questionsimplify=1")
         def has_float(value):
             return (any(has_float(x) for x in collection_items(value)) if is_collection(value)
                     else isinstance(value, sp.Basic) and value.has(sp.Float))
         if any(has_float(value) for value in env.values()):
             raise UnsupportedQuestion(name, "questionvariables", "floating-point variables are unsupported in frozen variants")
-        def decimal_definition(key):
-            pending, seen = [key], set()
-            while pending:
-                current = pending.pop()
-                if current in seen:
-                    continue
-                seen.add(current)
-                for n in _walk(parse(definitions[current])):
-                    if n.kind == "number" and ("." in n.value or "e" in n.value.lower()):
-                        return True
-                    if n.kind == "name" and n.value in definitions:
-                        pending.append(n.value)
-            return False
+        def decimal_source(source):
+            return _decimal_source(source, definitions)
         for key, value in env.items():
-            if is_collection(value) and decimal_definition(key):
+            if (is_collection(value) or _collection_helper(parse(definitions[key]))) and decimal_source(definitions[key]):
                 raise UnsupportedQuestion(name, f"questionvariables[{key}]",
                                           "decimal collection variables cannot preserve literal precision when frozen; use exact fractions")
+        def precision_guard(source, where, dynamic=()):
+            tree = parse(source)
+            if transformed_decimal_collection(tree):
+                raise UnsupportedQuestion(name, where, "Nonliteral decimal collections lose literal precision; use exact fractions")
+            if decimal_set(tree) or _collection_helper(tree) and contains_decimal(tree):
+                raise UnsupportedQuestion(name, where, "Decimal literals in sets/helpers are unsupported; use exact fractions")
+            nodes = list(_walk(tree))
+            constructed = any(n.kind in {"list", "set"} or n.kind == "call" and n.value in AUTHOR_COLLECTION_FUNCTIONS for n in nodes)
+            collection = constructed or any(n.kind == "name" and is_collection(env.get(n.value)) for n in nodes)
+            if collection and any(n.kind == "name" and n.value in definitions and decimal_source(definitions[n.value]) for n in nodes):
+                raise UnsupportedQuestion(name, where, "Decimal aliases in collections/helpers cannot preserve literal precision; use exact fractions")
+            if constructed and any(n.kind == "name" and n.value in dynamic for n in nodes):
+                raise UnsupportedQuestion(name, where, "Collections/helpers derived from learner inputs must be frozen in simplified questionvariables")
+        for inp in question["inputs"]:
+            for field in ("teacher", "syntaxhint"):
+                if inp[field]:
+                    precision_guard(inp[field], f"input[{inp['name']}]/{field}")
+        for test in question.get("qtests", []):
+            for source in test["inputs"].values():
+                precision_guard(source, f"qtest[{test['testcase']}]")
+        for prt in question["prts"]:
+            dynamic = {inp["name"] for inp in question["inputs"]}
+            for statement in re.split(r"[;\n]+", prt["feedbackvariables"]):
+                if ":" in statement:
+                    key, source = statement.split(":", 1)
+                    precision_guard(source, f"prt[{prt['name']}]/feedbackvariables", dynamic)
+                    dynamic.add(key.strip())
+            for node in prt["nodes"]:
+                for field in ("student", "teacher"):
+                    precision_guard(node[field], f"prt[{prt['name']}]/node[{node['name']}]/{field}", dynamic)
+                for branch in ("true", "false"):
+                    for source in re.findall(r"\{@(.*?)@\}", node[branch]["feedback"], re.S):
+                        precision_guard(source, f"prt[{prt['name']}]/feedback", dynamic)
+        for field in ("questiontext", "generalfeedback", "specificfeedback", "questionnote"):
+            for source in re.findall(r"\{@(.*?)@\}", question.get(field, ""), re.S):
+                precision_guard(source, field)
         if not question.get("simplify", True):
             for prt in question["prts"]:
                 for node in prt["nodes"]:
@@ -112,18 +161,38 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                     where = f"prt[{prt['name']}]/node[{node['name']}]/tans"
                     if prt["feedbackvariables"].strip():
                         raise UnsupportedQuestion(name, where, "EqualComAss with unsimplified feedback variables is unsupported")
-                    for key in set(re.findall(r"\b[A-Za-z_]\w*\b", node["teacher"])) & definitions.keys():
+                    # A direct qtest alias is reconstructed from its definition
+                    # by _qtest_answer. Its dependencies must still retain form.
+                    qtest_sources = [test["inputs"][node["student"]].strip()
+                                     for test in question.get("qtests", []) if node["student"] in test["inputs"]]
+                    sources = [node["teacher"]] + [definitions.get(source, source) for source in qtest_sources]
+                    transformations = {"factor", "ev", "expand", "ratsimp", "cancel"}
+                    collection_form = is_collection(evaluate(node["teacher"], env, assumptions=assumptions))
+                    pending, seen = [], set()
+                    for source in sources:
+                        tree = parse(source)
+                        if tree.kind == "call" and tree.value in transformations:
+                            continue
+                        pending.extend(n.value for n in _walk(tree) if n.kind == "name" and n.value in definitions)
+                    while pending:
+                        key = pending.pop()
+                        if key in seen:
+                            continue
+                        seen.add(key)
                         original = definitions[key]
                         value = env[key]
-                        if re.search(r"\b(?:factor|ev|expand|ratsimp|cancel)\s*\(", original):
+                        tree = parse(original)
+                        if (tree.kind == "call" and tree.value in transformations
+                                or not collection_form and re.search(r"\b(?:factor|ev|expand|ratsimp|cancel)\s*\(", original)):
                             # Explicit CAS transformations produce the frozen
                             # value; the assignment's input syntax is not its
                             # answer syntax under simp:false.
                             continue
                         if "rand(" in original or "rand_with_step(" in original:
-                            if not value.is_number:
+                            if getattr(value, "is_number", False) is not True:
                                 raise UnsupportedQuestion(name, where, "random symbolic answer form cannot be frozen")
                             continue
+                        pending.extend(n.value for n in _walk(tree) if n.kind == "name" and n.value in definitions)
                         try:
                             original_form = canonical_form(original, env, assumptions)
                             frozen_form = canonical_form(_source(value), assumptions=assumptions)
@@ -137,32 +206,54 @@ def instantiate(question: dict, seed: int = 1) -> dict:
             where = f"input[{inp['name']}]"
             try:
                 teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
+                validate_collection(teacher)
+                if not question.get("simplify", True) and _collection_helper(parse(inp["teacher"])):
+                    raise Unsupported("Finite collection helpers require questionsimplify=1")
             except (InvalidAnswer, Unsupported) as exc:
                 raise UnsupportedQuestion(name, where + "/tans", str(exc)) from exc
-            validate_collection(teacher)
             if is_logical(teacher):
                 validate_logic(teacher)
             if inp["type"] == "numerical" and getattr(teacher, "is_number", None) is not True:
                 raise UnsupportedQuestion(name, where + "/tans", "numerical answer requires a number")
             if inp["syntaxhint"]:
+                if not question.get("simplify", True) and _collection_helper(parse(inp["syntaxhint"])):
+                    raise UnsupportedQuestion(name, where + "/syntaxhint", "Finite collection helpers require questionsimplify=1")
                 evaluate(inp["syntaxhint"], env, assumptions=assumptions)
+        if not question.get("simplify", True):
+            for test in question.get("qtests", []):
+                if any(_collection_helper(parse(source)) for source in test["inputs"].values()):
+                    raise UnsupportedQuestion(name, f"qtest[{test['testcase']}]", "Finite collection helpers require questionsimplify=1")
         for prt in question["prts"]:
             placeholders = {n: evaluate(i["teacher"], env, assumptions=assumptions) for n, i in inputmap.items()}
             preview_env = {**env, **placeholders}
+            dynamic = set(inputmap) | {statement.split(":", 1)[0].strip()
+                                       for statement in re.split(r"[;\n]+", prt["feedbackvariables"]) if ":" in statement}
             if prt["feedbackvariables"].strip():
+                if any(_collection_helper(parse(source)) for source in _feedback_definitions(prt["feedbackvariables"])):
+                    raise UnsupportedQuestion(name, f"prt[{prt['name']}]/feedbackvariables", "Finite collection helpers must be frozen in simplified questionvariables")
                 # Names can depend on student inputs. Syntax is checked at grade time.
                 preview_env = assignments(prt["feedbackvariables"], preview_env, assumptions=assumptions)
             for node in prt["nodes"]:
                 where = f"prt[{prt['name']}]/node[{node['name']}]"
+                if (not question.get("simplify", True)
+                        and any(_collection_helper(parse(node[field])) for field in ("student", "teacher"))):
+                    raise UnsupportedQuestion(name, where, "Finite collection helpers require questionsimplify=1")
+                if (node["test"] not in {"AlgEquiv", "SameType"}
+                        and any(_collection_helper(parse(node[field])) for field in ("student", "teacher"))):
+                    raise UnsupportedQuestion(name, where, "Direct finite helper calls require AlgEquiv or SameType; use a frozen evaluated author value")
                 # Use actual typed teacher placeholders so collection arithmetic
                 # and unsupported tests are rejected while building the question.
                 student_value = evaluate(node["student"], preview_env, assumptions=assumptions)
                 teacher_value = evaluate(node["teacher"], preview_env, assumptions=assumptions)
+                for field, value in (("student", student_value), ("teacher", teacher_value)):
+                    if (is_collection(value) and any(n.kind == "name" and n.value in dynamic for n in _walk(parse(node[field])))
+                            and not (field == "student" and node[field].strip() in inputmap)):
+                        raise UnsupportedQuestion(name, where, "Collection checks require a direct learner input name to preserve literal precision; teacher collections must use frozen author values")
                 for value in (student_value, teacher_value):
                     validate_collection(value)
                 if (any(is_collection(x) for x in (student_value, teacher_value))
-                        and node["test"] not in {"AlgEquiv", "Sets"}):
-                    raise UnsupportedQuestion(name, where, "Collections require AlgEquiv or Sets")
+                        and node["test"] not in {"AlgEquiv", "Sets", "SameType", "EqualComAss"}):
+                    raise UnsupportedQuestion(name, where, "Collections require AlgEquiv, Sets, SameType or EqualComAss")
                 if is_logical(teacher_value):
                     validate_logic(teacher_value)
                     if node["test"] != "AlgEquiv":
@@ -202,7 +293,7 @@ def instantiate(question: dict, seed: int = 1) -> dict:
         raise UnsupportedQuestion(name, "instantiation", str(exc)) from exc
 
 
-def _input_validation(inp, raw, env, assumptions):
+def _input_validation(inp, raw, env, assumptions, question=None):
     raw = str(raw or "").strip()
     if not raw:
         return {"valid": False, "latex": "", "feedback": "Enter an answer"}, None, None
@@ -227,9 +318,14 @@ def _input_validation(inp, raw, env, assumptions):
         evaluate(tree, env, assumptions=assumptions, student=True, simplify=False)
         value = evaluate(tree, env, assumptions=assumptions, student=True)
         validate_collection(value)
+        if question is not None and is_collection(value):
+            definitions = _definitions(question)
+            if any(n.kind == "name" and n.value in definitions and _decimal_source(definitions[n.value], definitions)
+                   for n in _walk(tree)):
+                raise InvalidAnswer("Decimal author aliases in collection answers lose literal precision; use exact fractions")
         if inp.get("checkanswertype"):
             teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
-            if (is_collection(value) or is_collection(teacher)) and type(value) is not type(teacher):
+            if (is_collection(value) or is_collection(teacher)) and not same_type(value, teacher):
                 raise InvalidAnswer("Use the same collection type as the teacher answer")
         if is_logical(value):
             validate_logic(value)
@@ -244,6 +340,16 @@ def _walk(node):
     yield node
     for child in node.children:
         yield from _walk(child)
+
+
+def _collection_helper(tree):
+    return any(n.kind == "call" and n.value in AUTHOR_COLLECTION_FUNCTIONS for n in _walk(tree))
+
+
+def _feedback_definitions(source):
+    # Syntax remains validated by assignments; this only screens helper calls.
+    return [statement.split(":", 1)[1] for statement in re.split(r"[;\n]+", source)
+            if ":" in statement]
 
 
 def _branch_score(current, branch):
@@ -266,6 +372,8 @@ def _qtest_answer(question, expression, env, *, preserve_form=False):
     expression = expression.strip()
     definitions = _definitions(question)
     source = definitions.get(expression, expression)
+    if not question.get("simplify", True) and _collection_helper(parse(source)):
+        raise Unsupported("Finite collection helpers require questionsimplify=1")
     display = re.fullmatch(r"(?:dispdp|displaydp|decimalplaces)\s*\((.*),\s*(\d+)\s*\)", source.strip(), re.S)
     if display:
         digits = int(display.group(2))
@@ -278,6 +386,9 @@ def _qtest_answer(question, expression, env, *, preserve_form=False):
             return format(decimal.quantize(Decimal(1).scaleb(-digits), rounding=ROUND_HALF_EVEN), f".{digits}f")
     if re.fullmatch(r"[+-]?(?:\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?", source.strip()):
         return source.strip()
+    tree = parse(source)
+    if tree.kind == "list" and contains_decimal(tree):
+        return _author_form(source, env, _assumptions(question))
     if preserve_form:
         if expression in env:
             text = (_source(env[expression]) if ((question.get("simplify", True)
@@ -305,6 +416,8 @@ def _author_form(source, env, assumptions):
         if n.kind == "binary":
             return f"({render(n.children[0])}{'^' if n.value == '**' else n.value}{render(n.children[1])})"
         if n.kind == "call":
+            if n.value in SCALAR_FUNCTIONS or n.value in FUNCTION_ALIASES:
+                return n.value + "(" + ",".join(render(c) for c in n.children) + ")"
             if n.value == "factor" and len(n.children) == 1:
                 value = evaluate(n.children[0], env, assumptions=assumptions)
                 if value.is_Integer and value > 1:
@@ -356,7 +469,7 @@ def validate(question: dict, answers: Mapping[str, str], seed: int = 1, *, varia
     """Preview each parsed answer; no PRT, score or correctness is evaluated."""
     variant = instantiate(question, seed) if variant is None else variant
     env = _environment(question, variant)
-    inputs = {inp["name"]: _input_validation(inp, answers.get(inp["name"], ""), env, _assumptions(question))[0]
+    inputs = {inp["name"]: _input_validation(inp, answers.get(inp["name"], ""), env, _assumptions(question), question)[0]
               for inp in question["inputs"]}
     valid = all(result["valid"] for result in inputs.values())
     return {"status": "valid" if valid else "invalid", "inputs": inputs,
@@ -373,7 +486,7 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
     student_trees = {}
     for inp in question["inputs"]:
         key = inp["name"]
-        result, value, tree = _input_validation(inp, answers.get(key, ""), env, assumptions)
+        result, value, tree = _input_validation(inp, answers.get(key, ""), env, assumptions, question)
         input_results[key] = result
         if result["valid"]:
             student_values[key] = value

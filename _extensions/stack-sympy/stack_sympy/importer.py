@@ -13,7 +13,7 @@ from xml.etree import ElementTree as ET
 
 
 NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
-TESTS = {"AlgEquiv", "Sets", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
+TESTS = {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
          "NumAbsolute", "NumRelative", "NumDecPlaces"}
 INPUT_TYPES = {"algebraic", "numerical"}
 

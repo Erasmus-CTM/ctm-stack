@@ -59,3 +59,10 @@ binary64 behavior, unordered sets and repetitions, detailed `Sets` feedback,
 structural set normalization, type applicability, and flat/scalar/size boundaries.
 The unchanged legacy rows separately expose the radical normalization difference
 in row 212; it is not counted as a mathematical or native pass.
+
+Nested controls compare recursive list values, lists inside sets, inner-set
+normalization and outer duplicate feedback, SameType applicability (including
+length mismatches), held collection EqualComAss and finite author helpers.
+Former nesting boundaries now assert explicit supported type mismatches.
+Depth, total-tree size, scalar-leaf, helper arity/type, ordering and learner-call
+boundaries remain separate from mathematical passes.

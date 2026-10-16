@@ -1,4 +1,4 @@
-"""A conservative scalar subset of STACK answer tests.
+"""A conservative scalar and finite-collection subset of STACK answer tests.
 
 No numerical sampling is used to declare symbolic equivalence. Unsupported
 answer tests raise Unsupported, whereas malformed student answers return an
@@ -14,7 +14,8 @@ from typing import Any, Mapping
 import sympy as sp
 
 from .expressions import (InvalidAnswer, Node, Unsupported, canonical_form, evaluate,
-                          parse, is_logical, is_collection, validate_collection)
+                          parse, is_logical, is_collection, validate_collection,
+                          AUTHOR_COLLECTION_FUNCTIONS)
 
 MAX_DECIMAL_PLACES = 50
 
@@ -78,6 +79,39 @@ def _equiv(student, teacher):
     if not isinstance(student, sp.Expr) or not isinstance(teacher, sp.Expr):
         raise InvalidAnswer("Only scalar or logical answers are supported")
     return elementary_equivalent(student, teacher)
+
+
+def _algebraic(student, teacher, student_ast=None, teacher_ast=None, *, collection_leaf=False):
+    """Recursive AlgEquiv retaining literal precision and CAS applicability."""
+    if any(is_collection(x) for x in (student, teacher)):
+        from .collections import collection_test
+        def compare(a, b, index):
+            sa = student_ast.children[index] if student_ast is not None and student_ast.kind == "list" else None
+            ta = teacher_ast.children[index] if teacher_ast is not None and teacher_ast.kind == "list" else None
+            return _algebraic(a, b, sa, ta, collection_leaf=True)
+        return collection_test("AlgEquiv", student, teacher, compare)
+    from .logic import _has_equation
+    if (is_logical(student) != is_logical(teacher)
+            or _has_equation(student) and not _has_equation(teacher)):
+        return {**_result(True, False), "cas_valid": False}
+    if collection_leaf:
+        # Frozen exact rational members have no written child AST. They still
+        # supply the exact side of a comparison with a literal decimal answer.
+        if isinstance(student, sp.Rational) and (student_ast is None or student_ast.kind == "name"):
+            student_ast = parse(str(student))
+        if isinstance(teacher, sp.Rational) and (teacher_ast is None or teacher_ast.kind == "name"):
+            teacher_ast = parse(str(teacher))
+    if student_ast is not None and teacher_ast is not None:
+        from .equivalence import constant_float_equivalent
+        floating = constant_float_equivalent(student_ast, teacher_ast)
+        if floating is not None:
+            return _result(True, floating)
+    return _result(True, _equiv(student, teacher))
+
+
+def _helper_call(node):
+    return (node.kind == "call" and node.value in AUTHOR_COLLECTION_FUNCTIONS
+            or any(_helper_call(c) for c in node.children))
 
 
 def _decimal_places(raw: str) -> tuple[Decimal, int]:
@@ -289,11 +323,11 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
     Supported: AlgEquiv, EqualComAss, FacForm, SingleFrac, LowestTerms,
     NumAbsolute, NumRelative, NumDecPlaces
     (one to fifty decimal places).
-    Flat scalar lists/sets additionally support AlgEquiv; Sets provides set feedback.
+    Nested scalar collections support AlgEquiv, Sets, SameType and EqualComAss.
     Units, general relations, matrices, and feedback-tree CAS
     features are outside this intentionally limited implementation.
     """
-    if name not in {"AlgEquiv", "Sets", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
+    if name not in {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
                     "NumAbsolute", "NumRelative", "NumDecPlaces"}:
         raise Unsupported(f"Answer test {name!r} is unsupported")
     env = {} if env is None else env
@@ -304,24 +338,31 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
         return _result(False, False, "invalid", str(exc))
     try:
         teacher_ast = parse(teacher)
+        if name not in {"AlgEquiv", "SameType"} and _helper_call(teacher_ast):
+            raise Unsupported("Direct finite helper calls require AlgEquiv or SameType; use a frozen evaluated author value")
         teacher_value = evaluate(teacher_ast, env, assumptions=assumptions)
     except (InvalidAnswer, TypeError, ZeroDivisionError) as exc:
         raise Unsupported(f"Invalid teacher expression: {exc}") from exc
 
     for value in (student_value, teacher_value):
         validate_collection(value)
-    if name == "Sets" or any(is_collection(x) for x in (student_value, teacher_value)):
-        if name not in {"AlgEquiv", "Sets"}:
-            raise Unsupported("Collections require AlgEquiv or Sets")
+    if name == "SameType":
+        if any(is_logical(x) for x in (student_value, teacher_value)):
+            raise Unsupported("SameType supports scalar expressions and collections")
+        from .collections import same_type
+        return {**_result(True, same_type(student_value, teacher_value)), "cas_valid": True}
+    if name == "Sets":
         from .collections import collection_test
-        def element_equiv(a, b, index):
-            if student_ast.kind == teacher_ast.kind == "list":
-                from .equivalence import constant_float_equivalent
-                floating = constant_float_equivalent(student_ast.children[index], teacher_ast.children[index])
-                if floating is not None:
-                    return floating
-            return _equiv(a, b)
-        return collection_test(name, student_value, teacher_value, element_equiv)
+        return collection_test(name, student_value, teacher_value, None)
+    if any(is_collection(x) for x in (student_value, teacher_value)):
+        if name not in {"AlgEquiv", "EqualComAss"}:
+            raise Unsupported("Collections require AlgEquiv, Sets, SameType or EqualComAss")
+        result = _algebraic(student_value, teacher_value, student_ast, teacher_ast)
+        if name == "AlgEquiv":
+            return result
+        if not result["correct"]:
+            return {**_result(True, False), "cas_valid": False}
+        return {**_result(True, canonical_form(student_ast, env, assumptions) == canonical_form(teacher_ast, env, assumptions)), "cas_valid": True}
 
     from .logic import validate_logic
     for value in (student_value, teacher_value):
@@ -331,18 +372,7 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
         raise Unsupported("Logical answers require AlgEquiv")
 
     if name == "AlgEquiv":
-        from .logic import _has_equation
-        # STACK distinguishes CAS applicability from input syntax validity.
-        # In particular, Boolean student constants can answer equations, but
-        # an equation student answer cannot answer a Boolean teacher constant.
-        if (is_logical(student_value) != is_logical(teacher_value)
-                or _has_equation(student_value) and not _has_equation(teacher_value)):
-            return {**_result(True, False), "cas_valid": False}
-        from .equivalence import constant_float_equivalent
-        floating = constant_float_equivalent(student_ast, teacher_ast)
-        if floating is not None:
-            return _result(True, floating)
-        return _result(True, _equiv(student_value, teacher_value))
+        return _algebraic(student_value, teacher_value, student_ast, teacher_ast)
 
     if name == "SingleFrac":
         # STACK accepts equivalent atomic answers without requiring a '/'.

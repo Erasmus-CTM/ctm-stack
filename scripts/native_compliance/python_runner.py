@@ -7,7 +7,8 @@ from execution are observations, never an automatic excuse for a wrong mark.
 from __future__ import annotations
 
 from stack_sympy import InvalidAnswer, Unsupported, answer_test, evaluate, parse
-from stack_sympy.expressions import MAX_CHARS, MAX_COLLECTION_ITEMS, _STUDENT_FUNCTIONS, is_logical, symbolic_complex_log
+from stack_sympy.expressions import (MAX_CHARS, MAX_COLLECTION_ITEMS, MAX_COLLECTION_DEPTH,
+    MAX_COLLECTION_NODES, AUTHOR_COLLECTION_FUNCTIONS, _STUDENT_FUNCTIONS, is_logical, symbolic_complex_log)
 from stack_sympy.assessment import numeric_option_source
 from stack_sympy.logic import validate_logic
 import sympy as sp
@@ -30,7 +31,7 @@ def _walk(node):
         yield from _walk(child)
 
 
-def _preflight_expression(source: str, role: str, *, collections=False):
+def _preflight_expression(source: str, role: str, *, collections=False, helpers=False):
     """Return AST or a controlled classification of syntax outside the API."""
     if not isinstance(source, str):
         return None, ("unsupported", f"{role} must be an expression string")
@@ -52,16 +53,49 @@ def _preflight_expression(source: str, role: str, *, collections=False):
         )):
             return None, ("unsupported", f"{role} syntax outside scalar grammar: {message}")
         return None, (f"invalid_{role}", message)
+    from stack_sympy.expressions import decimal_set, transformed_decimal_collection
+    if decimal_set(node) or transformed_decimal_collection(node):
+        return None, ("unsupported", "Decimal literals inside sets require exact fractions")
+    def collection_shape(tree, depth=0, inside=False):
+        current = tree.kind in {"list", "set"}
+        if current:
+            if not collections:
+                return "Collections require a supported collection answer test"
+            if depth + 1 > MAX_COLLECTION_DEPTH:
+                return "Collection depth exceeds supported bound"
+            if len(tree.children) > MAX_COLLECTION_ITEMS:
+                return "Collection size exceeds supported bound"
+        if inside and tree.kind in {"logical", "boolean", "equation"}:
+            return "Collection leaves must be scalar expressions"
+        if inside and tree.kind == "call" and tree.value in {"member", "subsetp"}:
+            return "Collection leaves must be scalar expressions"
+        def collection_result(child):
+            return child.kind in {"list", "set"} or child.kind == "call" and child.value in {
+                "set", "setify", "listify", "union", "intersection", "setdifference"}
+        if (tree.kind in {"binary", "unary"} or tree.kind == "call" and tree.value in _STUDENT_FUNCTIONS) and any(collection_result(c) for c in tree.children):
+            return "Collection arithmetic and scalar function mapping are outside the supported subset"
+        for child in tree.children:
+            issue = collection_shape(child, depth + int(current), inside or current)
+            if issue:
+                return issue
+        return None
+    issue = collection_shape(node)
+    if issue:
+        return None, ("unsupported", issue)
+    def collection_size(tree):
+        if tree.kind in {"list", "set"}:
+            return 1 + sum(collection_size(c) if c.kind in {"list", "set"} else 1 for c in tree.children)
+        return sum(collection_size(c) for c in tree.children)
+    if collection_size(node) > MAX_COLLECTION_NODES:
+        return None, ("unsupported", "Collection tree exceeds supported bound")
     for item in _walk(node):
         if symbolic_complex_log(item):
             return None, ("unsupported", "Symbolic complex logarithms require branch-aware proof")
-        if item.kind in {"list", "set"}:
-            if not collections or item is not node:
-                return None, ("unsupported", f"{role} requires a top-level flat scalar collection with AlgEquiv or Sets")
-            if len(item.children) > MAX_COLLECTION_ITEMS:
-                return None, ("unsupported", f"{role} collection exceeds {MAX_COLLECTION_ITEMS} entries")
-            if any(child.kind in {"logical", "boolean", "equation"} for child in _walk(item)):
-                return None, ("unsupported", "Collections must contain only scalar expressions")
+        if item.kind == "call" and item.value in AUTHOR_COLLECTION_FUNCTIONS:
+            if not helpers:
+                return None, ("unsupported", "Finite collection helpers are author-only and require AlgEquiv or SameType")
+            if any(n.kind == "number" and ("." in n.value or "e" in n.value.lower()) for n in _walk(item)):
+                return None, ("unsupported", "Finite collection helpers require exact fractions rather than decimal literals")
         if item.kind == "index":
             return None, ("unsupported", f"{role} indexing is outside the student collection subset")
         if role == "student" and item.kind == "call" and item.value not in _STUDENT_FUNCTIONS:
@@ -83,7 +117,9 @@ def classify_case(case: dict) -> dict:
     # classification, including when its value is nonempty.
     parsed = {}
     for role in ("student", "teacher"):
-        node, issue = _preflight_expression(case.get(role), role, collections=name in {"AlgEquiv", "Sets"})
+        node, issue = _preflight_expression(case.get(role), role,
+            collections=name in {"AlgEquiv", "Sets", "SameType", "EqualComAss"},
+            helpers=role == "teacher" and name in {"AlgEquiv", "SameType"})
         if issue:
             return {"kind": issue[0], "reason": issue[1]}
         parsed[role] = node

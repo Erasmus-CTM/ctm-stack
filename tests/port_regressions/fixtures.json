@@ -2169,37 +2169,43 @@
     },
     {
       "id": "port-nested-list",
-      "group": "finite collection boundaries",
+      "group": "nested collection applicability",
       "test": "AlgEquiv",
       "student": "[[1]]",
       "teacher": "[1]",
       "options": "",
       "expected": {
-        "kind": "unsupported"
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
       },
       "origin": {
         "kind": "project_regression",
         "upstream_ordinal": null
       },
-      "reason": "Flat scalar collections only; nested/logical elements and more than 32 entries remain outside scope.",
-      "native_scope": false
+      "reason": "Nested collections are supported; this candidate has a different element/root type from the reference.",
+      "native_scope": true
     },
     {
       "id": "port-nested-set",
-      "group": "finite collection boundaries",
+      "group": "nested collection applicability",
       "test": "AlgEquiv",
       "student": "{{1}}",
       "teacher": "[1]",
       "options": "",
       "expected": {
-        "kind": "unsupported"
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
       },
       "origin": {
         "kind": "project_regression",
         "upstream_ordinal": null
       },
-      "reason": "Flat scalar collections only; nested/logical elements and more than 32 entries remain outside scope.",
-      "native_scope": false
+      "reason": "Nested collections are supported; this candidate has a different element/root type from the reference.",
+      "native_scope": true
     },
     {
       "id": "port-list-logical",
@@ -2270,6 +2276,719 @@
         "upstream_ordinal": null
       },
       "reason": "Pinned native set preparation does not establish this scalar trigonometric identity; members compare structurally.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-nested-list",
+      "group": "nested collections and checks",
+      "test": "AlgEquiv",
+      "student": "[1,[x+x]]",
+      "teacher": "[1,[2*x]]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-set-of-lists",
+      "group": "nested collections and checks",
+      "test": "AlgEquiv",
+      "student": "{[x+x]}",
+      "teacher": "{[2*x]}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-set-inner-list-order",
+      "group": "nested collections and checks",
+      "test": "AlgEquiv",
+      "student": "{[1,2]}",
+      "teacher": "{[2,1]}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-list-inner-set",
+      "group": "nested collections and checks",
+      "test": "AlgEquiv",
+      "student": "[{1,1}]",
+      "teacher": "[{1}]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-sets-inner-list-repeat",
+      "group": "nested collections and checks",
+      "test": "Sets",
+      "student": "{[1,1]}",
+      "teacher": "{[1]}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-sets-inner-set-repeat",
+      "group": "nested collections and checks",
+      "test": "Sets",
+      "student": "{{1,1}}",
+      "teacher": "{{1}}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-sets-list-duplicate",
+      "group": "nested collections and checks",
+      "test": "Sets",
+      "student": "{[1,2],[1,2]}",
+      "teacher": "{[1,2]}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-sets-set-duplicate",
+      "group": "nested collections and checks",
+      "test": "Sets",
+      "student": "{{1},{1}}",
+      "teacher": "{{1}}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-type-nested-list",
+      "group": "nested collections and checks",
+      "test": "SameType",
+      "student": "[1,[2]]",
+      "teacher": "[9,[3]]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-type-nested-mismatch",
+      "group": "nested collections and checks",
+      "test": "SameType",
+      "student": "[1,[2]]",
+      "teacher": "[9,{3}]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-type-list-length",
+      "group": "nested collections and checks",
+      "test": "SameType",
+      "student": "[1,[2]]",
+      "teacher": "[9]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-type-set-members",
+      "group": "nested collections and checks",
+      "test": "SameType",
+      "student": "{[1,2]}",
+      "teacher": "{{1,2}}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-form-set-repeat-reorder",
+      "group": "nested collections and checks",
+      "test": "EqualComAss",
+      "student": "{1,2,2}",
+      "teacher": "{2,1,2}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-form-set-repeat-count",
+      "group": "nested collections and checks",
+      "test": "EqualComAss",
+      "student": "{4,4}",
+      "teacher": "{4}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-form-nested-set-order",
+      "group": "nested collections and checks",
+      "test": "EqualComAss",
+      "student": "[[1,2],{3,4}]",
+      "teacher": "[[1,2],{4,3}]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested2-form-nested-list-order",
+      "group": "nested collections and checks",
+      "test": "EqualComAss",
+      "student": "[[1,2],{3,4}]",
+      "teacher": "[[2,1],{3,4}]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-union",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{1,2,3}",
+      "teacher": "union({1,2},{2,3})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-intersection",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{2}",
+      "teacher": "intersection({1,2},{2,3})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-difference",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{1}",
+      "teacher": "setdifference({1,2},{2})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-member",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "true",
+      "teacher": "member([x+x],{[2*x]})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-subset",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "true",
+      "teacher": "subsetp({[x+x]},{[2*x]})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-cardinality",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "2",
+      "teacher": "cardinality({1,1,2})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-constructor",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{1,2}",
+      "teacher": "set(2,1,1)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-setify",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{1,2}",
+      "teacher": "setify([2,1,1])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-listify",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "[1/3,1/2]",
+      "teacher": "listify({2/4,1/3})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-listify-list",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "[2,1,1]",
+      "teacher": "listify([2,1,1])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-author-set-union-empty",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{}",
+      "teacher": "union()",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true
+    },
+    {
+      "id": "port-nested-boundary-student-operation",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "union({1},{2})",
+      "teacher": "{1,2}",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false
+    },
+    {
+      "id": "port-nested-boundary-listify-order",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "[]",
+      "teacher": "listify({x,1})",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false
+    },
+    {
+      "id": "port-nested-boundary-helper-type",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "{}",
+      "teacher": "setify({1,2})",
+      "options": "",
+      "expected": {
+        "kind": "invalid_teacher"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false
+    },
+    {
+      "id": "port-nested-boundary-helper-arity",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "{}",
+      "teacher": "setdifference({1})",
+      "options": "",
+      "expected": {
+        "kind": "invalid_teacher"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false
+    },
+    {
+      "id": "port-nested-boundary-depth",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "[[[[[[[1]]]]]]]",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false
+    },
+    {
+      "id": "port-nested-boundary-tree-size",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false
+    },
+    {
+      "id": "port-nested-decimal-precision-0",
+      "group": "nested collection precision boundaries",
+      "test": "AlgEquiv",
+      "student": "{0.1}",
+      "teacher": "{1/10}",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Native float set members differ from exact rationals; direct list leaves retain scalar binary64 comparison.",
+      "native_scope": false
+    },
+    {
+      "id": "port-nested-decimal-precision-1",
+      "group": "nested collection precision boundaries",
+      "test": "Sets",
+      "student": "{{0.1}}",
+      "teacher": "{{1/10}}",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Native float set members differ from exact rationals; direct list leaves retain scalar binary64 comparison.",
+      "native_scope": false
+    },
+    {
+      "id": "port-nested-decimal-precision-2",
+      "group": "nested collection precision boundaries",
+      "test": "EqualComAss",
+      "student": "{[0.5]}",
+      "teacher": "{[1/2]}",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Native float set members differ from exact rationals; direct list leaves retain scalar binary64 comparison.",
+      "native_scope": false
+    },
+    {
+      "id": "port-nested-decimal-precision-3",
+      "group": "nested collection precision boundaries",
+      "test": "AlgEquiv",
+      "student": "[[1/10]]",
+      "teacher": "[[0.1]]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Native float set members differ from exact rationals; direct list leaves retain scalar binary64 comparison.",
       "native_scope": true
     }
   ]

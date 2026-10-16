@@ -68,7 +68,9 @@ def render_castext(source: str, env: dict, question: str, location: str, *, inpu
     Literal source text never enters an HTML attribute through a token.
     Escaped placeholders are held as private sentinels until after sanitizing.
     """
-    if re.search(r"\[\[(?!input:|validation:|feedback:)", source):
+    # Nested list syntax inside a CAS expression is not a CASText directive.
+    outside_expressions = re.sub(r"\{@.*?@\}", "", source, flags=re.S)
+    if re.search(r"\[\[(?!input:|validation:|feedback:)", outside_expressions):
         raise UnsupportedQuestion(question, location, "unsupported CASText block")
     placeholders = {}
     nonce = secrets.token_hex(12)

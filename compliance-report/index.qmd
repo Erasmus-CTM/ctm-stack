@@ -44,7 +44,7 @@ Select a count above or use the filters. Open a case to see the expected and act
 <details class="methodology">
 <summary>Scope and technical details</summary>
 
-This compares CAS answer-test functions rather than complete Moodle grading sessions. The port currently provides nine answer-test families, including flat finite scalar lists/sets with `AlgEquiv` and `Sets`. Cases outside port coverage stay in the inventory and are labeled by the missing answer test or unsupported input/feature. Some direct reference calls are also omitted because they need parser or controller preparation.
+This compares CAS answer-test functions rather than complete Moodle grading sessions. The port currently provides ten answer-test families, including bounded nested scalar lists/sets with `AlgEquiv`, `Sets`, `SameType` and `EqualComAss`. Cases outside port coverage stay in the inventory and are labeled by the missing answer test or unsupported input/feature. Some direct reference calls are also omitted because they need parser or controller preparation.
 
 “Test applicability” asks whether an answer test can compare the supplied values. It is separate from input syntax validity and from the final accept/reject mark. Form tests such as `EqualComAss` can reject mathematically equivalent expressions.
 
