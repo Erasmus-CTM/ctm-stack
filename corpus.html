@@ -106,14 +106,21 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./docs/authoring.html"> 
 <span class="menu-text">Authoring guide</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./compliance/"> 
-<span class="menu-text">Native compliance</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-compatibility" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Compatibility</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-compatibility">    
+        <li>
+    <a class="dropdown-item" href="./compliance/">
+ <span class="dropdown-text">STACK compliance</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./compliance/port-regressions.html"> 
-<span class="menu-text">Port regressions</span></a>
+        <li>
+    <a class="dropdown-item" href="./compliance/port-regressions.html">
+ <span class="dropdown-text">Port regressions</span></a>
   </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -156,6 +163,8 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#algmap-11-1" id="toc-algmap-11-1" class="nav-link" data-scroll-target="#algmap-11-1">AlgMap-11.1</a></li>
   <li><a href="#algmap-11-8" id="toc-algmap-11-8" class="nav-link" data-scroll-target="#algmap-11-8">AlgMap-11.8</a></li>
   <li><a href="#algmap-13-1" id="toc-algmap-13-1" class="nav-link" data-scroll-target="#algmap-13-1">AlgMap-13.1</a></li>
+  <li><a href="#algmap-14-1" id="toc-algmap-14-1" class="nav-link" data-scroll-target="#algmap-14-1">AlgMap-14.1</a></li>
+  <li><a href="#logs-1" id="toc-logs-1" class="nav-link" data-scroll-target="#logs-1">Logs_1</a></li>
   </ul></li>
   <li><a href="#authored-test-mismatches" id="toc-authored-test-mismatches" class="nav-link" data-scroll-target="#authored-test-mismatches">Authored test mismatches</a>
   <ul class="collapse">
@@ -168,11 +177,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#algmap-5-1" id="toc-algmap-5-1" class="nav-link" data-scroll-target="#algmap-5-1">AlgMap-5.1</a></li>
   <li><a href="#algmap-7-10" id="toc-algmap-7-10" class="nav-link" data-scroll-target="#algmap-7-10">AlgMap-7.10</a></li>
   <li><a href="#algmap-12-1" id="toc-algmap-12-1" class="nav-link" data-scroll-target="#algmap-12-1">AlgMap-12.1</a></li>
-  <li><a href="#algmap-14-1" id="toc-algmap-14-1" class="nav-link" data-scroll-target="#algmap-14-1">AlgMap-14.1</a></li>
   <li><a href="#algmap-15-1" id="toc-algmap-15-1" class="nav-link" data-scroll-target="#algmap-15-1">AlgMap-15.1</a></li>
   <li><a href="#complex-convert-1" id="toc-complex-convert-1" class="nav-link" data-scroll-target="#complex-convert-1">Complex_Convert_1</a></li>
   <li><a href="#limits-1" id="toc-limits-1" class="nav-link" data-scroll-target="#limits-1">Limits_1</a></li>
-  <li><a href="#logs-1" id="toc-logs-1" class="nav-link" data-scroll-target="#logs-1">Logs_1</a></li>
   <li><a href="#matrices-find-det-2-2" id="toc-matrices-find-det-2-2" class="nav-link" data-scroll-target="#matrices-find-det-2-2">Matrices_find det 2*2</a></li>
   <li><a href="#inequality-1" id="toc-inequality-1" class="nav-link" data-scroll-target="#inequality-1">Inequality_1</a></li>
   <li><a href="#numerical-input-min-sf" id="toc-numerical-input-min-sf" class="nav-link" data-scroll-target="#numerical-input-min-sf">Numerical input (min sf)</a></li>
@@ -203,8 +210,8 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. <strong>Only the 16 questions whose authored tests passed on every replayed seed have interactive cards.</strong> The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.</p>
-<p>The <a href="questions/corpus/baseline.json">reproducible baseline</a> reports <strong>16 passed</strong>, <strong>1 with test mismatches</strong>, and <strong>13 blocked</strong> (4 at import, 9 at instantiation). It retained <strong>73 authored test cases</strong> and replayed <strong>114 seed/case combinations</strong> across 17 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.</p>
+<p>These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. <strong>Only the 18 questions whose authored tests passed on every replayed seed have interactive cards.</strong> The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.</p>
+<p>The <a href="questions/corpus/baseline.json">reproducible baseline</a> reports <strong>18 passed</strong>, <strong>1 with test mismatches</strong>, and <strong>11 blocked</strong> (4 at import, 7 at instantiation). It retained <strong>73 authored test cases</strong> and replayed <strong>132 seed/case combinations</strong> across 19 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.</p>
 <p><strong>Attribution and reuse.</strong> Questions are from <a href="https://github.com/maths/moodle-qtype_stack">STACK / maths/moodle-qtype_stack</a>, pinned at commit <a href="https://github.com/maths/moodle-qtype_stack/commit/10d323311b7f39fb7b092dd10ce75f7d8632f525"><code>10d323311b7f39fb7b092dd10ce75f7d8632f525</code></a>. The unchanged question exports carry the <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/COPYING.txt">CC BY-SA 4.0 license</a>, also <a href="questions/corpus/COPYING.txt">included locally</a>; see each pinned source link below. The <a href="questions/corpus/manifest.json">manifest</a> records the exact upstream path and SHA-256 for every XML file.</p>
 <section id="browse-all-30" class="level2">
 <h2 class="anchored" data-anchor-id="browse-all-30">Browse all 30</h2>
@@ -305,7 +312,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td><a href="#algmap-8-10">AlgMap-8.10</a></td>
 <td>Algebra Refresher / 08 Algebraic fractions</td>
-<td>Authored test mismatch</td>
+<td>Upstream authoring bug (PRT)</td>
 <td><a href="questions/corpus/AlgMap-8-10.xml">Download</a></td>
 </tr>
 <tr class="even">
@@ -353,7 +360,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td><a href="#algmap-14-1">AlgMap-14.1</a></td>
 <td>Algebra Refresher / 14 Algebraic fractions involving factorising</td>
-<td>Unsupported at instantiation</td>
+<td>Passed authored tests</td>
 <td><a href="questions/corpus/AlgMap-14-1.xml">Download</a></td>
 </tr>
 <tr class="even">
@@ -377,7 +384,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td><a href="#logs-1">Logs_1</a></td>
 <td>Topics / Logs and Exponentials</td>
-<td>Unsupported at instantiation</td>
+<td>Passed authored tests</td>
 <td><a href="questions/corpus/Logs_1.xml">Download</a></td>
 </tr>
 <tr class="even">
@@ -403,7 +410,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="ready-to-try" class="level2">
 <h2 class="anchored" data-anchor-id="ready-to-try">Ready to try</h2>
-<p>These 16 cards use the first seed from each replay. Press <strong>Validate answers</strong>, then <strong>Check answer</strong>. <strong>Run author tests</strong> replays the card’s XML tests on the displayed seed; the <a href="questions/corpus/baseline.json">baseline</a> describes the unchanged imports. Three cards explicitly use <a href="questions/corrected/README.md">corrected teaching copies</a> for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.</p>
+<p>These 18 cards use the first seed from each replay. Press <strong>Validate answers</strong>, then <strong>Check answer</strong>. <strong>Run author tests</strong> replays the card’s XML tests on the displayed seed; the <a href="questions/corpus/baseline.json">baseline</a> describes the unchanged imports. Three cards explicitly use <a href="questions/corrected/README.md">corrected teaching copies</a> for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.</p>
 <section id="algmap-1-5" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-1-5">AlgMap-1.5</h3>
 <p>Algebra Refresher / 01 Combinations of arithmetic operations · 1 input · 2 authored tests · baseline seeds <code>128137392</code>, <code>2051957692</code>, <code>1375878840</code>.</p>
@@ -3135,12 +3142,460 @@ ta:factor((cf1*v+a)*(cf2*v+b));&lt;/text&gt;
 </code></pre></details></div></div>
 <p><a href="questions/corpus/AlgMap-13-1-.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/13-Factorising-algebraic-expressions/AlgMap-13-1-.xml">Pinned upstream source</a></p>
 </section>
+<section id="algmap-14-1" class="level3">
+<h3 class="anchored" data-anchor-id="algmap-14-1">AlgMap-14.1</h3>
+<p>Algebra Refresher / 14 Algebraic fractions involving factorising · 1 input · 3 authored tests · baseline seeds <code>1720352247</code>, <code>1847020159</code>, <code>410204508</code>.</p>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-17"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question">Reduce the following fraction to it's lowest terms:
+\[ {\frac{12 t + 36}{12 t}}. \]
+<br>
+<input class="stack-answer" data-name="ans" aria-label="Answer ans" size="15" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-17","question":{"name":"AlgMap-14.1","questiontext":"Reduce the following fraction to it's lowest terms:\n\\[ {@(cf1*v+k1)/(cf2*v)@}. \\]\n\u003cbr\u003e\n[[input:ans]] [[validation:ans]]","generalfeedback":"By factorisng the numerator we obtain: \\[\\frac{@factor(cf1*v+k1)@}{@cf2*v@}. \\]\nThen we can simplify the constants from the numerator and denominator to obtain:\n\\[ {@ta@}. \\]","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"\\[ {@(cf1*v+k1)/(cf2*v)@} = {@ta@}. \\]","variables":"v:rand([x,y,z,t]);\nf:rand(5)+2;\ncf1:(rand(3)+1)*f;\ncf2:(rand(3)+1)*f;\nk1:(rand(2)+2)*cf1;\nta:factor((cf1*v+k1)/(cf2*v));\nta2:ratsimp((cf1*v+k1)/(cf2*v));","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":15,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":true,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":true,"feedbackvariables":"","nodes":[{"name":"0","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":1,"note":"1-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-0-F","feedback":""}},{"name":"1","test":"SingleFrac","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":2,"note":"1-1-T","feedback":""},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-1-F","feedback":""}},{"name":"2","test":"AlgEquiv","student":"gcd(num(ans),denom(ans))","teacher":"1","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"1-2-T","feedback":""},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-2-F","feedback":"Your answer is not in it's lowest terms but is otherwise correct."}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"1-2-T"}}},{"testcase":"2","description":"","inputs":{"ans":"ta2"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"1-2-T"}}},{"testcase":"3","description":"","inputs":{"ans":"(cf1*v+k1)/(cf2*v)"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-2-F"}}}],"deployedseeds":[1720352247,1847020159,410204508,1413931985,1369593628,1208877863,1900468977,31933637,1666735042,125358585]},"variants":[{"seed":1720352247,"env":{"v":"t","f":"4","cf1":"12","cf2":"12","k1":"36","ta":"(t + 3)/t","ta2":"(t + 3)/t"},"question_html":"Reduce the following fraction to it's lowest terms:\n\\[ {\\frac{12 t + 36}{12 t}}. \\]\n\u003cbr\u003e\n\u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"15\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e","generalfeedback_html":"By factorisng the numerator we obtain: \\[\\frac{12 \\left(t + 3\\right)}{12 t}. \\]\nThen we can simplify the constants from the numerator and denominator to obtain:\n\\[ {\\frac{t + 3}{t}}. \\]","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"\\[ {\\frac{12 t + 36}{12 t}} = {\\frac{t + 3}{t}}. \\]"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: questions/corpus/AlgMap-14-1.xml
+#| question: AlgMap-14.1
+#| seed: 1720352247
+#| review: true
+```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;quiz&gt;
+  &lt;question type="stack"&gt;
+    &lt;name&gt;
+      &lt;text&gt;AlgMap-14.1&lt;/text&gt;
+    &lt;/name&gt;
+    &lt;questiontext format="html"&gt;
+      &lt;text&gt;&lt;![CDATA[Reduce the following fraction to it's lowest terms:
+\[ {@(cf1*v+k1)/(cf2*v)@}. \]
+&lt;br&gt;
+[[input:ans]] [[validation:ans]]]]&gt;&lt;/text&gt;
+    &lt;/questiontext&gt;
+    &lt;generalfeedback format="html"&gt;
+      &lt;text&gt;By factorisng the numerator we obtain: \[\frac{@factor(cf1*v+k1)@}{@cf2*v@}. \]
+Then we can simplify the constants from the numerator and denominator to obtain:
+\[ {@ta@}. \]&lt;/text&gt;
+    &lt;/generalfeedback&gt;
+    &lt;defaultgrade&gt;1&lt;/defaultgrade&gt;
+    &lt;penalty&gt;0.1&lt;/penalty&gt;
+    &lt;hidden&gt;0&lt;/hidden&gt;
+    &lt;idnumber/&gt;
+    &lt;stackversion&gt;
+      &lt;text/&gt;
+    &lt;/stackversion&gt;
+    &lt;questionvariables&gt;
+      &lt;text&gt;v:rand([x,y,z,t]);
+f:rand(5)+2;
+cf1:(rand(3)+1)*f;
+cf2:(rand(3)+1)*f;
+k1:(rand(2)+2)*cf1;
+ta:factor((cf1*v+k1)/(cf2*v));
+ta2:ratsimp((cf1*v+k1)/(cf2*v));&lt;/text&gt;
+    &lt;/questionvariables&gt;
+    &lt;specificfeedback format="html"&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;[[feedback:prt1]]&lt;/p&gt;]]&gt;&lt;/text&gt;
+    &lt;/specificfeedback&gt;
+    &lt;questionnote format="moodle_auto_format"&gt;
+      &lt;text&gt;\[ {@(cf1*v+k1)/(cf2*v)@} = {@ta@}. \]&lt;/text&gt;
+    &lt;/questionnote&gt;
+    &lt;questiondescription format="moodle_auto_format"&gt;
+      &lt;text/&gt;
+    &lt;/questiondescription&gt;
+    &lt;questionsimplify&gt;1&lt;/questionsimplify&gt;
+    &lt;assumepositive&gt;0&lt;/assumepositive&gt;
+    &lt;assumereal&gt;0&lt;/assumereal&gt;
+    &lt;scientificnotation&gt;*10&lt;/scientificnotation&gt;
+    &lt;multiplicationsign&gt;none&lt;/multiplicationsign&gt;
+    &lt;sqrtsign&gt;1&lt;/sqrtsign&gt;
+    &lt;complexno&gt;i&lt;/complexno&gt;
+    &lt;inversetrig&gt;cos-1&lt;/inversetrig&gt;
+    &lt;logicsymbol&gt;lang&lt;/logicsymbol&gt;
+    &lt;matrixparens&gt;[&lt;/matrixparens&gt;
+    &lt;isbroken&gt;0&lt;/isbroken&gt;
+    &lt;variantsselectionseed/&gt;
+    &lt;input&gt;
+      &lt;name&gt;ans&lt;/name&gt;
+      &lt;type&gt;algebraic&lt;/type&gt;
+      &lt;tans&gt;ta&lt;/tans&gt;
+      &lt;boxsize&gt;15&lt;/boxsize&gt;
+      &lt;strictsyntax&gt;1&lt;/strictsyntax&gt;
+      &lt;insertstars&gt;0&lt;/insertstars&gt;
+      &lt;syntaxhint/&gt;
+      &lt;syntaxattribute&gt;0&lt;/syntaxattribute&gt;
+      &lt;forbidwords/&gt;
+      &lt;allowwords/&gt;
+      &lt;forbidfloat&gt;1&lt;/forbidfloat&gt;
+      &lt;requirelowestterms&gt;1&lt;/requirelowestterms&gt;
+      &lt;checkanswertype&gt;1&lt;/checkanswertype&gt;
+      &lt;mustverify&gt;1&lt;/mustverify&gt;
+      &lt;showvalidation&gt;1&lt;/showvalidation&gt;
+      &lt;options/&gt;
+    &lt;/input&gt;
+    &lt;prt&gt;
+      &lt;name&gt;prt1&lt;/name&gt;
+      &lt;value&gt;1.0000000&lt;/value&gt;
+      &lt;autosimplify&gt;1&lt;/autosimplify&gt;
+      &lt;feedbackstyle&gt;1&lt;/feedbackstyle&gt;
+      &lt;feedbackvariables&gt;
+        &lt;text/&gt;
+      &lt;/feedbackvariables&gt;
+      &lt;node&gt;
+        &lt;name&gt;0&lt;/name&gt;
+        &lt;description/&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;ans&lt;/sans&gt;
+        &lt;tans&gt;ta&lt;/tans&gt;
+        &lt;testoptions/&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;0.0000000&lt;/truescore&gt;
+        &lt;truepenalty/&gt;
+        &lt;truenextnode&gt;1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;1-0-T &lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;
+        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;1-0-F &lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+      &lt;node&gt;
+        &lt;name&gt;1&lt;/name&gt;
+        &lt;description/&gt;
+        &lt;answertest&gt;SingleFrac&lt;/answertest&gt;
+        &lt;sans&gt;ans&lt;/sans&gt;
+        &lt;tans&gt;ta&lt;/tans&gt;
+        &lt;testoptions/&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;0.0000000&lt;/truescore&gt;
+        &lt;truepenalty/&gt;
+        &lt;truenextnode&gt;2&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;1-1-T &lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;
+        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;1-1-F &lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+      &lt;node&gt;
+        &lt;name&gt;2&lt;/name&gt;
+        &lt;description/&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;gcd(num(ans),denom(ans))&lt;/sans&gt;
+        &lt;tans&gt;1&lt;/tans&gt;
+        &lt;testoptions/&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;1.0000000&lt;/truescore&gt;
+        &lt;truepenalty/&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;1-2-T &lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;
+        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;1-2-F &lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text&gt;Your answer is not in it's lowest terms but is otherwise correct.&lt;/text&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+    &lt;/prt&gt;
+    &lt;deployedseed&gt;1720352247&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1847020159&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;410204508&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1413931985&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1369593628&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1208877863&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1900468977&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;31933637&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1666735042&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;125358585&lt;/deployedseed&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;1&lt;/testcase&gt;
+      &lt;description/&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;ta&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.0000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;1-2-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;2&lt;/testcase&gt;
+      &lt;description/&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;ta2&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.0000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;1-2-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;3&lt;/testcase&gt;
+      &lt;description/&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;(cf1*v+k1)/(cf2*v)&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;0.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.1000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;1-2-F &lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+  &lt;/question&gt;
+&lt;/quiz&gt;
+</code></pre></details></div></div>
+<p><a href="questions/corpus/AlgMap-14-1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/14-Algebraic-fractions-involving-factorising/AlgMap-14-1.xml">Pinned upstream source</a></p>
+</section>
+<section id="logs-1" class="level3">
+<h3 class="anchored" data-anchor-id="logs-1">Logs_1</h3>
+<p>Topics / Logs and Exponentials · 1 input · 3 authored tests · baseline seeds <code>1531295862</code>, <code>864648734</code>, <code>1099277693</code>.</p>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-18"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Given that \(\ln(a)={8}\) , express: \[\log_{a}(x^{5})\] as a single multiple of a natural logarithm.</p>
+<p>\(\log_{a}(x^{5}) = \) <input class="stack-answer" data-name="ans1" aria-label="Answer ans1" size="20" autocomplete="off"> <span class="stack-validation" data-name="ans1" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-18","question":{"name":"Logs_1","questiontext":"\u003cp\u003eGiven that \\(\\ln(a)={@a@}\\) , express: \\[\\log_{a}(x^{@n@})\\] as a single multiple of a natural logarithm.\u003c/p\u003e\n\u003cp\u003e\\(\\log_{a}(x^{@ n @}) = \\) [[input:ans1]] [[validation:ans1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eBelow are the basic rules of logarithms.\u003cbr /\u003e\\[\\log_{b}(mn) = \\log_{b}(m) +\\log_{b}(n)\\]\u003cbr /\u003e\\[\\log_{b}\\left(\\frac{m}{n}\\right) = \\log_{b}(m) -\\log_{b}(n)\\]\u003cbr /\u003e\\[\\log_{b}(m^n) = n\\cdot\\log_{b}(m)\\]\u003c/p\u003e\n\u003cp\u003e\\[\\log_{a}(m)=\\frac{\\log_{b}(m)}{\\log_{b}(a)}\\]\u003c/p\u003e\n\u003cp\u003e\u003cbr /\u003eHence \\[\\log_{a}(x^{@n@}) = {@n@}\\log_{a}(x) = {@n@}\\frac{\\ln(x)}{\\ln(a)}\\]\u003c/p\u003e\n\u003cp\u003e\\[ = {@n@}\\frac{\\ln(x)}{@a@}={@correctanswer@}\\]\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:Result]]\u003c/p\u003e","questionnote":"When \\(\\displaystyle \\ln(a)={@a@}, \\log_{a}(x^{@n@}) ={@correctanswer@}\\)","variables":"a:rand(8)+2;\n n:rand(8)+2;\n correctanswer:ev(n*ln(x)/a);\n wronganswer1:ev(n*a/ln(x));\n wronganswer2:n*a*ln(x);","defaultgrade":1.0,"penalty":0.0,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans1","type":"algebraic","teacher":"correctanswer","boxsize":20,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":true,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"Result","value":1.0,"autosimplify":true,"feedbackvariables":"","nodes":[{"name":"0","test":"AlgEquiv","student":"ans1","teacher":"correctanswer","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"Result-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":1,"note":"Result-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans1","teacher":"wronganswer1","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"Result-1-T","feedback":"\u003cp\u003eCheck the Log Laws\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":2,"note":"Result-1-F","feedback":""}},{"name":"2","test":"AlgEquiv","student":"ans1","teacher":"wronganswer2","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"Result-2-T","feedback":"\u003cp\u003eCheck the Log Laws\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"Result-2-F","feedback":""}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans1":"correctanswer"},"expected":{"Result":{"score":1.0,"penalty":0.0,"note":"Result-0-T"}}},{"testcase":"2","description":"","inputs":{"ans1":"wronganswer1"},"expected":{"Result":{"score":0.0,"penalty":0.0,"note":"Result-1-T"}}},{"testcase":"3","description":"","inputs":{"ans1":"wronganswer2"},"expected":{"Result":{"score":0.0,"penalty":0.0,"note":"Result-2-T"}}}],"deployedseeds":[1531295862,864648734,1099277693,1731809073,209765752,1273387083,1610313421,2071319725,73064170,1410745669,1363551006,1556989561,1814621817,1819508562]},"variants":[{"seed":1531295862,"env":{"a":"8","n":"5","correctanswer":"5*log(x)/8","wronganswer1":"40/log(x)","wronganswer2":"40*log(x)"},"question_html":"\u003cp\u003eGiven that \\(\\ln(a)={8}\\) , express: \\[\\log_{a}(x^{5})\\] as a single multiple of a natural logarithm.\u003c/p\u003e\n\u003cp\u003e\\(\\log_{a}(x^{5}) = \\) \u003cinput class=\"stack-answer\" data-name=\"ans1\" aria-label=\"Answer ans1\" size=\"20\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans1\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eBelow are the basic rules of logarithms.\u003cbr\u003e\\[\\log_{b}(mn) = \\log_{b}(m) +\\log_{b}(n)\\]\u003cbr\u003e\\[\\log_{b}\\left(\\frac{m}{n}\\right) = \\log_{b}(m) -\\log_{b}(n)\\]\u003cbr\u003e\\[\\log_{b}(m^n) = n\\cdot\\log_{b}(m)\\]\u003c/p\u003e\n\u003cp\u003e\\[\\log_{a}(m)=\\frac{\\log_{b}(m)}{\\log_{b}(a)}\\]\u003c/p\u003e\n\u003cp\u003e\u003cbr\u003eHence \\[\\log_{a}(x^{5}) = {5}\\log_{a}(x) = {5}\\frac{\\ln(x)}{\\ln(a)}\\]\u003c/p\u003e\n\u003cp\u003e\\[ = {5}\\frac{\\ln(x)}{8}={\\frac{5 \\log{\\left(x \\right)}}{8}}\\]\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"Result\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"When \\(\\displaystyle \\ln(a)={8}, \\log_{a}(x^{5}) ={\\frac{5 \\log{\\left(x \\right)}}{8}}\\)"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: questions/corpus/Logs_1.xml
+#| question: Logs_1
+#| seed: 1531295862
+#| review: true
+```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;quiz&gt;
+  &lt;question type="stack"&gt;
+    &lt;name&gt;
+      &lt;text&gt;Logs_1&lt;/text&gt;
+    &lt;/name&gt;
+    &lt;questiontext format="html"&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;Given that \(\ln(a)={@a@}\) , express: \[\log_{a}(x^{@n@})\] as a single multiple of a natural logarithm.&lt;/p&gt;
+&lt;p&gt;\(\log_{a}(x^{@ n @}) = \) [[input:ans1]] [[validation:ans1]]&lt;/p&gt;]]&gt;&lt;/text&gt;
+    &lt;/questiontext&gt;
+    &lt;generalfeedback format="html"&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;Below are the basic rules of logarithms.&lt;br /&gt;\[\log_{b}(mn) = \log_{b}(m) +\log_{b}(n)\]&lt;br /&gt;\[\log_{b}\left(\frac{m}{n}\right) = \log_{b}(m) -\log_{b}(n)\]&lt;br /&gt;\[\log_{b}(m^n) = n\cdot\log_{b}(m)\]&lt;/p&gt;
+&lt;p&gt;\[\log_{a}(m)=\frac{\log_{b}(m)}{\log_{b}(a)}\]&lt;/p&gt;
+&lt;p&gt;&lt;br /&gt;Hence \[\log_{a}(x^{@n@}) = {@n@}\log_{a}(x) = {@n@}\frac{\ln(x)}{\ln(a)}\]&lt;/p&gt;
+&lt;p&gt;\[ = {@n@}\frac{\ln(x)}{@a@}={@correctanswer@}\]&lt;/p&gt;]]&gt;&lt;/text&gt;
+    &lt;/generalfeedback&gt;
+    &lt;defaultgrade&gt;1&lt;/defaultgrade&gt;
+    &lt;penalty&gt;0&lt;/penalty&gt;
+    &lt;hidden&gt;0&lt;/hidden&gt;
+    &lt;idnumber/&gt;
+    &lt;stackversion&gt;
+      &lt;text/&gt;
+    &lt;/stackversion&gt;
+    &lt;questionvariables&gt;
+      &lt;text&gt;a:rand(8)+2;
+ n:rand(8)+2;
+ correctanswer:ev(n*ln(x)/a);
+ wronganswer1:ev(n*a/ln(x));
+ wronganswer2:n*a*ln(x);&lt;/text&gt;
+    &lt;/questionvariables&gt;
+    &lt;specificfeedback format="html"&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;[[feedback:Result]]&lt;/p&gt;]]&gt;&lt;/text&gt;
+    &lt;/specificfeedback&gt;
+    &lt;questionnote format="moodle_auto_format"&gt;
+      &lt;text&gt;When \(\displaystyle \ln(a)={@a@}, \log_{a}(x^{@n@}) ={@correctanswer@}\)&lt;/text&gt;
+    &lt;/questionnote&gt;
+    &lt;questiondescription format="moodle_auto_format"&gt;
+      &lt;text/&gt;
+    &lt;/questiondescription&gt;
+    &lt;questionsimplify&gt;1&lt;/questionsimplify&gt;
+    &lt;assumepositive&gt;0&lt;/assumepositive&gt;
+    &lt;assumereal&gt;0&lt;/assumereal&gt;
+    &lt;scientificnotation&gt;*10&lt;/scientificnotation&gt;
+    &lt;multiplicationsign&gt;dot&lt;/multiplicationsign&gt;
+    &lt;sqrtsign&gt;1&lt;/sqrtsign&gt;
+    &lt;complexno&gt;i&lt;/complexno&gt;
+    &lt;inversetrig&gt;cos-1&lt;/inversetrig&gt;
+    &lt;logicsymbol&gt;lang&lt;/logicsymbol&gt;
+    &lt;matrixparens&gt;[&lt;/matrixparens&gt;
+    &lt;isbroken&gt;0&lt;/isbroken&gt;
+    &lt;variantsselectionseed/&gt;
+    &lt;input&gt;
+      &lt;name&gt;ans1&lt;/name&gt;
+      &lt;type&gt;algebraic&lt;/type&gt;
+      &lt;tans&gt;correctanswer&lt;/tans&gt;
+      &lt;boxsize&gt;20&lt;/boxsize&gt;
+      &lt;strictsyntax&gt;1&lt;/strictsyntax&gt;
+      &lt;insertstars&gt;0&lt;/insertstars&gt;
+      &lt;syntaxhint/&gt;
+      &lt;syntaxattribute&gt;0&lt;/syntaxattribute&gt;
+      &lt;forbidwords/&gt;
+      &lt;allowwords/&gt;
+      &lt;forbidfloat&gt;1&lt;/forbidfloat&gt;
+      &lt;requirelowestterms&gt;1&lt;/requirelowestterms&gt;
+      &lt;checkanswertype&gt;1&lt;/checkanswertype&gt;
+      &lt;mustverify&gt;1&lt;/mustverify&gt;
+      &lt;showvalidation&gt;1&lt;/showvalidation&gt;
+      &lt;options/&gt;
+    &lt;/input&gt;
+    &lt;prt&gt;
+      &lt;name&gt;Result&lt;/name&gt;
+      &lt;value&gt;1.0000000&lt;/value&gt;
+      &lt;autosimplify&gt;1&lt;/autosimplify&gt;
+      &lt;feedbackstyle&gt;1&lt;/feedbackstyle&gt;
+      &lt;feedbackvariables&gt;
+        &lt;text/&gt;
+      &lt;/feedbackvariables&gt;
+      &lt;node&gt;
+        &lt;name&gt;0&lt;/name&gt;
+        &lt;description/&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;ans1&lt;/sans&gt;
+        &lt;tans&gt;correctanswer&lt;/tans&gt;
+        &lt;testoptions/&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;1.0000000&lt;/truescore&gt;
+        &lt;truepenalty/&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;Result-0-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;
+        &lt;falsenextnode&gt;1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;Result-0-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+      &lt;node&gt;
+        &lt;name&gt;1&lt;/name&gt;
+        &lt;description/&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;ans1&lt;/sans&gt;
+        &lt;tans&gt;wronganswer1&lt;/tans&gt;
+        &lt;testoptions/&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;0.0000000&lt;/truescore&gt;
+        &lt;truepenalty/&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;Result-1-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text&gt;&lt;![CDATA[&lt;p&gt;Check the Log Laws&lt;/p&gt;]]&gt;&lt;/text&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;
+        &lt;falsenextnode&gt;2&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;Result-1-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+      &lt;node&gt;
+        &lt;name&gt;2&lt;/name&gt;
+        &lt;description/&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;ans1&lt;/sans&gt;
+        &lt;tans&gt;wronganswer2&lt;/tans&gt;
+        &lt;testoptions/&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;0.0000000&lt;/truescore&gt;
+        &lt;truepenalty/&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;Result-2-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text&gt;&lt;![CDATA[&lt;p&gt;Check the Log Laws&lt;/p&gt;]]&gt;&lt;/text&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;
+        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;Result-2-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+    &lt;/prt&gt;
+    &lt;deployedseed&gt;1531295862&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;864648734&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1099277693&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1731809073&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;209765752&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1273387083&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1610313421&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;2071319725&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;73064170&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1410745669&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1363551006&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1556989561&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1814621817&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1819508562&lt;/deployedseed&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;1&lt;/testcase&gt;
+      &lt;description/&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans1&lt;/name&gt;
+        &lt;value&gt;correctanswer&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;Result&lt;/name&gt;
+        &lt;expectedscore&gt;1.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.0000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;Result-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;2&lt;/testcase&gt;
+      &lt;description/&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans1&lt;/name&gt;
+        &lt;value&gt;wronganswer1&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;Result&lt;/name&gt;
+        &lt;expectedscore&gt;0.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.0000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;Result-1-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;3&lt;/testcase&gt;
+      &lt;description/&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans1&lt;/name&gt;
+        &lt;value&gt;wronganswer2&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;Result&lt;/name&gt;
+        &lt;expectedscore&gt;0.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.0000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;Result-2-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+  &lt;/question&gt;
+&lt;/quiz&gt;
+</code></pre></details></div></div>
+<p><a href="questions/corpus/Logs_1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Logs-and-Exponentials/Logs_1.xml">Pinned upstream source</a></p>
+</section>
 </section>
 <section id="authored-test-mismatches" class="level2">
 <h2 class="anchored" data-anchor-id="authored-test-mismatches">Authored test mismatches</h2>
-<p>This question imports and instantiates, but the adapter’s replay disagrees with outcomes authored in the XML. Its grading is therefore not presented as a working exercise. Seeded values in this adapter need not match Maxima’s values for the same seed, so a mismatch may arise from a different generated variant. The <a href="questions/corpus/baseline.json">baseline JSON</a> lists every failed seed, input, PRT, expected result, and observed result.</p>
+<p>These cases disagree with expectations authored in the XML and are kept out of the interactive gallery. Reviewed causes are named below; an authored-test mismatch alone does not identify whether the cause is the port or the original question. The <a href="questions/corpus/baseline.json">baseline JSON</a> retains the exact expected and observed results.</p>
 <section id="algmap-8-10" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-8-10">AlgMap-8.10</h3>
+<p><strong>Upstream authoring bug in the PRT.</strong> At the failing variant, <code>a=8</code>, <code>b=9</code>, <code>c=2</code>, and <code>d=3</code>, so the correct answer is <code>8*(t+y)/2 + 9*(t+y)/3 = 7*(t+y)</code>. Both authored model answers therefore have no fraction operator. The only full-credit branch requires <code>SingleFrac</code>, which rejects this product; every later branch awards zero. Authored tests 1 and 2 nevertheless expect full credit. The pinned native STACK test also rejects <code>7*(t+y)</code> under <code>SingleFrac</code>. The port’s random choices expose a latent assumption in the original question; this diagnosis uses the fixed values above, rather than assuming Maxima generates those values for the same seed.</p>
 <p>Algebra Refresher / 08 Algebraic fractions · <strong>2 failed of 12 replayed seed/case combinations.</strong> For seed <code>1856951054</code>, case <code>1</code>, input <code>ans = (7*(t + y))</code>: <code>prt1</code> expected score <code>1.0</code> and answer note <code>1-0-T</code>, but produced score <code>0.0</code> and answer note <code>1-0-F | 1-1-F</code>.</p>
 <p><a href="questions/corpus/AlgMap-8-10.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/08-Algebraic-fractions/AlgMap-8-10.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Full replay</a></p>
 </section>
@@ -3173,30 +3628,20 @@ ta:factor((cf1*v+a)*(cf2*v+b));&lt;/text&gt;
 <p>Algebra Refresher / 12 Simultaneous linear equations · <strong>Unsupported at import.</strong> <code>input[ans]</code>: unsupported input name or type 'ans'/'matrix'.</p>
 <p><a href="questions/corpus/AlgMap-12-1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/12-Simultaneous-linear-equations/AlgMap-12-1.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Replay record</a></p>
 </section>
-<section id="algmap-14-1" class="level3">
-<h3 class="anchored" data-anchor-id="algmap-14-1">AlgMap-14.1</h3>
-<p>Algebra Refresher / 14 Algebraic fractions involving factorising · <strong>Unsupported at instantiation at seed <code>1720352247</code>.</strong> <code>instantiation</code>: Function gcd is not allowed; use gcd*(…) for multiplication.</p>
-<p><a href="questions/corpus/AlgMap-14-1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/14-Algebraic-fractions-involving-factorising/AlgMap-14-1.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Replay record</a></p>
-</section>
 <section id="algmap-15-1" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-15-1">AlgMap-15.1</h3>
-<p>Algebra Refresher / 15 Quadratic equations · <strong>Unsupported at instantiation at seed <code>2060820372</code>.</strong> <code>instantiation</code>: Unexpected character at position 0.</p>
+<p>Algebra Refresher / 15 Quadratic equations · <strong>Unsupported at instantiation at seed <code>2060820372</code>.</strong> <code>input[ans]/tans</code>: Set expressions {…} are not yet supported.</p>
 <p><a href="questions/corpus/AlgMap-15-1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/15-Quadratic-equations/AlgMap-15-1.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Replay record</a></p>
 </section>
 <section id="complex-convert-1" class="level3">
 <h3 class="anchored" data-anchor-id="complex-convert-1">Complex_Convert_1</h3>
-<p>Topics / Complex Numbers · <strong>Unsupported at instantiation at seed <code>817828831</code>.</strong> <code>questionvariables[principaltheta]</code>: Function mod is not allowed; use mod*(…) for multiplication.</p>
+<p>Topics / Complex Numbers · <strong>Unsupported at instantiation at seed <code>817828831</code>.</strong> <code>input[ans1]/tans</code>: only scalar teacher answers are supported.</p>
 <p><a href="questions/corpus/Complex_Convert_1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Complex-Numbers/Complex_Convert_1.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Replay record</a></p>
 </section>
 <section id="limits-1" class="level3">
 <h3 class="anchored" data-anchor-id="limits-1">Limits_1</h3>
 <p>Topics / Limits · <strong>Unsupported at import.</strong> <code>prt[Result]/node[0]/truepenalty</code>: branch-specific penalties are unsupported.</p>
 <p><a href="questions/corpus/Limits_1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Limits/Limits_1.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Replay record</a></p>
-</section>
-<section id="logs-1" class="level3">
-<h3 class="anchored" data-anchor-id="logs-1">Logs_1</h3>
-<p>Topics / Logs and Exponentials · <strong>Unsupported at instantiation at seed <code>1531295862</code>.</strong> <code>questionvariables[correctanswer]</code>: Function ln is not allowed; use ln*(…) for multiplication.</p>
-<p><a href="questions/corpus/Logs_1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Logs-and-Exponentials/Logs_1.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Replay record</a></p>
 </section>
 <section id="matrices-find-det-2-2" class="level3">
 <h3 class="anchored" data-anchor-id="matrices-find-det-2-2">Matrices_find det 2*2</h3>
@@ -3205,7 +3650,7 @@ ta:factor((cf1*v+a)*(cf2*v+b));&lt;/text&gt;
 </section>
 <section id="inequality-1" class="level3">
 <h3 class="anchored" data-anchor-id="inequality-1">Inequality_1</h3>
-<p>Topics / Inequalities · <strong>Unsupported at instantiation at seed <code>1959651692</code>.</strong> <code>questionvariables[correctanswer]</code>: Unexpected character at position 1.</p>
+<p>Topics / Inequalities · <strong>Unsupported at instantiation at seed <code>1959651692</code>.</strong> <code>questionvariables[correctanswer]</code>: Unexpected character '&gt;' (U+003E) at position 1.</p>
 <p><a href="questions/corpus/Inequality_1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Inequalities/Inequality_1.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Replay record</a></p>
 </section>
 <section id="numerical-input-min-sf" class="level3">

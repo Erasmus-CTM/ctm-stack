@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Port regression report – STACK SymPy · Native compliance</title>
+<title>Port regressions – STACK SymPy</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f53186b9ac0866246e638800b9d808a6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e3515265876d2ff83baf2d30e02c4c0b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,15 +73,15 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="report.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">STACK SymPy · Native compliance</span>
+    <a class="navbar-brand" href="../">
+    <span class="navbar-title">STACK SymPy</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -98,9 +98,12 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link active" href="./port-regressions.html" aria-current="page"> 
 <span class="menu-text">Port regressions</span></a>
   </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./../"> 
-<span class="menu-text">Back to example site</span></a>
+    <a class="nav-link" href="./../"> <i class="bi bi-arrow-left" role="img">
+</i> 
+<span class="menu-text">Back to examples</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -113,16 +116,14 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Port regression report</h1>
-<p class="subtitle lead">Project-owned discoveries and compatibility controls</p>
+<h1 class="title">Port regressions</h1>
+<p class="subtitle lead">Checks for discoveries made while building the port</p>
 </div>
 
 
@@ -139,22 +140,52 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>These cases extend our coverage independently of the <a href="./index.html">legacy STACK compliance report</a>. Each has a stable ID, expected behavior, origin, and reason. CPython, native STACK where applicable, and browser Pyodide are observed separately.</p>
-<p>Explicit boundary checks verify controlled rejection of unsupported syntax. They do not count as mathematical compatibility passes. Known form defects and real/principal-complex branch conventions remain visible as separate statuses. Missing runner output stays unavailable.</p>
-<p><a href="port-regressions.json">Download port regression JSON</a> · <a href="https://github.com/Erasmus-CTM/stack-sympy/tree/main/tests/port_regressions">Fixture and contribution guide</a></p>
-<p>These project-owned cases record discoveries, negative controls, and explicit unsupported boundaries. Their counts are separate from the imported STACK inventory. A boundary pass checks an intentional rejection; a known defect remains a limitation, even when its recorded observation is stable.</p>
+<p>These project-owned cases cover supported behavior, invalid or unsupported inputs, and known differences discovered during development. They are separate from the <a href="./index.html">2,303 source cases in STACK compliance</a>.</p>
+<p><strong>Expected</strong> is the behavior recorded for each case. <strong>Port</strong> is the SymPy implementation, <strong>STACK</strong> is Maxima, and <strong>Browser</strong> runs the port through Pyodide. A browser agreement can confirm the same known defect; it does not make that result correct.</p>
+<div class="status-legend" aria-label="How to read the colors">
+<p><span class="tone-good">Green: expected behavior or agreement</span> <span class="tone-notice">Amber: known issue or explained difference</span> <span class="tone-bad">Red: unexpected result</span> <span class="tone-neutral">Gray: input handling or no comparison</span></p>
+</div>
 <div id="port-regressions-status" role="status">
-Port regression results unavailable until report loads.
+Loading saved results…
 </div>
+<div id="port-summary" class="report-summary">
+
+</div>
+<section id="case-results" class="level2">
+<h2 class="anchored" data-anchor-id="case-results">Cases</h2>
+<p>Each amber case explains what differs and what to conclude. Select a count above or use the filters.</p>
 <div class="report-controls">
-<p><label>Port case or expression <input id="port-search" type="search" placeholder="Search project regressions"></label> <label>Group <select id="port-group"><option value="">All groups</option></select></label></p>
+<p><label>Search cases <input id="port-search" type="search" placeholder="Expression, case ID, or explanation"></label> <label>Group <select id="port-group"><option value="">All groups</option></select></label></p>
 </div>
+<div id="port-filters" class="report-controls">
+
+</div>
+<button type="button" id="clear-filters" class="clear-filters">
+Clear filters
+</button>
+<p id="port-case-count" role="status">
+</p>
 <div id="port-regressions-list" class="case-list">
 
 </div>
+<details class="methodology">
+<summary>
+Scope and technical details
+</summary>
+<p>An expected input-handling check verifies that invalid or unsupported input is correctly refused. It is not a successful mathematical comparison. Known port issues remain defects even when their observations match a recorded exception. Root-convention differences have their own explanation and are not labeled mathematical failures.</p>
+<p>The saved run observes isolated Python, official STACK functions where applicable, and the same port in browser Pyodide. “Test applies” is the answer test’s applicability, separate from input syntax validity. Missing observations remain unavailable.</p>
+<div id="port-provenance">
+
+</div>
+</details>
+<p class="report-downloads">
+<a href="port-regressions.json" download="">Download saved results</a> · <a href="https://github.com/Erasmus-CTM/stack-sympy/tree/main/tests/port_regressions">Cases and contribution guide</a> · <a href="./index.html">STACK compliance</a>
+</p>
+<script src="report-ui.js" defer=""></script>
 <script src="port-regressions.js" defer=""></script>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

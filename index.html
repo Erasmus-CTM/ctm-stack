@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Try a STACK question on a static page – STACK SymPy</title>
+<title>STACK questions with AI Feedback – STACK SymPy</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -110,14 +110,21 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./docs/authoring.html"> 
 <span class="menu-text">Authoring guide</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./compliance/"> 
-<span class="menu-text">Native compliance</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-compatibility" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Compatibility</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-compatibility">    
+        <li>
+    <a class="dropdown-item" href="./compliance/">
+ <span class="dropdown-text">STACK compliance</span></a>
   </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="./compliance/port-regressions.html"> 
-<span class="menu-text">Port regressions</span></a>
+        <li>
+    <a class="dropdown-item" href="./compliance/port-regressions.html">
+ <span class="dropdown-text">Port regressions</span></a>
   </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -141,8 +148,10 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#expand-and-collect" id="toc-expand-and-collect" class="nav-link active" data-scroll-target="#expand-and-collect">Expand and collect</a></li>
-  <li><a href="#how-to-use-it-in-your-own-page" id="toc-how-to-use-it-in-your-own-page" class="nav-link" data-scroll-target="#how-to-use-it-in-your-own-page">How to use it in your own page</a></li>
+  <li><a href="#try-a-question" id="toc-try-a-question" class="nav-link active" data-scroll-target="#try-a-question">Try a question</a></li>
+  <li><a href="#what-is-supported" id="toc-what-is-supported" class="nav-link" data-scroll-target="#what-is-supported">What is supported?</a></li>
+  <li><a href="#use-your-own-question" id="toc-use-your-own-question" class="nav-link" data-scroll-target="#use-your-own-question">Use your own question</a></li>
+  <li><a href="#explore-the-port" id="toc-explore-the-port" class="nav-link" data-scroll-target="#explore-the-port">Explore the port</a></li>
   </ul>
 </nav>
     </div>
@@ -153,8 +162,8 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Try a STACK question on a static page</h1>
-<p class="subtitle lead">Native question exports, evaluated with SymPy in your browser</p>
+<h1 class="title">STACK questions with AI Feedback</h1>
+<p class="subtitle lead">Interactive practice on Quarto teaching pages</p>
 </div>
 
 
@@ -171,11 +180,13 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>STACK SymPy reads an ordinary Moodle STACK XML export at build time. The Quarto page contains an interactive question card; a browser worker uses the same bounded Python question model to check each response. No Moodle session is needed to try these examples. The review buttons here show the authored question tests and their expected PRT outcomes.</p>
-<section id="expand-and-collect" class="level2">
-<h2 class="anchored" data-anchor-id="expand-and-collect">Expand and collect</h2>
-<p>This question rewards an expanded polynomial. The input accepts omitted multiplication signs in forms such as <code>8x</code> and <code>2(x+1)</code>, and the preview displays the whole polynomial without extra grouping. A mathematically equivalent factored answer earns partial credit. Press <strong>Validate answers</strong> to inspect the parsed answer, then <strong>Check answer</strong> to grade it. Editing an answer requires validation again. Change the variant to see fresh coefficients. This preceding prose supplies automatic feedback context.</p>
-<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-1" data-stack-feedback="{&quot;context&quot;:{&quot;mode&quot;:&quot;auto&quot;,&quot;refs&quot;:&quot;auto&quot;,&quot;text&quot;:&quot;Expand and collect\nThis question rewards an expanded polynomial. The input accepts omitted multiplication signs in forms such as 8x and 2(x+1), and the preview displays the whole polynomial without extra grouping. A mathematically equivalent factored answer earns partial credit. Press Validate answers to inspect the parsed answer, then Check answer to grade it. Editing an answer requires validation again. Change the variant to see fresh coefficients. This preceding prose supplies automatic feedback context.&quot;},&quot;language&quot;:&quot;en&quot;,&quot;policySelection&quot;:{&quot;exercise&quot;:&quot;stack-sympy-1&quot;,&quot;name&quot;:&quot;&quot;},&quot;uiLanguage&quot;:&quot;en&quot;}"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option><option value="1">Variant 2</option><option value="2">Variant 3</option></select></label></div><div class="stack-prompt stack-question"><p>Expand and collect like terms: \((x+{5})(x+{3})\).</p><p>Give your answer as a polynomial in \(x\). <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="18" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span> <span class="stack-feedback" data-name="prt1"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-1","question":{"name":"Expand a product (form-sensitive)","questiontext":"\u003cp\u003eExpand and collect like terms: \\((x+{@a@})(x+{@b@})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). [[input:ans]] [[validation:ans]] [[feedback:prt1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eMultiply each term and collect: \\(x^2+({@a@}+{@b@})x+{@a@}\\cdot{@b@}={@ta@}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"Expansion: (x+a)(x+b) = ta","variables":"a:rand(4)+2;\nb:rand(3)+2;\nta:x^2+(a+b)*x+a*b;","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":18,"strictsyntax":true,"insertstars":1,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"prt1-0-T","feedback":"\u003cp\u003eCorrect: the expression is expanded and collected.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":1,"note":"prt1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.5,"next":-1,"note":"prt1-1-T","feedback":"\u003cp\u003eThis is equivalent, but expand the product and collect like terms for full credit.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"prt1-1-F","feedback":"\u003cp\u003eCheck the middle term and constant term when you multiply the binomials.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"Expanded polynomial","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"2","description":"Equivalent but still factored","inputs":{"ans":"(x+a)*(x+b)"},"expected":{"prt1":{"score":0.5,"penalty":0.1,"note":"prt1-0-F | prt1-1-T"}}},{"testcase":"3","description":"Incorrect middle coefficient","inputs":{"ans":"x^2+(a+b+1)*x+a*b"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F | prt1-1-F"}}}],"deployedseeds":[17,29,47]},"variants":[{"seed":17,"env":{"a":"5","b":"3","ta":"x**2 + 8*x + 15"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{5})(x+{3})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({5}+{3})x+{5}\\cdot{3}={x^{2} + 8 x + 15}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":18,"env":{"a":"3","b":"2","ta":"x**2 + 5*x + 6"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{3})(x+{2})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({3}+{2})x+{3}\\cdot{2}={x^{2} + 5 x + 6}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":19,"env":{"a":"2","b":"4","ta":"x**2 + 6*x + 8"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{2})(x+{4})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({2}+{4})x+{2}\\cdot{4}={x^{2} + 6 x + 8}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+<p>Bring selected Moodle STACK questions to a teaching website, with SymPy answer checking and <strong>AI Feedback for guided hints and explanations</strong>. Supported questions run in the learner’s browser without a Moodle session, retaining their XML, response trees and authored question tests.</p>
+<p><strong>Quarto</strong> turns plain-text teaching material into web pages. This extension adds interactive STACK question cards to those pages, which you can publish as a static website.</p>
+<section id="try-a-question" class="level2">
+<h2 class="anchored" data-anchor-id="try-a-question">Try a question</h2>
+<p>Expand and collect the polynomial below. An equivalent factored answer earns partial credit. Press <strong>Validate answers</strong> to inspect your expression, then <strong>Check answer</strong> to grade it. Change the variant to try fresh coefficients.</p>
+<p><strong>AI Feedback</strong> adds guided hints and explanations alongside the question’s deterministic grading. Open its panel for help as you work. The review controls let STACK authors inspect the question’s own tests.</p>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-1" data-stack-feedback="{&quot;context&quot;:{&quot;mode&quot;:&quot;auto&quot;,&quot;refs&quot;:&quot;auto&quot;,&quot;text&quot;:&quot;Try a question\nExpand and collect the polynomial below. An equivalent factored answer earns partial credit. Press Validate answers to inspect your expression, then Check answer to grade it. Change the variant to try fresh coefficients.\nAI Feedback adds guided hints and explanations alongside the question’s deterministic grading. Open its panel for help as you work. The review controls let STACK authors inspect the question’s own tests.&quot;},&quot;language&quot;:&quot;en&quot;,&quot;policySelection&quot;:{&quot;exercise&quot;:&quot;stack-sympy-1&quot;,&quot;name&quot;:&quot;&quot;},&quot;uiLanguage&quot;:&quot;en&quot;}"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option><option value="1">Variant 2</option><option value="2">Variant 3</option></select></label></div><div class="stack-prompt stack-question"><p>Expand and collect like terms: \((x+{5})(x+{3})\).</p><p>Give your answer as a polynomial in \(x\). <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="18" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span> <span class="stack-feedback" data-name="prt1"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-1","question":{"name":"Expand a product (form-sensitive)","questiontext":"\u003cp\u003eExpand and collect like terms: \\((x+{@a@})(x+{@b@})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). [[input:ans]] [[validation:ans]] [[feedback:prt1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eMultiply each term and collect: \\(x^2+({@a@}+{@b@})x+{@a@}\\cdot{@b@}={@ta@}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"Expansion: (x+a)(x+b) = ta","variables":"a:rand(4)+2;\nb:rand(3)+2;\nta:x^2+(a+b)*x+a*b;","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":18,"strictsyntax":true,"insertstars":1,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"prt1-0-T","feedback":"\u003cp\u003eCorrect: the expression is expanded and collected.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":1,"note":"prt1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.5,"next":-1,"note":"prt1-1-T","feedback":"\u003cp\u003eThis is equivalent, but expand the product and collect like terms for full credit.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"prt1-1-F","feedback":"\u003cp\u003eCheck the middle term and constant term when you multiply the binomials.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"Expanded polynomial","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"2","description":"Equivalent but still factored","inputs":{"ans":"(x+a)*(x+b)"},"expected":{"prt1":{"score":0.5,"penalty":0.1,"note":"prt1-0-F | prt1-1-T"}}},{"testcase":"3","description":"Incorrect middle coefficient","inputs":{"ans":"x^2+(a+b+1)*x+a*b"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F | prt1-1-F"}}}],"deployedseeds":[17,29,47]},"variants":[{"seed":17,"env":{"a":"5","b":"3","ta":"x**2 + 8*x + 15"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{5})(x+{3})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({5}+{3})x+{5}\\cdot{3}={x^{2} + 8 x + 15}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":18,"env":{"a":"3","b":"2","ta":"x**2 + 5*x + 6"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{3})(x+{2})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({3}+{2})x+{3}\\cdot{2}={x^{2} + 5 x + 6}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":19,"env":{"a":"2","b":"4","ta":"x**2 + 6*x + 8"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{2})(x+{4})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({2}+{4})x+{2}\\cdot{4}={x^{2} + 6 x + 8}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
 #| file: questions/polynomial-expansion.xml
 #| question: Expand a product (form-sensitive)
 #| variants: 3
@@ -355,19 +366,30 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
 </code></pre></details></div></div>
 <p><a href="questions/polynomial-expansion.xml">Download the native STACK XML</a> · <a href="./examples.html">See the other examples</a></p>
 </section>
-<section id="how-to-use-it-in-your-own-page" class="level2">
-<h2 class="anchored" data-anchor-id="how-to-use-it-in-your-own-page">How to use it in your own page</h2>
-<p>Put the XML in your project, install the STACK SymPy and shared AI Feedback extensions, add <code>filters: [stack-sympy]</code> to <code>_quarto.yml</code>, and point a code block at one named question:</p>
-<pre class="text" data-ai-feedback-context="How to use it in your own page
-Put the XML in your project, install the STACK SymPy and shared AI Feedback extensions, add filters: [stack-sympy] to _quarto.yml, and point a code block at one named question:"><code>```{.stack-question}
-#| file: questions/polynomial-expansion.xml
-#| question: Expand a product (form-sensitive)
-#| variants: 3
-#| seed: 17
-#| review: true
-#| feedback: true
-```</code></pre>
-<p>Render with <code>quarto render</code>, then serve the output over HTTP. The <a href="./docs/authoring.html">authoring guide</a> explains the XML subset, diagnostics, grading, and the test command. The <a href="https://github.com/Erasmus-CTM/stack-sympy#readme">README</a> has installation and development instructions.</p>
+<section id="what-is-supported" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-supported">What is supported?</h2>
+<p>This is a bounded port of STACK, with <strong>scalar algebraic and numerical inputs</strong> and eight answer tests:</p>
+<p><code>AlgEquiv</code>, <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, <code>LowestTerms</code>, <code>NumAbsolute</code>, <code>NumRelative</code>, and <code>NumDecPlaces</code>.</p>
+<p><code>AlgEquiv</code> also handles supported Boolean expressions and polynomial equations. General set, list, matrix and units inputs, arbitrary Maxima code, and the full Moodle assessment workflow are outside the current scope. See the <a href="./docs/authoring.html#what-the-adapter-checks">precise support limits</a> before adapting a question.</p>
+</section>
+<section id="use-your-own-question" class="level2">
+<h2 class="anchored" data-anchor-id="use-your-own-question">Use your own question</h2>
+<ol type="1">
+<li>Export a supported question from Moodle as STACK XML.</li>
+<li>Add STACK SymPy and AI Feedback to a Quarto project, then embed the named question in a page.</li>
+<li>Render the project and publish the resulting website.</li>
+</ol>
+<p>The <a href="./docs/authoring.html">authoring guide</a> has the installation steps, embedding example and AI Feedback setup. It also explains how to replay your authored tests and inspect unsupported features.</p>
+</section>
+<section id="explore-the-port" class="level2">
+<h2 class="anchored" data-anchor-id="explore-the-port">Explore the port</h2>
+<ul>
+<li><a href="./examples.html">Worked examples</a>: grading different answer forms and using feedback.</li>
+<li><a href="./corpus.html">Question corpus</a>: imported STACK questions, replay results and known authoring issues.</li>
+<li><a href="compliance/">STACK compliance</a>: comparisons with upstream answer-test cases.</li>
+<li><a href="compliance/port-regressions.html">Port regressions</a>: focused checks for discoveries made during the port.</li>
+<li><a href="https://github.com/Erasmus-CTM/stack-sympy#readme">Source and development guide</a>: installation details and implementation notes.</li>
+</ul>
 
 
 </section>

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Native STACK answer-test compliance – STACK SymPy · Native compliance</title>
+<title>STACK compliance – STACK SymPy</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -40,7 +40,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-f53186b9ac0866246e638800b9d808a6.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e3515265876d2ff83baf2d30e02c4c0b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -73,15 +73,15 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="report.css">
 </head>
 
-<body class="nav-fixed quarto-light">
+<body class="nav-fixed fullcontent quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">STACK SymPy · Native compliance</span>
+    <a class="navbar-brand" href="../">
+    <span class="navbar-title">STACK SymPy</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -98,9 +98,12 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./port-regressions.html"> 
 <span class="menu-text">Port regressions</span></a>
   </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./../"> 
-<span class="menu-text">Back to example site</span></a>
+    <a class="nav-link" href="./../"> <i class="bi bi-arrow-left" role="img">
+</i> 
+<span class="menu-text">Back to examples</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -113,16 +116,14 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
-    </div>
+    
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Native STACK answer-test compliance</h1>
-<p class="subtitle lead">A pinned, inspectable CAS comparison</p>
+<h1 class="title">STACK compliance</h1>
+<p class="subtitle lead">Expected behavior, engine agreement, and known limitations</p>
 </div>
 
 
@@ -139,43 +140,73 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This report replays static answer-test rows from the pinned upstream STACK fixture against this project’s Python implementation, official STACK/Maxima, and the same Python core running under Pyodide. The three checks answer different questions. Upstream negative sentinels annotate expected native deviations; only case-specific reviewed comparisons are labeled <strong>known native mathematical failures</strong> here. Agreement with such a failure is not mathematical correctness. A native answer note may be unavailable or not comparable even when the CAS validity and correctness booleans agree.</p>
-<p>The parity inventory covers every static row, including unsupported rows that agree only in preflight classification. The eligible grading count appears separately below. Raw answer notes are displayed for inspection but are <strong>not generally compared</strong> as equivalent feedback. A comparable authored <code>-1</code> controlled-error row must match its asserted STACK error note exactly, apart from surrounding output whitespace.</p>
-<p>The “native vs desired” axis compares a direct Maxima answer-test call with an upstream fixture expectation. An unexpected deviation there can reflect PHP-side preparation, option defaults, or CAS state that this direct-call oracle does not reproduce; it is a case for investigation, not proof of a Moodle grading bug. Final-mark agreement and CAS applicability are reported separately, since both engines can reject an answer while disagreeing about whether their equivalence test applies.</p>
-<p>Fixture score codes: <code>0</code> means desired reject, <code>1</code> desired accept, and <code>-1</code> an asserted controlled error. <code>-2</code> means desired reject despite an upstream annotated native acceptance; <code>-3</code> means desired accept despite an upstream annotated native rejection. These negative codes record source-authored expectations, not approvals of this report’s direct-CAS observations.</p>
-<p>The scope is <strong>CAS answer-test behavior</strong> for the imported static rows. PHP question/controller behavior, Moodle attempt state, dynamically appended fixture cases, complete input validation, and all STACK functionality are outside this comparison. The native runner nounifies <code>and</code>, <code>or</code>, and <code>not</code> before Maxima evaluation, following STACK’s logical input preparation. Its fingerprint distinguishes these observations from older raw-operator runs. Unsupported and out-of-contract rows remain visible in the inventory. An unavailable runner is shown as unavailable, never treated as a pass.</p>
-<p>
-<a href="report.json" download="">Download complete JSON report</a> · <span id="fixture-link">Fixture commit link unavailable until report loads</span> · <a href="https://github.com/Erasmus-CTM/stack-sympy">Source repository</a>
-</p>
+<p>Each source case compares a submitted answer with a reference using a named STACK answer test. The SymPy port implements a subset of STACK; this page shows its coverage gaps, expected behavior, and agreement with STACK and the browser.</p>
+<p><strong>Port</strong> is this SymPy implementation. <strong>STACK</strong> is the reference Maxima implementation. <strong>Expected</strong> is the source fixture’s intended accept, reject, or error result. Only STACK tests with a fully supported equivalent in the Python port were run.</p>
+<div class="status-legend" aria-label="How to read the colors">
+<p><span class="tone-good">Green: expected behavior or agreement</span> <span class="tone-notice">Amber: known issue or explained difference</span> <span class="tone-bad">Red: unexpected result</span> <span class="tone-neutral">Gray: not graded, outside scope, or unavailable</span></p>
+</div>
 <div id="report-loading" role="status">
-Loading report data…
+Loading saved results…
 </div>
 <div id="report-root" hidden="">
-<div id="report-provenance" class="report-provenance">
+<div id="report-overview" class="report-overview">
 
 </div>
 <div id="report-summary" class="report-summary">
 
 </div>
-<div id="report-runners" class="report-runners">
+<details class="secondary-comparisons">
+<summary>
+More comparisons: final marks, test applicability, and STACK expectations
+</summary>
+<div id="extra-summary" class="report-summary">
 
 </div>
-<p><a href="./port-regressions.html">Project-owned port regressions</a> have their own page and counts.</p>
-<section id="inspect-cases" class="level2">
-<h2 class="anchored" data-anchor-id="inspect-cases">Inspect cases</h2>
-<div class="report-controls">
-<p><label>Expression or case ID <input id="case-search" type="search" placeholder="Search student, teacher, options, test, ID"></label> <label>Answer test <select id="test-filter"><option value="">All tests</option></select></label> <label>Desired result <select id="desired-filter"><option value="">All statuses</option></select></label> <label>Native comparison <select id="native-filter"><option value="">All statuses</option></select></label> <label>Native final mark <select id="native_mark-filter"><option value="">All statuses</option></select></label> <label>Native CAS applicability <select id="native_applicability-filter"><option value="">All statuses</option></select></label> <label>Native vs desired <select id="native_desired-filter"><option value="">All statuses</option></select></label> <label>Browser parity <select id="parity-filter"><option value="">All statuses</option></select></label></p>
+<div id="extra-filters" class="report-controls">
+
 </div>
+</details>
+<section id="case-results" class="level2">
+<h2 class="anchored" data-anchor-id="case-results">Cases</h2>
+<p>Select a count above or use the filters. Open a case to see the expected and actual results.</p>
+<div class="report-controls">
+<p><label>Search cases <input id="case-search" type="search" placeholder="Case number, expression, test, or ID"></label> <label>Answer test <select id="test-filter"><option value="">All answer tests</option></select></label></p>
+</div>
+<div id="comparison-filters" class="report-controls">
+
+</div>
+<button type="button" id="clear-filters" class="clear-filters">
+Clear filters
+</button>
 <p id="case-count" role="status">
 </p>
 <div id="case-list" class="case-list">
 
 </div>
 <button type="button" id="show-more" hidden="">
-Show more
+Show more cases
 </button>
+<details class="methodology">
+<summary>
+Scope and technical details
+</summary>
+<p>This compares CAS answer-test functions rather than complete Moodle grading sessions. The port currently provides eight answer-test families. Cases outside port coverage stay in the inventory and are labeled by the missing answer test or unsupported input/feature. Some direct reference calls are also omitted because they need parser or controller preparation.</p>
+<p>“Test applicability” asks whether an answer test can compare the supplied values. It is separate from input syntax validity and from the final accept/reject mark. Form tests such as <code>EqualComAss</code> can reject mathematically equivalent expressions.</p>
+<p>Source codes <code>0</code> and <code>1</code> mean expected rejection and acceptance; <code>-1</code> expects a controlled error. Codes <code>-2</code> and <code>-3</code> flag source-authored native deviations. Only specifically reviewed cases are labeled “Known STACK issue.” Ordinary feedback notes are retained but not generally compared; asserted controlled-error notes are checked separately.</p>
+<p>Browser agreement includes input/scope classifications as well as graded results. The summary separates these. STACK coverage counts available observations, not compatibility passes.</p>
+<div id="report-provenance">
+
+</div>
+<div id="report-runners">
+
+</div>
+</details>
+<p class="report-downloads">
+<a href="report.json" download="">Download saved results</a> · <span id="fixture-link"></span> · <a href="./port-regressions.html">Project regression cases</a>
+</p>
 </section>
 </div>
+<script src="report-ui.js" defer=""></script>
 <script src="report.js" defer=""></script>
 
 

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "engine_revision": "ffdc260349b401bae591aec5abdd8a7288178c3f",
-  "adapter_source_sha256": "5bd2f2cee42b710c32c2c5035b0f538d1dd1dab52ae5bb3d98dada79857dc921",
+  "engine_revision": "0c6ba3983ec81a20806f73ac9aef0bbc68df6312",
+  "adapter_source_sha256": "20a9194a730ecf790b79e9c5b6cd4c3fc4ef73f22ff6b7a205cdf639c38902ef",
   "python_version": "3.12.14",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",
@@ -10,13 +10,13 @@
     "total": 30,
     "stages": {
       "qtests_mismatch": 1,
-      "qtests_pass": 16,
+      "qtests_pass": 18,
       "unsupported_import": 4,
-      "unsupported_instantiate": 9
+      "unsupported_instantiate": 7
     },
     "imported": 26,
-    "instantiated_all_seeds": 17,
-    "replayed_cases": 114,
+    "instantiated_all_seeds": 19,
+    "replayed_cases": 132,
     "failed_cases": 2,
     "failed_checks": 2
   },
@@ -171,34 +171,31 @@
       "status": "qtests_pass"
     },
     {
-      "diagnostic": {
-        "location": "instantiation",
-        "message": "AlgMap-14.1: instantiation: Function gcd is not allowed; use gcd*(...) for multiplication",
-        "reason": "Function gcd is not allowed; use gcd*(...) for multiplication",
-        "seed": 1720352247,
-        "type": "UnsupportedQuestion"
-      },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "AlgMap-14-1.xml",
       "id": "algmap-14-1",
       "imported_questions": 1,
-      "instantiated_seeds": [],
+      "instantiated_seeds": [
+        1720352247,
+        1847020159,
+        410204508
+      ],
       "mismatches": [],
       "native_qtests": 3,
-      "replayed_cases": 0,
+      "replayed_cases": 9,
       "seeds": [
         1720352247,
         1847020159,
         410204508
       ],
-      "status": "unsupported_instantiate"
+      "status": "qtests_pass"
     },
     {
       "diagnostic": {
-        "location": "instantiation",
-        "message": "AlgMap-15.1: instantiation: Unexpected character at position 0",
-        "reason": "Unexpected character at position 0",
+        "location": "input[ans]/tans",
+        "message": "AlgMap-15.1: input[ans]/tans: Set expressions {...} are not yet supported",
+        "reason": "Set expressions {...} are not yet supported",
         "seed": 2060820372,
         "type": "UnsupportedQuestion"
       },
@@ -593,9 +590,9 @@
     },
     {
       "diagnostic": {
-        "location": "questionvariables[principaltheta]",
-        "message": "Complex_Convert_1: questionvariables[principaltheta]: Function mod is not allowed; use mod*(...) for multiplication",
-        "reason": "Function mod is not allowed; use mod*(...) for multiplication",
+        "location": "input[ans1]/tans",
+        "message": "Complex_Convert_1: input[ans1]/tans: only scalar teacher answers are supported",
+        "reason": "only scalar teacher answers are supported",
         "seed": 817828831,
         "type": "UnsupportedQuestion"
       },
@@ -618,8 +615,8 @@
     {
       "diagnostic": {
         "location": "questionvariables[correctanswer]",
-        "message": "Inequality_1: questionvariables[correctanswer]: Unexpected character at position 1",
-        "reason": "Unexpected character at position 1",
+        "message": "Inequality_1: questionvariables[correctanswer]: Unexpected character '>' (U+003E) at position 1",
+        "reason": "Unexpected character '>' (U+003E) at position 1",
         "seed": 1959651692,
         "type": "UnsupportedQuestion"
       },
@@ -663,28 +660,25 @@
       "status": "unsupported_import"
     },
     {
-      "diagnostic": {
-        "location": "questionvariables[correctanswer]",
-        "message": "Logs_1: questionvariables[correctanswer]: Function ln is not allowed; use ln*(...) for multiplication",
-        "reason": "Function ln is not allowed; use ln*(...) for multiplication",
-        "seed": 1531295862,
-        "type": "UnsupportedQuestion"
-      },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "Logs_1.xml",
       "id": "logs-1",
       "imported_questions": 1,
-      "instantiated_seeds": [],
+      "instantiated_seeds": [
+        1531295862,
+        864648734,
+        1099277693
+      ],
       "mismatches": [],
       "native_qtests": 3,
-      "replayed_cases": 0,
+      "replayed_cases": 9,
       "seeds": [
         1531295862,
         864648734,
         1099277693
       ],
-      "status": "unsupported_instantiate"
+      "status": "qtests_pass"
     },
     {
       "diagnostic": {

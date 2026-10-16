@@ -31,7 +31,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 280,
+        "elapsed_ms": 259,
         "scope": "supported"
       },
       "native": {
@@ -54,7 +54,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 280,
+          "elapsed_ms": 259,
           "scope": "supported"
         },
         "pyodide": {
@@ -100,7 +100,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 574,
+        "elapsed_ms": 580,
         "scope": "supported"
       },
       "native": {
@@ -123,7 +123,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 574,
+          "elapsed_ms": 580,
           "scope": "supported"
         },
         "pyodide": {
@@ -169,7 +169,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 215,
+        "elapsed_ms": 232,
         "scope": "supported"
       },
       "native": {
@@ -192,7 +192,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 215,
+          "elapsed_ms": 232,
           "scope": "supported"
         },
         "pyodide": {
@@ -238,7 +238,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 257,
+        "elapsed_ms": 261,
         "scope": "supported"
       },
       "native": {
@@ -261,7 +261,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 257,
+          "elapsed_ms": 261,
           "scope": "supported"
         },
         "pyodide": {
@@ -307,7 +307,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 240,
+        "elapsed_ms": 232,
         "scope": "supported"
       },
       "native": {
@@ -330,7 +330,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 240,
+          "elapsed_ms": 232,
           "scope": "supported"
         },
         "pyodide": {
@@ -370,7 +370,7 @@
         "test": "AlgEquiv",
         "kind": "invalid_student",
         "message": "Non-finite value",
-        "elapsed_ms": 212,
+        "elapsed_ms": 205,
         "scope": "supported"
       },
       "native": null,
@@ -382,7 +382,7 @@
           "test": "AlgEquiv",
           "kind": "invalid_student",
           "message": "Non-finite value",
-          "elapsed_ms": 212,
+          "elapsed_ms": 205,
           "scope": "supported"
         },
         "pyodide": {
@@ -425,7 +425,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 225,
+        "elapsed_ms": 226,
         "scope": "supported"
       },
       "native": {
@@ -448,7 +448,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 225,
+          "elapsed_ms": 226,
           "scope": "supported"
         },
         "pyodide": {
@@ -494,7 +494,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 220,
+        "elapsed_ms": 229,
         "scope": "supported"
       },
       "native": {
@@ -517,7 +517,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 220,
+          "elapsed_ms": 229,
           "scope": "supported"
         },
         "pyodide": {
@@ -563,7 +563,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 224,
+        "elapsed_ms": 227,
         "scope": "supported"
       },
       "native": {
@@ -586,7 +586,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 224,
+          "elapsed_ms": 227,
           "scope": "supported"
         },
         "pyodide": {
@@ -632,7 +632,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 220,
+        "elapsed_ms": 229,
         "scope": "supported"
       },
       "native": {
@@ -655,7 +655,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 220,
+          "elapsed_ms": 229,
           "scope": "supported"
         },
         "pyodide": {
@@ -701,7 +701,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 222,
+        "elapsed_ms": 228,
         "scope": "supported"
       },
       "native": {
@@ -724,7 +724,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 222,
+          "elapsed_ms": 228,
           "scope": "supported"
         },
         "pyodide": {
@@ -770,7 +770,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 227,
+        "elapsed_ms": 226,
         "scope": "supported"
       },
       "native": {
@@ -793,7 +793,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 227,
+          "elapsed_ms": 226,
           "scope": "supported"
         },
         "pyodide": {
@@ -839,7 +839,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 230,
+        "elapsed_ms": 237,
         "scope": "supported"
       },
       "native": {
@@ -862,7 +862,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 230,
+          "elapsed_ms": 237,
           "scope": "supported"
         },
         "pyodide": {
@@ -977,7 +977,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 225,
+        "elapsed_ms": 230,
         "scope": "supported"
       },
       "native": {
@@ -1000,7 +1000,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 225,
+          "elapsed_ms": 230,
           "scope": "supported"
         },
         "pyodide": {
@@ -1046,7 +1046,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 230,
+        "elapsed_ms": 229,
         "scope": "supported"
       },
       "native": {
@@ -1069,7 +1069,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 230,
+          "elapsed_ms": 229,
           "scope": "supported"
         },
         "pyodide": {
@@ -1115,7 +1115,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 238,
+        "elapsed_ms": 230,
         "scope": "supported"
       },
       "native": {
@@ -1138,7 +1138,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 238,
+          "elapsed_ms": 230,
           "scope": "supported"
         },
         "pyodide": {
@@ -1184,7 +1184,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 273,
+        "elapsed_ms": 243,
         "scope": "supported"
       },
       "native": {
@@ -1207,7 +1207,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 273,
+          "elapsed_ms": 243,
           "scope": "supported"
         },
         "pyodide": {
@@ -1253,7 +1253,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 230,
+        "elapsed_ms": 232,
         "scope": "supported"
       },
       "native": {
@@ -1276,7 +1276,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 230,
+          "elapsed_ms": 232,
           "scope": "supported"
         },
         "pyodide": {
@@ -1322,7 +1322,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 235,
+        "elapsed_ms": 228,
         "scope": "supported"
       },
       "native": {
@@ -1345,7 +1345,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 235,
+          "elapsed_ms": 228,
           "scope": "supported"
         },
         "pyodide": {
@@ -1391,7 +1391,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 242,
+        "elapsed_ms": 228,
         "scope": "supported"
       },
       "native": {
@@ -1414,7 +1414,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 242,
+          "elapsed_ms": 228,
           "scope": "supported"
         },
         "pyodide": {
@@ -1461,7 +1461,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 254,
+        "elapsed_ms": 230,
         "scope": "supported"
       },
       "native": {
@@ -1485,7 +1485,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 254,
+          "elapsed_ms": 230,
           "scope": "supported"
         },
         "pyodide": {
@@ -1533,7 +1533,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 267,
+        "elapsed_ms": 228,
         "scope": "supported"
       },
       "native": {
@@ -1557,7 +1557,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 267,
+          "elapsed_ms": 228,
           "scope": "supported"
         },
         "pyodide": {
@@ -1604,7 +1604,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 438,
+        "elapsed_ms": 405,
         "scope": "supported"
       },
       "native": {
@@ -1627,7 +1627,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 438,
+          "elapsed_ms": 405,
           "scope": "supported"
         },
         "pyodide": {
@@ -1674,7 +1674,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 425,
+        "elapsed_ms": 409,
         "scope": "supported"
       },
       "native": {
@@ -1698,7 +1698,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 425,
+          "elapsed_ms": 409,
           "scope": "supported"
         },
         "pyodide": {
@@ -1745,7 +1745,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 341,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -1768,7 +1768,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 341,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -1820,7 +1820,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 335,
+        "elapsed_ms": 298,
         "scope": "supported"
       },
       "native": {
@@ -1843,7 +1843,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 335,
+          "elapsed_ms": 298,
           "scope": "supported"
         },
         "pyodide": {
@@ -1890,7 +1890,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 215,
+        "elapsed_ms": 207,
         "scope": "supported"
       },
       "native": {
@@ -1914,7 +1914,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 215,
+          "elapsed_ms": 207,
           "scope": "supported"
         },
         "pyodide": {
@@ -1962,7 +1962,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 204,
+        "elapsed_ms": 207,
         "scope": "supported"
       },
       "native": {
@@ -1986,7 +1986,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 204,
+          "elapsed_ms": 207,
           "scope": "supported"
         },
         "pyodide": {
@@ -2034,7 +2034,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 226,
+        "elapsed_ms": 231,
         "scope": "supported"
       },
       "native": {
@@ -2058,7 +2058,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 226,
+          "elapsed_ms": 231,
           "scope": "supported"
         },
         "pyodide": {
@@ -2105,7 +2105,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 204,
+        "elapsed_ms": 208,
         "scope": "supported"
       },
       "native": {
@@ -2128,7 +2128,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 204,
+          "elapsed_ms": 208,
           "scope": "supported"
         },
         "pyodide": {
@@ -2174,7 +2174,7 @@
         "correct": false,
         "note": "wrong_decimal_places",
         "feedback": "Incorrect number of decimal places",
-        "elapsed_ms": 209,
+        "elapsed_ms": 205,
         "scope": "supported"
       },
       "native": {
@@ -2197,7 +2197,7 @@
           "correct": false,
           "note": "wrong_decimal_places",
           "feedback": "Incorrect number of decimal places",
-          "elapsed_ms": 209,
+          "elapsed_ms": 205,
           "scope": "supported"
         },
         "pyodide": {
@@ -2243,7 +2243,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 224,
+        "elapsed_ms": 227,
         "scope": "supported"
       },
       "native": {
@@ -2266,7 +2266,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 224,
+          "elapsed_ms": 227,
           "scope": "supported"
         },
         "pyodide": {
@@ -2312,7 +2312,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 303,
+        "elapsed_ms": 321,
         "scope": "supported"
       },
       "native": {
@@ -2335,7 +2335,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 303,
+          "elapsed_ms": 321,
           "scope": "supported"
         },
         "pyodide": {
@@ -2381,7 +2381,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 226,
+        "elapsed_ms": 232,
         "scope": "supported"
       },
       "native": {
@@ -2404,7 +2404,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 226,
+          "elapsed_ms": 232,
           "scope": "supported"
         },
         "pyodide": {
@@ -2445,7 +2445,7 @@
         "kind": "unsupported",
         "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
         "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-        "elapsed_ms": 227,
+        "elapsed_ms": 229,
         "scope": "unsupported"
       },
       "native": null,
@@ -2458,7 +2458,7 @@
           "kind": "unsupported",
           "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
           "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-          "elapsed_ms": 227,
+          "elapsed_ms": 229,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2497,7 +2497,7 @@
         "kind": "unsupported",
         "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
         "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-        "elapsed_ms": 231,
+        "elapsed_ms": 228,
         "scope": "unsupported"
       },
       "native": null,
@@ -2510,7 +2510,7 @@
           "kind": "unsupported",
           "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
           "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-          "elapsed_ms": 231,
+          "elapsed_ms": 228,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2549,7 +2549,7 @@
         "kind": "unsupported",
         "reason": "Equation logic supports equations and disjunctions of equations",
         "message": "Equation logic supports equations and disjunctions of equations",
-        "elapsed_ms": 229,
+        "elapsed_ms": 227,
         "scope": "unsupported"
       },
       "native": null,
@@ -2562,7 +2562,7 @@
           "kind": "unsupported",
           "reason": "Equation logic supports equations and disjunctions of equations",
           "message": "Equation logic supports equations and disjunctions of equations",
-          "elapsed_ms": 229,
+          "elapsed_ms": 227,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2599,9 +2599,9 @@
         "case_id": "port-held-calculus",
         "test": "AlgEquiv",
         "kind": "unsupported",
-        "reason": "student syntax outside scalar grammar: Unexpected character at position 0",
-        "message": "student syntax outside scalar grammar: Unexpected character at position 0",
-        "elapsed_ms": 203,
+        "reason": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
+        "message": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
+        "elapsed_ms": 207,
         "scope": "unsupported"
       },
       "native": null,
@@ -2612,17 +2612,17 @@
           "case_id": "port-held-calculus",
           "test": "AlgEquiv",
           "kind": "unsupported",
-          "reason": "student syntax outside scalar grammar: Unexpected character at position 0",
-          "message": "student syntax outside scalar grammar: Unexpected character at position 0",
-          "elapsed_ms": 203,
+          "reason": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
+          "message": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
+          "elapsed_ms": 207,
           "scope": "unsupported"
         },
         "pyodide": {
           "case_id": "port-held-calculus",
           "test": "AlgEquiv",
           "kind": "unsupported",
-          "reason": "student syntax outside scalar grammar: Unexpected character at position 0",
-          "message": "student syntax outside scalar grammar: Unexpected character at position 0"
+          "reason": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
+          "message": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0"
         },
         "eligible": false,
         "match": true
@@ -2653,7 +2653,7 @@
         "kind": "unsupported",
         "reason": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
         "message": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
-        "elapsed_ms": 202,
+        "elapsed_ms": 209,
         "scope": "unsupported"
       },
       "native": null,
@@ -2666,7 +2666,7 @@
           "kind": "unsupported",
           "reason": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
           "message": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
-          "elapsed_ms": 202,
+          "elapsed_ms": 209,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2705,7 +2705,7 @@
         "kind": "unsupported",
         "reason": "Plus/minus input requires explicit alternatives",
         "message": "Plus/minus input requires explicit alternatives",
-        "elapsed_ms": 203,
+        "elapsed_ms": 207,
         "scope": "unsupported"
       },
       "native": null,
@@ -2718,7 +2718,7 @@
           "kind": "unsupported",
           "reason": "Plus/minus input requires explicit alternatives",
           "message": "Plus/minus input requires explicit alternatives",
-          "elapsed_ms": 203,
+          "elapsed_ms": 207,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2772,7 +2772,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 207,
+        "elapsed_ms": 208,
         "scope": "supported"
       },
       "native": {
@@ -2796,7 +2796,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 207,
+          "elapsed_ms": 208,
           "scope": "supported"
         },
         "pyodide": {
@@ -2815,30 +2815,1536 @@
       "python_status": "known_defect",
       "native_status": "match_desired",
       "parity_status": "match"
+    },
+    {
+      "id": "port-implies-equivalent",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "not(A) or B",
+      "teacher": "A implies B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 495
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-implies-equivalent",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 231,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-implies-equivalent",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATLogic_True. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-implies-equivalent",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-implies-equivalent",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 231,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-implies-equivalent",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-implies-negative",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "not(A) and B",
+      "teacher": "A implies B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 496
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-implies-negative",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 228,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-implies-negative",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-implies-negative",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-implies-negative",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 228,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-implies-negative",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-xor-expanded",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "(not A and B) or (not B and A)",
+      "teacher": "A xor B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 497
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-xor-expanded",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 225,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-xor-expanded",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATLogic_True. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-xor-expanded",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-xor-expanded",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 225,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-xor-expanded",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-xnor-expanded",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "(A and B) or (not A and not B)",
+      "teacher": "A xnor B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 498
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-xnor-expanded",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 229,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-xnor-expanded",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATLogic_True. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-xnor-expanded",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-xnor-expanded",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 229,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-xnor-expanded",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-xor-xnor-contradiction",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "(A xor B) nounand (A xnor B)",
+      "teacher": "false",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 500
+      },
+      "reason": "STACK logical operators must parse as held propositions and compare by truth table.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-xor-xnor-contradiction",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 230,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-xor-xnor-contradiction",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATLogic_True. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-xor-xnor-contradiction",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-xor-xnor-contradiction",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 230,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-xor-xnor-contradiction",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-relative-malformed-option",
+      "group": "numeric option defaults",
+      "test": "NumRelative",
+      "student": "1",
+      "teacher": "0",
+      "options": "(x",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 1697
+      },
+      "reason": "STACK controller replaces a syntactically invalid numerical tolerance with 0.05 before grading.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-relative-malformed-option",
+        "test": "NumRelative",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 205,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-relative-malformed-option",
+        "test": "NumRelative",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-relative-malformed-option",
+        "test": "NumRelative",
+        "python": {
+          "case_id": "port-relative-malformed-option",
+          "test": "NumRelative",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 205,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-relative-malformed-option",
+          "test": "NumRelative",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-absolute-malformed-option",
+      "group": "numeric option defaults",
+      "test": "NumAbsolute",
+      "student": "1",
+      "teacher": "0",
+      "options": "(x",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 1735
+      },
+      "reason": "STACK controller replaces a syntactically invalid numerical tolerance with 0.05 before grading.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-absolute-malformed-option",
+        "test": "NumAbsolute",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 203,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-absolute-malformed-option",
+        "test": "NumAbsolute",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-absolute-malformed-option",
+        "test": "NumAbsolute",
+        "python": {
+          "case_id": "port-absolute-malformed-option",
+          "test": "NumAbsolute",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 203,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-absolute-malformed-option",
+          "test": "NumAbsolute",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-implies-converse",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "A implies B",
+      "teacher": "B implies A",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Implication is directional; its converse is not equivalent.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-implies-converse",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 207,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-implies-converse",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-implies-converse",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-implies-converse",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 207,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-implies-converse",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-xnor-three-operands",
+      "group": "logical operators",
+      "test": "AlgEquiv",
+      "student": "A xnor B xnor C",
+      "teacher": "A xor B xor C",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "STACK xnor chains use parity equivalence, not an all-operands-equal test.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-xnor-three-operands",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 228,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-xnor-three-operands",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATLogic_True. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-xnor-three-operands",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-xnor-three-operands",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 228,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-xnor-three-operands",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-absolute-default-accept",
+      "group": "numeric option defaults",
+      "test": "NumAbsolute",
+      "student": "1.049",
+      "teacher": "1",
+      "options": "(x",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Malformed numerical options use 0.05 even when this accepts the answer.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-absolute-default-accept",
+        "test": "NumAbsolute",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 206,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-absolute-default-accept",
+        "test": "NumAbsolute",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-absolute-default-accept",
+        "test": "NumAbsolute",
+        "python": {
+          "case_id": "port-absolute-default-accept",
+          "test": "NumAbsolute",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 206,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-absolute-default-accept",
+          "test": "NumAbsolute",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-relative-default-accept",
+      "group": "numeric option defaults",
+      "test": "NumRelative",
+      "student": "1.049",
+      "teacher": "1",
+      "options": "(x",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Malformed numerical options use 0.05 even when this accepts the answer.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-relative-default-accept",
+        "test": "NumRelative",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 205,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-relative-default-accept",
+        "test": "NumRelative",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-relative-default-accept",
+        "test": "NumRelative",
+        "python": {
+          "case_id": "port-relative-default-accept",
+          "test": "NumRelative",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 205,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-relative-default-accept",
+          "test": "NumRelative",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-ln-alias",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "ln(x)",
+      "teacher": "log(x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "STACK assessment.mac aliases ln to log.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-ln-alias",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 205,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-ln-alias",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-ln-alias",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-ln-alias",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 205,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-ln-alias",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-ln-held-form",
+      "group": "corpus scalar functions",
+      "test": "EqualComAss",
+      "student": "ln(x)",
+      "teacher": "log(x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "The log alias preserves the same written function form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-ln-held-form",
+        "test": "EqualComAss",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "cas_valid": true,
+        "elapsed_ms": 207,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-ln-held-form",
+        "test": "EqualComAss",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-ln-held-form",
+        "test": "EqualComAss",
+        "python": {
+          "case_id": "port-ln-held-form",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true,
+          "elapsed_ms": 207,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-ln-held-form",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-gcd-integer",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "gcd(-12,18)",
+      "teacher": "6",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Integer gcd retains nonnegative numeric content.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-gcd-integer",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 208,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-gcd-integer",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-gcd-integer",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-gcd-integer",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 208,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-gcd-integer",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-gcd-polynomial-content",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "gcd(2*x+2,4*x+4)",
+      "teacher": "2*x+2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Polynomial gcd retains numeric content rather than becoming monic.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-gcd-polynomial-content",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 235,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-gcd-polynomial-content",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-gcd-polynomial-content",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-gcd-polynomial-content",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 235,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-gcd-polynomial-content",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-gcd-not-monic",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "gcd(2*x+2,4*x+4)",
+      "teacher": "x+1",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Dropping polynomial numeric content changes the gcd.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-gcd-not-monic",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 232,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-gcd-not-monic",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-gcd-not-monic",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-gcd-not-monic",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 232,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-gcd-not-monic",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-mod-negative-dividend",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "mod(-7,3)",
+      "teacher": "2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Modulo uses the floor convention, including negative dividends.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-mod-negative-dividend",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 252,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-mod-negative-dividend",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-mod-negative-dividend",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-mod-negative-dividend",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 252,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-mod-negative-dividend",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-mod-negative-divisor",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "mod(7,-3)",
+      "teacher": "-2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "The remainder has the divisor sign, as in Maxima.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-mod-negative-divisor",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 206,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-mod-negative-divisor",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-mod-negative-divisor",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-mod-negative-divisor",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 206,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-mod-negative-divisor",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-mod-zero-divisor",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "mod(7,0)",
+      "teacher": "7",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Maxima defines mod(x,0)=x; SymPy Mod would raise.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-mod-zero-divisor",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 205,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-mod-zero-divisor",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-mod-zero-divisor",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-mod-zero-divisor",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 205,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-mod-zero-divisor",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-mod-pi-period",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "mod(5*Pi/2,2*%pi)",
+      "teacher": "%pi/2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Modulo supports real period reduction used by Complex_Convert_1.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-mod-pi-period",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 227,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-mod-pi-period",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-mod-pi-period",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-mod-pi-period",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 227,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-mod-pi-period",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-integral-singlefrac-authoring",
+      "group": "upstream authoring controls",
+      "test": "SingleFrac",
+      "student": "7*(t+y)",
+      "teacher": "7*(t+y)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null,
+        "corpus_file": "AlgMap-8-10.xml",
+        "seed": 1856951054
+      },
+      "reason": "AlgMap-8.10 can generate a correct integral product that its SingleFrac-only full-credit branch rejects. This pins the native form behavior behind the upstream PRT authoring bug.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-integral-singlefrac-authoring",
+        "test": "SingleFrac",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 225,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-integral-singlefrac-authoring",
+        "test": "SingleFrac",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATSingleFrac_part. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-integral-singlefrac-authoring",
+        "test": "SingleFrac",
+        "python": {
+          "case_id": "port-integral-singlefrac-authoring",
+          "test": "SingleFrac",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 225,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-integral-singlefrac-authoring",
+          "test": "SingleFrac",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-symbolic-complex-log-boundary",
+      "group": "declared boundaries",
+      "test": "AlgEquiv",
+      "student": "ln(x+%i)",
+      "teacher": "log(x+%i)",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 466
+      },
+      "reason": "Scalar ln is a log alias; symbolic complex-log branch proofs remain outside the declared subset.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-symbolic-complex-log-boundary",
+        "test": "AlgEquiv",
+        "kind": "unsupported",
+        "reason": "Symbolic complex logarithms require branch-aware proof",
+        "message": "Symbolic complex logarithms require branch-aware proof",
+        "elapsed_ms": 203,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-symbolic-complex-log-boundary",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-symbolic-complex-log-boundary",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Symbolic complex logarithms require branch-aware proof",
+          "message": "Symbolic complex logarithms require branch-aware proof",
+          "elapsed_ms": 203,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-symbolic-complex-log-boundary",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Symbolic complex logarithms require branch-aware proof",
+          "message": "Symbolic complex logarithms require branch-aware proof"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
     }
   ],
   "summary": {
     "python": {
-      "pass": 34,
-      "boundary_pass": 7,
+      "pass": 55,
+      "boundary_pass": 8,
       "known_defect": 1
     },
     "native": {
-      "match_desired": 34,
-      "outside_port_scope": 7,
+      "match_desired": 55,
+      "outside_port_scope": 8,
       "branch_convention_difference": 1
     },
     "parity": {
-      "match": 42
+      "match": 64
     }
   },
   "errors": {},
   "provenance": {
-    "code_sha": "f1d170225cf3ceb3b2db1347e187ace8a6f77e53",
-    "fixture_sha256": "74a62110ef3b853f64fb2f421dc4818817ad430557514a9a0d26b9bdcd98173f",
-    "source_bundle_sha256": "3a266876c293e9cd22bdcf843753716d5da59274f83f37c79f11e20f74389fd6",
+    "code_sha": "92c618b8392a8fb86d94815593dd195e0b3a007b",
+    "fixture_sha256": "b86b017d12331e591385230cf39b26ccbf2f802da5f0a31b3656b2b40f11d176",
+    "source_bundle_sha256": "f4877cf21cb663f607ed91831b8154d6dee0699e0999a26d3097d7966be9cf9b",
     "stack_sha": "10d323311b7f39fb7b092dd10ce75f7d8632f525",
-    "input_preparation": "stack-logic-nouns-v1",
+    "input_preparation": "stack-logic-nouns-numeric-default-v2",
     "sympy_version": "1.13.3",
     "python_version": "3.12.15"
   },
@@ -2846,10 +4352,10 @@
     "native": {
       "reference_layer": "direct_official_maxima_AT",
       "stack_sha": "10d323311b7f39fb7b092dd10ce75f7d8632f525",
-      "input_preparation": "stack-logic-nouns-v1",
+      "input_preparation": "stack-logic-nouns-numeric-default-v2",
       "stack_library_version": "2026080600",
       "maxima_version": "Maxima 5.46.0",
-      "native_scope_sha256": "c08aef69c3e8c76f5e1d7a7430e81a13ed6d71c402a90c91d132f742f998a9b5",
+      "native_scope_sha256": "a3640324370f306b9511b1f93e0c5369de68bb3c22555759409a38de9e5cf2b8",
       "execution_isolation": "fresh_maxima_process_per_case",
       "jobs": 4,
       "loader_warmup": true,
@@ -2888,9 +4394,9 @@
     "parity": {
       "schema_version": 1,
       "engine": "parity",
-      "fixture_sha256": "74a62110ef3b853f64fb2f421dc4818817ad430557514a9a0d26b9bdcd98173f",
-      "python_report_sha256": "6cd74da67080cb04a783385376da1b00e354c87acfb62f1f6847352e2bf1fab3",
-      "source_bundle_sha256": "3a266876c293e9cd22bdcf843753716d5da59274f83f37c79f11e20f74389fd6",
+      "fixture_sha256": "b86b017d12331e591385230cf39b26ccbf2f802da5f0a31b3656b2b40f11d176",
+      "python_report_sha256": "e88451a03be32c5228ac5d748f5ac2726f43dc10ba996f36b30dd5a8d40a8d5d",
+      "source_bundle_sha256": "f4877cf21cb663f607ed91831b8154d6dee0699e0999a26d3097d7966be9cf9b",
       "pyodide_version": "0.27.2",
       "sympy_version": "1.13.3",
       "browser_versions": {
@@ -2898,16 +4404,16 @@
         "pyodide_version": "0.27.2"
       },
       "summary": {
-        "total": 42,
-        "python_observed": 42,
-        "pyodide_observed": 42,
-        "matched": 42,
+        "total": 64,
+        "python_observed": 64,
+        "pyodide_observed": 64,
+        "matched": 64,
         "mismatched": 0,
-        "python_supported": 36,
-        "pyodide_supported": 36,
-        "eligible": 36,
-        "eligible_matched": 36,
-        "unsupported_agreement": 6,
+        "python_supported": 57,
+        "pyodide_supported": 57,
+        "eligible": 57,
+        "eligible_matched": 57,
+        "unsupported_agreement": 7,
         "python_faults": 0,
         "pyodide_faults": 0
       },
