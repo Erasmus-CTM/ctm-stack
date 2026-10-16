@@ -165,13 +165,13 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         assert collection.locator('.stack-validation[data-name="explained"]').get_attribute('data-latex').count('2') >= 2
         collection.locator('.stack-check').click()
         collection.locator('.stack-result[data-state="correct"]').wait_for(timeout=120000)
-        assert 'Repeated elements' in collection.locator('.stack-result').inner_text()
+        assert 'Repeated elements' in collection.locator('.stack-feedback[data-name="explained"]').inner_text()
         collection.locator('.stack-answer[data-name="explained"]').fill(f'{{{a},3*x}}')
         collection.locator('.stack-validate').click()
         collection.locator('.stack-result[data-state="valid"]').wait_for(timeout=120000)
         collection.locator('.stack-check').click()
         collection.locator('.stack-result[data-state="retry"]').wait_for(timeout=120000)
-        text = collection.locator('.stack-result').inner_text()
+        text = collection.locator('.stack-feedback[data-name="explained"]').inner_text()
         assert 'Extra elements' in text and 'Missing elements' in text
         collection.locator('.stack-answer[data-name="sequence"]').fill('[[1]]')
         collection.locator('.stack-validate').click()
