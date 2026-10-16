@@ -5,14 +5,15 @@ project:
     - index.qmd
     - port-regressions.qmd
   resources:
-    - report.js
+    - report.json
     - port-regressions.json
+    - report-ui.js
     - report.js
     - port-regressions.js
     - report.css
 
 website:
-  title: "STACK SymPy · Native compliance"
+  title: "STACK SymPy · Test reports"
   navbar:
     left:
       - text: STACK compliance

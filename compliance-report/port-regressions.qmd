@@ -1,22 +1,46 @@
 ---
-title: "Port regression report"
-subtitle: "Project-owned discoveries and compatibility controls"
+title: "Port regressions"
+subtitle: "Checks for discoveries made while building the port"
 ---
 
-These cases extend our coverage independently of the [legacy STACK compliance report](index.qmd). Each has a stable ID, expected behavior, origin, and reason. CPython, native STACK where applicable, and browser Pyodide are observed separately.
+These project-owned cases cover supported behavior, invalid or unsupported inputs, and known differences discovered during development. They are separate from the [2,303 source cases in STACK compliance](index.qmd).
 
-Explicit boundary checks verify controlled rejection of unsupported syntax. They do not count as mathematical compatibility passes. Known form defects and real/principal-complex branch conventions remain visible as separate statuses. Missing runner output stays unavailable.
+**Expected** is the behavior recorded for each case. **Port** is the SymPy implementation, **STACK** is Maxima, and **Browser** runs the port through Pyodide. A browser agreement can confirm the same known defect; it does not make that result correct.
 
-[Download port regression JSON](port-regressions.json) · [Fixture and contribution guide](https://github.com/Erasmus-CTM/stack-sympy/tree/main/tests/port_regressions)
+<div class="status-legend" aria-label="How to read the colors">
+  <span class="tone-good">Green: expected behavior or agreement</span>
+  <span class="tone-notice">Amber: known issue or explained difference</span>
+  <span class="tone-bad">Red: unexpected result</span>
+  <span class="tone-neutral">Gray: input handling or no comparison</span>
+</div>
 
-These project-owned cases record discoveries, negative controls, and explicit unsupported boundaries. Their counts are separate from the imported STACK inventory. A boundary pass checks an intentional rejection; a known defect remains a limitation, even when its recorded observation is stable.
+<div id="port-regressions-status" role="status">Loading saved results…</div>
+<div id="port-summary" class="report-summary"></div>
 
-<div id="port-regressions-status" role="status">Port regression results unavailable until report loads.</div>
+## Cases {#case-results}
+
+Each amber case explains what differs and what to conclude. Select a count above or use the filters.
+
 <div class="report-controls">
-  <label>Port case or expression <input id="port-search" type="search" placeholder="Search project regressions"></label>
+  <label>Search cases <input id="port-search" type="search" placeholder="Expression, case ID, or explanation"></label>
   <label>Group <select id="port-group"><option value="">All groups</option></select></label>
 </div>
+<div id="port-filters" class="report-controls"></div>
+<button type="button" id="clear-filters" class="clear-filters">Clear filters</button>
+<p id="port-case-count" role="status"></p>
 <div id="port-regressions-list" class="case-list"></div>
 
+<details class="methodology">
+<summary>Scope and technical details</summary>
 
+An expected input-handling check verifies that invalid or unsupported input is correctly refused. It is not a successful mathematical comparison. Known port issues remain defects even when their observations match a recorded exception. Root-convention differences have their own explanation and are not labeled mathematical failures.
+
+The saved run observes isolated Python, official STACK functions where applicable, and the same port in browser Pyodide. “Test applies” is the answer test’s applicability, separate from input syntax validity. Missing observations remain unavailable.
+
+<div id="port-provenance"></div>
+</details>
+
+<p class="report-downloads"><a href="port-regressions.json" download>Download saved results</a> · <a href="https://github.com/Erasmus-CTM/stack-sympy/tree/main/tests/port_regressions">Cases and contribution guide</a> · <a href="index.qmd">STACK compliance</a></p>
+
+<script src="report-ui.js" defer></script>
 <script src="port-regressions.js" defer></script>

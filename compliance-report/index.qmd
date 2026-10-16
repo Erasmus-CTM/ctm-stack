@@ -1,43 +1,61 @@
 ---
-title: "Native STACK answer-test compliance"
-subtitle: "A pinned, inspectable CAS comparison"
+title: "STACK compliance"
+subtitle: "Expected behavior, engine agreement, and known limitations"
 ---
 
-This report replays static answer-test rows from the pinned upstream STACK fixture against this project's Python implementation, official STACK/Maxima, and the same Python core running under Pyodide. The three checks answer different questions. Upstream negative sentinels annotate expected native deviations; only case-specific reviewed comparisons are labeled **known native mathematical failures** here. Agreement with such a failure is not mathematical correctness. A native answer note may be unavailable or not comparable even when the CAS validity and correctness booleans agree.
+Each source case compares a submitted answer with a reference using a named STACK answer test. The SymPy port implements a subset of STACK; this page shows its coverage gaps, expected behavior, and agreement with STACK and the browser.
 
-The parity inventory covers every static row, including unsupported rows that agree only in preflight classification. The eligible grading count appears separately below. Raw answer notes are displayed for inspection but are **not generally compared** as equivalent feedback. A comparable authored `-1` controlled-error row must match its asserted STACK error note exactly, apart from surrounding output whitespace.
+**Port** is this SymPy implementation. **STACK** is the reference Maxima implementation. **Expected** is the source fixture’s intended accept, reject, or error result. Only STACK tests with a fully supported equivalent in the Python port were run.
 
-The “native vs desired” axis compares a direct Maxima answer-test call with an upstream fixture expectation. An unexpected deviation there can reflect PHP-side preparation, option defaults, or CAS state that this direct-call oracle does not reproduce; it is a case for investigation, not proof of a Moodle grading bug. Final-mark agreement and CAS applicability are reported separately, since both engines can reject an answer while disagreeing about whether their equivalence test applies.
+<div class="status-legend" aria-label="How to read the colors">
+  <span class="tone-good">Green: expected behavior or agreement</span>
+  <span class="tone-notice">Amber: known issue or explained difference</span>
+  <span class="tone-bad">Red: unexpected result</span>
+  <span class="tone-neutral">Gray: not graded, outside scope, or unavailable</span>
+</div>
 
-Fixture score codes: `0` means desired reject, `1` desired accept, and `-1` an asserted controlled error. `-2` means desired reject despite an upstream annotated native acceptance; `-3` means desired accept despite an upstream annotated native rejection. These negative codes record source-authored expectations, not approvals of this report's direct-CAS observations.
-
-The scope is **CAS answer-test behavior** for the imported static rows. PHP question/controller behavior, Moodle attempt state, dynamically appended fixture cases, complete input validation, and all STACK functionality are outside this comparison. The native runner nounifies `and`, `or`, and `not` before Maxima evaluation, following STACK’s logical input preparation. Its fingerprint distinguishes these observations from older raw-operator runs. Unsupported and out-of-contract rows remain visible in the inventory. An unavailable runner is shown as unavailable, never treated as a pass.
-
-<p><a href="report.json" download>Download complete JSON report</a> · <span id="fixture-link">Fixture commit link unavailable until report loads</span> · <a href="https://github.com/Erasmus-CTM/stack-sympy">Source repository</a></p>
-
-<div id="report-loading" role="status">Loading report data…</div>
+<div id="report-loading" role="status">Loading saved results…</div>
 <div id="report-root" hidden>
-  <div id="report-provenance" class="report-provenance"></div>
-  <div id="report-summary" class="report-summary"></div>
-  <div id="report-runners" class="report-runners"></div>
+<div id="report-overview" class="report-overview"></div>
+<div id="report-summary" class="report-summary"></div>
 
-[Project-owned port regressions](port-regressions.qmd) have their own page and counts.
+<details class="secondary-comparisons">
+<summary>More comparisons: final marks, test applicability, and STACK expectations</summary>
+<div id="extra-summary" class="report-summary"></div>
+<div id="extra-filters" class="report-controls"></div>
+</details>
 
-## Inspect cases
+## Cases {#case-results}
+
+Select a count above or use the filters. Open a case to see the expected and actual results.
 
 <div class="report-controls">
-  <label>Expression or case ID <input id="case-search" type="search" placeholder="Search student, teacher, options, test, ID"></label>
-  <label>Answer test <select id="test-filter"><option value="">All tests</option></select></label>
-  <label>Desired result <select id="desired-filter"><option value="">All statuses</option></select></label>
-  <label>Native comparison <select id="native-filter"><option value="">All statuses</option></select></label>
-  <label>Native final mark <select id="native_mark-filter"><option value="">All statuses</option></select></label>
-  <label>Native CAS applicability <select id="native_applicability-filter"><option value="">All statuses</option></select></label>
-  <label>Native vs desired <select id="native_desired-filter"><option value="">All statuses</option></select></label>
-  <label>Browser parity <select id="parity-filter"><option value="">All statuses</option></select></label>
+  <label>Search cases <input id="case-search" type="search" placeholder="Case number, expression, test, or ID"></label>
+  <label>Answer test <select id="test-filter"><option value="">All answer tests</option></select></label>
 </div>
+<div id="comparison-filters" class="report-controls"></div>
+<button type="button" id="clear-filters" class="clear-filters">Clear filters</button>
 <p id="case-count" role="status"></p>
 <div id="case-list" class="case-list"></div>
-<button type="button" id="show-more" hidden>Show more</button>
+<button type="button" id="show-more" hidden>Show more cases</button>
+
+<details class="methodology">
+<summary>Scope and technical details</summary>
+
+This compares CAS answer-test functions rather than complete Moodle grading sessions. The port currently provides eight answer-test families. Cases outside port coverage stay in the inventory and are labeled by the missing answer test or unsupported input/feature. Some direct reference calls are also omitted because they need parser or controller preparation.
+
+“Test applicability” asks whether an answer test can compare the supplied values. It is separate from input syntax validity and from the final accept/reject mark. Form tests such as `EqualComAss` can reject mathematically equivalent expressions.
+
+Source codes `0` and `1` mean expected rejection and acceptance; `-1` expects a controlled error. Codes `-2` and `-3` flag source-authored native deviations. Only specifically reviewed cases are labeled “Known STACK issue.” Ordinary feedback notes are retained but not generally compared; asserted controlled-error notes are checked separately.
+
+Browser agreement includes input/scope classifications as well as graded results. The summary separates these. STACK coverage counts available observations, not compatibility passes.
+
+<div id="report-provenance"></div>
+<div id="report-runners"></div>
+</details>
+
+<p class="report-downloads"><a href="report.json" download>Download saved results</a> · <span id="fixture-link"></span> · <a href="port-regressions.qmd">Project regression cases</a></p>
 </div>
 
+<script src="report-ui.js" defer></script>
 <script src="report.js" defer></script>
