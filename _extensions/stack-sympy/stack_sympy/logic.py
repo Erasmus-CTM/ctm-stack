@@ -56,7 +56,10 @@ def _proposition(value):
         return value
     if isinstance(value, Logical):
         args = [_proposition(x) for x in value.operands]
-        return {"and": sp.And, "or": sp.Or, "not": sp.Not}[value.operator](*args)
+        # STACK's xnor is associative parity equivalence, rather than
+        # SymPy Equivalent's all-operands-equal interpretation for n > 2.
+        return {"and": sp.And, "or": sp.Or, "not": sp.Not, "implies": sp.Implies,
+                "xor": sp.Xor, "xnor": lambda a, b: sp.Not(sp.Xor(a, b))}[value.operator](*args)
     raise Unsupported("Boolean logic requires propositions, not arithmetic expressions")
 
 

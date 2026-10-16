@@ -30,3 +30,13 @@ Keep cross-cutting parser/AST/numeric-screen unit tests in the normal Python
 suite and end-to-end XML/validation tests in `tests/browser.py`. Add portable
 answer-test discoveries here, including a nearby negative control whenever a
 new proof strategy accepts a new form.
+
+Logical-operator cases link to upstream rows 495–498 and 500: `implies`, `xor`,
+and `xnor` must parse and grade, including a directional implication control
+and STACK’s parity semantics for chained `xnor`. Numerical-option cases link
+to rows 1697 and 1735. The `NumAbsolute`/`NumRelative` branch of STACK’s
+`stack/answertest/controller.class.php` replaces an absent or syntactically
+invalid option with `0.05`; the port follows that behavior for malformed
+syntax in its supported grammar. A parseable but invalid tolerance such as
+`1/0`, `x`, or `%i` is still an error. Acceptance controls prevent implementing
+the malformed-option cases as unconditional rejection.

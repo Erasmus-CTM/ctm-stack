@@ -41,7 +41,11 @@ SCALAR_FUNCTIONS = {
 FUNCTION_ALIASES = {"cosec": "csc", "cosech": "csch"}
 _STUDENT_FUNCTIONS = frozenset(SCALAR_FUNCTIONS) | FUNCTION_ALIASES.keys()
 LOGIC_OPERATORS = {"and": "and", "or": "or", "not": "not",
+                   "implies": "implies", "xor": "xor", "xnor": "xnor",
                    "nounand": "and", "nounor": "or", "nounnot": "not"}
+LOGIC_PRECEDENCE = {"xor": 0, "xnor": 0, "implies": 1, "or": 2, "and": 4, "not": 5}
+LOGIC_LATEX = {"and": r" \land ", "or": r" \lor ", "implies": r" \rightarrow ",
+               "xor": r" \oplus ", "xnor": r" \leftrightarrow "}
 _AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "lcm", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
 
 
@@ -85,12 +89,14 @@ class Logical(sp.Basic):
     def _sympystr(self, printer):
         parts = ["(" + (str(x).lower() if x in (sp.true, sp.false) else printer.doprint(x)) + ")"
                  for x in self.operands]
-        return "nounnot " + parts[0] if self.operator == "not" else (" noun" + self.operator + " ").join(parts)
+        if self.operator == "not":
+            return "nounnot " + parts[0]
+        spelling = "noun" + self.operator if self.operator in {"and", "or"} else self.operator
+        return (" " + spelling + " ").join(parts)
 
     def _latex(self, printer):
         parts = [r"\left(" + printer.doprint(x) + r"\right)" for x in self.operands]
-        return r"\lnot " + parts[0] if self.operator == "not" else (
-            r" \land " if self.operator == "and" else r" \lor ").join(parts)
+        return r"\lnot " + parts[0] if self.operator == "not" else LOGIC_LATEX[self.operator].join(parts)
 
 
 def is_logical(value):
@@ -200,7 +206,8 @@ class _Parser:
                        and (previous[0] == "number" or previous[1] == ")")
                        and (following[0] == "name" or following[1] == "("
                             or (previous[1] == ")" and following[0] == "number")))
-            bp = 20 if implied else {"or": 2, "nounor": 2, "and": 4, "nounand": 4,
+            bp = 20 if implied else {"xor": 0, "xnor": 0, "implies": 1,
+                                     "or": 2, "nounor": 2, "and": 4, "nounand": 4,
                                      "=": 6, "+": 10, "-": 10, "*": 20, "/": 20, "^": 30, "**": 30}.get(op, -1)
             if bp < minimum:
                 break
@@ -209,7 +216,7 @@ class _Parser:
             if not implied:
                 self.pos += 1
             rhs = self.expression(bp if op in ("^", "**") else bp + 1, depth + 1)
-            if not implied and op in {"or", "nounor", "and", "nounand"}:
+            if not implied and op in LOGIC_OPERATORS:
                 lhs = Node("logical", LOGIC_OPERATORS[op], (lhs, rhs))
             elif not implied and op == "=":
                 if lhs.kind == "equation" or rhs.kind == "equation":
@@ -238,7 +245,7 @@ def form_latex(node: Node, env: Mapping[str, Any] | None = None) -> str:
 
     def precedence(n):
         if n.kind == "logical":
-            return {"or": 2, "and": 4, "not": 5}[n.value]
+            return LOGIC_PRECEDENCE[n.value]
         if n.kind == "equation":
             return 6
         if n.kind == "number" and "e" in n.value.lower():
@@ -270,8 +277,10 @@ def form_latex(node: Node, env: Mapping[str, Any] | None = None) -> str:
         if n.kind == "logical":
             if n.value == "not":
                 return r"\lnot " + wrap(show(n.children[0]))
-            parts = [wrap(show(c)) if precedence(c) < precedence(n) else show(c) for c in n.children]
-            return (r" \land " if n.value == "and" else r" \lor ").join(parts)
+            parts = [wrap(show(c)) if precedence(c) < precedence(n)
+                     or i > 0 and precedence(c) == precedence(n) else show(c)
+                     for i, c in enumerate(n.children)]
+            return LOGIC_LATEX[n.value].join(parts)
         if n.kind == "number":
             if "e" in n.value.lower():
                 coefficient, exponent = re.split("[eE]", n.value)

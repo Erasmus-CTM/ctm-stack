@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "native_scope_sha256": "375e45aa5b73d1dd4d514807d583b6f3322b915f0c73b19a706339d27b237fd7",
+  "native_scope_sha256": "984ba90d138f79eaf4d81bb33da115e82f03b92633940e1bac9756601f0e2bd9",
   "cases": {
     "9ab41a1b2484066b5d333608e28b2d3b45408d40111ae01417fc93a39a829760-1": {
       "category": "known_native_mathematical_failure",

@@ -48,6 +48,24 @@ def _option(options: str, env, assumptions):
         raise Unsupported(f"Invalid answer-test options: {exc}") from exc
 
 
+def numeric_option_source(options: str) -> str:
+    """Mirror the numeric controller's default for absent/malformed options.
+
+    controller.class.php replaces a syntactically invalid NumAbsolute or
+    NumRelative option with 0.05. Evaluation errors and syntax outside our
+    bounded grammar must still be reported, rather than silently defaulted.
+    """
+    if not options.strip():
+        return "0.05"
+    try:
+        parse(options)
+    except InvalidAnswer as exc:
+        if str(exc) in {"Expected ')'", "Expected ']'", "Expected an expression", "Unexpected trailing text"}:
+            return "0.05"
+        raise
+    return options
+
+
 def _equiv(student, teacher):
     from .logic import logical_equivalent
     from .equivalence import elementary_equivalent
@@ -334,7 +352,7 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
         return _result(True, equivalent and factored)
 
     if name in {"NumAbsolute", "NumRelative"}:
-        tolerance = _number(_option(options or "0.05", env, assumptions), "Tolerance")
+        tolerance = _number(_option(numeric_option_source(options), env, assumptions), "Tolerance")
         try:
             student_number = _number(student_value, "Student answer")
             teacher_number = _number(teacher_value, "Teacher answer")

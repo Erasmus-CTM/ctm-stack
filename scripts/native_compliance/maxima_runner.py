@@ -20,7 +20,7 @@ from pathlib import Path
 
 
 STACK_SHA = "10d323311b7f39fb7b092dd10ce75f7d8632f525"
-INPUT_PREPARATION = "stack-logic-nouns-v1"
+INPUT_PREPARATION = "stack-logic-nouns-numeric-default-v2"
 # MP_Operation/MP_FunctionCall::toString(nounify=2), security-map.json.
 LOGIC_NOUNS = {"and": "nounand", "or": "nounor", "not": "nounnot"}
 
@@ -119,7 +119,8 @@ def _unavailable(case: dict) -> str | None:
             return f"plus_minus_requires_php_parser_{field}"
         if case[field].strip() == "1/0":
             return f"undefined_expression_requires_php_controller_{field}"
-        if _unbalanced_delimiters(case[field]):
+        if _unbalanced_delimiters(case[field]) and not (
+                field == "options" and case["test"] in {"NumAbsolute", "NumRelative"}):
             return f"malformed_expression_requires_php_parser_{field}"
         if UNSAFE.search(case[field]):
             return f"unsafe_or_php_preprocessed_{field}"
@@ -161,8 +162,15 @@ def _call(case: dict) -> str:
     args = [f"eval_string({_literal(prepare_logic(case['student']))})",
             f"eval_string({_literal(prepare_logic(case['teacher']))})"]
     if requires_option:
-        option = case["options"] or "0.05"  # controller default for NumAbsolute/Relative
-        args.append(f"eval_string({_literal(prepare_logic(option))})")
+        option = prepare_logic(case["options"])
+        if test in {"NumAbsolute", "NumRelative"}:
+            # controller.class.php defaults absent or syntactically invalid
+            # options. Catch parsing alone: 1/0 must remain an evaluation error.
+            option = _literal(option if option.strip() else "0.05")
+            args.append(f"block([stack_option],stack_option:errcatch(parse_string({option})),"
+                        f"if stack_option=[] then 0.05 else eval_string({option}))")
+        else:
+            args.append(f"eval_string({_literal(option)})")
     if raw:
         # PHP uses get_inputform(true, 1).  For supported plain numeric input
         # the fixture's spelling is the pertinent raw input; nontrivial AST
