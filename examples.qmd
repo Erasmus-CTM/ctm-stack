@@ -1,6 +1,9 @@
 ---
 title: "More worked questions"
 subtitle: "Equivalent expressions and numerical answer tests"
+ai-feedback:
+  page-policy:
+    math-exercise: brief-mathematics
 ---
 
 Press **Validate answers** to inspect each parsed response, then **Check answer** to grade it. An edit requires validation again.
@@ -16,9 +19,17 @@ The prompt states the domain (x\ne -n). A cancelled fraction and the original un
 #| seed: 29
 #| review: true
 #| feedback: true
+#| label: rational-practice
+#| feedback-policy: two-step-practice
 ```
 
 [Download the rational question](questions/rational-equivalence.xml)
+
+This activity selects `two-step-practice`: a guiding question followed by a worked
+explanation. Its named parents inherit the shared mathematics instructions and
+set a 90-word limit. The other feedback activities on this page inherit the
+shared four-step sequence with the same page limit. See the
+[policy setup](docs/authoring.qmd#choose-a-teaching-policy) to adapt it.
 
 ## Three numerical checks
 

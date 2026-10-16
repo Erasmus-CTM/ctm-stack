@@ -18,9 +18,15 @@ local function sharedFeedback()
     end
     assert(#found <= 1, 'Multiple ai-feedback installations found; keep one project installation.')
     if #found == 1 then
+      local manifest = io.open(pandoc.path.join({pandoc.path.directory(found[1]), '_extension.yml'}), 'r')
+      local metadata = manifest and manifest:read('*a') or ''
+      if manifest then manifest:close() end
+      local major, minor = metadata:match('version:%s*["\']?(%d+)%.(%d+)')
+      assert(major and (tonumber(major) > 0 or tonumber(minor) >= 8),
+        'STACK feedback requires ai-feedback 0.8.0 or later and Quarto 1.8.27 or later. Run: quarto add Erasmus-CTM/ai-feedback')
       local shared = dofile(found[1])
       assert(shared.selection and shared.prepare and shared.context and shared.markCallout,
-        'STACK feedback requires ai-feedback 0.6.0 or later. Run: quarto add Erasmus-CTM/ai-feedback')
+        'STACK feedback requires ai-feedback 0.8.0 or later. Run: quarto add Erasmus-CTM/ai-feedback')
       return shared
     end
     if quarto.project.directory then break end

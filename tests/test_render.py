@@ -11,6 +11,8 @@ import shutil
 import subprocess
 import tempfile
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 QUESTION = ROOT / "questions/polynomial-expansion.xml"
@@ -209,9 +211,11 @@ def test_shared_feedback_context_and_policy_are_emitted_once_per_page():
 def test_named_policy_uses_shared_yaml_selection():
     source = ("---\nai-feedback:\n  page-policy-files: feedback/chapter.yml\n---\n"
               + _card("#| feedback: true\n", "#| label: expansion-practice\n#| feedback-policy: short-hints\n"))
-    policy = ("ai-feedback:\n  integrations:\n    math-exercise:\n"
-              "      max-words: 120\n  policies:\n    short-hints:\n"
-              "      prompt: Ask for the next step.\n")
+    policy = ("ai-feedback:\n  policies:\n    course:\n"
+              "      base-prompt: Preserve the course notation.\n"
+              "      max-words: 120\n    short-hints:\n"
+              "      extends: course\n      steps:\n"
+              "        - step-prompt: Ask for the next step.\n")
     result, output = _fixture_render(source, shared="flat", files={"feedback/chapter.yml": policy})
     assert result.returncode == 0, result.stdout + result.stderr
     assert _feedback_cards(output)[0]["policySelection"] == {
@@ -221,3 +225,26 @@ def test_named_policy_uses_shared_yaml_selection():
                                 files={"feedback/chapter.yml": policy})
     assert result.returncode != 0
     assert "unknown feedback-policy missing" in result.stdout + result.stderr
+
+
+def test_feedback_rejects_an_older_shared_extension():
+    metadata = (ROOT / "_extensions/ai-feedback/_extension.yml").read_text()
+    result, _ = _fixture_render(_card("#| feedback: true\n"), shared="flat", files={
+        "_extensions/ai-feedback/_extension.yml": re.sub(r"(?m)^version:.*$", "version: 0.6.0", metadata)})
+    assert result.returncode != 0
+    assert "requires ai-feedback 0.8.0 or later" in result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("policy, diagnostic", [
+    ("policies:\n    old:\n      prompt: Ask a question.", "base-prompt"),
+    ("policies:\n    old:\n      steps:\n        - prompt: Ask a question.", "step-prompt"),
+    ("integrations:\n    math-exercise:\n      max-words: 80", "only define policies"),
+    ("policies:\n    child:\n      extends: missing", "Unknown parent"),
+    ("policies:\n    a:\n      extends: b\n    b:\n      extends: a", "Circular"),
+])
+def test_invalid_shared_policies_stop_rendering(policy, diagnostic):
+    source = ("---\nai-feedback:\n  page-policy-files: invalid.yml\n---\n"
+              + _card("#| feedback: true\n"))
+    result, _ = _fixture_render(source, shared="flat", files={"invalid.yml": "ai-feedback:\n  " + policy + "\n"})
+    assert result.returncode != 0
+    assert diagnostic in result.stdout + result.stderr

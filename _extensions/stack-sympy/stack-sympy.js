@@ -302,9 +302,11 @@
       var F = window.AIFeedback;
       var versionParts = F && String(F.version || '').split('.').map(Number);
       if (!F || !F.attach || !F.contextText || !F.contextMaterials || !F.settingsButton ||
-          !versionParts || versionParts[0] < 1 && versionParts[1] < 6) {
+          !F.resolvePolicy || !F.applyPolicy || !versionParts ||
+          !Number.isInteger(versionParts[0]) || !Number.isInteger(versionParts[1]) ||
+          versionParts[0] < 0 || versionParts[0] === 0 && versionParts[1] < 8) {
         feedbackButton.addEventListener('click', function () {
-          feedbackOutput.textContent = 'AI feedback requires ai-feedback 0.6.0 or later. Install or update the shared extension and render this page again. Native checking is still available.';
+          feedbackOutput.textContent = 'AI feedback requires ai-feedback 0.8.0 or later. Install or update the shared extension and render this page again. Native checking is still available.';
         });
       } else {
         var gear = F.settingsButton(config.uiLanguage);
@@ -312,6 +314,9 @@
         feedbackHandle = F.attach({
           id: 'stack-' + card.dataset.stackId,
           integration: 'math-exercise',
+          contextRefs: function () {
+            return config.context && config.context.mode === 'explicit' ? config.context.refs : '';
+          },
           policySelection: config.policySelection || {},
           uiLanguage: config.uiLanguage,
           button: feedbackButton,

@@ -90,6 +90,46 @@ def test_feedback_copy_prompt_and_context_modes():
         browser.close()
 
 
+def test_inherited_policy_steps_permissions_and_parent_changes():
+    site = render_site()
+    with serve(site) as url, sync_playwright() as pw:
+        browser = browser_for(pw)
+        page = browser.new_page()
+        page.goto(url + "/examples.html", wait_until="domcontentloaded")
+        card = page.locator(".stack-sympy[data-stack-feedback]").first
+        card.locator(".stack-answer").first.fill("x+1")
+        prompt_data(card)
+        first = card.locator(".ai-feedback-prompt").inner_text()
+        assert "CURRENT HINT LEVEL: 1 OF 2" in first
+        assert "at most 90 words" in first
+        assert "Do not supply a complete rewritten response or finished solution" in first
+        assert "Preserve every stated given" in first  # Shared mathematics base remains active.
+        prompt_data(card)
+        second = card.locator(".ai-feedback-prompt").inner_text()
+        assert "CURRENT HINT LEVEL: 2 OF 2" in second
+        assert "A complete rewrite or solution is permitted" in second
+        assert "Give a concise worked explanation" in second
+        prompt_data(card)
+        assert "CURRENT HINT LEVEL: 2 OF 2" in card.locator(".ai-feedback-prompt").inner_text()
+
+        # A changed inherited parent resets the dependent activity's progression.
+        page.evaluate("""() => {
+          window.__aiFeedbackPolicies.layers[0].policies['brief-mathematics']['max-words'] = 70;
+        }""")
+        prompt_data(card)
+        changed = card.locator(".ai-feedback-prompt").inner_text()
+        assert "CURRENT HINT LEVEL: 1 OF 2" in changed
+        assert "at most 70 words" in changed
+        assert "Do not supply a complete rewritten response or finished solution" in changed
+
+        # A definition without an explicit selection does not override the page baseline.
+        other = page.locator(".stack-sympy[data-stack-feedback]").nth(1)
+        other.locator(".stack-answer").first.fill("1")
+        prompt_data(other)
+        assert "CURRENT HINT LEVEL: 1 OF 4" in other.locator(".ai-feedback-prompt").inner_text()
+        browser.close()
+
+
 API_STUB = r"""
 (() => {
   localStorage.setItem('ai-feedback-config-v1', JSON.stringify({
@@ -163,6 +203,7 @@ def test_feedback_api_evidence_and_stale_cancellation():
         card.locator('.stack-result[data-state="correct"]').wait_for(timeout=120000)
         button.click()
         checked = user_data(api_request(page, 4))
+        assert "CURRENT HINT LEVEL: 1 OF 4" in api_request(page, 4)["messages"][0]["content"]
         assert checked["evidence"]
         evidence = json.loads(checked["evidence"][0]["text"])
         assert evidence["status"] == "graded"
@@ -197,4 +238,38 @@ def test_feedback_api_evidence_and_stale_cancellation():
         assert "CURRENT HINT LEVEL: 1 OF 4" in api_request(page, 7)["messages"][0]["content"]
         page.evaluate("window.__replyFeedback()")
         card.locator(".ai-feedback-body").wait_for()
+        browser.close()
+
+
+def test_check_can_preserve_hints_but_variant_selection_always_resets():
+    site = render_site()
+    with serve(site) as url, sync_playwright() as pw:
+        browser = browser_for(pw)
+        page = browser.new_page()
+        page.goto(url + "/index.html", wait_until="domcontentloaded")
+        # Override through the shared exercise namespace using the emitted card key.
+        page.evaluate("""() => {
+          const card = document.querySelector('[data-stack-feedback]');
+          const key = JSON.parse(card.dataset.stackFeedback).policySelection.exercise;
+          window.__aiFeedbackPolicies.layers.push({exercises: {'math-exercise': {
+            [key]: {'reset-on-run': false, language: 'nb', 'max-words': 80}
+          }}});
+        }""")
+        card = page.locator(".stack-sympy[data-stack-feedback]").first
+        card.locator(".stack-answer").first.fill("x**2+8x+15")
+        prompt_data(card)
+        first = card.locator(".ai-feedback-prompt").inner_text()
+        assert "CURRENT HINT LEVEL: 1 OF 4" in first
+        assert "Write explanations in nb" in first
+        assert "at most 80 words" in first
+        card.locator(".stack-validate").click()
+        card.locator('.stack-result[data-state="valid"]').wait_for(timeout=120000)
+        card.locator(".stack-check").click()
+        card.locator('.stack-result[data-state="correct"]').wait_for(timeout=120000)
+        assert prompt_data(card)["evidence"]
+        assert "CURRENT HINT LEVEL: 2 OF 4" in card.locator(".ai-feedback-prompt").inner_text()
+        card.locator(".stack-variant").select_option(index=1)
+        card.locator(".stack-answer").first.fill("x+1")
+        assert prompt_data(card)["evidence"] == []
+        assert "CURRENT HINT LEVEL: 1 OF 4" in card.locator(".ai-feedback-prompt").inner_text()
         browser.close()

@@ -53,7 +53,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: Erasmus-CTM/ai-feedback
-          ref: bf23e36028c0bfcff6038874e10b109558437b1b
+          ref: 68abb6dc1d1e4770c44ad408b4972d689c9f42fc # AI Feedback 0.8.0
           path: .shared-ai-feedback
           persist-credentials: false
       - name: Install shared AI Feedback extension
