@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-15T19:57:26.835031+00:00",
+  "generated_at": "2026-10-16T09:27:05.967426+00:00",
   "scope": "Pinned upstream static answer-test rows only; CAS-only comparison, not Moodle controller grading or deployment fidelity.",
   "provenance": {
-    "code_sha": "5d5587e74efae45c71af4b9149073de279e94473",
-    "run_url": "https://github.com/Erasmus-CTM/stack-sympy/actions/runs/38796241802",
+    "code_sha": "213ef2b66b5c2f544565ff86c44b22081488b33c",
+    "run_url": "https://github.com/Erasmus-CTM/stack-sympy/actions/runs/38879445184",
     "fixture_sha256": "3b85be950574ffe271fc8e6808f596b50a40e5e26af02b71dc00ff23038bec30",
     "fixture_upstream": {
       "repository": "maths/moodle-qtype_stack",
@@ -258,7 +258,7 @@
         "test": "AlgEquiv",
         "kind": "invalid_student",
         "message": "Division by zero",
-        "elapsed_ms": 574,
+        "elapsed_ms": 535,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -283,7 +283,7 @@
           "test": "AlgEquiv",
           "kind": "invalid_student",
           "message": "Division by zero",
-          "elapsed_ms": 574,
+          "elapsed_ms": 535,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -336,7 +336,7 @@
         "test": "AlgEquiv",
         "kind": "invalid_teacher",
         "message": "Division by zero",
-        "elapsed_ms": 547,
+        "elapsed_ms": 579,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -361,7 +361,7 @@
           "test": "AlgEquiv",
           "kind": "invalid_teacher",
           "message": "Division by zero",
-          "elapsed_ms": 547,
+          "elapsed_ms": 579,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -654,7 +654,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 864,
+        "elapsed_ms": 837,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -684,7 +684,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 864,
+          "elapsed_ms": 837,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -1942,7 +1942,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 856,
+        "elapsed_ms": 840,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -1972,7 +1972,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 856,
+          "elapsed_ms": 840,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -2030,7 +2030,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 858,
+        "elapsed_ms": 853,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -2060,7 +2060,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 858,
+          "elapsed_ms": 853,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -2358,7 +2358,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 875,
+        "elapsed_ms": 854,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -2388,7 +2388,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 875,
+          "elapsed_ms": 854,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -2446,7 +2446,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 545,
+        "elapsed_ms": 535,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -2476,7 +2476,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 545,
+          "elapsed_ms": 535,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -2534,7 +2534,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 570,
+        "elapsed_ms": 536,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -2564,7 +2564,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 570,
+          "elapsed_ms": 536,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -2622,7 +2622,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 583,
+        "elapsed_ms": 536,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -2652,7 +2652,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 583,
+          "elapsed_ms": 536,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -2710,7 +2710,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 534,
+        "elapsed_ms": 535,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -2740,7 +2740,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 534,
+          "elapsed_ms": 535,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -2798,7 +2798,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 608,
+        "elapsed_ms": 538,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -2829,7 +2829,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 608,
+          "elapsed_ms": 538,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -2888,7 +2888,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 529,
+        "elapsed_ms": 528,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -2918,7 +2918,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 529,
+          "elapsed_ms": 528,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -2976,7 +2976,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 528,
+        "elapsed_ms": 529,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -3006,7 +3006,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 528,
+          "elapsed_ms": 529,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -3064,7 +3064,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 540,
+        "elapsed_ms": 526,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -3094,7 +3094,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 540,
+          "elapsed_ms": 526,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -3152,7 +3152,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 544,
+        "elapsed_ms": 533,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -3182,7 +3182,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 544,
+          "elapsed_ms": 533,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -3240,7 +3240,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 544,
+        "elapsed_ms": 529,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -3271,7 +3271,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 544,
+          "elapsed_ms": 529,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -3330,7 +3330,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 555,
+        "elapsed_ms": 549,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -3360,7 +3360,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 555,
+          "elapsed_ms": 549,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -3418,7 +3418,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 610,
+        "elapsed_ms": 609,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -3448,7 +3448,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 610,
+          "elapsed_ms": 609,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -3506,7 +3506,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 799,
+        "elapsed_ms": 804,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -3536,7 +3536,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 799,
+          "elapsed_ms": 804,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -3594,7 +3594,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 615,
+        "elapsed_ms": 611,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -3624,7 +3624,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 615,
+          "elapsed_ms": 611,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -3682,7 +3682,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 824,
+        "elapsed_ms": 862,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -3712,7 +3712,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 824,
+          "elapsed_ms": 862,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -3770,7 +3770,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 604,
+        "elapsed_ms": 624,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -3801,7 +3801,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 604,
+          "elapsed_ms": 624,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -3860,7 +3860,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 539,
+        "elapsed_ms": 525,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -3890,7 +3890,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 539,
+          "elapsed_ms": 525,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -3948,7 +3948,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 621,
+        "elapsed_ms": 607,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -3978,7 +3978,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 621,
+          "elapsed_ms": 607,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -4036,7 +4036,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 1148,
+        "elapsed_ms": 1172,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -4067,7 +4067,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 1148,
+          "elapsed_ms": 1172,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -4286,7 +4286,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 851,
+        "elapsed_ms": 862,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -4317,7 +4317,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 851,
+          "elapsed_ms": 862,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -4376,7 +4376,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 864,
+        "elapsed_ms": 850,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -4407,7 +4407,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 864,
+          "elapsed_ms": 850,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -4466,7 +4466,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 1125,
+        "elapsed_ms": 1131,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -4496,7 +4496,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 1125,
+          "elapsed_ms": 1131,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -4554,7 +4554,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 1058,
+        "elapsed_ms": 1078,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -4584,7 +4584,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 1058,
+          "elapsed_ms": 1078,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -4642,7 +4642,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 849,
+        "elapsed_ms": 898,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -4672,7 +4672,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 849,
+          "elapsed_ms": 898,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -4730,7 +4730,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 1057,
+        "elapsed_ms": 1070,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -4760,7 +4760,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 1057,
+          "elapsed_ms": 1070,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -4818,7 +4818,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 1436,
+        "elapsed_ms": 1452,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -4848,7 +4848,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 1436,
+          "elapsed_ms": 1452,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -4906,7 +4906,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 1661,
+        "elapsed_ms": 1500,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -4936,7 +4936,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 1661,
+          "elapsed_ms": 1500,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -6022,7 +6022,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 589,
+        "elapsed_ms": 533,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -6052,7 +6052,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 589,
+          "elapsed_ms": 533,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -6110,7 +6110,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 951,
+        "elapsed_ms": 850,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -6140,7 +6140,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 951,
+          "elapsed_ms": 850,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -6518,7 +6518,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 948,
+        "elapsed_ms": 874,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -6549,7 +6549,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 948,
+          "elapsed_ms": 874,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -6688,7 +6688,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 671,
+        "elapsed_ms": 602,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -6718,7 +6718,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 671,
+          "elapsed_ms": 602,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -6776,7 +6776,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 960,
+        "elapsed_ms": 869,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -6806,7 +6806,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 960,
+          "elapsed_ms": 869,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -6864,7 +6864,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 890,
+        "elapsed_ms": 844,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -6895,7 +6895,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 890,
+          "elapsed_ms": 844,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -6954,7 +6954,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 705,
+        "elapsed_ms": 615,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -6984,7 +6984,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 705,
+          "elapsed_ms": 615,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -7042,7 +7042,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 528,
+        "elapsed_ms": 549,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -7072,7 +7072,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 528,
+          "elapsed_ms": 549,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -7130,7 +7130,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 855,
+        "elapsed_ms": 848,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -7160,7 +7160,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 855,
+          "elapsed_ms": 848,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -7458,7 +7458,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 829,
+        "elapsed_ms": 833,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -7488,7 +7488,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 829,
+          "elapsed_ms": 833,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -7546,7 +7546,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 857,
+        "elapsed_ms": 835,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -7576,7 +7576,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 857,
+          "elapsed_ms": 835,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -7874,7 +7874,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 857,
+        "elapsed_ms": 855,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -7905,7 +7905,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 857,
+          "elapsed_ms": 855,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -7964,7 +7964,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 1047,
+        "elapsed_ms": 1056,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -7994,7 +7994,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 1047,
+          "elapsed_ms": 1056,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -8052,7 +8052,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 596,
+        "elapsed_ms": 592,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -8082,7 +8082,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 596,
+          "elapsed_ms": 592,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -8230,7 +8230,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 807,
+        "elapsed_ms": 813,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -8260,7 +8260,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 807,
+          "elapsed_ms": 813,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -8478,7 +8478,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 834,
+        "elapsed_ms": 839,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -8509,7 +8509,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 834,
+          "elapsed_ms": 839,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -8568,7 +8568,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 589,
+        "elapsed_ms": 604,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -8598,7 +8598,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 589,
+          "elapsed_ms": 604,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -8656,7 +8656,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 870,
+        "elapsed_ms": 869,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -8687,7 +8687,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 870,
+          "elapsed_ms": 869,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -8746,7 +8746,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 586,
+        "elapsed_ms": 601,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -8776,7 +8776,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 586,
+          "elapsed_ms": 601,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -8914,7 +8914,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 610,
+        "elapsed_ms": 632,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -8944,7 +8944,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 610,
+          "elapsed_ms": 632,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -9002,7 +9002,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 604,
+        "elapsed_ms": 615,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -9032,7 +9032,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 604,
+          "elapsed_ms": 615,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -9090,7 +9090,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 596,
+        "elapsed_ms": 597,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -9120,7 +9120,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 596,
+          "elapsed_ms": 597,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -9178,7 +9178,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 600,
+        "elapsed_ms": 597,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -9208,7 +9208,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 600,
+          "elapsed_ms": 597,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -9354,7 +9354,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 885,
+        "elapsed_ms": 898,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -9384,7 +9384,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 885,
+          "elapsed_ms": 898,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -9762,7 +9762,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 598,
+        "elapsed_ms": 601,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -9792,7 +9792,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 598,
+          "elapsed_ms": 601,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -9850,7 +9850,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 832,
+        "elapsed_ms": 843,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -9880,7 +9880,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 832,
+          "elapsed_ms": 843,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -9938,7 +9938,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 595,
+        "elapsed_ms": 593,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -9968,7 +9968,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 595,
+          "elapsed_ms": 593,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -10026,7 +10026,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 590,
+        "elapsed_ms": 598,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -10056,7 +10056,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 590,
+          "elapsed_ms": 598,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -10114,7 +10114,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 839,
+        "elapsed_ms": 826,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -10144,7 +10144,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 839,
+          "elapsed_ms": 826,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -10202,7 +10202,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 589,
+        "elapsed_ms": 592,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -10232,7 +10232,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 589,
+          "elapsed_ms": 592,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -10290,7 +10290,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 675,
+        "elapsed_ms": 663,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -10320,7 +10320,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 675,
+          "elapsed_ms": 663,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -10378,7 +10378,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 934,
+        "elapsed_ms": 964,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -10408,7 +10408,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 934,
+          "elapsed_ms": 964,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -10466,7 +10466,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 946,
+        "elapsed_ms": 945,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -10496,7 +10496,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 946,
+          "elapsed_ms": 945,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -10642,7 +10642,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 622,
+        "elapsed_ms": 653,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -10672,7 +10672,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 622,
+          "elapsed_ms": 653,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -10730,7 +10730,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 646,
+        "elapsed_ms": 654,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -10760,7 +10760,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 646,
+          "elapsed_ms": 654,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -10818,7 +10818,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 941,
+        "elapsed_ms": 956,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -10848,7 +10848,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 941,
+          "elapsed_ms": 956,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -10906,7 +10906,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 957,
+        "elapsed_ms": 936,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -10937,7 +10937,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 957,
+          "elapsed_ms": 936,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -11227,7 +11227,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 654,
+        "elapsed_ms": 670,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -11257,7 +11257,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 654,
+          "elapsed_ms": 670,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -11315,7 +11315,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 531,
+        "elapsed_ms": 545,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -11345,7 +11345,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 531,
+          "elapsed_ms": 545,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -11483,7 +11483,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 526,
+        "elapsed_ms": 522,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -11513,7 +11513,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 526,
+          "elapsed_ms": 522,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -11571,7 +11571,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 666,
+        "elapsed_ms": 665,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -11601,7 +11601,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 666,
+          "elapsed_ms": 665,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -11659,7 +11659,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 875,
+        "elapsed_ms": 855,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -11689,7 +11689,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 875,
+          "elapsed_ms": 855,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -12467,7 +12467,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 587,
+        "elapsed_ms": 613,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -12497,7 +12497,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 587,
+          "elapsed_ms": 613,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -12555,7 +12555,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 1235,
+        "elapsed_ms": 1243,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -12586,7 +12586,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 1235,
+          "elapsed_ms": 1243,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -13213,7 +13213,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 821,
+        "elapsed_ms": 861,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -13244,7 +13244,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 821,
+          "elapsed_ms": 861,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -13303,7 +13303,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 898,
+        "elapsed_ms": 909,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -13333,7 +13333,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 898,
+          "elapsed_ms": 909,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -13391,7 +13391,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 915,
+        "elapsed_ms": 887,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -13421,7 +13421,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 915,
+          "elapsed_ms": 887,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -14119,7 +14119,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 820,
+        "elapsed_ms": 830,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -14150,7 +14150,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 820,
+          "elapsed_ms": 830,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -14209,7 +14209,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 928,
+        "elapsed_ms": 955,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -14240,7 +14240,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 928,
+          "elapsed_ms": 955,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -14379,7 +14379,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 941,
+        "elapsed_ms": 942,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -14409,7 +14409,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 941,
+          "elapsed_ms": 942,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -17504,7 +17504,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 828,
+        "elapsed_ms": 840,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -17534,7 +17534,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 828,
+          "elapsed_ms": 840,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -17669,7 +17669,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 922,
+        "elapsed_ms": 909,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -17699,7 +17699,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 922,
+          "elapsed_ms": 909,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -34757,7 +34757,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 562,
+        "elapsed_ms": 527,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -34787,7 +34787,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 562,
+          "elapsed_ms": 527,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -34845,7 +34845,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 654,
+        "elapsed_ms": 663,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -34875,7 +34875,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 654,
+          "elapsed_ms": 663,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -34933,7 +34933,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 900,
+        "elapsed_ms": 882,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -34963,7 +34963,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 900,
+          "elapsed_ms": 882,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -35021,7 +35021,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 857,
+        "elapsed_ms": 879,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -35051,7 +35051,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 857,
+          "elapsed_ms": 879,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -35109,7 +35109,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 915,
+        "elapsed_ms": 878,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -35139,7 +35139,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 915,
+          "elapsed_ms": 878,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -35197,7 +35197,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 894,
+        "elapsed_ms": 871,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -35227,7 +35227,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 894,
+          "elapsed_ms": 871,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -35285,7 +35285,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 610,
+        "elapsed_ms": 609,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -35315,7 +35315,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 610,
+          "elapsed_ms": 609,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -38253,7 +38253,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 828,
+        "elapsed_ms": 853,
         "expected_score": -3,
         "desired": {
           "kind": "result",
@@ -38283,7 +38283,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 828,
+          "elapsed_ms": 853,
           "expected_score": -3,
           "desired": {
             "kind": "result",
@@ -38341,7 +38341,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 835,
+        "elapsed_ms": 854,
         "expected_score": -3,
         "desired": {
           "kind": "result",
@@ -38371,7 +38371,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 835,
+          "elapsed_ms": 854,
           "expected_score": -3,
           "desired": {
             "kind": "result",
@@ -38429,7 +38429,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 751,
+        "elapsed_ms": 761,
         "expected_score": -3,
         "desired": {
           "kind": "result",
@@ -38459,7 +38459,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 751,
+          "elapsed_ms": 761,
           "expected_score": -3,
           "desired": {
             "kind": "result",
@@ -38517,7 +38517,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 847,
+        "elapsed_ms": 844,
         "expected_score": -3,
         "desired": {
           "kind": "result",
@@ -38547,7 +38547,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 847,
+          "elapsed_ms": 844,
           "expected_score": -3,
           "desired": {
             "kind": "result",
@@ -38605,7 +38605,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 854,
+        "elapsed_ms": 860,
         "expected_score": -3,
         "desired": {
           "kind": "result",
@@ -38636,7 +38636,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 854,
+          "elapsed_ms": 860,
           "expected_score": -3,
           "desired": {
             "kind": "result",
@@ -38695,7 +38695,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 778,
+        "elapsed_ms": 790,
         "expected_score": -3,
         "desired": {
           "kind": "result",
@@ -38725,7 +38725,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 778,
+          "elapsed_ms": 790,
           "expected_score": -3,
           "desired": {
             "kind": "result",
@@ -38783,7 +38783,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 2101,
+        "elapsed_ms": 2109,
         "expected_score": -3,
         "desired": {
           "kind": "result",
@@ -38813,7 +38813,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 2101,
+          "elapsed_ms": 2109,
           "expected_score": -3,
           "desired": {
             "kind": "result",
@@ -38873,7 +38873,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 1218,
+        "elapsed_ms": 1246,
         "expected_score": -3,
         "desired": {
           "kind": "result",
@@ -38904,7 +38904,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 1218,
+          "elapsed_ms": 1246,
           "expected_score": -3,
           "desired": {
             "kind": "result",
@@ -48175,7 +48175,7 @@
         "test": "EqualComAss",
         "kind": "invalid_student",
         "message": "Division by zero",
-        "elapsed_ms": 540,
+        "elapsed_ms": 544,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -48200,7 +48200,7 @@
           "test": "EqualComAss",
           "kind": "invalid_student",
           "message": "Division by zero",
-          "elapsed_ms": 540,
+          "elapsed_ms": 544,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -48253,7 +48253,7 @@
         "test": "EqualComAss",
         "kind": "invalid_teacher",
         "message": "Division by zero",
-        "elapsed_ms": 497,
+        "elapsed_ms": 531,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -48278,7 +48278,7 @@
           "test": "EqualComAss",
           "kind": "invalid_teacher",
           "message": "Division by zero",
-          "elapsed_ms": 497,
+          "elapsed_ms": 531,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -48335,7 +48335,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 508,
+        "elapsed_ms": 525,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -48366,7 +48366,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 508,
+          "elapsed_ms": 525,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -48426,7 +48426,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 519,
+        "elapsed_ms": 560,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -48457,7 +48457,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 519,
+          "elapsed_ms": 560,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -48597,7 +48597,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 513,
+        "elapsed_ms": 518,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -48628,7 +48628,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 513,
+          "elapsed_ms": 518,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -48688,7 +48688,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 521,
+        "elapsed_ms": 528,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -48719,7 +48719,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 521,
+          "elapsed_ms": 528,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -48779,7 +48779,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 521,
+        "elapsed_ms": 529,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -48810,7 +48810,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 521,
+          "elapsed_ms": 529,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -48870,7 +48870,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 514,
+        "elapsed_ms": 531,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -48901,7 +48901,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 514,
+          "elapsed_ms": 531,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -48961,7 +48961,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 521,
+        "elapsed_ms": 527,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -48992,7 +48992,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 521,
+          "elapsed_ms": 527,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -49052,7 +49052,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 514,
+        "elapsed_ms": 534,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -49083,7 +49083,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 514,
+          "elapsed_ms": 534,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -49143,7 +49143,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 519,
+        "elapsed_ms": 540,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -49174,7 +49174,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 519,
+          "elapsed_ms": 540,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -49234,7 +49234,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 516,
+        "elapsed_ms": 531,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -49265,7 +49265,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 516,
+          "elapsed_ms": 531,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -49325,7 +49325,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 518,
+        "elapsed_ms": 531,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -49356,7 +49356,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 518,
+          "elapsed_ms": 531,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -49416,7 +49416,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 523,
+        "elapsed_ms": 533,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -49447,7 +49447,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 523,
+          "elapsed_ms": 533,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -49507,7 +49507,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 513,
+        "elapsed_ms": 544,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -49538,7 +49538,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 513,
+          "elapsed_ms": 544,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -49598,7 +49598,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 511,
+        "elapsed_ms": 529,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -49629,7 +49629,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 511,
+          "elapsed_ms": 529,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -49689,7 +49689,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 825,
+        "elapsed_ms": 819,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -49720,7 +49720,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 825,
+          "elapsed_ms": 819,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -49780,7 +49780,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 844,
+        "elapsed_ms": 859,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -49811,7 +49811,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 844,
+          "elapsed_ms": 859,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -50111,7 +50111,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 519,
+        "elapsed_ms": 550,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -50142,7 +50142,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 519,
+          "elapsed_ms": 550,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -50282,7 +50282,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 520,
+        "elapsed_ms": 534,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -50313,7 +50313,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 520,
+          "elapsed_ms": 534,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -50373,7 +50373,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 604,
+        "elapsed_ms": 594,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -50404,7 +50404,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 604,
+          "elapsed_ms": 594,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -50464,7 +50464,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 815,
+        "elapsed_ms": 796,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -50495,7 +50495,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 815,
+          "elapsed_ms": 796,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -50555,7 +50555,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 594,
+        "elapsed_ms": 601,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -50586,7 +50586,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 594,
+          "elapsed_ms": 601,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -50646,7 +50646,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 591,
+        "elapsed_ms": 586,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -50677,7 +50677,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 591,
+          "elapsed_ms": 586,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -50737,7 +50737,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 600,
+        "elapsed_ms": 590,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -50768,7 +50768,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 600,
+          "elapsed_ms": 590,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -50828,7 +50828,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 592,
+        "elapsed_ms": 604,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -50859,7 +50859,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 592,
+          "elapsed_ms": 604,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -50919,7 +50919,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 609,
+        "elapsed_ms": 602,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -50950,7 +50950,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 609,
+          "elapsed_ms": 602,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -51010,7 +51010,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 586,
+        "elapsed_ms": 591,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -51041,7 +51041,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 586,
+          "elapsed_ms": 591,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -51341,7 +51341,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 588,
+        "elapsed_ms": 572,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -51372,7 +51372,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 588,
+          "elapsed_ms": 572,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -51432,7 +51432,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 574,
+        "elapsed_ms": 596,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -51463,7 +51463,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 574,
+          "elapsed_ms": 596,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -51523,7 +51523,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 593,
+        "elapsed_ms": 588,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -51554,7 +51554,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 593,
+          "elapsed_ms": 588,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -51705,7 +51705,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 600,
+        "elapsed_ms": 586,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -51736,7 +51736,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 600,
+          "elapsed_ms": 586,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -51796,7 +51796,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 525,
+        "elapsed_ms": 532,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -51827,7 +51827,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 525,
+          "elapsed_ms": 532,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -51887,7 +51887,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 519,
+        "elapsed_ms": 520,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -51918,7 +51918,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 519,
+          "elapsed_ms": 520,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -51978,7 +51978,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 580,
+        "elapsed_ms": 586,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -52009,7 +52009,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 580,
+          "elapsed_ms": 586,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -52069,7 +52069,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 596,
+        "elapsed_ms": 591,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -52100,7 +52100,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 596,
+          "elapsed_ms": 591,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -52160,7 +52160,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 516,
+        "elapsed_ms": 524,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -52191,7 +52191,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 516,
+          "elapsed_ms": 524,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -52251,7 +52251,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 514,
+        "elapsed_ms": 518,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -52282,7 +52282,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 514,
+          "elapsed_ms": 518,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -52342,7 +52342,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 606,
+        "elapsed_ms": 598,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -52373,7 +52373,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 606,
+          "elapsed_ms": 598,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -52524,7 +52524,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 548,
+        "elapsed_ms": 536,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -52555,7 +52555,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 548,
+          "elapsed_ms": 536,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -52615,7 +52615,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 616,
+        "elapsed_ms": 588,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -52646,7 +52646,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 616,
+          "elapsed_ms": 588,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -52706,7 +52706,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 531,
+        "elapsed_ms": 519,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -52737,7 +52737,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 531,
+          "elapsed_ms": 519,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -52797,7 +52797,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 558,
+        "elapsed_ms": 514,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -52829,7 +52829,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 558,
+          "elapsed_ms": 514,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -52890,7 +52890,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 582,
+        "elapsed_ms": 595,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -52921,7 +52921,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 582,
+          "elapsed_ms": 595,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -52981,7 +52981,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 560,
+        "elapsed_ms": 530,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -53013,7 +53013,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 560,
+          "elapsed_ms": 530,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -53074,7 +53074,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 596,
+        "elapsed_ms": 582,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -53105,7 +53105,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 596,
+          "elapsed_ms": 582,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -53165,7 +53165,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 632,
+        "elapsed_ms": 603,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -53196,7 +53196,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 632,
+          "elapsed_ms": 603,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -53256,7 +53256,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 854,
+        "elapsed_ms": 847,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -53287,7 +53287,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 854,
+          "elapsed_ms": 847,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -53347,7 +53347,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 611,
+        "elapsed_ms": 601,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -53378,7 +53378,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 611,
+          "elapsed_ms": 601,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -53438,7 +53438,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 597,
+        "elapsed_ms": 590,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -53469,7 +53469,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 597,
+          "elapsed_ms": 590,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -53529,7 +53529,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 522,
+        "elapsed_ms": 523,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -53560,7 +53560,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 522,
+          "elapsed_ms": 523,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -53620,7 +53620,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 528,
+        "elapsed_ms": 531,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -53651,7 +53651,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 528,
+          "elapsed_ms": 531,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -53791,7 +53791,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 530,
+        "elapsed_ms": 542,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -53822,7 +53822,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 530,
+          "elapsed_ms": 542,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -53882,7 +53882,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 541,
+        "elapsed_ms": 535,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -53913,7 +53913,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 541,
+          "elapsed_ms": 535,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -53973,7 +53973,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 605,
+        "elapsed_ms": 682,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -54005,7 +54005,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 605,
+          "elapsed_ms": 682,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -54306,7 +54306,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 543,
+        "elapsed_ms": 535,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -54337,7 +54337,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 543,
+          "elapsed_ms": 535,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -54397,7 +54397,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 541,
+        "elapsed_ms": 538,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -54428,7 +54428,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 541,
+          "elapsed_ms": 538,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -54488,7 +54488,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 545,
+        "elapsed_ms": 536,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -54519,7 +54519,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 545,
+          "elapsed_ms": 536,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -54579,7 +54579,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 544,
+        "elapsed_ms": 540,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -54611,7 +54611,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 544,
+          "elapsed_ms": 540,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -54672,7 +54672,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 619,
+        "elapsed_ms": 605,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -54703,7 +54703,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 619,
+          "elapsed_ms": 605,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -54843,7 +54843,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 1182,
+        "elapsed_ms": 1172,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -54874,7 +54874,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 1182,
+          "elapsed_ms": 1172,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -82798,7 +82798,7 @@
         "test": "FacForm",
         "kind": "invalid_student",
         "message": "Division by zero",
-        "elapsed_ms": 537,
+        "elapsed_ms": 529,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -82823,7 +82823,7 @@
           "test": "FacForm",
           "kind": "invalid_student",
           "message": "Division by zero",
-          "elapsed_ms": 537,
+          "elapsed_ms": 529,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -82876,7 +82876,7 @@
         "test": "FacForm",
         "kind": "invalid_teacher",
         "message": "Division by zero",
-        "elapsed_ms": 540,
+        "elapsed_ms": 517,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -82901,7 +82901,7 @@
           "test": "FacForm",
           "kind": "invalid_teacher",
           "message": "Division by zero",
-          "elapsed_ms": 540,
+          "elapsed_ms": 517,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -83036,7 +83036,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 529,
+        "elapsed_ms": 548,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -83066,7 +83066,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 529,
+          "elapsed_ms": 548,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -83124,7 +83124,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 566,
+        "elapsed_ms": 515,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -83154,7 +83154,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 566,
+          "elapsed_ms": 515,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -83212,7 +83212,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 532,
+        "elapsed_ms": 518,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -83242,7 +83242,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 532,
+          "elapsed_ms": 518,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -83300,7 +83300,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 607,
+        "elapsed_ms": 593,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -83330,7 +83330,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 607,
+          "elapsed_ms": 593,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -83388,7 +83388,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 605,
+        "elapsed_ms": 588,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -83418,7 +83418,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 605,
+          "elapsed_ms": 588,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -83476,7 +83476,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 600,
+        "elapsed_ms": 581,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -83506,7 +83506,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 600,
+          "elapsed_ms": 581,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -83564,7 +83564,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 611,
+        "elapsed_ms": 590,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -83594,7 +83594,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 611,
+          "elapsed_ms": 590,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -83652,7 +83652,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 617,
+        "elapsed_ms": 588,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -83682,7 +83682,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 617,
+          "elapsed_ms": 588,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -83740,7 +83740,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 617,
+        "elapsed_ms": 596,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -83770,7 +83770,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 617,
+          "elapsed_ms": 596,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -83828,7 +83828,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 617,
+        "elapsed_ms": 600,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -83858,7 +83858,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 617,
+          "elapsed_ms": 600,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -84156,7 +84156,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 624,
+        "elapsed_ms": 582,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -84186,7 +84186,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 624,
+          "elapsed_ms": 582,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -84244,7 +84244,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 635,
+        "elapsed_ms": 604,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -84274,7 +84274,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 635,
+          "elapsed_ms": 604,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -84332,7 +84332,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 625,
+        "elapsed_ms": 587,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -84362,7 +84362,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 625,
+          "elapsed_ms": 587,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -84420,7 +84420,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 617,
+        "elapsed_ms": 598,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -84450,7 +84450,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 617,
+          "elapsed_ms": 598,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -84508,7 +84508,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 628,
+        "elapsed_ms": 596,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -84538,7 +84538,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 628,
+          "elapsed_ms": 596,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -84756,7 +84756,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 627,
+        "elapsed_ms": 603,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -84786,7 +84786,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 627,
+          "elapsed_ms": 603,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -84844,7 +84844,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 620,
+        "elapsed_ms": 593,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -84874,7 +84874,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 620,
+          "elapsed_ms": 593,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -84932,7 +84932,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 623,
+        "elapsed_ms": 596,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -84962,7 +84962,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 623,
+          "elapsed_ms": 596,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -85020,7 +85020,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 615,
+        "elapsed_ms": 580,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -85050,7 +85050,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 615,
+          "elapsed_ms": 580,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -85668,7 +85668,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 625,
+        "elapsed_ms": 607,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -85698,7 +85698,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 625,
+          "elapsed_ms": 607,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -85756,7 +85756,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 627,
+        "elapsed_ms": 601,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -85786,7 +85786,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 627,
+          "elapsed_ms": 601,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -85844,7 +85844,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 629,
+        "elapsed_ms": 598,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -85874,7 +85874,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 629,
+          "elapsed_ms": 598,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -85932,7 +85932,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 606,
+        "elapsed_ms": 605,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -85962,7 +85962,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 606,
+          "elapsed_ms": 605,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -86020,7 +86020,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 619,
+        "elapsed_ms": 591,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -86050,7 +86050,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 619,
+          "elapsed_ms": 591,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -86108,7 +86108,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 651,
+        "elapsed_ms": 622,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -86138,7 +86138,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 651,
+          "elapsed_ms": 622,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -86196,7 +86196,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 649,
+        "elapsed_ms": 609,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -86226,7 +86226,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 649,
+          "elapsed_ms": 609,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -86284,7 +86284,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 616,
+        "elapsed_ms": 606,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -86314,7 +86314,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 616,
+          "elapsed_ms": 606,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -86372,7 +86372,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 612,
+        "elapsed_ms": 588,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -86402,7 +86402,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 612,
+          "elapsed_ms": 588,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -86460,7 +86460,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 633,
+        "elapsed_ms": 614,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -86490,7 +86490,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 633,
+          "elapsed_ms": 614,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -86548,7 +86548,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 632,
+        "elapsed_ms": 604,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -86578,7 +86578,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 632,
+          "elapsed_ms": 604,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -86636,7 +86636,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 621,
+        "elapsed_ms": 604,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -86666,7 +86666,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 621,
+          "elapsed_ms": 604,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -86812,7 +86812,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 629,
+        "elapsed_ms": 610,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -86842,7 +86842,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 629,
+          "elapsed_ms": 610,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -86900,7 +86900,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 629,
+        "elapsed_ms": 589,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -86930,7 +86930,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 629,
+          "elapsed_ms": 589,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -86988,7 +86988,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 606,
+        "elapsed_ms": 596,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -87018,7 +87018,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 606,
+          "elapsed_ms": 596,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -87076,7 +87076,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 623,
+        "elapsed_ms": 615,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -87106,7 +87106,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 623,
+          "elapsed_ms": 615,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -87164,7 +87164,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 607,
+        "elapsed_ms": 621,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -87194,7 +87194,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 607,
+          "elapsed_ms": 621,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -87252,7 +87252,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 625,
+        "elapsed_ms": 605,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -87282,7 +87282,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 625,
+          "elapsed_ms": 605,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -87340,7 +87340,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 604,
+        "elapsed_ms": 618,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -87370,7 +87370,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 604,
+          "elapsed_ms": 618,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -87428,7 +87428,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 624,
+        "elapsed_ms": 612,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -87458,7 +87458,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 624,
+          "elapsed_ms": 612,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -87516,7 +87516,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 607,
+        "elapsed_ms": 608,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -87546,7 +87546,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 607,
+          "elapsed_ms": 608,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -87604,7 +87604,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 607,
+        "elapsed_ms": 608,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -87634,7 +87634,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 607,
+          "elapsed_ms": 608,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -87692,7 +87692,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 627,
+        "elapsed_ms": 690,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -87722,7 +87722,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 627,
+          "elapsed_ms": 690,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -87780,7 +87780,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 619,
+        "elapsed_ms": 627,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -87810,7 +87810,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 619,
+          "elapsed_ms": 627,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -87868,7 +87868,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 622,
+        "elapsed_ms": 637,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -87898,7 +87898,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 622,
+          "elapsed_ms": 637,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -87956,7 +87956,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 613,
+        "elapsed_ms": 618,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -87986,7 +87986,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 613,
+          "elapsed_ms": 618,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -88044,7 +88044,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 604,
+        "elapsed_ms": 602,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -88074,7 +88074,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 604,
+          "elapsed_ms": 602,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -88132,7 +88132,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 609,
+        "elapsed_ms": 619,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -88162,7 +88162,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 609,
+          "elapsed_ms": 619,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -88860,7 +88860,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 550,
+        "elapsed_ms": 524,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -88890,7 +88890,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 550,
+          "elapsed_ms": 524,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -88948,7 +88948,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 602,
+        "elapsed_ms": 596,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -88978,7 +88978,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 602,
+          "elapsed_ms": 596,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -89116,7 +89116,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 602,
+        "elapsed_ms": 606,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -89146,7 +89146,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 602,
+          "elapsed_ms": 606,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -95093,7 +95093,7 @@
         "test": "SingleFrac",
         "kind": "invalid_student",
         "message": "Division by zero",
-        "elapsed_ms": 531,
+        "elapsed_ms": 504,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -95118,7 +95118,7 @@
           "test": "SingleFrac",
           "kind": "invalid_student",
           "message": "Division by zero",
-          "elapsed_ms": 531,
+          "elapsed_ms": 504,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -95171,7 +95171,7 @@
         "test": "SingleFrac",
         "kind": "invalid_teacher",
         "message": "Division by zero",
-        "elapsed_ms": 541,
+        "elapsed_ms": 542,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -95196,7 +95196,7 @@
           "test": "SingleFrac",
           "kind": "invalid_teacher",
           "message": "Division by zero",
-          "elapsed_ms": 541,
+          "elapsed_ms": 542,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -95332,7 +95332,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 522,
+        "elapsed_ms": 526,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -95362,7 +95362,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 522,
+          "elapsed_ms": 526,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -95420,7 +95420,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 529,
+        "elapsed_ms": 530,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -95450,7 +95450,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 529,
+          "elapsed_ms": 530,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -95508,7 +95508,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 834,
+        "elapsed_ms": 859,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -95538,7 +95538,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 834,
+          "elapsed_ms": 859,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -95596,7 +95596,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 521,
+        "elapsed_ms": 513,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -95626,7 +95626,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 521,
+          "elapsed_ms": 513,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -95684,7 +95684,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 588,
+        "elapsed_ms": 586,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -95714,7 +95714,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 588,
+          "elapsed_ms": 586,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -95772,7 +95772,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 595,
+        "elapsed_ms": 608,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -95802,7 +95802,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 595,
+          "elapsed_ms": 608,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -95860,7 +95860,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 587,
+        "elapsed_ms": 606,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -95890,7 +95890,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 587,
+          "elapsed_ms": 606,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -95948,7 +95948,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 512,
+        "elapsed_ms": 526,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -95978,7 +95978,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 512,
+          "elapsed_ms": 526,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -96036,7 +96036,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 515,
+        "elapsed_ms": 528,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -96066,7 +96066,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 515,
+          "elapsed_ms": 528,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -96124,7 +96124,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 833,
+        "elapsed_ms": 813,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -96154,7 +96154,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 833,
+          "elapsed_ms": 813,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -96212,7 +96212,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 884,
+        "elapsed_ms": 858,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -96242,7 +96242,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 884,
+          "elapsed_ms": 858,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -96300,7 +96300,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 870,
+        "elapsed_ms": 825,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -96330,7 +96330,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 870,
+          "elapsed_ms": 825,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -96388,7 +96388,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 611,
+        "elapsed_ms": 606,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -96418,7 +96418,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 611,
+          "elapsed_ms": 606,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -96476,7 +96476,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 523,
+        "elapsed_ms": 529,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -96506,7 +96506,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 523,
+          "elapsed_ms": 529,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -96564,7 +96564,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 610,
+        "elapsed_ms": 600,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -96594,7 +96594,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 610,
+          "elapsed_ms": 600,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -96652,7 +96652,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 607,
+        "elapsed_ms": 587,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -96682,7 +96682,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 607,
+          "elapsed_ms": 587,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -96740,7 +96740,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 602,
+        "elapsed_ms": 582,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -96770,7 +96770,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 602,
+          "elapsed_ms": 582,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -96828,7 +96828,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 607,
+        "elapsed_ms": 598,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -96858,7 +96858,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 607,
+          "elapsed_ms": 598,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -96916,7 +96916,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 619,
+        "elapsed_ms": 598,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -96946,7 +96946,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 619,
+          "elapsed_ms": 598,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -97004,7 +97004,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 612,
+        "elapsed_ms": 604,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -97034,7 +97034,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 612,
+          "elapsed_ms": 604,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -97092,7 +97092,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 619,
+        "elapsed_ms": 605,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -97122,7 +97122,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 619,
+          "elapsed_ms": 605,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -97180,7 +97180,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 541,
+        "elapsed_ms": 527,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -97210,7 +97210,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 541,
+          "elapsed_ms": 527,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -97268,7 +97268,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 555,
+        "elapsed_ms": 536,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -97298,7 +97298,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 555,
+          "elapsed_ms": 536,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -97356,7 +97356,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 533,
+        "elapsed_ms": 530,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -97386,7 +97386,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 533,
+          "elapsed_ms": 530,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -97444,7 +97444,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 532,
+        "elapsed_ms": 527,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -97474,7 +97474,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 532,
+          "elapsed_ms": 527,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -97532,7 +97532,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 546,
+        "elapsed_ms": 526,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -97562,7 +97562,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 546,
+          "elapsed_ms": 526,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -97620,7 +97620,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 551,
+        "elapsed_ms": 527,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -97650,7 +97650,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 551,
+          "elapsed_ms": 527,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -97708,7 +97708,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 552,
+        "elapsed_ms": 518,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -97738,7 +97738,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 552,
+          "elapsed_ms": 518,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -97796,7 +97796,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 619,
+        "elapsed_ms": 591,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -97826,7 +97826,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 619,
+          "elapsed_ms": 591,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -97884,7 +97884,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 604,
+        "elapsed_ms": 594,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -97914,7 +97914,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 604,
+          "elapsed_ms": 594,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -97972,7 +97972,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 610,
+        "elapsed_ms": 597,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -98002,7 +98002,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 610,
+          "elapsed_ms": 597,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -98060,7 +98060,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 604,
+        "elapsed_ms": 592,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -98090,7 +98090,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 604,
+          "elapsed_ms": 592,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -98148,7 +98148,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 609,
+        "elapsed_ms": 592,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -98178,7 +98178,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 609,
+          "elapsed_ms": 592,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -98236,7 +98236,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 618,
+        "elapsed_ms": 594,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -98266,7 +98266,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 618,
+          "elapsed_ms": 594,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -135081,7 +135081,7 @@
         "test": "NumRelative",
         "kind": "invalid_student",
         "message": "Division by zero",
-        "elapsed_ms": 543,
+        "elapsed_ms": 528,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -135106,7 +135106,7 @@
           "test": "NumRelative",
           "kind": "invalid_student",
           "message": "Division by zero",
-          "elapsed_ms": 543,
+          "elapsed_ms": 528,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -135159,7 +135159,7 @@
         "test": "NumRelative",
         "kind": "invalid_teacher",
         "message": "Division by zero",
-        "elapsed_ms": 550,
+        "elapsed_ms": 524,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -135184,7 +135184,7 @@
           "test": "NumRelative",
           "kind": "invalid_teacher",
           "message": "Division by zero",
-          "elapsed_ms": 550,
+          "elapsed_ms": 524,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -135237,7 +135237,7 @@
         "test": "NumRelative",
         "kind": "invalid_option",
         "message": "Division by zero",
-        "elapsed_ms": 539,
+        "elapsed_ms": 527,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -135262,7 +135262,7 @@
           "test": "NumRelative",
           "kind": "invalid_option",
           "message": "Division by zero",
-          "elapsed_ms": 539,
+          "elapsed_ms": 527,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -135394,7 +135394,7 @@
         "test": "NumRelative",
         "kind": "invalid_option",
         "message": "Tolerance option must be a finite real number",
-        "elapsed_ms": 541,
+        "elapsed_ms": 514,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -135422,7 +135422,7 @@
           "test": "NumRelative",
           "kind": "invalid_option",
           "message": "Tolerance option must be a finite real number",
-          "elapsed_ms": 541,
+          "elapsed_ms": 514,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -135715,7 +135715,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 527,
+        "elapsed_ms": 521,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -135745,7 +135745,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 527,
+          "elapsed_ms": 521,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -135803,7 +135803,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 543,
+        "elapsed_ms": 520,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -135833,7 +135833,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 543,
+          "elapsed_ms": 520,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -135891,7 +135891,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 522,
+        "elapsed_ms": 516,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -135921,7 +135921,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 522,
+          "elapsed_ms": 516,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -135979,7 +135979,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 537,
+        "elapsed_ms": 521,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -136009,7 +136009,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 537,
+          "elapsed_ms": 521,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -136067,7 +136067,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 557,
+        "elapsed_ms": 528,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -136097,7 +136097,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 557,
+          "elapsed_ms": 528,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -136155,7 +136155,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 561,
+        "elapsed_ms": 528,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -136185,7 +136185,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 561,
+          "elapsed_ms": 528,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -136243,7 +136243,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 556,
+        "elapsed_ms": 520,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -136273,7 +136273,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 556,
+          "elapsed_ms": 520,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -136331,7 +136331,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 555,
+        "elapsed_ms": 523,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -136361,7 +136361,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 555,
+          "elapsed_ms": 523,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -136419,7 +136419,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 610,
+        "elapsed_ms": 539,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -136449,7 +136449,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 610,
+          "elapsed_ms": 539,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -136507,7 +136507,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 543,
+        "elapsed_ms": 526,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -136537,7 +136537,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 543,
+          "elapsed_ms": 526,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -136595,7 +136595,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 590,
+        "elapsed_ms": 525,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -136625,7 +136625,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 590,
+          "elapsed_ms": 525,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -136683,7 +136683,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 543,
+        "elapsed_ms": 529,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -136713,7 +136713,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 543,
+          "elapsed_ms": 529,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -136771,7 +136771,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 545,
+        "elapsed_ms": 532,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -136801,7 +136801,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 545,
+          "elapsed_ms": 532,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -136939,7 +136939,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 544,
+        "elapsed_ms": 530,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -136969,7 +136969,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 544,
+          "elapsed_ms": 530,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -137027,7 +137027,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 536,
+        "elapsed_ms": 522,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -137057,7 +137057,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 536,
+          "elapsed_ms": 522,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -137115,7 +137115,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 528,
+        "elapsed_ms": 523,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -137145,7 +137145,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 528,
+          "elapsed_ms": 523,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -138320,7 +138320,7 @@
         "test": "NumAbsolute",
         "kind": "invalid_student",
         "message": "Division by zero",
-        "elapsed_ms": 524,
+        "elapsed_ms": 536,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -138345,7 +138345,7 @@
           "test": "NumAbsolute",
           "kind": "invalid_student",
           "message": "Division by zero",
-          "elapsed_ms": 524,
+          "elapsed_ms": 536,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -138398,7 +138398,7 @@
         "test": "NumAbsolute",
         "kind": "invalid_teacher",
         "message": "Division by zero",
-        "elapsed_ms": 543,
+        "elapsed_ms": 528,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -138423,7 +138423,7 @@
           "test": "NumAbsolute",
           "kind": "invalid_teacher",
           "message": "Division by zero",
-          "elapsed_ms": 543,
+          "elapsed_ms": 528,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -138476,7 +138476,7 @@
         "test": "NumAbsolute",
         "kind": "invalid_option",
         "message": "Division by zero",
-        "elapsed_ms": 542,
+        "elapsed_ms": 519,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -138501,7 +138501,7 @@
           "test": "NumAbsolute",
           "kind": "invalid_option",
           "message": "Division by zero",
-          "elapsed_ms": 542,
+          "elapsed_ms": 519,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -138713,7 +138713,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 521,
+        "elapsed_ms": 529,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -138743,7 +138743,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 521,
+          "elapsed_ms": 529,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -138801,7 +138801,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 560,
+        "elapsed_ms": 527,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -138831,7 +138831,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 560,
+          "elapsed_ms": 527,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -138889,7 +138889,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 541,
+        "elapsed_ms": 530,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -138919,7 +138919,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 541,
+          "elapsed_ms": 530,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -138977,7 +138977,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 524,
+        "elapsed_ms": 520,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -139007,7 +139007,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 524,
+          "elapsed_ms": 520,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -139065,7 +139065,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 544,
+        "elapsed_ms": 526,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -139095,7 +139095,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 544,
+          "elapsed_ms": 526,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -139153,7 +139153,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 557,
+        "elapsed_ms": 538,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -139183,7 +139183,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 557,
+          "elapsed_ms": 538,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -139241,7 +139241,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 547,
+        "elapsed_ms": 537,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -139271,7 +139271,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 547,
+          "elapsed_ms": 537,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -139329,7 +139329,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 546,
+        "elapsed_ms": 529,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -139359,7 +139359,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 546,
+          "elapsed_ms": 529,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -139417,7 +139417,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 553,
+        "elapsed_ms": 528,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -139447,7 +139447,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 553,
+          "elapsed_ms": 528,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -139505,7 +139505,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 551,
+        "elapsed_ms": 529,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -139535,7 +139535,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 551,
+          "elapsed_ms": 529,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -153046,7 +153046,7 @@
         "test": "NumDecPlaces",
         "kind": "invalid_student",
         "message": "Division by zero",
-        "elapsed_ms": 538,
+        "elapsed_ms": 532,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -153071,7 +153071,7 @@
           "test": "NumDecPlaces",
           "kind": "invalid_student",
           "message": "Division by zero",
-          "elapsed_ms": 538,
+          "elapsed_ms": 532,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -153124,7 +153124,7 @@
         "test": "NumDecPlaces",
         "kind": "invalid_teacher",
         "message": "Division by zero",
-        "elapsed_ms": 531,
+        "elapsed_ms": 519,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -153149,7 +153149,7 @@
           "test": "NumDecPlaces",
           "kind": "invalid_teacher",
           "message": "Division by zero",
-          "elapsed_ms": 531,
+          "elapsed_ms": 519,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -153202,7 +153202,7 @@
         "test": "NumDecPlaces",
         "kind": "invalid_option",
         "message": "Division by zero",
-        "elapsed_ms": 536,
+        "elapsed_ms": 521,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -153227,7 +153227,7 @@
           "test": "NumDecPlaces",
           "kind": "invalid_option",
           "message": "Division by zero",
-          "elapsed_ms": 536,
+          "elapsed_ms": 521,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -153280,7 +153280,7 @@
         "test": "NumDecPlaces",
         "kind": "invalid_option",
         "message": "Decimal-place option must be an integer from 1 to 50",
-        "elapsed_ms": 539,
+        "elapsed_ms": 533,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -153308,7 +153308,7 @@
           "test": "NumDecPlaces",
           "kind": "invalid_option",
           "message": "Decimal-place option must be an integer from 1 to 50",
-          "elapsed_ms": 539,
+          "elapsed_ms": 533,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -153361,7 +153361,7 @@
         "test": "NumDecPlaces",
         "kind": "invalid_option",
         "message": "Decimal-place option must be an integer from 1 to 50",
-        "elapsed_ms": 556,
+        "elapsed_ms": 521,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -153389,7 +153389,7 @@
           "test": "NumDecPlaces",
           "kind": "invalid_option",
           "message": "Decimal-place option must be an integer from 1 to 50",
-          "elapsed_ms": 556,
+          "elapsed_ms": 521,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -153442,7 +153442,7 @@
         "test": "NumDecPlaces",
         "kind": "invalid_option",
         "message": "Decimal-place option must be an integer from 1 to 50",
-        "elapsed_ms": 540,
+        "elapsed_ms": 524,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -153470,7 +153470,7 @@
           "test": "NumDecPlaces",
           "kind": "invalid_option",
           "message": "Decimal-place option must be an integer from 1 to 50",
-          "elapsed_ms": 540,
+          "elapsed_ms": 524,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -153844,7 +153844,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 540,
+        "elapsed_ms": 525,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -153874,7 +153874,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 540,
+          "elapsed_ms": 525,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -154020,7 +154020,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 543,
+        "elapsed_ms": 528,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -154050,7 +154050,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 543,
+          "elapsed_ms": 528,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -154108,7 +154108,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 527,
+        "elapsed_ms": 522,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -154138,7 +154138,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 527,
+          "elapsed_ms": 522,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -154196,7 +154196,7 @@
         "correct": false,
         "note": "wrong_value",
         "feedback": "",
-        "elapsed_ms": 537,
+        "elapsed_ms": 536,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -154226,7 +154226,7 @@
           "correct": false,
           "note": "wrong_value",
           "feedback": "",
-          "elapsed_ms": 537,
+          "elapsed_ms": 536,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -154284,7 +154284,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 526,
+        "elapsed_ms": 537,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -154314,7 +154314,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 526,
+          "elapsed_ms": 537,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -154372,7 +154372,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 539,
+        "elapsed_ms": 532,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -154402,7 +154402,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 539,
+          "elapsed_ms": 532,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -154548,7 +154548,7 @@
         "correct": false,
         "note": "wrong_decimal_places",
         "feedback": "Incorrect number of decimal places",
-        "elapsed_ms": 573,
+        "elapsed_ms": 581,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -154578,7 +154578,7 @@
           "correct": false,
           "note": "wrong_decimal_places",
           "feedback": "Incorrect number of decimal places",
-          "elapsed_ms": 573,
+          "elapsed_ms": 581,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -154724,7 +154724,7 @@
         "correct": false,
         "note": "wrong_decimal_places",
         "feedback": "Incorrect number of decimal places",
-        "elapsed_ms": 564,
+        "elapsed_ms": 537,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -154754,7 +154754,7 @@
           "correct": false,
           "note": "wrong_decimal_places",
           "feedback": "Incorrect number of decimal places",
-          "elapsed_ms": 564,
+          "elapsed_ms": 537,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -154812,7 +154812,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 526,
+        "elapsed_ms": 532,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -154842,7 +154842,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 526,
+          "elapsed_ms": 532,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -154900,7 +154900,7 @@
         "correct": false,
         "note": "wrong_decimal_places",
         "feedback": "Incorrect number of decimal places",
-        "elapsed_ms": 514,
+        "elapsed_ms": 527,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -154930,7 +154930,7 @@
           "correct": false,
           "note": "wrong_decimal_places",
           "feedback": "Incorrect number of decimal places",
-          "elapsed_ms": 514,
+          "elapsed_ms": 527,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -154988,7 +154988,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 528,
+        "elapsed_ms": 524,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -155018,7 +155018,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 528,
+          "elapsed_ms": 524,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -155076,7 +155076,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 531,
+        "elapsed_ms": 527,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -155106,7 +155106,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 531,
+          "elapsed_ms": 527,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -179766,7 +179766,7 @@
         "test": "LowestTerms",
         "kind": "invalid_student",
         "message": "Division by zero",
-        "elapsed_ms": 527,
+        "elapsed_ms": 519,
         "expected_score": -1,
         "desired": {
           "kind": "controlled_error",
@@ -179791,7 +179791,7 @@
           "test": "LowestTerms",
           "kind": "invalid_student",
           "message": "Division by zero",
-          "elapsed_ms": 527,
+          "elapsed_ms": 519,
           "expected_score": -1,
           "desired": {
             "kind": "controlled_error",
@@ -179847,7 +179847,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 510,
+        "elapsed_ms": 528,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -179877,7 +179877,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 510,
+          "elapsed_ms": 528,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -179935,7 +179935,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 521,
+        "elapsed_ms": 525,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -179965,7 +179965,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 521,
+          "elapsed_ms": 525,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -180023,7 +180023,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 513,
+        "elapsed_ms": 527,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -180053,7 +180053,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 513,
+          "elapsed_ms": 527,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -180111,7 +180111,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 523,
+        "elapsed_ms": 527,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -180141,7 +180141,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 523,
+          "elapsed_ms": 527,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -180199,7 +180199,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 514,
+        "elapsed_ms": 532,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -180229,7 +180229,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 514,
+          "elapsed_ms": 532,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -180287,7 +180287,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 518,
+        "elapsed_ms": 530,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -180317,7 +180317,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 518,
+          "elapsed_ms": 530,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -180375,7 +180375,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 519,
+        "elapsed_ms": 523,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -180405,7 +180405,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 519,
+          "elapsed_ms": 523,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -180463,7 +180463,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 533,
+        "elapsed_ms": 529,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -180493,7 +180493,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 533,
+          "elapsed_ms": 529,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -180551,7 +180551,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 527,
+        "elapsed_ms": 526,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -180581,7 +180581,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 527,
+          "elapsed_ms": 526,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -180639,7 +180639,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 586,
+        "elapsed_ms": 595,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -180669,7 +180669,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 586,
+          "elapsed_ms": 595,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -180727,7 +180727,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 582,
+        "elapsed_ms": 598,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -180757,7 +180757,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 582,
+          "elapsed_ms": 598,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -180815,7 +180815,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 599,
+        "elapsed_ms": 597,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -180845,7 +180845,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 599,
+          "elapsed_ms": 597,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -180903,7 +180903,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 589,
+        "elapsed_ms": 590,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -180933,7 +180933,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 589,
+          "elapsed_ms": 590,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -180991,7 +180991,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 586,
+        "elapsed_ms": 601,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -181022,7 +181022,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 586,
+          "elapsed_ms": 601,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -181081,7 +181081,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 535,
+        "elapsed_ms": 526,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -181111,7 +181111,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 535,
+          "elapsed_ms": 526,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -181169,7 +181169,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 556,
+        "elapsed_ms": 541,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -181199,7 +181199,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 556,
+          "elapsed_ms": 541,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -181497,7 +181497,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 574,
+        "elapsed_ms": 580,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -181527,7 +181527,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 574,
+          "elapsed_ms": 580,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -181585,7 +181585,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 531,
+        "elapsed_ms": 520,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -181615,7 +181615,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 531,
+          "elapsed_ms": 520,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -181761,7 +181761,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 518,
+        "elapsed_ms": 527,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -181791,7 +181791,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 518,
+          "elapsed_ms": 527,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -181849,7 +181849,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 516,
+        "elapsed_ms": 518,
         "expected_score": 1,
         "desired": {
           "kind": "result",
@@ -181879,7 +181879,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 516,
+          "elapsed_ms": 518,
           "expected_score": 1,
           "desired": {
             "kind": "result",
@@ -181937,7 +181937,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 524,
+        "elapsed_ms": 533,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -181967,7 +181967,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 524,
+          "elapsed_ms": 533,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -182025,7 +182025,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 550,
+        "elapsed_ms": 544,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -182055,7 +182055,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 550,
+          "elapsed_ms": 544,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -182113,7 +182113,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 565,
+        "elapsed_ms": 582,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -182143,7 +182143,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 565,
+          "elapsed_ms": 582,
           "expected_score": 0,
           "desired": {
             "kind": "result",
@@ -182201,7 +182201,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 545,
+        "elapsed_ms": 446,
         "expected_score": 0,
         "desired": {
           "kind": "result",
@@ -182231,7 +182231,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 545,
+          "elapsed_ms": 446,
           "expected_score": 0,
           "desired": {
             "kind": "result",

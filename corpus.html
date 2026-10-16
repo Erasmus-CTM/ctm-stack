@@ -399,26 +399,32 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="ready-to-try" class="level2">
 <h2 class="anchored" data-anchor-id="ready-to-try">Ready to try</h2>
-<p>These 16 cards use the first seed from each replay. Press <strong>Validate answers</strong>, then <strong>Check answer</strong>. <strong>Run author tests</strong> replays the original XML test cases on the displayed seed; the <a href="questions/corpus/baseline.json">baseline</a> covers every recorded seed. Their source panels start closed and expose both the authored block and unchanged STACK XML.</p>
+<p>These 16 cards use the first seed from each replay. Press <strong>Validate answers</strong>, then <strong>Check answer</strong>. <strong>Run author tests</strong> replays the card’s XML tests on the displayed seed; the <a href="questions/corpus/baseline.json">baseline</a> describes the unchanged imports. Three cards explicitly use <a href="questions/corrected/README.md">corrected teaching copies</a> for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.</p>
 <section id="algmap-1-5" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-1-5">AlgMap-1.5</h3>
 <p>Algebra Refresher / 01 Combinations of arithmetic operations · 1 input · 2 authored tests · baseline seeds <code>128137392</code>, <code>2051957692</code>, <code>1375878840</code>.</p>
-<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-1"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Simplify the algebraic expression \[{c^{6} \cdot c^{7}}.\] Be sure to leave your answer in the form: \(x^y\). <br> <br> <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="15" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-1","question":{"name":"AlgMap-1.5","questiontext":"\u003cp\u003eSimplify the algebraic expression \\[{@c^a*c^b@}.\\] Be sure to leave your answer in the form: \\(x^y\\). \u003cbr /\u003e \u003cbr /\u003e [[input:ans]] [[validation:ans]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eRemember the rule that the rule, \\(c^a+c^b=c^{a+b}\\). \u003cbr /\u003e \u003cbr /\u003e In this exmaple: \\[c^{@a@}+c^{@b@}=c^{@ev(a+b,simp)@}.\\]\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"\\( {@c^a*c^b@} = {@ta@} \\).","variables":"a:ev(rand(6)+2,simp);\nb:ev(rand(6)+2,simp);\np:(ev(c^a,simp)*ev(c^b,simp));\nta:ev(c^(a+b),simp);","defaultgrade":1.0,"penalty":0.1,"simplify":false,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":15,"strictsyntax":true,"insertstars":0,"forbidwords":["ratsimp"],"forbidfloat":true,"requirelowestterms":true,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"1-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":1,"note":"1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"1-1-T","feedback":"\u003cp\u003eYour answer is equivalent to the correct answer but you haven't fully simplified.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-1-F","feedback":""}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"1-0-T"}}},{"testcase":"2","description":"","inputs":{"ans":"p"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-1-T"}}}],"deployedseeds":[128137392,2051957692,1375878840,147752938,1429917072,1652793006,1814142093,563558373,1641811929,249014580]},"variants":[{"seed":128137392,"env":{"a":"6","b":"7","p":"c**13","ta":"c**13"},"question_html":"\u003cp\u003eSimplify the algebraic expression \\[{c^{6} \\cdot c^{7}}.\\] Be sure to leave your answer in the form: \\(x^y\\). \u003cbr\u003e \u003cbr\u003e \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"15\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eRemember the rule that the rule, \\(c^a+c^b=c^{a+b}\\). \u003cbr\u003e \u003cbr\u003e In this exmaple: \\[c^{6}+c^{7}=c^{13}.\\]\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"\\( {c^{6} \\cdot c^{7}} = {c^{13}} \\)."}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
-#| file: questions/corpus/AlgMap-1-5.xml
-#| question: AlgMap-1.5
+<blockquote class="blockquote">
+<p><strong>Corrected teaching copy:</strong> The worked explanation now uses multiplication in the exponent product rule, rather than the incorrect addition rule. The original XML is preserved unchanged; this card and its source panels use the corrected copy linked below.</p>
+</blockquote>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-1"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Simplify the algebraic expression \[{c^{6} \cdot c^{7}}.\] Be sure to leave your answer in the form: \(x^y\). <br> <br> <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="15" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-1","question":{"name":"AlgMap-1.5 (corrected teaching copy)","questiontext":"\u003cp\u003eSimplify the algebraic expression \\[{@c^a*c^b@}.\\] Be sure to leave your answer in the form: \\(x^y\\). \u003cbr /\u003e \u003cbr /\u003e [[input:ans]] [[validation:ans]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eRemember the product rule, \\(c^a\\cdot c^b=c^{a+b}\\). \u003cbr /\u003e \u003cbr /\u003e In this example: \\[c^{@a@}\\cdot c^{@b@}=c^{@ev(a+b,simp)@}.\\]\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"\\( {@c^a*c^b@} = {@ta@} \\).","variables":"a:ev(rand(6)+2,simp);\nb:ev(rand(6)+2,simp);\np:(ev(c^a,simp)*ev(c^b,simp));\nta:ev(c^(a+b),simp);","defaultgrade":1.0,"penalty":0.1,"simplify":false,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":15,"strictsyntax":true,"insertstars":0,"forbidwords":["ratsimp"],"forbidfloat":true,"requirelowestterms":true,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"1-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":1,"note":"1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"1-1-T","feedback":"\u003cp\u003eYour answer is equivalent to the correct answer but you haven't fully simplified.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-1-F","feedback":""}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"1-0-T"}}},{"testcase":"2","description":"","inputs":{"ans":"p"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-1-T"}}}],"deployedseeds":[128137392,2051957692,1375878840,147752938,1429917072,1652793006,1814142093,563558373,1641811929,249014580]},"variants":[{"seed":128137392,"env":{"a":"6","b":"7","p":"c**13","ta":"c**13"},"question_html":"\u003cp\u003eSimplify the algebraic expression \\[{c^{6} \\cdot c^{7}}.\\] Be sure to leave your answer in the form: \\(x^y\\). \u003cbr\u003e \u003cbr\u003e \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"15\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eRemember the product rule, \\(c^a\\cdot c^b=c^{a+b}\\). \u003cbr\u003e \u003cbr\u003e In this example: \\[c^{6}\\cdot c^{7}=c^{13}.\\]\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"\\( {c^{6} \\cdot c^{7}} = {c^{13}} \\)."}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: questions/corrected/AlgMap-1-5.xml
+#| question: AlgMap-1.5 (corrected teaching copy)
 #| seed: 128137392
 #| review: true
 ```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Teaching correction by CTM, 2026-10-16. Derived from the pinned STACK
+     corpus/AlgMap-1-5.xml export; CC BY-SA 4.0. Original authors and source:
+     ../corpus/manifest.json. The original export is preserved unchanged. --&gt;
 &lt;quiz&gt;
   &lt;question type="stack"&gt;
     &lt;name&gt;
-      &lt;text&gt;AlgMap-1.5&lt;/text&gt;
+      &lt;text&gt;AlgMap-1.5 (corrected teaching copy)&lt;/text&gt;
     &lt;/name&gt;
     &lt;questiontext format="html"&gt;
       &lt;text&gt;&lt;![CDATA[&lt;p&gt;Simplify the algebraic expression \[{@c^a*c^b@}.\] Be sure to leave your answer in the form: \(x^y\). &lt;br /&gt; &lt;br /&gt; [[input:ans]] [[validation:ans]]&lt;/p&gt;]]&gt;&lt;/text&gt;
     &lt;/questiontext&gt;
     &lt;generalfeedback format="html"&gt;
-      &lt;text&gt;&lt;![CDATA[&lt;p&gt;Remember the rule that the rule, \(c^a+c^b=c^{a+b}\). &lt;br /&gt; &lt;br /&gt; In this exmaple: \[c^{@a@}+c^{@b@}=c^{@ev(a+b,simp)@}.\]&lt;/p&gt;]]&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;Remember the product rule, \(c^a\cdot c^b=c^{a+b}\). &lt;br /&gt; &lt;br /&gt; In this example: \[c^{@a@}\cdot c^{@b@}=c^{@ev(a+b,simp)@}.\]&lt;/p&gt;]]&gt;&lt;/text&gt;
     &lt;/generalfeedback&gt;
     &lt;defaultgrade&gt;1&lt;/defaultgrade&gt;
     &lt;penalty&gt;0.1&lt;/penalty&gt;
@@ -572,7 +578,7 @@ ta:ev(c^(a+b),simp);&lt;/text&gt;
   &lt;/question&gt;
 &lt;/quiz&gt;
 </code></pre></details></div></div>
-<p><a href="questions/corpus/AlgMap-1-5.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/01-Combinations-of-arithmetic-operations/AlgMap-1-5.xml">Pinned upstream source</a></p>
+<p><a href="questions/corpus/AlgMap-1-5.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/01-Combinations-of-arithmetic-operations/AlgMap-1-5.xml">Pinned upstream source</a> <a href="questions/corrected/AlgMap-1-5.xml">Download the corrected teaching XML</a></p>
 </section>
 <section id="algmap-1-6" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-1-6">AlgMap-1.6</h3>
@@ -899,21 +905,24 @@ ta:factor(n);&lt;/text&gt;
 <h3 class="anchored" data-anchor-id="algmap-2-5">AlgMap-2.5</h3>
 <p>Algebra Refresher / 02 Factorisation of whole numbers · 1 input · 2 authored tests · baseline seeds <code>554625703</code>, <code>2004313867</code>, <code>1257826844</code>.</p>
 <blockquote class="blockquote">
-<p><strong>Upstream grading note:</strong> This original response tree checks lowest-terms form without checking equivalence first. A reduced answer with the wrong value can receive full credit. The XML and its authored tests are unchanged.</p>
+<p><strong>Corrected teaching copy:</strong> A reduced answer with the wrong value can receive full credit. This defect belongs to the original response tree. The corrected card checks value equivalence before lowest-terms form and adds a wrong-value author test. The original XML is preserved unchanged; this card and its source panels use the corrected copy linked below.</p>
 </blockquote>
-<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-4"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Reduce the following fraction to it's lowest terms: \[\frac{-6}{60}.\] <br> <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="15" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-4","question":{"name":"AlgMap-2.5","questiontext":"\u003cp\u003eReduce the following fraction to it's lowest terms: \\[\\frac{@ev(a*c,simp)@}{@ev(b*c,simp)@}.\\] \u003cbr /\u003e [[input:ans]] [[validation:ans]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eFactorise the numerator and the denominator into prime factors, then cancel matching factors. In this example: \u003cbr /\u003e \\[ \\frac{@factor(a*c)@}{@factor(b*c)@} = {@ta@}. \\]\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"\\[\\frac{@ev(a*c,simp)@}{@ev(b*c,simp)@} = {@ta@}.\\]","variables":"a:ev((rand([1,3,5,7,9])*rand([1,-1])),simp);\nb:ev((rand([2,4,6,8,10])*rand([1,-1])),simp);\nc:ev(rand(5)+2,simp);\nta:ev((a*c)/(b*c),simp);","defaultgrade":1.0,"penalty":0.1,"simplify":false,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":15,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"LowestTerms","student":"ans","teacher":"ta","options":"","quiet":true,"true":{"mode":"=","score":1.0,"next":-1,"note":"1-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":1,"note":"1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"1-1-T","feedback":"\u003cp\u003eYour answer is equivalent to the correct answer, but is not in the correct form!\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-1-F","feedback":""}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"1-0-T"}}},{"testcase":"2","description":"","inputs":{"ans":"(ev(a*c,simp))/(ev(b*c,simp))"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-1-T"}}}],"deployedseeds":[554625703,2004313867,1257826844,533970977,1878644045]},"variants":[{"seed":554625703,"env":{"a":"-1","b":"10","c":"6","ta":"-1/10"},"question_html":"\u003cp\u003eReduce the following fraction to it's lowest terms: \\[\\frac{-6}{60}.\\] \u003cbr\u003e \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"15\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eFactorise the numerator and the denominator into prime factors, then cancel matching factors. In this example: \u003cbr\u003e \\[ \\frac{-6}{2^{2} \\cdot 3 \\cdot 5} = {\\frac{-1}{10}}. \\]\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"\\[\\frac{-6}{60} = {\\frac{-1}{10}}.\\]"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
-#| file: questions/corpus/AlgMap-2-5.xml
-#| question: AlgMap-2.5
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-4"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Reduce the following fraction to its lowest terms: \[\frac{-6}{60}.\] <br> <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="15" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-4","question":{"name":"AlgMap-2.5 (corrected teaching copy)","questiontext":"\u003cp\u003eReduce the following fraction to its lowest terms: \\[\\frac{@ev(a*c,simp)@}{@ev(b*c,simp)@}.\\] \u003cbr /\u003e [[input:ans]] [[validation:ans]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eFactorise the numerator and the denominator into prime factors, then cancel matching factors. In this example: \u003cbr /\u003e \\[ \\frac{@factor(a*c)@}{@factor(b*c)@} = {@ta@}. \\]\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"\\[\\frac{@ev(a*c,simp)@}{@ev(b*c,simp)@} = {@ta@}.\\]","variables":"a:ev((rand([1,3,5,7,9])*rand([1,-1])),simp);\nb:ev((rand([2,4,6,8,10])*rand([1,-1])),simp);\nc:ev(rand(5)+2,simp);\nta:ev((a*c)/(b*c),simp);","defaultgrade":1.0,"penalty":0.1,"simplify":false,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":15,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":1,"note":"1-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-0-F","feedback":"\u003cp\u003eThe fraction must have the same value as the original fraction.\u003c/p\u003e"}},{"name":"1","test":"LowestTerms","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"1-1-T","feedback":""},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-1-F","feedback":"\u003cp\u003eThe value is correct; now cancel common factors.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"1-0-T | 1-1-T"}}},{"testcase":"2","description":"","inputs":{"ans":"(ev(a*c,simp))/(ev(b*c,simp))"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-0-T | 1-1-F"}}},{"testcase":"3","description":"Wrong value in lowest terms","inputs":{"ans":"123/127"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-0-F"}}}],"deployedseeds":[554625703,2004313867,1257826844,533970977,1878644045]},"variants":[{"seed":554625703,"env":{"a":"-1","b":"10","c":"6","ta":"-1/10"},"question_html":"\u003cp\u003eReduce the following fraction to its lowest terms: \\[\\frac{-6}{60}.\\] \u003cbr\u003e \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"15\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eFactorise the numerator and the denominator into prime factors, then cancel matching factors. In this example: \u003cbr\u003e \\[ \\frac{-6}{2^{2} \\cdot 3 \\cdot 5} = {\\frac{-1}{10}}. \\]\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"\\[\\frac{-6}{60} = {\\frac{-1}{10}}.\\]"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: questions/corrected/AlgMap-2-5.xml
+#| question: AlgMap-2.5 (corrected teaching copy)
 #| seed: 554625703
 #| review: true
 ```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Teaching correction by CTM, 2026-10-16. Derived from the pinned STACK
+     corpus/AlgMap-2-5.xml export; CC BY-SA 4.0. Original authors and source:
+     ../corpus/manifest.json. The original export is preserved unchanged. --&gt;
 &lt;quiz&gt;
   &lt;question type="stack"&gt;
     &lt;name&gt;
-      &lt;text&gt;AlgMap-2.5&lt;/text&gt;
+      &lt;text&gt;AlgMap-2.5 (corrected teaching copy)&lt;/text&gt;
     &lt;/name&gt;
     &lt;questiontext format="html"&gt;
-      &lt;text&gt;&lt;![CDATA[&lt;p&gt;Reduce the following fraction to it's lowest terms: \[\frac{@ev(a*c,simp)@}{@ev(b*c,simp)@}.\] &lt;br /&gt; [[input:ans]] [[validation:ans]]&lt;/p&gt;]]&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;Reduce the following fraction to its lowest terms: \[\frac{@ev(a*c,simp)@}{@ev(b*c,simp)@}.\] &lt;br /&gt; [[input:ans]] [[validation:ans]]&lt;/p&gt;]]&gt;&lt;/text&gt;
     &lt;/questiontext&gt;
     &lt;generalfeedback format="html"&gt;
       &lt;text&gt;&lt;![CDATA[&lt;p&gt;Factorise the numerator and the denominator into prime factors, then cancel matching factors. In this example: &lt;br /&gt; \[ \frac{@factor(a*c)@}{@factor(b*c)@} = {@ta@}. \]&lt;/p&gt;]]&gt;&lt;/text&gt;
@@ -980,53 +989,25 @@ ta:ev((a*c)/(b*c),simp);&lt;/text&gt;
       &lt;/feedbackvariables&gt;
       &lt;node&gt;
         &lt;name&gt;0&lt;/name&gt;
-        &lt;description/&gt;
-        &lt;answertest&gt;LowestTerms&lt;/answertest&gt;
-        &lt;sans&gt;ans&lt;/sans&gt;
-        &lt;tans&gt;ta&lt;/tans&gt;
-        &lt;testoptions/&gt;
-        &lt;quiet&gt;1&lt;/quiet&gt;
-        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
-        &lt;truescore&gt;1.0000000&lt;/truescore&gt;
-        &lt;truepenalty/&gt;
-        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
-        &lt;trueanswernote&gt;1-0-T &lt;/trueanswernote&gt;
-        &lt;truefeedback format="html"&gt;
-          &lt;text/&gt;
-        &lt;/truefeedback&gt;
-        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
-        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
-        &lt;falsepenalty/&gt;
-        &lt;falsenextnode&gt;1&lt;/falsenextnode&gt;
-        &lt;falseanswernote&gt;1-0-F &lt;/falseanswernote&gt;
-        &lt;falsefeedback format="html"&gt;
-          &lt;text/&gt;
-        &lt;/falsefeedback&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;&lt;sans&gt;ans&lt;/sans&gt;&lt;tans&gt;ta&lt;/tans&gt;
+        &lt;testoptions/&gt;&lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;&lt;truescore&gt;0&lt;/truescore&gt;
+        &lt;truepenalty/&gt;&lt;truenextnode&gt;1&lt;/truenextnode&gt;&lt;trueanswernote&gt;1-0-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;&lt;text/&gt;&lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;&lt;falsescore&gt;0&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;&lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;&lt;falseanswernote&gt;1-0-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;&lt;text&gt;&lt;![CDATA[&lt;p&gt;The fraction must have the same value as the original fraction.&lt;/p&gt;]]&gt;&lt;/text&gt;&lt;/falsefeedback&gt;
       &lt;/node&gt;
       &lt;node&gt;
         &lt;name&gt;1&lt;/name&gt;
-        &lt;description/&gt;
-        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
-        &lt;sans&gt;ans&lt;/sans&gt;
-        &lt;tans&gt;ta&lt;/tans&gt;
-        &lt;testoptions/&gt;
-        &lt;quiet&gt;0&lt;/quiet&gt;
-        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
-        &lt;truescore&gt;0.0000000&lt;/truescore&gt;
-        &lt;truepenalty/&gt;
-        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
-        &lt;trueanswernote&gt;1-1-T &lt;/trueanswernote&gt;
-        &lt;truefeedback format="html"&gt;
-          &lt;text&gt;&lt;![CDATA[&lt;p&gt;Your answer is equivalent to the correct answer, but is not in the correct form!&lt;/p&gt;]]&gt;&lt;/text&gt;
-        &lt;/truefeedback&gt;
-        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
-        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
-        &lt;falsepenalty/&gt;
-        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
-        &lt;falseanswernote&gt;1-1-F &lt;/falseanswernote&gt;
-        &lt;falsefeedback format="html"&gt;
-          &lt;text/&gt;
-        &lt;/falsefeedback&gt;
+        &lt;answertest&gt;LowestTerms&lt;/answertest&gt;&lt;sans&gt;ans&lt;/sans&gt;&lt;tans&gt;ta&lt;/tans&gt;
+        &lt;testoptions/&gt;&lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;&lt;truescore&gt;1&lt;/truescore&gt;
+        &lt;truepenalty/&gt;&lt;truenextnode&gt;-1&lt;/truenextnode&gt;&lt;trueanswernote&gt;1-1-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;&lt;text/&gt;&lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;&lt;falsescore&gt;0&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;&lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;&lt;falseanswernote&gt;1-1-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;&lt;text&gt;&lt;![CDATA[&lt;p&gt;The value is correct; now cancel common factors.&lt;/p&gt;]]&gt;&lt;/text&gt;&lt;/falsefeedback&gt;
       &lt;/node&gt;
     &lt;/prt&gt;
     &lt;deployedseed&gt;554625703&lt;/deployedseed&gt;
@@ -1045,7 +1026,7 @@ ta:ev((a*c)/(b*c),simp);&lt;/text&gt;
         &lt;name&gt;prt1&lt;/name&gt;
         &lt;expectedscore&gt;1.0000000&lt;/expectedscore&gt;
         &lt;expectedpenalty&gt;0.0000000&lt;/expectedpenalty&gt;
-        &lt;expectedanswernote&gt;1-0-T&lt;/expectedanswernote&gt;
+        &lt;expectedanswernote&gt;1-0-T | 1-1-T&lt;/expectedanswernote&gt;
       &lt;/expected&gt;
     &lt;/qtest&gt;
     &lt;qtest&gt;
@@ -1059,13 +1040,18 @@ ta:ev((a*c)/(b*c),simp);&lt;/text&gt;
         &lt;name&gt;prt1&lt;/name&gt;
         &lt;expectedscore&gt;0.0000000&lt;/expectedscore&gt;
         &lt;expectedpenalty&gt;0.1000000&lt;/expectedpenalty&gt;
-        &lt;expectedanswernote&gt;1-1-T&lt;/expectedanswernote&gt;
+        &lt;expectedanswernote&gt;1-0-T | 1-1-F&lt;/expectedanswernote&gt;
       &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;3&lt;/testcase&gt;&lt;description&gt;Wrong value in lowest terms&lt;/description&gt;
+      &lt;testinput&gt;&lt;name&gt;ans&lt;/name&gt;&lt;value&gt;123/127&lt;/value&gt;&lt;/testinput&gt;
+      &lt;expected&gt;&lt;name&gt;prt1&lt;/name&gt;&lt;expectedscore&gt;0&lt;/expectedscore&gt;&lt;expectedpenalty&gt;0.1&lt;/expectedpenalty&gt;&lt;expectedanswernote&gt;1-0-F&lt;/expectedanswernote&gt;&lt;/expected&gt;
     &lt;/qtest&gt;
   &lt;/question&gt;
 &lt;/quiz&gt;
 </code></pre></details></div></div>
-<p><a href="questions/corpus/AlgMap-2-5.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/02-Factorisation-of-whole-numbers/AlgMap-2-5.xml">Pinned upstream source</a></p>
+<p><a href="questions/corpus/AlgMap-2-5.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/02-Factorisation-of-whole-numbers/AlgMap-2-5.xml">Pinned upstream source</a> <a href="questions/corrected/AlgMap-2-5.xml">Download the corrected teaching XML</a></p>
 </section>
 <section id="algmap-4-1" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-4-1">AlgMap-4.1</h3>
@@ -1421,22 +1407,28 @@ ta:ev(factor(expand((A*x+B)*D+C)),simp)/D;&lt;/text&gt;
 <section id="algmap-6-4" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-6-4">AlgMap-6.4</h3>
 <p>Algebra Refresher / 06 Simplifying algebraic expressions · 1 input · 3 authored tests · baseline seeds <code>17</code>, <code>29</code>, <code>47</code>.</p>
-<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-7"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Simplify the algebraic expression: \[{c^{a} \cdot c^{b}}.\] Be sure to leave your answer in the form \(x^y\). <br> <br> <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="15" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-7","question":{"name":"AlgMap-6.4","questiontext":"\u003cp\u003eSimplify the algebraic expression: \\[{@p@}.\\] Be sure to leave your answer in the form \\(x^y\\). \u003cbr /\u003e \u003cbr /\u003e [[input:ans]] [[validation:ans]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eHere we can use the rules of indices, \\(c^a+c^b=c^{a+b}\\), which apply to algebraic expressions as well as numeric values.\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"\\[{@c@}^{@a@}\\cdot {@c@}^{@b@} = {@ta@} .\\]","variables":"p:(c^a)*(c^b);\nta:c^(a+b);","defaultgrade":1.0,"penalty":0.1,"simplify":false,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":15,"strictsyntax":true,"insertstars":0,"forbidwords":["ratsimp"],"forbidfloat":true,"requirelowestterms":true,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"1-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":1,"note":"1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"1-1-T","feedback":"\u003cp\u003eYour answer is equivalent to the correct answer but you haven't fully simplified.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-1-F","feedback":""}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"1-0-T"}}},{"testcase":"2","description":"","inputs":{"ans":"p"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-1-T"}}},{"testcase":"3","description":"","inputs":{"ans":"c^(a*b)"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-1-F"}}}],"deployedseeds":[]},"variants":[{"seed":17,"env":{"p":"c**a*c**b","ta":"c**(a + b)"},"question_html":"\u003cp\u003eSimplify the algebraic expression: \\[{c^{a} \\cdot c^{b}}.\\] Be sure to leave your answer in the form \\(x^y\\). \u003cbr\u003e \u003cbr\u003e \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"15\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eHere we can use the rules of indices, \\(c^a+c^b=c^{a+b}\\), which apply to algebraic expressions as well as numeric values.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"\\[{c}^{a}\\cdot {c}^{b} = {c^{a + b}} .\\]"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
-#| file: questions/corpus/AlgMap-6-4.xml
-#| question: AlgMap-6.4
+<blockquote class="blockquote">
+<p><strong>Corrected teaching copy:</strong> The worked explanation now states c^a · c^b = c^(a+b); the original incorrectly used addition. The original XML is preserved unchanged; this card and its source panels use the corrected copy linked below.</p>
+</blockquote>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-7"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Simplify the algebraic expression: \[{c^{a} \cdot c^{b}}.\] Be sure to leave your answer in the form \(x^y\). <br> <br> <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="15" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-7","question":{"name":"AlgMap-6.4 (corrected teaching copy)","questiontext":"\u003cp\u003eSimplify the algebraic expression: \\[{@p@}.\\] Be sure to leave your answer in the form \\(x^y\\). \u003cbr /\u003e \u003cbr /\u003e [[input:ans]] [[validation:ans]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eHere we can use the rules of indices, \\(c^a\\cdot c^b=c^{a+b}\\), which apply to algebraic expressions as well as numeric values.\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"\\[{@c@}^{@a@}\\cdot {@c@}^{@b@} = {@ta@} .\\]","variables":"p:(c^a)*(c^b);\nta:c^(a+b);","defaultgrade":1.0,"penalty":0.1,"simplify":false,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":15,"strictsyntax":true,"insertstars":0,"forbidwords":["ratsimp"],"forbidfloat":true,"requirelowestterms":true,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"1-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":1,"note":"1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"1-1-T","feedback":"\u003cp\u003eYour answer is equivalent to the correct answer but you haven't fully simplified.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"1-1-F","feedback":""}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"1-0-T"}}},{"testcase":"2","description":"","inputs":{"ans":"p"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-1-T"}}},{"testcase":"3","description":"","inputs":{"ans":"c^(a*b)"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"1-1-F"}}}],"deployedseeds":[]},"variants":[{"seed":17,"env":{"p":"c**a*c**b","ta":"c**(a + b)"},"question_html":"\u003cp\u003eSimplify the algebraic expression: \\[{c^{a} \\cdot c^{b}}.\\] Be sure to leave your answer in the form \\(x^y\\). \u003cbr\u003e \u003cbr\u003e \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"15\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eHere we can use the rules of indices, \\(c^a\\cdot c^b=c^{a+b}\\), which apply to algebraic expressions as well as numeric values.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"\\[{c}^{a}\\cdot {c}^{b} = {c^{a + b}} .\\]"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: questions/corrected/AlgMap-6-4.xml
+#| question: AlgMap-6.4 (corrected teaching copy)
 #| seed: 17
 #| review: true
 ```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Teaching correction by CTM, 2026-10-16. Derived from the pinned STACK
+     corpus/AlgMap-6-4.xml export; CC BY-SA 4.0. Original authors and source:
+     ../corpus/manifest.json. The original export is preserved unchanged. --&gt;
 &lt;quiz&gt;
   &lt;question type="stack"&gt;
     &lt;name&gt;
-      &lt;text&gt;AlgMap-6.4&lt;/text&gt;
+      &lt;text&gt;AlgMap-6.4 (corrected teaching copy)&lt;/text&gt;
     &lt;/name&gt;
     &lt;questiontext format="html"&gt;
       &lt;text&gt;&lt;![CDATA[&lt;p&gt;Simplify the algebraic expression: \[{@p@}.\] Be sure to leave your answer in the form \(x^y\). &lt;br /&gt; &lt;br /&gt; [[input:ans]] [[validation:ans]]&lt;/p&gt;]]&gt;&lt;/text&gt;
     &lt;/questiontext&gt;
     &lt;generalfeedback format="html"&gt;
-      &lt;text&gt;&lt;![CDATA[&lt;p&gt;Here we can use the rules of indices, \(c^a+c^b=c^{a+b}\), which apply to algebraic expressions as well as numeric values.&lt;/p&gt;]]&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;Here we can use the rules of indices, \(c^a\cdot c^b=c^{a+b}\), which apply to algebraic expressions as well as numeric values.&lt;/p&gt;]]&gt;&lt;/text&gt;
     &lt;/generalfeedback&gt;
     &lt;defaultgrade&gt;1&lt;/defaultgrade&gt;
     &lt;penalty&gt;0.1&lt;/penalty&gt;
@@ -1592,7 +1584,7 @@ ta:c^(a+b);&lt;/text&gt;
   &lt;/question&gt;
 &lt;/quiz&gt;
 </code></pre></details></div></div>
-<p><a href="questions/corpus/AlgMap-6-4.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/06-Simplifying-algebraic-expressions/AlgMap-6-4.xml">Pinned upstream source</a></p>
+<p><a href="questions/corpus/AlgMap-6-4.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/06-Simplifying-algebraic-expressions/AlgMap-6-4.xml">Pinned upstream source</a> <a href="questions/corrected/AlgMap-6-4.xml">Download the corrected teaching XML</a></p>
 </section>
 <section id="algmap-6-7" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-6-7">AlgMap-6.7</h3>
