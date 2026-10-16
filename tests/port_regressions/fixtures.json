@@ -1,0 +1,841 @@
+{
+  "schema_version": 1,
+  "suite": "project_port_regressions",
+  "description": "Project-owned discoveries and negative/boundary controls; separate from imported legacy STACK rows.",
+  "cases": [
+    {
+      "id": "port-cosh",
+      "group": "elementary functions",
+      "test": "AlgEquiv",
+      "student": "cosh(x)^2-sinh(x)^2",
+      "teacher": "1",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "elementary functions regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-logistic",
+      "group": "elementary functions",
+      "test": "AlgEquiv",
+      "student": "1/(1+exp(-2*x))",
+      "teacher": "tanh(x)/2+1/2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "elementary functions regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-reciprocal",
+      "group": "elementary functions",
+      "test": "AlgEquiv",
+      "student": "cosech(x)",
+      "teacher": "csch(x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "elementary functions regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-sech",
+      "group": "elementary functions",
+      "test": "AlgEquiv",
+      "student": "sech(x)",
+      "teacher": "1/cosh(x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "elementary functions regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-wrong-hyperbolic",
+      "group": "elementary functions",
+      "test": "AlgEquiv",
+      "student": "cosh(x)",
+      "teacher": "sinh(x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "elementary functions regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-pole",
+      "group": "elementary functions",
+      "test": "AlgEquiv",
+      "student": "csch(0)",
+      "teacher": "1",
+      "options": "",
+      "expected": {
+        "kind": "invalid_student"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "elementary functions regression from scalar helper audit",
+      "native_scope": false
+    },
+    {
+      "id": "port-demorgan",
+      "group": "held logic",
+      "test": "AlgEquiv",
+      "student": "not(A and B)",
+      "teacher": "not A or not B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "held logic regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-noun-aliases",
+      "group": "held logic",
+      "test": "AlgEquiv",
+      "student": "nounnot(A nounand B)",
+      "teacher": "not A or not B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "held logic regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-boolean-precedence",
+      "group": "held logic",
+      "test": "AlgEquiv",
+      "student": "A or B and C",
+      "teacher": "A or (B and C)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "held logic regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-wrong-demorgan",
+      "group": "held logic",
+      "test": "AlgEquiv",
+      "student": "not(A and B)",
+      "teacher": "not A and not B",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "held logic regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-zero-product",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "a=0 or b=0",
+      "teacher": "a*b=0",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 252
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-zero-product-reverse",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "a*b=0",
+      "teacher": "a=0 or b=0",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 253
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-symbolic-factor",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "a*x=a*y",
+      "teacher": "a=0 or x=y",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 255
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-bad-cancellation",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "a*x=a*y",
+      "teacher": "x=y",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 254
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-root-multiplicity",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "(x-2)^2=0",
+      "teacher": "x=2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-duplicate-equation",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "x=0 or x=0",
+      "teacher": "x^2=0",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-branch-multiplicity",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "(x-1)*(x-4)=0 or (x-2)*(x-4)=0",
+      "teacher": "x=1 or x=2 or x=4",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-duplicate-branch",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "(x-1)*(x-4)=0 or (x-2)*(x-4)=0",
+      "teacher": "x=1 or x=2 or x=4 or x=4",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-complex-coefficient",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "x+y=i",
+      "teacher": "y=i-x",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-numeric-equation-scaling",
+      "group": "polynomial equations",
+      "test": "AlgEquiv",
+      "student": "x/2=y/3",
+      "teacher": "3*x=2*y",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "polynomial equations regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-boolean-equation",
+      "group": "type applicability",
+      "test": "AlgEquiv",
+      "student": "true",
+      "teacher": "x=x",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "type applicability regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-equation-boolean-asymmetry",
+      "group": "type applicability",
+      "test": "AlgEquiv",
+      "student": "x=x",
+      "teacher": "true",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "type applicability regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-equation-type",
+      "group": "type applicability",
+      "test": "AlgEquiv",
+      "student": "1",
+      "teacher": "x=1",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 226
+      },
+      "reason": "type applicability regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-complex-principal-root",
+      "group": "complex normalization",
+      "test": "AlgEquiv",
+      "student": "(4*sqrt(3)*%i+4)^(1/5)",
+      "teacher": "8^(1/5)*(cos(%pi/15)+%i*sin(%pi/15))",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 46
+      },
+      "reason": "complex normalization regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-complex-root-form",
+      "group": "complex normalization",
+      "test": "EqualComAss",
+      "student": "(4*sqrt(3)*%i+4)^(1/5)",
+      "teacher": "8^(1/5)*(cos(%pi/15)+%i*sin(%pi/15))",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 668
+      },
+      "reason": "complex normalization regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-complex-exponential",
+      "group": "complex normalization",
+      "test": "AlgEquiv",
+      "student": "5/4*exp(%i*%pi/6)",
+      "teacher": "5*sqrt(3)/8+5/8*%i",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 49
+      },
+      "reason": "complex normalization regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-principal-root-control",
+      "group": "complex normalization",
+      "test": "AlgEquiv",
+      "student": "(-1)^(1/5)",
+      "teacher": "-1",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null,
+        "documentation": "https://maxima.sourceforge.io/docs/manual/maxima_singlepage.html"
+      },
+      "reason": "The port uses principal complex powers. Maxima 5.46 with domain:real, radexpand:true, m1pbranch:false selects the negative real fifth root.",
+      "native_scope": true,
+      "native_expected": {
+        "cas_valid": true,
+        "correct": true
+      },
+      "native_difference_reason": "Traced branch convention: standalone Maxima prints [real,true,-1,-1,false] for [domain,radexpand,(-1)^(1/5),rectform((-1)^(1/5)),numer_pbranch]. The port deliberately retains principal complex power semantics; this is a compatibility difference, not a mathematical-failure claim."
+    },
+    {
+      "id": "port-form-function",
+      "group": "held arithmetic",
+      "test": "EqualComAss",
+      "student": "cos(0)",
+      "teacher": "1",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "held arithmetic regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-form-identity",
+      "group": "held arithmetic",
+      "test": "EqualComAss",
+      "student": "x+0",
+      "teacher": "x",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "held arithmetic regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-form-reorder",
+      "group": "held arithmetic",
+      "test": "EqualComAss",
+      "student": "sqrt(x)+sin(x)",
+      "teacher": "sin(x)+sqrt(x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "held arithmetic regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-written-precision",
+      "group": "numeric spelling",
+      "test": "NumDecPlaces",
+      "student": "1.230",
+      "teacher": "1.23",
+      "options": "3",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "numeric spelling regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-wrong-written-precision",
+      "group": "numeric spelling",
+      "test": "NumDecPlaces",
+      "student": "1.23",
+      "teacher": "1.23",
+      "options": "3",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "numeric spelling regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-exact-not-tolerance",
+      "group": "numerical screen",
+      "test": "AlgEquiv",
+      "student": "x+1/10^20",
+      "teacher": "x",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "numerical screen regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-probe-collision",
+      "group": "numerical screen",
+      "test": "AlgEquiv",
+      "student": "x+(x-2)*(x-(sqrt(2)+%pi)/4)",
+      "teacher": "x",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "numerical screen regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-singular-probe",
+      "group": "numerical screen",
+      "test": "AlgEquiv",
+      "student": "1/(x-2)",
+      "teacher": "1/(x-2)+1",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "numerical screen regression from scalar helper audit",
+      "native_scope": true
+    },
+    {
+      "id": "port-variable-denominator",
+      "group": "declared boundaries",
+      "test": "AlgEquiv",
+      "student": "x/x=1",
+      "teacher": "true",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit boundary: preserve an unsupported result until this helper has a scoped implementation.",
+      "native_scope": false
+    },
+    {
+      "id": "port-zero-denominator-cancellation",
+      "group": "declared boundaries",
+      "test": "AlgEquiv",
+      "student": "0/x=0",
+      "teacher": "true",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit boundary: preserve an unsupported result until this helper has a scoped implementation.",
+      "native_scope": false
+    },
+    {
+      "id": "port-equation-system",
+      "group": "declared boundaries",
+      "test": "AlgEquiv",
+      "student": "x=0 and y=0",
+      "teacher": "x=0",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit boundary: preserve an unsupported result until this helper has a scoped implementation.",
+      "native_scope": false
+    },
+    {
+      "id": "port-held-calculus",
+      "group": "declared boundaries",
+      "test": "AlgEquiv",
+      "student": "'diff(x^2,x)",
+      "teacher": "2*x",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit boundary: preserve an unsupported result until this helper has a scoped implementation.",
+      "native_scope": false
+    },
+    {
+      "id": "port-base-log",
+      "group": "declared boundaries",
+      "test": "AlgEquiv",
+      "student": "lg(x,10)",
+      "teacher": "log(x)/log(10)",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit boundary: preserve an unsupported result until this helper has a scoped implementation.",
+      "native_scope": false
+    },
+    {
+      "id": "port-plus-minus",
+      "group": "declared boundaries",
+      "test": "AlgEquiv",
+      "student": "x=1+-2",
+      "teacher": "x=3 or x=-1",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit boundary: preserve an unsupported result until this helper has a scoped implementation.",
+      "native_scope": false
+    },
+    {
+      "id": "port-division-form-limitation",
+      "group": "held arithmetic",
+      "test": "EqualComAss",
+      "student": "x/(-y)",
+      "teacher": "-(x/y)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 645
+      },
+      "reason": "held arithmetic regression from scalar helper audit",
+      "native_scope": true,
+      "known_defect": {
+        "observation": {
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true
+        },
+        "reason": "Existing scalar form limitation; separate desired behavior from observed behavior."
+      }
+    }
+  ]
+}

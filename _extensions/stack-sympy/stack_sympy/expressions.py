@@ -28,7 +28,7 @@ MAX_TOKENS = 350
 MAX_DEPTH = 40
 MAX_POWER = 100
 MAX_DIGITS = 100
-_LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(?P<name>%?[A-Za-z_][A-Za-z_0-9]*)|(?P<op>\*\*|[=+*/^(),\[\]-]))", re.ASCII)
+_LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(?P<name>%?[A-Za-z_][A-Za-z_0-9]*)|(?P<op>\*\*|\+\-|[=+*/^(),\[\]-]))", re.ASCII)
 _NAMES = {"pi": sp.pi, "%pi": sp.pi, "e": sp.E, "E": sp.E, "%e": sp.E,
           "i": sp.I, "I": sp.I, "%i": sp.I}
 SCALAR_FUNCTIONS = {
@@ -110,6 +110,8 @@ def _tokens(source: str) -> list[tuple[str, str, int, int]]:
             raise InvalidAnswer(f"Unexpected character at position {pos}")
         kind = match.lastgroup
         value = match.group(kind)
+        if value == "+-":
+            raise Unsupported("Plus/minus input requires explicit alternatives")
         if kind == "number" and len(value) > MAX_DIGITS:
             raise InvalidAnswer("Number too long")
         out.append((kind, value, match.start(kind), match.end(kind)))

@@ -26,3 +26,7 @@
 .badge[data-status="known_native_mathematical_failure"] { background: #fff0be; color: #65490a; }
 .badge[data-status="upstream_negative_sentinel_difference"] { background: #e2e8f0; color: #334155; }
 #show-more { margin: 1rem 0; }
+
+.badge[data-status="boundary_pass"], .badge[data-status="match_desired"] { background: #e7f3eb; color: #245334; }
+
+.badge[data-status="branch_convention_difference"] { background: #fff0c2; color: #604900; }

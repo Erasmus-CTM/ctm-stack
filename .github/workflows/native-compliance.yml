@@ -117,9 +117,38 @@ jobs:
           path: test-results/compliance/pyodide.json
           if-no-files-found: warn
 
+  port-regressions:
+    name: Project regressions (Python, Maxima, Pyodide)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: maths/moodle-qtype_stack
+          ref: 10d323311b7f39fb7b092dd10ce75f7d8632f525
+          path: .stack-upstream-reference
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y maxima maxima-share
+          python -m pip install -r requirements-dev.txt
+          python -m playwright install --with-deps chromium
+      - run: python scripts/run_port_regressions.py --stack-source .stack-upstream-reference
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: compliance-port-regressions
+          path: test-results/compliance/port-regressions.json
+          if-no-files-found: warn
+
   report:
     name: Assemble and render inspectable report
-    needs: [desired, native, reference, parity]
+    needs: [desired, native, reference, parity, port-regressions]
     if: always()
     runs-on: ubuntu-24.04
     permissions:

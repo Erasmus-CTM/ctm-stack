@@ -297,7 +297,48 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
         "summary": {axis: dict(Counter(row[f"{axis}_status"] for row in rows))
                     for axis in ("desired", "native", "native_mark", "native_applicability", "native_desired", "parity")},
         "cases": rows,
+        "port_regressions": port_regressions(ROOT / "test-results/compliance/port-regressions.json"),
     }
+
+
+
+def port_regressions(path: Path) -> dict:
+    """Keep project contracts and their denominator separate from legacy rows."""
+    try:
+        try:
+            from .port_contract import load_fixture, assemble as assemble_port
+        except ImportError:
+            from port_contract import load_fixture, assemble as assemble_port
+        fixture = ROOT / "tests/port_regressions/fixtures.json"
+        cases = load_fixture(fixture)
+        report, error = read_json(path)
+        if error:
+            raise ValueError(error)
+        provenance = report.get("provenance", {})
+        if (report.get("schema_version") != 1 or report.get("suite") != "project_port_regressions"
+                or provenance.get("fixture_sha256") != hashlib.sha256(fixture.read_bytes()).hexdigest()
+                or provenance.get("input_preparation") != INPUT_PREPARATION
+                or provenance.get("source_bundle_sha256") != hashlib.sha256(
+                    (ROOT / "_extensions/stack-sympy/runtime-sources.js").read_bytes()).hexdigest()):
+            raise ValueError("Port regression provenance differs from current fixture/preparation/runtime")
+        rows = report.get("cases", [])
+        if [row.get("id") for row in rows] != [case["id"] for case in cases]:
+            raise ValueError("Port regression coverage differs from fixture")
+        for case, row in zip(cases, rows):
+            if any(row.get(key) != value for key,value in case.items()):
+                raise ValueError("Port regression contract differs from fixture")
+        native = {"observations":[row["native"] for row in rows if row.get("native")]}
+        parity = {"cases":[row["parity"] for row in rows if row.get("parity")]}
+        check = assemble_port(cases, [row["python"] for row in rows if row.get("python")],
+                              native, parity, report.get("errors"))
+        if report.get("passed") is not check["passed"] or report.get("summary") != check["summary"]:
+            raise ValueError("Port regression verdict contradicts observations")
+        if any(any(row.get(key) != expected[key] for key in ("python_status","native_status","parity_status"))
+               for row,expected in zip(rows,check["cases"])):
+            raise ValueError("Port regression statuses contradict observations")
+        return {"available":True, **report}
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        return {"available":False,"passed":False,"error":str(exc),"cases":[]}
 
 
 def main(argv: list[str] | None = None) -> int:

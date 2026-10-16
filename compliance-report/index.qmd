@@ -21,7 +21,18 @@ The scope is **CAS answer-test behavior** for the imported static rows. PHP ques
   <div id="report-summary" class="report-summary"></div>
   <div id="report-runners" class="report-runners"></div>
 
-## Inspect cases
+## Port regressions
+
+These project-owned cases record discoveries, negative controls, and explicit unsupported boundaries. Their counts are separate from the imported STACK inventory. A boundary pass checks an intentional rejection; a known defect remains a limitation, even when its recorded observation is stable.
+
+<div id="port-regressions-status" role="status">Port regression results unavailable until report loads.</div>
+<div class="report-controls">
+  <label>Port case or expression <input id="port-search" type="search" placeholder="Search project regressions"></label>
+  <label>Group <select id="port-group"><option value="">All groups</option></select></label>
+</div>
+<div id="port-regressions-list" class="case-list"></div>
+
+## Inspect legacy STACK cases
 
 <div class="report-controls">
   <label>Expression or case ID <input id="case-search" type="search" placeholder="Search student, teacher, options, test, ID"></label>

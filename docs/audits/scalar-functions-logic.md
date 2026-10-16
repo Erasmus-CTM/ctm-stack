@@ -42,3 +42,18 @@ The resolved Python exceptions are #46, #49, and #147. The resolved native appli
 | Case diagnostics | `exdowncase` is tried after equivalence fails to detect a wrong-case answer note | It supplies feedback; it does not turn differently cased scalar symbols into an accepted answer. |
 
 These are distinct layers, not a universal list of substitutions. In particular, default answer-test preparation uses `nounify=2` (logic nouns); general nounification/activation has separate contexts. Unit wrappers and collection nouns also exist but are outside plain scalar scope.
+
+
+## Project regression collection
+
+The current fix also adds 42 project-owned cases, separately reported and gated
+in CPython, native STACK and Pyodide. They cover new proof strategies, nearby
+negative controls, typed boundaries, and one currently unresolved division-form
+defect. Seven cases check explicit invalid/unsupported behavior and are not
+counted as mathematical compatibility passes. A traced Maxima `domain:real`
+versus principal-complex-power difference has its own case-pinned label.
+
+The collection caught `1+-2` being parsed as addition of a negative number.
+STACK reserves this contiguous token for plus/minus. The port now rejects it
+explicitly until sign alternatives have an implemented contract; `1+(-2)`
+remains ordinary arithmetic. The legacy preflight fingerprint is unchanged.
