@@ -46,7 +46,7 @@ These are distinct layers, not a universal list of substitutions. In particular,
 
 ## Project regression collection
 
-The current fix also adds 42 project-owned cases, separately reported and gated
+The current fix also adds 42 project-owned cases, reported on their own page and gated
 in CPython, native STACK and Pyodide. They cover new proof strategies, nearby
 negative controls, typed boundaries, and one currently unresolved division-form
 defect. Seven cases check explicit invalid/unsupported behavior and are not

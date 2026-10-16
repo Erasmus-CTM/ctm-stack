@@ -1,0 +1,22 @@
+---
+title: "Port regression report"
+subtitle: "Project-owned discoveries and compatibility controls"
+---
+
+These cases extend our coverage independently of the [legacy STACK compliance report](index.qmd). Each has a stable ID, expected behavior, origin, and reason. CPython, native STACK where applicable, and browser Pyodide are observed separately.
+
+Explicit boundary checks verify controlled rejection of unsupported syntax. They do not count as mathematical compatibility passes. Known form defects and real/principal-complex branch conventions remain visible as separate statuses. Missing runner output stays unavailable.
+
+[Download port regression JSON](port-regressions.json) · [Fixture and contribution guide](https://github.com/Erasmus-CTM/stack-sympy/tree/main/tests/port_regressions)
+
+These project-owned cases record discoveries, negative controls, and explicit unsupported boundaries. Their counts are separate from the imported STACK inventory. A boundary pass checks an intentional rejection; a known defect remains a limitation, even when its recorded observation is stable.
+
+<div id="port-regressions-status" role="status">Port regression results unavailable until report loads.</div>
+<div class="report-controls">
+  <label>Port case or expression <input id="port-search" type="search" placeholder="Search project regressions"></label>
+  <label>Group <select id="port-group"><option value="">All groups</option></select></label>
+</div>
+<div id="port-regressions-list" class="case-list"></div>
+
+
+<script src="port-regressions.js" defer></script>

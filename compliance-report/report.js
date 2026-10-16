@@ -98,42 +98,6 @@ function caseElement(row) {
   box.append(body, provenance);
   return box;
 }
-function renderPortRegressions(report) {
-  const status = $("port-regressions-status");
-  if (!report?.available) {
-    status.textContent = `Port regressions unavailable: ${report?.error || "no current observations"}`;
-    return;
-  }
-  const counts = report.summary.python;
-  const total = report.cases.length;
-  status.textContent = `${total} project cases · ${counts.pass || 0} mathematical checks passed · ${counts.boundary_pass || 0} boundary checks passed · ${counts.known_defect || 0} known defects. Native branch differences: ${report.summary.native.branch_convention_difference || 0}. Overall: ${report.passed ? "passed" : "failed or incomplete"}. Legacy counts are unchanged.`;
-  const info = node("div");
-  info.append(details("Port suite provenance and runner errors", {provenance:report.provenance,errors:report.errors,runners:report.runners}));
-  status.append(info);
-  optionValues("port-group", report.cases, "group");
-  function update() {
-    const query = $("port-search").value.trim().toLowerCase();
-    const rows = report.cases.filter(row => (!$("port-group").value || row.group === $("port-group").value) &&
-      (!query || [row.id,row.group,row.student,row.teacher,row.reason].some(x => String(x).toLowerCase().includes(query))));
-    $("port-regressions-list").replaceChildren(...rows.map(row => {
-      const box = node("details", undefined, "case");
-      const head = node("summary");
-      head.append(node("span", `${row.id} · ${row.test}`), badge("Python",row.python_status),
-                  badge("native vs desired",row.native_status), badge("parity",row.parity_status),
-                  node("span",`${row.student} → ${row.teacher}`));
-      box.append(head,node("p",row.reason));
-      for (const [title,value] of [["Expected behavior and origin",{expected:row.expected,origin:row.origin,known_defect:row.known_defect,native_expected:row.native_expected,native_difference_reason:row.native_difference_reason}],
-                                  ["Python observation",row.python],["Native observation",row.native],["Browser parity",row.parity]]) {
-        box.append(details(title,value));
-      }
-      return box;
-    }));
-  }
-  $("port-search").addEventListener("input",update);
-  $("port-group").addEventListener("input",update);
-  update();
-}
-
 fetch("report.json", {cache:"no-store"}).then(response => {
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
   return response.json();
@@ -141,7 +105,6 @@ fetch("report.json", {cache:"no-store"}).then(response => {
   $("report-loading").hidden = true;
   $("report-root").hidden = false;
   summary(report);
-  renderPortRegressions(report.port_regressions);
   optionValues("test-filter", report.cases, "test");
   for (const axis of ["desired","native","native_mark","native_applicability","native_desired","parity"]) optionValues(`${axis}-filter`, report.cases, `${axis}_status`);
   let visible = 80;

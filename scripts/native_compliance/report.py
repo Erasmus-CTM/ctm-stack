@@ -297,7 +297,6 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
         "summary": {axis: dict(Counter(row[f"{axis}_status"] for row in rows))
                     for axis in ("desired", "native", "native_mark", "native_applicability", "native_desired", "parity")},
         "cases": rows,
-        "port_regressions": port_regressions(ROOT / "test-results/compliance/port-regressions.json"),
     }
 
 
@@ -357,6 +356,10 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    port_output = args.output.with_name("port-regressions.json")
+    port = port_regressions(ROOT / "test-results/compliance/port-regressions.json")
+    port_output.write_text(json.dumps(port, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Port report: {port_output}")
     print(f"Report: {args.output} ({len(report['cases'])} imported rows)")
     return 0
 

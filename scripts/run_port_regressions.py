@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 from pathlib import Path
 import sys
 import sympy
@@ -62,7 +63,7 @@ def run(fixture, stack_source, maxima, output, browser):
     else:
         errors['parity'] = 'Browser parity intentionally not run locally; CI requires it'
     report = assemble(cases,observations,native,parity,errors)
-    report['provenance'] = {'fixture_sha256':digest(fixture),'source_bundle_sha256':bundle_hash,
+    report['provenance'] = {'code_sha':os.getenv('GITHUB_SHA'),'fixture_sha256':digest(fixture),'source_bundle_sha256':bundle_hash,
                             'stack_sha':STACK_SHA,'input_preparation':INPUT_PREPARATION,
                             'sympy_version':sympy.__version__,'python_version':sys.version.split()[0]}
     report['runners'] = {'native':(native or {}).get('metadata'),

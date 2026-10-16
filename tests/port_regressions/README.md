@@ -23,8 +23,7 @@ incomplete and does not pass the overall gate.
 
 The independent CI job uploads `compliance-port-regressions`. Report assembly
 checks the fixture hash, source bundle hash, preparation marker, complete case
-coverage, contract fields, and verdicts. The compliance page's **Port
-regressions** section has separate counts and filters. Missing runners remain
+coverage, contract fields, and verdicts. The **Port regressions** page and its JSON download have separate counts and filters. Missing runners remain
 unavailable; legacy percentages and denominators do not change.
 
 Keep cross-cutting parser/AST/numeric-screen unit tests in the normal Python

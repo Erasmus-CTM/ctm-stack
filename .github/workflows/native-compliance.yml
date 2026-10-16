@@ -176,7 +176,9 @@ jobs:
         if: always()
         with:
           name: native-compliance-json
-          path: compliance-report/report.json
+          path: |
+            compliance-report/report.json
+            compliance-report/port-regressions.json
           if-no-files-found: warn
       - uses: actions/upload-artifact@v4
         if: always()

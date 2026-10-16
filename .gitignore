@@ -8,6 +8,7 @@ playwright-report/
 test-results/
 compliance-report/_site/
 compliance-report/report.json
+compliance-report/port-regressions.json
 /_extensions/ai-feedback/
 /_extensions/*/ai-feedback/
 
