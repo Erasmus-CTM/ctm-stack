@@ -73,7 +73,7 @@ def test_rendered_questions_show_authored_block_and_original_xml():
 
 
 def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
-    from scripts.generate_corpus_page import generate
+    from scripts.generate_corpus_page import generate, teaching_source
 
     manifest = json.loads((ROOT / "questions/corpus/manifest.json").read_text())
     baseline = json.loads((ROOT / "questions/corpus/baseline.json").read_text())
@@ -97,7 +97,7 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
     rendered_xml = re.findall(r'<code class="language-xml">(.*?)</code>', output, re.S)
     assert len(rendered_xml) == len(passing)
     for entry, source in zip(passing, rendered_xml):
-        assert html.unescape(source) == (ROOT / "questions/corpus" / entry["file"]).read_text()
+        assert html.unescape(source) == (ROOT / teaching_source(entry)[0]).read_text()
     for entry in entries:
         assert f'id="{entry["id"]}"' in output
         assert f'questions/corpus/{entry["file"]}' in output

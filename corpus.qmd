@@ -46,20 +46,23 @@ The [reproducible baseline](questions/corpus/baseline.json) reports **16 passed*
 
 ## Ready to try
 
-These 16 cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the original XML test cases on the displayed seed; the [baseline](questions/corpus/baseline.json) covers every recorded seed. Their source panels start closed and expose both the authored block and unchanged STACK XML.
+These 16 cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the card's XML tests on the displayed seed; the [baseline](questions/corpus/baseline.json) describes the unchanged imports. Three cards explicitly use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.
 
 ### AlgMap-1.5 {#algmap-1-5}
 
 Algebra Refresher / 01 Combinations of arithmetic operations · 1 input · 2 authored tests · baseline seeds `128137392`, `2051957692`, `1375878840`.
 
+> **Corrected teaching copy:** The worked explanation now uses multiplication in the exponent product rule, rather than the incorrect addition rule. The original XML is preserved unchanged; this card and its source panels use the corrected copy linked below.
+
 ```{.stack-question}
-#| file: questions/corpus/AlgMap-1-5.xml
-#| question: AlgMap-1.5
+#| file: questions/corrected/AlgMap-1-5.xml
+#| question: AlgMap-1.5 (corrected teaching copy)
 #| seed: 128137392
 #| review: true
 ```
 
 [Download original XML](questions/corpus/AlgMap-1-5.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/01-Combinations-of-arithmetic-operations/AlgMap-1-5.xml)
+[Download the corrected teaching XML](questions/corrected/AlgMap-1-5.xml)
 
 ### AlgMap-1.6 {#algmap-1-6}
 
@@ -91,16 +94,17 @@ Algebra Refresher / 02 Factorisation of whole numbers · 1 input · 2 authored t
 
 Algebra Refresher / 02 Factorisation of whole numbers · 1 input · 2 authored tests · baseline seeds `554625703`, `2004313867`, `1257826844`.
 
-> **Upstream grading note:** This original response tree checks lowest-terms form without checking equivalence first. A reduced answer with the wrong value can receive full credit. The XML and its authored tests are unchanged.
+> **Corrected teaching copy:** A reduced answer with the wrong value can receive full credit. This defect belongs to the original response tree. The corrected card checks value equivalence before lowest-terms form and adds a wrong-value author test. The original XML is preserved unchanged; this card and its source panels use the corrected copy linked below.
 
 ```{.stack-question}
-#| file: questions/corpus/AlgMap-2-5.xml
-#| question: AlgMap-2.5
+#| file: questions/corrected/AlgMap-2-5.xml
+#| question: AlgMap-2.5 (corrected teaching copy)
 #| seed: 554625703
 #| review: true
 ```
 
 [Download original XML](questions/corpus/AlgMap-2-5.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/02-Factorisation-of-whole-numbers/AlgMap-2-5.xml)
+[Download the corrected teaching XML](questions/corrected/AlgMap-2-5.xml)
 
 ### AlgMap-4.1 {#algmap-4-1}
 
@@ -132,14 +136,17 @@ Algebra Refresher / 04 Multiplication and division of fractions · 1 input · 4 
 
 Algebra Refresher / 06 Simplifying algebraic expressions · 1 input · 3 authored tests · baseline seeds `17`, `29`, `47`.
 
+> **Corrected teaching copy:** The worked explanation now states c^a · c^b = c^(a+b); the original incorrectly used addition. The original XML is preserved unchanged; this card and its source panels use the corrected copy linked below.
+
 ```{.stack-question}
-#| file: questions/corpus/AlgMap-6-4.xml
-#| question: AlgMap-6.4
+#| file: questions/corrected/AlgMap-6-4.xml
+#| question: AlgMap-6.4 (corrected teaching copy)
 #| seed: 17
 #| review: true
 ```
 
 [Download original XML](questions/corpus/AlgMap-6-4.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/06-Simplifying-algebraic-expressions/AlgMap-6-4.xml)
+[Download the corrected teaching XML](questions/corrected/AlgMap-6-4.xml)
 
 ### AlgMap-6.7 {#algmap-6-7}
 
