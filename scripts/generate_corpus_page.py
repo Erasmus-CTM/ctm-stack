@@ -30,6 +30,27 @@ CORRECTIONS = {
 }
 
 
+def upstream_authoring_issue(entry: dict, row: dict) -> str | None:
+    """Apply the reviewed diagnosis only to its reproduced failure pattern."""
+    if entry["file"] != "AlgMap-8-10.xml" or row["status"] != "qtests_mismatch":
+        return None
+    failures = {(case["seed"], case["testcase"]) for case in row["mismatches"]}
+    if failures != {(1856951054, "1"), (1856951054, "2")}:
+        return None
+    return (
+        "**Upstream authoring bug in the PRT.** At the failing variant, "
+        "`a=8`, `b=9`, `c=2`, and `d=3`, so the correct answer is "
+        "`8*(t+y)/2 + 9*(t+y)/3 = 7*(t+y)`. Both authored model answers "
+        "therefore have no fraction operator. The only full-credit branch "
+        "requires `SingleFrac`, which rejects this product; every later branch "
+        "awards zero. Authored tests 1 and 2 nevertheless expect full credit. "
+        "The pinned native STACK test also rejects `7*(t+y)` under `SingleFrac`. "
+        "The port's random choices expose a latent assumption in the original "
+        "question; this diagnosis uses the fixed values above, rather than "
+        "assuming Maxima generates those values for the same seed."
+    )
+
+
 def teaching_source(entry: dict) -> tuple[str, str]:
     if entry["file"] in CORRECTIONS:
         return f"questions/corrected/{entry['file']}", entry["question_name"] + " (corrected teaching copy)"
@@ -69,7 +90,8 @@ def generate() -> str:
         row = reports[entry["id"]]
         name = html.escape(entry["question_name"])
         topic = html.escape(entry["topic"].replace("-", " ").replace("_", " "))
-        out.append(f"| [{name}](#{entry['id']}) | {topic} | {LABELS[row['status']]} | [Download](questions/corpus/{entry['file']}) |")
+        label = "Upstream authoring bug (PRT)" if upstream_authoring_issue(entry, row) else LABELS[row['status']]
+        out.append(f"| [{name}](#{entry['id']}) | {topic} | {label} | [Download](questions/corpus/{entry['file']}) |")
     out += [
         "",
         "## Ready to try",
@@ -106,7 +128,7 @@ def generate() -> str:
     out += [
         "## Authored test mismatches",
         "",
-        (f"{'This question imports and instantiates' if len(mismatched) == 1 else f'These {len(mismatched)} questions import and instantiate'}, but the adapter's replay disagrees with outcomes authored in the XML. {'Its grading is' if len(mismatched) == 1 else 'Their grading is'} therefore not presented as a working exercise. Seeded values in this adapter need not match Maxima's values for the same seed, so a mismatch may arise from a different generated variant. The [baseline JSON](questions/corpus/baseline.json) lists every failed seed, input, PRT, expected result, and observed result."
+        ("These cases disagree with expectations authored in the XML and are kept out of the interactive gallery. Reviewed causes are named below; an authored-test mismatch alone does not identify whether the cause is the port or the original question. The [baseline JSON](questions/corpus/baseline.json) retains the exact expected and observed results."
          if mismatched else "None among the questions replayed on every recorded seed. The [baseline JSON](questions/corpus/baseline.json) retains individual seed and test results; unsupported questions remain listed below."),
         "",
     ]
@@ -119,6 +141,7 @@ def generate() -> str:
         out += [
             f"### {entry['question_name'].replace('*', r'\*')} {{#{entry['id']}}}",
             "",
+            *([upstream_authoring_issue(entry, row), ""] if upstream_authoring_issue(entry, row) else []),
             f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · **{row['failed_cases']} failed of {row['replayed_cases']} replayed seed/case combinations.** For seed `{sample['seed']}`, case `{sample['testcase']}`, input `{inputs}`: `{check['prt']}` expected score `{expected['score']}` and answer note `{expected['note']}`, but produced score `{actual['score']}` and answer note `{actual['note']}`.",
             "",
             f"[Download original XML](questions/corpus/{entry['file']}) · [Pinned upstream source]({entry['source_url']}) · [Full replay](questions/corpus/baseline.json)",

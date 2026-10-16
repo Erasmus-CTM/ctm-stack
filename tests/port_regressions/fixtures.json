@@ -1056,6 +1056,225 @@
       },
       "reason": "Malformed numerical options use 0.05 even when this accepts the answer.",
       "native_scope": true
+    },
+    {
+      "id": "port-ln-alias",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "ln(x)",
+      "teacher": "log(x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "STACK assessment.mac aliases ln to log.",
+      "native_scope": true
+    },
+    {
+      "id": "port-ln-held-form",
+      "group": "corpus scalar functions",
+      "test": "EqualComAss",
+      "student": "ln(x)",
+      "teacher": "log(x)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "The log alias preserves the same written function form.",
+      "native_scope": true
+    },
+    {
+      "id": "port-gcd-integer",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "gcd(-12,18)",
+      "teacher": "6",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Integer gcd retains nonnegative numeric content.",
+      "native_scope": true
+    },
+    {
+      "id": "port-gcd-polynomial-content",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "gcd(2*x+2,4*x+4)",
+      "teacher": "2*x+2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Polynomial gcd retains numeric content rather than becoming monic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-gcd-not-monic",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "gcd(2*x+2,4*x+4)",
+      "teacher": "x+1",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Dropping polynomial numeric content changes the gcd.",
+      "native_scope": true
+    },
+    {
+      "id": "port-mod-negative-dividend",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "mod(-7,3)",
+      "teacher": "2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Modulo uses the floor convention, including negative dividends.",
+      "native_scope": true
+    },
+    {
+      "id": "port-mod-negative-divisor",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "mod(7,-3)",
+      "teacher": "-2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "The remainder has the divisor sign, as in Maxima.",
+      "native_scope": true
+    },
+    {
+      "id": "port-mod-zero-divisor",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "mod(7,0)",
+      "teacher": "7",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Maxima defines mod(x,0)=x; SymPy Mod would raise.",
+      "native_scope": true
+    },
+    {
+      "id": "port-mod-pi-period",
+      "group": "corpus scalar functions",
+      "test": "AlgEquiv",
+      "student": "mod(5*Pi/2,2*%pi)",
+      "teacher": "%pi/2",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Modulo supports real period reduction used by Complex_Convert_1.",
+      "native_scope": true
+    },
+    {
+      "id": "port-integral-singlefrac-authoring",
+      "group": "upstream authoring controls",
+      "test": "SingleFrac",
+      "student": "7*(t+y)",
+      "teacher": "7*(t+y)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null,
+        "corpus_file": "AlgMap-8-10.xml",
+        "seed": 1856951054
+      },
+      "reason": "AlgMap-8.10 can generate a correct integral product that its SingleFrac-only full-credit branch rejects. This pins the native form behavior behind the upstream PRT authoring bug.",
+      "native_scope": true
+    },
+    {
+      "id": "port-symbolic-complex-log-boundary",
+      "group": "declared boundaries",
+      "test": "AlgEquiv",
+      "student": "ln(x+%i)",
+      "teacher": "log(x+%i)",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": 466
+      },
+      "reason": "Scalar ln is a log alias; symbolic complex-log branch proofs remain outside the declared subset.",
+      "native_scope": false
     }
   ]
 }

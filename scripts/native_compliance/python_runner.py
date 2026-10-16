@@ -7,7 +7,7 @@ from execution are observations, never an automatic excuse for a wrong mark.
 from __future__ import annotations
 
 from stack_sympy import InvalidAnswer, Unsupported, answer_test, evaluate, parse
-from stack_sympy.expressions import MAX_CHARS, _STUDENT_FUNCTIONS, is_logical
+from stack_sympy.expressions import MAX_CHARS, _STUDENT_FUNCTIONS, is_logical, symbolic_complex_log
 from stack_sympy.assessment import numeric_option_source
 from stack_sympy.logic import validate_logic
 import sympy as sp
@@ -21,7 +21,7 @@ except ImportError:  # Loaded as a standalone module into the Pyodide filesystem
 _NUMERIC_TESTS = frozenset({"NumAbsolute", "NumRelative", "NumDecPlaces"})
 _NONSCALAR_NAMES = frozenset({"true", "false", "all", "none", "and", "or", "not",
                               "xor", "xnor", "implies", "nounand", "inf", "infinity"})
-_CONSTANT_NAMES = frozenset({"pi", "%pi", "e", "E", "%e", "i", "I", "%i"})
+_CONSTANT_NAMES = frozenset({"pi", "%pi", "Pi", "PI", "e", "E", "%e", "i", "I", "%i"})
 
 
 def _walk(node):
@@ -53,6 +53,8 @@ def _preflight_expression(source: str, role: str):
             return None, ("unsupported", f"{role} syntax outside scalar grammar: {message}")
         return None, (f"invalid_{role}", message)
     for item in _walk(node):
+        if symbolic_complex_log(item):
+            return None, ("unsupported", "Symbolic complex logarithms require branch-aware proof")
         if item.kind in {"list", "index"}:
             return None, ("unsupported", f"{role} list or index expression outside scalar subset")
         if role == "student" and item.kind == "call" and item.value not in _STUDENT_FUNCTIONS:
@@ -129,7 +131,7 @@ def classify_case(case: dict) -> dict:
                     return {"kind": "unsupported", "reason": f"{role} has variable denominator outside FacForm domain"}
     if name in _NUMERIC_TESTS:
         for role, node in parsed.items():
-            if any(item.kind == "name" and item.value not in {"pi", "%pi", "e", "E", "%e"}
+            if any(item.kind == "name" and item.value not in {"pi", "%pi", "Pi", "PI", "e", "E", "%e"}
                    for item in _walk(node)):
                 return {"kind": "unsupported", "reason": f"{role} symbolic or nonreal numeric expression outside numerical subset"}
         if name == "NumDecPlaces" and parsed["student"].kind == "name":

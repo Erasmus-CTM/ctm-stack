@@ -35,8 +35,11 @@ class CorpusTests(unittest.TestCase):
             self.assertEqual(row["replayed_cases"], row["native_qtests"] * len(row["seeds"]))
         self.assertEqual(by_file["AlgMap-3-3.xml"]["status"], "unsupported_instantiate")
         self.assertIn("questionvariables", by_file["AlgMap-3-3.xml"]["diagnostic"]["location"])
-        self.assertEqual(by_file["AlgMap-14-1.xml"]["status"], "unsupported_instantiate")
-        self.assertIn("gcd", by_file["AlgMap-14-1.xml"]["diagnostic"]["reason"])
+        self.assertEqual(by_file["AlgMap-14-1.xml"]["status"], "qtests_pass")
+        self.assertEqual(by_file["Logs_1.xml"]["status"], "qtests_pass")
+        self.assertIn("only scalar teacher answers", by_file["Complex_Convert_1.xml"]["diagnostic"]["reason"])
+        self.assertEqual(by_file["AlgMap-15-1.xml"]["diagnostic"]["location"], "input[ans]/tans")
+        self.assertIn("Set expressions", by_file["AlgMap-15-1.xml"]["diagnostic"]["reason"])
 
     def test_seed_specific_mismatch_is_recorded_without_promoting_question(self):
         report = json.loads(BASELINE.read_text(encoding="utf-8"))
