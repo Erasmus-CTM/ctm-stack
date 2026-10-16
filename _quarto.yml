@@ -39,3 +39,8 @@ format:
 
 filters:
   - stack-sympy
+
+ai-feedback:
+  policy-files: feedback/course.yml
+  project-policy:
+    math-exercise: course-mathematics
