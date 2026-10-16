@@ -13,6 +13,8 @@ import sympy as sp
 from .assessment import answer_test
 from .expressions import InvalidAnswer, Node, Unsupported, assignments, canonical_form, evaluate, form_latex, parse
 from .importer import UnsupportedQuestion
+from .expressions import is_logical
+from .logic import validate_logic
 from .rendering import render_castext
 
 
@@ -32,7 +34,7 @@ def _environment(question, variant):
 def _source(s):
     if isinstance(s, list):
         return "[" + ",".join(_source(x) for x in s) + "]"
-    return str(s)
+    return str(s).lower() if s in (sp.true, sp.false) else str(s)
 
 
 def _definitions(question):
@@ -116,6 +118,8 @@ def instantiate(question: dict, seed: int = 1) -> dict:
             teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
             if not isinstance(teacher, sp.Basic):
                 raise UnsupportedQuestion(name, where + "/tans", "only scalar teacher answers are supported")
+            if is_logical(teacher):
+                validate_logic(teacher)
             if inp["type"] == "numerical" and teacher.is_number is not True:
                 raise UnsupportedQuestion(name, where + "/tans", "numerical answer requires a number")
             if inp["syntaxhint"]:
@@ -127,7 +131,11 @@ def instantiate(question: dict, seed: int = 1) -> dict:
             for node in prt["nodes"]:
                 where = f"prt[{prt['name']}]/node[{node['name']}]"
                 evaluate(node["student"], {**env, **{n: sp.Symbol(n) for n in inputmap}}, assumptions=assumptions)
-                evaluate(node["teacher"], env, assumptions=assumptions)
+                teacher_value = evaluate(node["teacher"], env, assumptions=assumptions)
+                if is_logical(teacher_value):
+                    validate_logic(teacher_value)
+                    if node["test"] != "AlgEquiv":
+                        raise UnsupportedQuestion(name, where, "Logical answers require AlgEquiv")
                 if node["test"] == "FacForm":
                     if not node["options"]:
                         raise UnsupportedQuestion(name, where + "/testoptions", "FacForm requires a polynomial variable option")
@@ -187,6 +195,8 @@ def _input_validation(inp, raw, env, assumptions):
         value = evaluate(tree, env, assumptions=assumptions, student=True)
         if not isinstance(value, sp.Basic):
             raise InvalidAnswer("Only scalar answers are supported")
+        if is_logical(value):
+            validate_logic(value)
         if inp["type"] == "numerical" and value.is_number is not True:
             raise InvalidAnswer("Enter a numerical answer")
         return {"valid": True, "latex": form_latex(tree, env), "feedback": ""}, value, tree

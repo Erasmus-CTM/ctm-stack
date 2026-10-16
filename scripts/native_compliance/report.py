@@ -19,8 +19,10 @@ import sys
 
 try:
     from .common import matches_desired
+    from .maxima_runner import INPUT_PREPARATION
 except ImportError:  # Direct CLI invocation.
     from common import matches_desired
+    from maxima_runner import INPUT_PREPARATION
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -137,6 +139,8 @@ def validated_run(document: dict | None, read_error: str | None, expected_hash: 
     metadata = document.get("metadata")
     if engine in {"python", "native"} and not isinstance(metadata, dict):
         return None, "Missing runner metadata"
+    if engine == "native" and metadata.get("input_preparation") != INPUT_PREPARATION:
+        return None, "Native input preparation differs from current noun mapping"
     observed_hash = metadata.get("fixture_sha256") if engine in {"python", "native"} else document.get("fixture_sha256")
     if observed_hash != expected_hash:
         return None, f"Fixture SHA-256 mismatch or missing ({observed_hash!r})"

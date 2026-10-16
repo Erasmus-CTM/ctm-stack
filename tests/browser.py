@@ -109,6 +109,22 @@ def test_browser_worker_grades_and_runs_authored_tests():
             example.locator(".stack-tests").click()
             example.locator(".stack-result .stack-verdict").wait_for(timeout=180000)
             assert "All authored tests passed" in example.locator(".stack-result").inner_text(), index
+        # Exercise held logic and new functions through validation and grading,
+        # in addition to replaying their authored XML qtests above.
+        for question_name, response, correct in (
+            ("Hyperbolic equivalence", "tanh(x)/2+1/2", True),
+            ("Zero product equations", "a=0 or b=0", True),
+            ("Zero product equations", "a^3*b^3=0", False),
+            ("Boolean equivalence", "not a or not b", True),
+        ):
+            example = next(cards.nth(i) for i in range(cards.count())
+                           if json.loads(cards.nth(i).locator(".stack-sympy-data").text_content())["question"]["name"] == question_name)
+            example.locator(".stack-answer").fill(response)
+            example.locator(".stack-validate").click()
+            example.locator('.stack-validation[data-state="valid"]').wait_for(timeout=120000)
+            example.locator(".stack-check").click()
+            example.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
+            assert example.locator(".stack-result").get_attribute("data-state") == ("correct" if correct else "retry")
         multi = None
         # Find the authored multi-input numerical case without depending on
         # the visual order of the examples.

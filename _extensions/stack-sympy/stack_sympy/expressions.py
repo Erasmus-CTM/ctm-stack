@@ -28,10 +28,20 @@ MAX_TOKENS = 350
 MAX_DEPTH = 40
 MAX_POWER = 100
 MAX_DIGITS = 100
-_LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(?P<name>%?[A-Za-z_][A-Za-z_0-9]*)|(?P<op>\*\*|[+*/^(),\[\]-]))", re.ASCII)
+_LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(?P<name>%?[A-Za-z_][A-Za-z_0-9]*)|(?P<op>\*\*|[=+*/^(),\[\]-]))", re.ASCII)
 _NAMES = {"pi": sp.pi, "%pi": sp.pi, "e": sp.E, "E": sp.E, "%e": sp.E,
           "i": sp.I, "I": sp.I, "%i": sp.I}
-_STUDENT_FUNCTIONS = {"sqrt", "sin", "cos", "tan", "exp", "log", "abs"}
+SCALAR_FUNCTIONS = {
+    "sqrt": sp.sqrt, "sin": sp.sin, "cos": sp.cos, "tan": sp.tan,
+    "sec": sp.sec, "csc": sp.csc, "cot": sp.cot,
+    "sinh": sp.sinh, "cosh": sp.cosh, "tanh": sp.tanh,
+    "sech": sp.sech, "csch": sp.csch, "coth": sp.coth,
+    "exp": sp.exp, "log": sp.log, "abs": sp.Abs,
+}
+FUNCTION_ALIASES = {"cosec": "csc", "cosech": "csch"}
+_STUDENT_FUNCTIONS = frozenset(SCALAR_FUNCTIONS) | FUNCTION_ALIASES.keys()
+LOGIC_OPERATORS = {"and": "and", "or": "or", "not": "not",
+                   "nounand": "and", "nounor": "or", "nounnot": "not"}
 _AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "lcm", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
 
 
@@ -40,6 +50,51 @@ class Node:
     kind: str
     value: str = ""
     children: tuple["Node", ...] = ()
+
+
+class Equation(sp.Basic):
+    """An unevaluated equation; repeated roots and denominators remain visible."""
+    def _sympystr(self, printer):
+        return "(" + printer.doprint(self.args[0]) + ")=(" + printer.doprint(self.args[1]) + ")"
+
+    def _latex(self, printer):
+        return printer.doprint(self.args[0]) + " = " + printer.doprint(self.args[1])
+
+
+class Logical(sp.Basic):
+    """Held logic, analogous to STACK's nounand/nounor/nounnot.
+
+    Do not use SymPy Or here: its constructor removes duplicates, which would
+    erase equation-branch multiplicity before AlgEquiv can inspect it.
+    """
+    def __new__(cls, operator, *operands):
+        return sp.Basic.__new__(cls, sp.Symbol(str(operator)), *operands)
+
+    @property
+    def operator(self):
+        return str(self.args[0])
+
+    @property
+    def operands(self):
+        return self.args[1:]
+
+    @property
+    def free_symbols(self):
+        return set().union(*(x.free_symbols for x in self.operands))
+
+    def _sympystr(self, printer):
+        parts = ["(" + (str(x).lower() if x in (sp.true, sp.false) else printer.doprint(x)) + ")"
+                 for x in self.operands]
+        return "nounnot " + parts[0] if self.operator == "not" else (" noun" + self.operator + " ").join(parts)
+
+    def _latex(self, printer):
+        parts = [r"\left(" + printer.doprint(x) + r"\right)" for x in self.operands]
+        return r"\lnot " + parts[0] if self.operator == "not" else (
+            r" \land " if self.operator == "and" else r" \lor ").join(parts)
+
+
+def is_logical(value):
+    return isinstance(value, (Logical, Equation)) or value in (sp.true, sp.false)
 
 
 def _tokens(source: str) -> list[tuple[str, str, int, int]]:
@@ -87,7 +142,11 @@ class _Parser:
             raise InvalidAnswer("Expression nested too deeply")
         kind, val = self.tokens[self.pos][:2]
         self.pos += 1
-        if kind == "number":
+        if val in {"not", "nounnot"}:
+            lhs = Node("logical", "not", (self.expression(5, depth + 1),))
+        elif val in {"true", "false"}:
+            lhs = Node("boolean", val)
+        elif kind == "number":
             lhs = Node("number", val)
         elif kind == "name":
             if self.current == "(":
@@ -135,11 +194,12 @@ class _Parser:
             # unknown name followed by '(' is never guessed to be a product.
             previous = self.tokens[self.pos - 1]
             following = self.tokens[self.pos]
-            implied = (previous[3] == following[2]
+            implied = (following[1] not in LOGIC_OPERATORS and previous[3] == following[2]
                        and (previous[0] == "number" or previous[1] == ")")
                        and (following[0] == "name" or following[1] == "("
                             or (previous[1] == ")" and following[0] == "number")))
-            bp = 20 if implied else {"+": 10, "-": 10, "*": 20, "/": 20, "^": 30, "**": 30}.get(op, -1)
+            bp = 20 if implied else {"or": 2, "nounor": 2, "and": 4, "nounand": 4,
+                                     "=": 6, "+": 10, "-": 10, "*": 20, "/": 20, "^": 30, "**": 30}.get(op, -1)
             if bp < minimum:
                 break
             if implied and not self.insertstars:
@@ -147,7 +207,14 @@ class _Parser:
             if not implied:
                 self.pos += 1
             rhs = self.expression(bp if op in ("^", "**") else bp + 1, depth + 1)
-            lhs = Node("binary", "*" if implied else op, (lhs, rhs))
+            if not implied and op in {"or", "nounor", "and", "nounand"}:
+                lhs = Node("logical", LOGIC_OPERATORS[op], (lhs, rhs))
+            elif not implied and op == "=":
+                if lhs.kind == "equation" or rhs.kind == "equation":
+                    raise Unsupported("Chained equations are unsupported")
+                lhs = Node("equation", "=", (lhs, rhs))
+            else:
+                lhs = Node("binary", "*" if implied else op, (lhs, rhs))
         return lhs
 
 
@@ -168,6 +235,10 @@ def form_latex(node: Node, env: Mapping[str, Any] | None = None) -> str:
     env = env or {}
 
     def precedence(n):
+        if n.kind == "logical":
+            return {"or": 2, "and": 4, "not": 5}[n.value]
+        if n.kind == "equation":
+            return 6
         if n.kind == "number" and "e" in n.value.lower():
             return 20  # Displayed as mantissa times ten to a power.
         if n.kind == "name" and n.value in env:
@@ -190,6 +261,15 @@ def form_latex(node: Node, env: Mapping[str, Any] | None = None) -> str:
         return r"\left(" + content + r"\right)"
 
     def show(n):
+        if n.kind == "boolean":
+            return r"\mathrm{" + n.value + "}"
+        if n.kind == "equation":
+            return show(n.children[0]) + " = " + show(n.children[1])
+        if n.kind == "logical":
+            if n.value == "not":
+                return r"\lnot " + wrap(show(n.children[0]))
+            parts = [wrap(show(c)) if precedence(c) < precedence(n) else show(c) for c in n.children]
+            return (r" \land " if n.value == "and" else r" \lor ").join(parts)
         if n.kind == "number":
             if "e" in n.value.lower():
                 coefficient, exponent = re.split("[eE]", n.value)
@@ -298,6 +378,19 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
     def visit(n: Node, depth=0):
         if depth > MAX_DEPTH:
             raise InvalidAnswer("Expression nested too deeply")
+        if n.kind == "boolean":
+            return sp.true if n.value == "true" else sp.false
+        if n.kind == "logical":
+            operands = [visit(c, depth + 1) for c in n.children]
+            if any(not (is_logical(x) or isinstance(x, sp.Symbol)) for x in operands):
+                raise InvalidAnswer("Logical operators require propositions or equations")
+            return Logical(n.value, *operands)
+        if n.kind == "equation":
+            operands = [evaluate(c, env, rng=rng, assumptions=assumptions,
+                                 student=student, simplify=False) for c in n.children]
+            if any(not isinstance(x, sp.Expr) for x in operands):
+                raise InvalidAnswer("Equation sides must be scalar expressions")
+            return Equation(*operands)
         if n.kind == "number":
             return _number(n.value)
         if n.kind == "name":
@@ -327,10 +420,12 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
             return seq[idx - 1]
         if n.kind == "unary":
             value = visit(n.children[0], depth + 1)
+            if not isinstance(value, sp.Expr):
+                raise InvalidAnswer("Arithmetic requires scalar expressions")
             return value if n.value == "+" else -value
         if n.kind == "binary":
             a, b = (visit(c, depth + 1) for c in n.children)
-            if not isinstance(a, sp.Basic) or not isinstance(b, sp.Basic):
+            if not isinstance(a, sp.Expr) or not isinstance(b, sp.Expr):
                 raise Unsupported("Arithmetic requires scalar expressions")
             if n.value == "+":
                 result = sp.Add(a, b, evaluate=simplify)
@@ -383,12 +478,14 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                 if len(args) not in (2, 3) or not isinstance(args[1], sp.Symbol):
                     raise Unsupported("diff expects expression, variable, optional order")
                 return sp.diff(args[0], args[1], *([_integer(args[2], lower=0, upper=10)] if len(args) == 3 else []))
-            funcs = {"sqrt": sp.sqrt, "sin": sp.sin, "cos": sp.cos, "tan": sp.tan, "exp": sp.exp,
-                     "log": sp.log, "abs": sp.Abs, "expand": sp.expand, "factor": sp.factor,
+            name = FUNCTION_ALIASES.get(name, name)
+            funcs = {**SCALAR_FUNCTIONS, "expand": sp.expand, "factor": sp.factor,
                      "ratsimp": lambda x: sp.together(sp.cancel(x)), "cancel": sp.cancel,
                      "float": lambda x: sp.N(x, 17)}
-            if name not in funcs or len(args) != 1 or isinstance(args[0], list):
+            if name not in funcs or len(args) != 1:
                 raise Unsupported(f"Unsupported call to {name}")
+            if not isinstance(args[0], sp.Expr):
+                raise InvalidAnswer("Functions require scalar arguments")
             return _finite(funcs[name](args[0]))
         raise Unsupported("Unknown expression node")
 
@@ -512,7 +609,7 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
             # Maxima rewrites exp(x) to %e^x before noun arithmetic.
             if n.value == "exp" and len(n.children) == 1:
                 return ("pow", from_sympy(sp.E), visit(n.children[0]))
-            return ("call", n.value, tuple(visit(x) for x in n.children))
+            return ("call", FUNCTION_ALIASES.get(n.value, n.value), tuple(visit(x) for x in n.children))
         raise Unsupported("EqualComAss supports scalar expressions")
 
     return visit(node)

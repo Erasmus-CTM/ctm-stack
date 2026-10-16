@@ -7,7 +7,8 @@ from execution are observations, never an automatic excuse for a wrong mark.
 from __future__ import annotations
 
 from stack_sympy import InvalidAnswer, Unsupported, answer_test, evaluate, parse
-from stack_sympy.expressions import MAX_CHARS
+from stack_sympy.expressions import MAX_CHARS, _STUDENT_FUNCTIONS, is_logical
+from stack_sympy.logic import validate_logic
 import sympy as sp
 import re
 
@@ -16,7 +17,6 @@ try:
 except ImportError:  # Loaded as a standalone module into the Pyodide filesystem.
     from common import SUPPORTED_TESTS
 
-_STUDENT_FUNCTIONS = frozenset({"sqrt", "sin", "cos", "tan", "exp", "log", "abs"})
 _NUMERIC_TESTS = frozenset({"NumAbsolute", "NumRelative", "NumDecPlaces"})
 _NONSCALAR_NAMES = frozenset({"true", "false", "all", "none", "and", "or", "not",
                               "xor", "xnor", "nounand", "inf", "infinity"})
@@ -39,6 +39,8 @@ def _preflight_expression(source: str, role: str):
         return None, ("unsupported", f"{role} exceeds {MAX_CHARS} characters")
     try:
         node = parse(source)
+    except Unsupported as exc:
+        return None, ("unsupported", str(exc))
     except InvalidAnswer as exc:
         message = str(exc)
         # The parser recognizes a narrow scalar grammar. Lexical constructs
@@ -85,6 +87,16 @@ def classify_case(case: dict) -> dict:
                 exponent = item.children[1]
                 if exponent.kind == "number" and exponent.value.isdigit() and int(exponent.value) > 100:
                     return {"kind": "unsupported", "reason": f"{role} exponent exceeds supported bound"}
+    for role, node in parsed.items():
+        if any(item.kind in {"logical", "boolean", "equation"} for item in _walk(node)):
+            if name != "AlgEquiv":
+                return {"kind": "unsupported", "reason": "Logical answers require AlgEquiv"}
+            try:
+                validate_logic(evaluate(node, student=role == "student"))
+            except Unsupported as exc:
+                return {"kind": "unsupported", "reason": str(exc)}
+            except InvalidAnswer as exc:
+                return {"kind": f"invalid_{role}", "reason": str(exc)}
     option = case.get("options", "")
     if not isinstance(option, str):
         return {"kind": "invalid_option", "reason": "option must be a string"}

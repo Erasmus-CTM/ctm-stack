@@ -23,6 +23,8 @@ TESTS = {"AlgEquiv": 2, "EqualComAss": 2, "FacForm": 3, "SingleFrac": 2, "Lowest
 MARKER = re.compile(r"^\s*STACKREF\|([a-z][a-z0-9_]*)\|(true|false)\|(true|false)\s*$", re.M)
 CASE_ID = re.compile(r"[a-z][a-z0-9_]*\Z")
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+from native_compliance.maxima_runner import prepare_logic
 
 
 def load_cases(path: Path) -> list[dict]:
@@ -90,7 +92,8 @@ def maxima_batch(source: Path, cases: list[dict], home: Path) -> str:
         "simp:false$",
     ]
     for case in cases:
-        args = ",".join([case["student"], case["teacher"]] + ([case["options"]] if TESTS[case["test"]] == 3 else []))
+        args = ",".join(prepare_logic(value) for value in
+                        [case["student"], case["teacher"]] + ([case["options"]] if TESTS[case["test"]] == 3 else []))
         call = f'AT{case["test"]}({args})'
         # [1]/[2] are the actual validity and raw mark from the upstream AT.
         # A failing call leaves its result marker missing and fails the run.
