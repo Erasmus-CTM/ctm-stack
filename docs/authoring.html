@@ -149,6 +149,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../compliance/"> 
 <span class="menu-text">Native compliance</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../compliance/port-regressions.html"> 
+<span class="menu-text">Port regressions</span></a>
+  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -459,7 +463,7 @@ A policy can inherit those defaults and specialize them by name:"><pre class="so
 </tbody>
 </table>
 <p>This is a deliberately limited evaluator, not a replacement for Moodle STACK or its Maxima CAS. <code>questionsimplify=0</code> (<code>simp:false</code>) is accepted when any <code>EqualComAss</code> teacher form can be preserved after freezing author variables; otherwise the build rejects it. In this mode, supported <code>{@expression@}</code> CASText also preserves authored arithmetic form and groups substitutions inside existing TeX math. <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, and <code>LowestTerms</code> require a direct input name in <code>sans</code> to preserve the student’s written form. <code>FacForm</code> considers the written factors, including common integer content, and rejects expressions outside its bounded polynomial subset or a missing/non-symbol variable option. <code>SingleFrac</code> requires an equivalent single written fraction (or equivalent atomic answer) and excludes divisions nested in its numerator or denominator. <code>LowestTerms</code> checks reducible written integer fractions and supported denominator restrictions; it does not compare the teacher expression or factor symbolic polynomials. Build-time validation rejects unsupported author features rather than silently grading them differently. Symbolic equivalence uses SymPy transformations rather than randomized substitution. Decimal-place grading reads the literal answer so a trailing zero is meaningful. Native qtest answer notes are checked using STACK-style ordered subsequence matching, including anchored beginning/end notes and <code>NULL</code>: a terminal note can pass even if earlier PRT nodes contributed notes. The review interface and qtests help an author inspect the selected seeds, but they do not establish complete parity with all STACK configurations.</p>
-<p>CASText also renders a scalar equality such as <code>{@p=ta@}</code> as an equation for display. This does not enable equation-valued student inputs or arbitrary Maxima equations.</p>
+<p>CASText also renders a scalar equality such as <code>{@p=ta@}</code> as an equation for display. <code>AlgEquiv</code> additionally supports bounded polynomial equation inputs and disjunctions, with root multiplicity retained. For example, <code>a=0 or b=0</code> matches <code>a*b=0</code>, while <code>a^3*b^3=0</code> does not. It also supports pure Boolean expressions and elementary hyperbolic functions such as <code>cosh</code> and <code>tanh</code>. See the <a href="../examples.html#hyperbolic-equivalence">examples</a> and the README for the precise limits.</p>
 </section>
 <section id="validate-and-publish" class="level2">
 <h2 class="anchored" data-anchor-id="validate-and-publish">Validate and publish</h2>

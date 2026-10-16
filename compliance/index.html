@@ -91,6 +91,14 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">STACK compliance</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./port-regressions.html"> 
+<span class="menu-text">Port regressions</span></a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./../"> 
 <span class="menu-text">Back to example site</span></a>
   </li>  
@@ -135,7 +143,7 @@ ul.task-list li input[type="checkbox"] {
 <p>The parity inventory covers every static row, including unsupported rows that agree only in preflight classification. The eligible grading count appears separately below. Raw answer notes are displayed for inspection but are <strong>not generally compared</strong> as equivalent feedback. A comparable authored <code>-1</code> controlled-error row must match its asserted STACK error note exactly, apart from surrounding output whitespace.</p>
 <p>The “native vs desired” axis compares a direct Maxima answer-test call with an upstream fixture expectation. An unexpected deviation there can reflect PHP-side preparation, option defaults, or CAS state that this direct-call oracle does not reproduce; it is a case for investigation, not proof of a Moodle grading bug. Final-mark agreement and CAS applicability are reported separately, since both engines can reject an answer while disagreeing about whether their equivalence test applies.</p>
 <p>Fixture score codes: <code>0</code> means desired reject, <code>1</code> desired accept, and <code>-1</code> an asserted controlled error. <code>-2</code> means desired reject despite an upstream annotated native acceptance; <code>-3</code> means desired accept despite an upstream annotated native rejection. These negative codes record source-authored expectations, not approvals of this report’s direct-CAS observations.</p>
-<p>The scope is <strong>CAS answer-test behavior</strong> for the imported static rows. PHP question/controller behavior, Moodle attempt state, dynamically appended fixture cases, complete input validation, and all STACK functionality are outside this comparison. Unsupported and out-of-contract rows remain visible in the inventory. An unavailable runner is shown as unavailable, never treated as a pass.</p>
+<p>The scope is <strong>CAS answer-test behavior</strong> for the imported static rows. PHP question/controller behavior, Moodle attempt state, dynamically appended fixture cases, complete input validation, and all STACK functionality are outside this comparison. The native runner nounifies <code>and</code>, <code>or</code>, and <code>not</code> before Maxima evaluation, following STACK’s logical input preparation. Its fingerprint distinguishes these observations from older raw-operator runs. Unsupported and out-of-contract rows remain visible in the inventory. An unavailable runner is shown as unavailable, never treated as a pass.</p>
 <p>
 <a href="report.json" download="">Download complete JSON report</a> · <span id="fixture-link">Fixture commit link unavailable until report loads</span> · <a href="https://github.com/Erasmus-CTM/stack-sympy">Source repository</a>
 </p>
@@ -152,6 +160,7 @@ Loading report data…
 <div id="report-runners" class="report-runners">
 
 </div>
+<p><a href="./port-regressions.html">Project-owned port regressions</a> have their own page and counts.</p>
 <section id="inspect-cases" class="level2">
 <h2 class="anchored" data-anchor-id="inspect-cases">Inspect cases</h2>
 <div class="report-controls">

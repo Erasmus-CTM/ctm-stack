@@ -143,6 +143,10 @@ window.Quarto = {
     <a class="nav-link" href="./compliance/"> 
 <span class="menu-text">Native compliance</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./compliance/port-regressions.html"> 
+<span class="menu-text">Port regressions</span></a>
+  </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
@@ -171,6 +175,9 @@ window.Quarto = {
   <li><a href="#imported-stack-fixture" id="toc-imported-stack-fixture" class="nav-link" data-scroll-target="#imported-stack-fixture">Imported STACK fixture</a></li>
   <li><a href="#numeric-order-of-operations-from-the-stack-collection" id="toc-numeric-order-of-operations-from-the-stack-collection" class="nav-link" data-scroll-target="#numeric-order-of-operations-from-the-stack-collection">Numeric order of operations from the STACK collection</a></li>
   <li><a href="#original-rounding-question" id="toc-original-rounding-question" class="nav-link" data-scroll-target="#original-rounding-question">Original rounding question</a></li>
+  <li><a href="#hyperbolic-equivalence" id="toc-hyperbolic-equivalence" class="nav-link" data-scroll-target="#hyperbolic-equivalence">Hyperbolic equivalence</a></li>
+  <li><a href="#zero-product-equations" id="toc-zero-product-equations" class="nav-link" data-scroll-target="#zero-product-equations">Zero product equations</a></li>
+  <li><a href="#boolean-equivalence" id="toc-boolean-equivalence" class="nav-link" data-scroll-target="#boolean-equivalence">Boolean equivalence</a></li>
   </ul>
 </nav>
     </div>
@@ -1580,6 +1587,507 @@ ta6: dispdp(a4,3)&lt;/text&gt;
 &lt;/quiz&gt;
 </code></pre></details></div></div>
 <p><a href="questions/upstream/rounding-three-dp.xml">Download rounding XML</a></p>
+</section>
+<section id="hyperbolic-equivalence" class="level2">
+<h2 class="anchored" data-anchor-id="hyperbolic-equivalence">Hyperbolic equivalence</h2>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-6"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Give an expression equivalent to \(1/(1+\exp(-2x))\). You may use hyperbolic functions.</p><p><input class="stack-answer" data-name="ans" aria-label="Answer ans" size="18" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span> <span class="stack-feedback" data-name="prt1"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-6","question":{"name":"Hyperbolic equivalence","questiontext":"\u003cp\u003eGive an expression equivalent to \\(1/(1+\\exp(-2x))\\). You may use hyperbolic functions.\u003c/p\u003e\u003cp\u003e[[input:ans]] [[validation:ans]] [[feedback:prt1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eA reference answer is \\({@ta@}\\).\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"Hyperbolic equivalence","variables":"ta:tanh(x)/2+1/2;","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":18,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"prt1-0-T","feedback":"\u003cp\u003eCorrect.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"prt1-0-F","feedback":"\u003cp\u003eThis answer is not equivalent to the reference.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"Equivalent answer","inputs":{"ans":"tanh(x)/2+1/2"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"2","description":"Equivalent answer","inputs":{"ans":"1/(1+exp(-2*x))"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"3","description":"Equivalent answer","inputs":{"ans":"(sinh(x)+cosh(x))/(2*cosh(x))"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"4","description":"Incorrect candidate","inputs":{"ans":"tanh(x)"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F"}}}],"deployedseeds":[17,29,47]},"variants":[{"seed":17,"env":{"ta":"tanh(x)/2 + 1/2"},"question_html":"\u003cp\u003eGive an expression equivalent to \\(1/(1+\\exp(-2x))\\). You may use hyperbolic functions.\u003c/p\u003e\u003cp\u003e\u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eA reference answer is \\({\\frac{\\tanh{\\left(x \\right)}}{2} + \\frac{1}{2}}\\).\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Hyperbolic equivalence"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: questions/hyperbolic-equivalence.xml
+#| question: Hyperbolic equivalence
+#| seed: 17
+#| review: true
+```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Authored by the CTM team. CC BY-SA 4.0. --&gt;
+&lt;quiz&gt;
+  &lt;question type="stack"&gt;
+    &lt;name&gt;
+      &lt;text&gt;Hyperbolic equivalence&lt;/text&gt;
+    &lt;/name&gt;
+    &lt;questiontext format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;Give an expression equivalent to \(1/(1+\exp(-2x))\). You may use hyperbolic functions.&amp;lt;/p&amp;gt;&amp;lt;p&amp;gt;[[input:ans]] [[validation:ans]] [[feedback:prt1]]&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/questiontext&gt;
+    &lt;generalfeedback format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;A reference answer is \({@ta@}\).&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/generalfeedback&gt;
+    &lt;defaultgrade&gt;1&lt;/defaultgrade&gt;
+    &lt;penalty&gt;0.1&lt;/penalty&gt;
+    &lt;hidden&gt;0&lt;/hidden&gt;
+    &lt;idnumber /&gt;
+    &lt;stackversion&gt;
+      &lt;text&gt;2021072200&lt;/text&gt;
+    &lt;/stackversion&gt;
+    &lt;questionvariables&gt;
+      &lt;text&gt;ta:tanh(x)/2+1/2;&lt;/text&gt;
+    &lt;/questionvariables&gt;
+    &lt;specificfeedback format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;[[feedback:prt1]]&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/specificfeedback&gt;
+    &lt;questionnote format="moodle_auto_format"&gt;
+      &lt;text&gt;Hyperbolic equivalence&lt;/text&gt;
+    &lt;/questionnote&gt;
+    &lt;questiondescription format="moodle_auto_format"&gt;
+      &lt;text /&gt;
+    &lt;/questiondescription&gt;
+    &lt;questionsimplify&gt;1&lt;/questionsimplify&gt;
+    &lt;assumepositive&gt;0&lt;/assumepositive&gt;
+    &lt;assumereal&gt;0&lt;/assumereal&gt;
+    &lt;scientificnotation&gt;*10&lt;/scientificnotation&gt;
+    &lt;multiplicationsign&gt;none&lt;/multiplicationsign&gt;
+    &lt;sqrtsign&gt;1&lt;/sqrtsign&gt;
+    &lt;complexno&gt;i&lt;/complexno&gt;
+    &lt;inversetrig&gt;cos-1&lt;/inversetrig&gt;
+    &lt;logicsymbol&gt;lang&lt;/logicsymbol&gt;
+    &lt;matrixparens&gt;[&lt;/matrixparens&gt;
+    &lt;isbroken&gt;0&lt;/isbroken&gt;
+    &lt;variantsselectionseed /&gt;
+    &lt;input&gt;
+      &lt;name&gt;ans&lt;/name&gt;
+      &lt;type&gt;algebraic&lt;/type&gt;
+      &lt;tans&gt;ta&lt;/tans&gt;
+      &lt;boxsize&gt;18&lt;/boxsize&gt;
+      &lt;strictsyntax&gt;1&lt;/strictsyntax&gt;
+      &lt;insertstars&gt;0&lt;/insertstars&gt;
+      &lt;syntaxhint /&gt;
+      &lt;syntaxattribute&gt;0&lt;/syntaxattribute&gt;
+      &lt;forbidwords /&gt;
+      &lt;allowwords /&gt;
+      &lt;forbidfloat&gt;1&lt;/forbidfloat&gt;
+      &lt;requirelowestterms&gt;0&lt;/requirelowestterms&gt;
+      &lt;checkanswertype&gt;1&lt;/checkanswertype&gt;
+      &lt;mustverify&gt;1&lt;/mustverify&gt;
+      &lt;showvalidation&gt;1&lt;/showvalidation&gt;
+      &lt;options /&gt;
+    &lt;/input&gt;
+    &lt;prt&gt;
+      &lt;name&gt;prt1&lt;/name&gt;
+      &lt;value&gt;1.0000000&lt;/value&gt;
+      &lt;autosimplify&gt;0&lt;/autosimplify&gt;
+      &lt;feedbackstyle&gt;1&lt;/feedbackstyle&gt;
+      &lt;feedbackvariables&gt;
+        &lt;text /&gt;
+      &lt;/feedbackvariables&gt;
+      &lt;node&gt;
+        &lt;name&gt;0&lt;/name&gt;
+        &lt;description /&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;ans&lt;/sans&gt;
+        &lt;tans&gt;ta&lt;/tans&gt;
+        &lt;testoptions /&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;1.0000000&lt;/truescore&gt;
+        &lt;truepenalty /&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;prt1-0-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text&gt;&amp;lt;p&amp;gt;Correct.&amp;lt;/p&amp;gt;&lt;/text&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty /&gt;
+        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;prt1-0-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text&gt;&amp;lt;p&amp;gt;This answer is not equivalent to the reference.&amp;lt;/p&amp;gt;&lt;/text&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+    &lt;/prt&gt;
+    &lt;deployedseed&gt;17&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;29&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;47&lt;/deployedseed&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;1&lt;/testcase&gt;
+      &lt;description&gt;Equivalent answer&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;tanh(x)/2+1/2&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;2&lt;/testcase&gt;
+      &lt;description&gt;Equivalent answer&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;1/(1+exp(-2*x))&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;3&lt;/testcase&gt;
+      &lt;description&gt;Equivalent answer&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;(sinh(x)+cosh(x))/(2*cosh(x))&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;4&lt;/testcase&gt;
+      &lt;description&gt;Incorrect candidate&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;tanh(x)&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;0&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.1&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-F&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+  &lt;/question&gt;
+&lt;/quiz&gt;
+</code></pre></details></div></div>
+<p><a href="questions/hyperbolic-equivalence.xml">Download XML</a></p>
+</section>
+<section id="zero-product-equations" class="level2">
+<h2 class="anchored" data-anchor-id="zero-product-equations">Zero product equations</h2>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-7"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Express \(ab=0\) as a disjunction of polynomial equations. Write <code>or</code> between the alternatives.</p><p><input class="stack-answer" data-name="ans" aria-label="Answer ans" size="18" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span> <span class="stack-feedback" data-name="prt1"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-7","question":{"name":"Zero product equations","questiontext":"\u003cp\u003eExpress \\(ab=0\\) as a disjunction of polynomial equations. Write \u003ccode\u003eor\u003c/code\u003e between the alternatives.\u003c/p\u003e\u003cp\u003e[[input:ans]] [[validation:ans]] [[feedback:prt1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eA reference answer is \\({@ta@}\\).\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"Zero product equations","variables":"ta:a*b=0;","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":18,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"prt1-0-T","feedback":"\u003cp\u003eCorrect.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"prt1-0-F","feedback":"\u003cp\u003eThis answer is not equivalent to the reference.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"Equivalent answer","inputs":{"ans":"a=0 or b=0"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"2","description":"Equivalent answer","inputs":{"ans":"b=0 nounor a=0"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"3","description":"Incorrect candidate","inputs":{"ans":"a^3*b^3=0"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F"}}},{"testcase":"4","description":"Incorrect candidate","inputs":{"ans":"a=0"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F"}}}],"deployedseeds":[17,29,47]},"variants":[{"seed":17,"env":{"ta":"(a*b)=(0)"},"question_html":"\u003cp\u003eExpress \\(ab=0\\) as a disjunction of polynomial equations. Write \u003ccode\u003eor\u003c/code\u003e between the alternatives.\u003c/p\u003e\u003cp\u003e\u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eA reference answer is \\({a b = 0}\\).\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Zero product equations"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: questions/zero-product.xml
+#| question: Zero product equations
+#| seed: 17
+#| review: true
+```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Authored by the CTM team. CC BY-SA 4.0. --&gt;
+&lt;quiz&gt;
+  &lt;question type="stack"&gt;
+    &lt;name&gt;
+      &lt;text&gt;Zero product equations&lt;/text&gt;
+    &lt;/name&gt;
+    &lt;questiontext format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;Express \(ab=0\) as a disjunction of polynomial equations. Write &amp;lt;code&amp;gt;or&amp;lt;/code&amp;gt; between the alternatives.&amp;lt;/p&amp;gt;&amp;lt;p&amp;gt;[[input:ans]] [[validation:ans]] [[feedback:prt1]]&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/questiontext&gt;
+    &lt;generalfeedback format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;A reference answer is \({@ta@}\).&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/generalfeedback&gt;
+    &lt;defaultgrade&gt;1&lt;/defaultgrade&gt;
+    &lt;penalty&gt;0.1&lt;/penalty&gt;
+    &lt;hidden&gt;0&lt;/hidden&gt;
+    &lt;idnumber /&gt;
+    &lt;stackversion&gt;
+      &lt;text&gt;2021072200&lt;/text&gt;
+    &lt;/stackversion&gt;
+    &lt;questionvariables&gt;
+      &lt;text&gt;ta:a*b=0;&lt;/text&gt;
+    &lt;/questionvariables&gt;
+    &lt;specificfeedback format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;[[feedback:prt1]]&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/specificfeedback&gt;
+    &lt;questionnote format="moodle_auto_format"&gt;
+      &lt;text&gt;Zero product equations&lt;/text&gt;
+    &lt;/questionnote&gt;
+    &lt;questiondescription format="moodle_auto_format"&gt;
+      &lt;text /&gt;
+    &lt;/questiondescription&gt;
+    &lt;questionsimplify&gt;1&lt;/questionsimplify&gt;
+    &lt;assumepositive&gt;0&lt;/assumepositive&gt;
+    &lt;assumereal&gt;0&lt;/assumereal&gt;
+    &lt;scientificnotation&gt;*10&lt;/scientificnotation&gt;
+    &lt;multiplicationsign&gt;none&lt;/multiplicationsign&gt;
+    &lt;sqrtsign&gt;1&lt;/sqrtsign&gt;
+    &lt;complexno&gt;i&lt;/complexno&gt;
+    &lt;inversetrig&gt;cos-1&lt;/inversetrig&gt;
+    &lt;logicsymbol&gt;lang&lt;/logicsymbol&gt;
+    &lt;matrixparens&gt;[&lt;/matrixparens&gt;
+    &lt;isbroken&gt;0&lt;/isbroken&gt;
+    &lt;variantsselectionseed /&gt;
+    &lt;input&gt;
+      &lt;name&gt;ans&lt;/name&gt;
+      &lt;type&gt;algebraic&lt;/type&gt;
+      &lt;tans&gt;ta&lt;/tans&gt;
+      &lt;boxsize&gt;18&lt;/boxsize&gt;
+      &lt;strictsyntax&gt;1&lt;/strictsyntax&gt;
+      &lt;insertstars&gt;0&lt;/insertstars&gt;
+      &lt;syntaxhint /&gt;
+      &lt;syntaxattribute&gt;0&lt;/syntaxattribute&gt;
+      &lt;forbidwords /&gt;
+      &lt;allowwords /&gt;
+      &lt;forbidfloat&gt;1&lt;/forbidfloat&gt;
+      &lt;requirelowestterms&gt;0&lt;/requirelowestterms&gt;
+      &lt;checkanswertype&gt;1&lt;/checkanswertype&gt;
+      &lt;mustverify&gt;1&lt;/mustverify&gt;
+      &lt;showvalidation&gt;1&lt;/showvalidation&gt;
+      &lt;options /&gt;
+    &lt;/input&gt;
+    &lt;prt&gt;
+      &lt;name&gt;prt1&lt;/name&gt;
+      &lt;value&gt;1.0000000&lt;/value&gt;
+      &lt;autosimplify&gt;0&lt;/autosimplify&gt;
+      &lt;feedbackstyle&gt;1&lt;/feedbackstyle&gt;
+      &lt;feedbackvariables&gt;
+        &lt;text /&gt;
+      &lt;/feedbackvariables&gt;
+      &lt;node&gt;
+        &lt;name&gt;0&lt;/name&gt;
+        &lt;description /&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;ans&lt;/sans&gt;
+        &lt;tans&gt;ta&lt;/tans&gt;
+        &lt;testoptions /&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;1.0000000&lt;/truescore&gt;
+        &lt;truepenalty /&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;prt1-0-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text&gt;&amp;lt;p&amp;gt;Correct.&amp;lt;/p&amp;gt;&lt;/text&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty /&gt;
+        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;prt1-0-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text&gt;&amp;lt;p&amp;gt;This answer is not equivalent to the reference.&amp;lt;/p&amp;gt;&lt;/text&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+    &lt;/prt&gt;
+    &lt;deployedseed&gt;17&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;29&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;47&lt;/deployedseed&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;1&lt;/testcase&gt;
+      &lt;description&gt;Equivalent answer&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;a=0 or b=0&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;2&lt;/testcase&gt;
+      &lt;description&gt;Equivalent answer&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;b=0 nounor a=0&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;3&lt;/testcase&gt;
+      &lt;description&gt;Incorrect candidate&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;a^3*b^3=0&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;0&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.1&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-F&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;4&lt;/testcase&gt;
+      &lt;description&gt;Incorrect candidate&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;a=0&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;0&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.1&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-F&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+  &lt;/question&gt;
+&lt;/quiz&gt;
+</code></pre></details></div></div>
+<p><a href="questions/zero-product.xml">Download XML</a></p>
+</section>
+<section id="boolean-equivalence" class="level2">
+<h2 class="anchored" data-anchor-id="boolean-equivalence">Boolean equivalence</h2>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-8"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Rewrite the negation of <code>a and b</code> using <code>or</code>. Here a and b are propositions.</p><p><input class="stack-answer" data-name="ans" aria-label="Answer ans" size="18" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span> <span class="stack-feedback" data-name="prt1"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-8","question":{"name":"Boolean equivalence","questiontext":"\u003cp\u003eRewrite the negation of \u003ccode\u003ea and b\u003c/code\u003e using \u003ccode\u003eor\u003c/code\u003e. Here a and b are propositions.\u003c/p\u003e\u003cp\u003e[[input:ans]] [[validation:ans]] [[feedback:prt1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eA reference answer is \\({@ta@}\\).\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"Boolean equivalence","variables":"ta:not(a and b);","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":18,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"prt1-0-T","feedback":"\u003cp\u003eCorrect.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"prt1-0-F","feedback":"\u003cp\u003eThis answer is not equivalent to the reference.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"Equivalent answer","inputs":{"ans":"not a or not b"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"2","description":"Equivalent answer","inputs":{"ans":"nounnot(a) nounor nounnot(b)"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"3","description":"Equivalent answer","inputs":{"ans":"not(a and b)"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"4","description":"Incorrect candidate","inputs":{"ans":"not a and not b"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F"}}}],"deployedseeds":[17,29,47]},"variants":[{"seed":17,"env":{"ta":"nounnot ((a) nounand (b))"},"question_html":"\u003cp\u003eRewrite the negation of \u003ccode\u003ea and b\u003c/code\u003e using \u003ccode\u003eor\u003c/code\u003e. Here a and b are propositions.\u003c/p\u003e\u003cp\u003e\u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eA reference answer is \\({\\lnot \\left(\\left(a\\right) \\land \\left(b\\right)\\right)}\\).\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Boolean equivalence"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: questions/boolean-equivalence.xml
+#| question: Boolean equivalence
+#| seed: 17
+#| review: true
+```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- Authored by the CTM team. CC BY-SA 4.0. --&gt;
+&lt;quiz&gt;
+  &lt;question type="stack"&gt;
+    &lt;name&gt;
+      &lt;text&gt;Boolean equivalence&lt;/text&gt;
+    &lt;/name&gt;
+    &lt;questiontext format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;Rewrite the negation of &amp;lt;code&amp;gt;a and b&amp;lt;/code&amp;gt; using &amp;lt;code&amp;gt;or&amp;lt;/code&amp;gt;. Here a and b are propositions.&amp;lt;/p&amp;gt;&amp;lt;p&amp;gt;[[input:ans]] [[validation:ans]] [[feedback:prt1]]&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/questiontext&gt;
+    &lt;generalfeedback format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;A reference answer is \({@ta@}\).&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/generalfeedback&gt;
+    &lt;defaultgrade&gt;1&lt;/defaultgrade&gt;
+    &lt;penalty&gt;0.1&lt;/penalty&gt;
+    &lt;hidden&gt;0&lt;/hidden&gt;
+    &lt;idnumber /&gt;
+    &lt;stackversion&gt;
+      &lt;text&gt;2021072200&lt;/text&gt;
+    &lt;/stackversion&gt;
+    &lt;questionvariables&gt;
+      &lt;text&gt;ta:not(a and b);&lt;/text&gt;
+    &lt;/questionvariables&gt;
+    &lt;specificfeedback format="html"&gt;
+      &lt;text&gt;&amp;lt;p&amp;gt;[[feedback:prt1]]&amp;lt;/p&amp;gt;&lt;/text&gt;
+    &lt;/specificfeedback&gt;
+    &lt;questionnote format="moodle_auto_format"&gt;
+      &lt;text&gt;Boolean equivalence&lt;/text&gt;
+    &lt;/questionnote&gt;
+    &lt;questiondescription format="moodle_auto_format"&gt;
+      &lt;text /&gt;
+    &lt;/questiondescription&gt;
+    &lt;questionsimplify&gt;1&lt;/questionsimplify&gt;
+    &lt;assumepositive&gt;0&lt;/assumepositive&gt;
+    &lt;assumereal&gt;0&lt;/assumereal&gt;
+    &lt;scientificnotation&gt;*10&lt;/scientificnotation&gt;
+    &lt;multiplicationsign&gt;none&lt;/multiplicationsign&gt;
+    &lt;sqrtsign&gt;1&lt;/sqrtsign&gt;
+    &lt;complexno&gt;i&lt;/complexno&gt;
+    &lt;inversetrig&gt;cos-1&lt;/inversetrig&gt;
+    &lt;logicsymbol&gt;lang&lt;/logicsymbol&gt;
+    &lt;matrixparens&gt;[&lt;/matrixparens&gt;
+    &lt;isbroken&gt;0&lt;/isbroken&gt;
+    &lt;variantsselectionseed /&gt;
+    &lt;input&gt;
+      &lt;name&gt;ans&lt;/name&gt;
+      &lt;type&gt;algebraic&lt;/type&gt;
+      &lt;tans&gt;ta&lt;/tans&gt;
+      &lt;boxsize&gt;18&lt;/boxsize&gt;
+      &lt;strictsyntax&gt;1&lt;/strictsyntax&gt;
+      &lt;insertstars&gt;0&lt;/insertstars&gt;
+      &lt;syntaxhint /&gt;
+      &lt;syntaxattribute&gt;0&lt;/syntaxattribute&gt;
+      &lt;forbidwords /&gt;
+      &lt;allowwords /&gt;
+      &lt;forbidfloat&gt;1&lt;/forbidfloat&gt;
+      &lt;requirelowestterms&gt;0&lt;/requirelowestterms&gt;
+      &lt;checkanswertype&gt;1&lt;/checkanswertype&gt;
+      &lt;mustverify&gt;1&lt;/mustverify&gt;
+      &lt;showvalidation&gt;1&lt;/showvalidation&gt;
+      &lt;options /&gt;
+    &lt;/input&gt;
+    &lt;prt&gt;
+      &lt;name&gt;prt1&lt;/name&gt;
+      &lt;value&gt;1.0000000&lt;/value&gt;
+      &lt;autosimplify&gt;0&lt;/autosimplify&gt;
+      &lt;feedbackstyle&gt;1&lt;/feedbackstyle&gt;
+      &lt;feedbackvariables&gt;
+        &lt;text /&gt;
+      &lt;/feedbackvariables&gt;
+      &lt;node&gt;
+        &lt;name&gt;0&lt;/name&gt;
+        &lt;description /&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;ans&lt;/sans&gt;
+        &lt;tans&gt;ta&lt;/tans&gt;
+        &lt;testoptions /&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;1.0000000&lt;/truescore&gt;
+        &lt;truepenalty /&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;prt1-0-T&lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text&gt;&amp;lt;p&amp;gt;Correct.&amp;lt;/p&amp;gt;&lt;/text&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty /&gt;
+        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;prt1-0-F&lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text&gt;&amp;lt;p&amp;gt;This answer is not equivalent to the reference.&amp;lt;/p&amp;gt;&lt;/text&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+    &lt;/prt&gt;
+    &lt;deployedseed&gt;17&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;29&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;47&lt;/deployedseed&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;1&lt;/testcase&gt;
+      &lt;description&gt;Equivalent answer&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;not a or not b&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;2&lt;/testcase&gt;
+      &lt;description&gt;Equivalent answer&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;nounnot(a) nounor nounnot(b)&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;3&lt;/testcase&gt;
+      &lt;description&gt;Equivalent answer&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;not(a and b)&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;1&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;4&lt;/testcase&gt;
+      &lt;description&gt;Incorrect candidate&lt;/description&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans&lt;/name&gt;
+        &lt;value&gt;not a and not b&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;prt1&lt;/name&gt;
+        &lt;expectedscore&gt;0&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.1&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;prt1-0-F&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+  &lt;/question&gt;
+&lt;/quiz&gt;
+</code></pre></details></div></div>
+<p><a href="questions/boolean-equivalence.xml">Download XML</a></p>
 
 
 </section>
