@@ -87,3 +87,20 @@ def test_remaining_exceptions_have_case_specific_author_discussion():
         assert discussion["category"] in {"domain_review", "proof_limitation"}
         assert discussion["explanation"] and discussion["question"] and discussion["sources"]
         assert discussion["evidence"] in {"documented_context", "observed_behavior"}
+
+
+@pytest.mark.parametrize("ordinal,env", [
+    (50, {"x": -sp.I}), (76, {"x": sp.I}),
+    (92, {"x": sp.Integer(1), "k": sp.S.Half}),
+    (99, {"k": sp.Integer(-1), "m": sp.Integer(1)}),
+    (101, {"k": sp.Integer(1), "m": sp.Integer(-1)}),
+    (127, {"x": sp.pi, "n": sp.S.Half}),
+    (155, {"a": sp.Integer(-1), "b": sp.Integer(1)}),
+    (167, {"x": sp.Integer(2)}), (471, {"x": -sp.I}),
+])
+def test_documented_counterexamples_are_exact(ordinal, env):
+    fixture = json.loads((Path(__file__).resolve().parent /
+                         "native_compliance/fixtures.json").read_text())
+    case = next(c for c in fixture["cases"] if c["ordinal"] == ordinal)
+    difference = sp.simplify(evaluate(case["student"], env) - evaluate(case["teacher"], env))
+    assert difference.is_zero is False

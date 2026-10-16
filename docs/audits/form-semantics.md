@@ -42,7 +42,9 @@ report metadata/presentation against the pinned upstream sources.
 
 ## Validation actually performed during development
 
-- Non-rendering Python suite: **363 tests and 146 subtests passed**.
+- Non-rendering Python suite: **372 tests and 146 subtests passed**, including
+  exact checks of the documented branch counterexamples. A browser regression
+  checks discussion filters, source links, and distinct expected/observed marks.
 - CPython legacy conformance: **404 desired passes, 10 pinned differences,
   1,889 out of contract, zero unexpected**, over all 2,303 rows.
 - Project regressions: **80 Python result passes, eight expected boundaries**.
