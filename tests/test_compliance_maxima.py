@@ -41,7 +41,7 @@ class NativeMaximaTests(unittest.TestCase):
         self.assertEqual(len(fixture["cases"]), 2303)
         self.assertEqual(sum(native._unavailable(row) is None for row in fixture["cases"]), 837)
         self.assertEqual(native.scope_sha256(fixture["cases"]),
-                         "437e047c66de2ce7209ef531b7a8f40ec2229f5d9203621a4511bb82a52628e7")
+                         "375e45aa5b73d1dd4d514807d583b6f3322b915f0c73b19a706339d27b237fd7")
         self.assertEqual(native._unavailable(case(test="NumAbsolute", options="")), None)
         self.assertEqual(native._unavailable(case(test="NotImplemented")), "test_family_not_implemented")
         self.assertEqual(native._unavailable(case(student="")), "empty_answer_requires_php_controller")
@@ -50,6 +50,15 @@ class NativeMaximaTests(unittest.TestCase):
         self.assertEqual(native._unavailable(case(student="x#pm#1")), "plus_minus_requires_php_parser_student")
         self.assertEqual(native._unavailable(case(student="1/0")), "undefined_expression_requires_php_controller_student")
         self.assertEqual(native._unavailable(case(student="(x")), "malformed_expression_requires_php_parser_student")
+
+    def test_logic_preparation_is_token_aware_and_fingerprinted(self):
+        source = 'a=0 or b=0 and not c=1'
+        self.assertEqual(native.prepare_logic(source), 'a=0 nounor b=0 nounand nounnot c=1')
+        preserved = 'floor(x)+ordinary+nounor+notable+"and or not"'
+        self.assertEqual(native.prepare_logic(preserved), preserved)
+        self.assertIn('eval_string("a=0 nounor b=0")',
+                      native._call(case(student='a=0 or b=0', teacher='a*b=0')))
+        self.assertEqual(native.INPUT_PREPARATION, 'stack-logic-nouns-v1')
 
     def test_batch_arguments_simplification_raw_and_default(self):
         cases = [case(), case("2", "EqualComAss"), case("3", "FacForm", options="x"),

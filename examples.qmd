@@ -91,3 +91,36 @@ This unmodified STACK sample has multiple answer fields and checks decimal-place
 ```
 
 [Download rounding XML](questions/upstream/rounding-three-dp.xml)
+
+## Hyperbolic equivalence
+
+```{.stack-question}
+#| file: questions/hyperbolic-equivalence.xml
+#| question: Hyperbolic equivalence
+#| seed: 17
+#| review: true
+```
+
+[Download XML](questions/hyperbolic-equivalence.xml)
+
+## Zero product equations
+
+```{.stack-question}
+#| file: questions/zero-product.xml
+#| question: Zero product equations
+#| seed: 17
+#| review: true
+```
+
+[Download XML](questions/zero-product.xml)
+
+## Boolean equivalence
+
+```{.stack-question}
+#| file: questions/boolean-equivalence.xml
+#| question: Boolean equivalence
+#| seed: 17
+#| review: true
+```
+
+[Download XML](questions/boolean-equivalence.xml)

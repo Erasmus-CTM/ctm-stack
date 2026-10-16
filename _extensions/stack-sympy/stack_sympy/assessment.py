@@ -13,7 +13,7 @@ from typing import Any, Mapping
 
 import sympy as sp
 
-from .expressions import InvalidAnswer, Node, Unsupported, canonical_form, evaluate, parse
+from .expressions import InvalidAnswer, Node, Unsupported, canonical_form, evaluate, parse, is_logical
 
 MAX_DECIMAL_PLACES = 50
 
@@ -49,18 +49,16 @@ def _option(options: str, env, assumptions):
 
 
 def _equiv(student, teacher):
-    if not isinstance(student, sp.Basic) or not isinstance(teacher, sp.Basic):
-        raise InvalidAnswer("Only scalar answers are supported")
-    if student == teacher:
-        return True
-    difference = student - teacher
-    try:
-        for transform in (sp.cancel, sp.trigsimp, sp.simplify):
-            if transform(difference) == 0:
-                return True
-        return False
-    except (TypeError, ValueError, ZeroDivisionError, NotImplementedError):
-        return False
+    from .logic import logical_equivalent
+    from .equivalence import elementary_equivalent
+    if is_logical(student) or is_logical(teacher):
+        # A symbol can be a proposition in a Boolean comparison.
+        if not all(is_logical(x) or isinstance(x, sp.Symbol) for x in (student, teacher)):
+            return False
+        return logical_equivalent(student, teacher)
+    if not isinstance(student, sp.Expr) or not isinstance(teacher, sp.Expr):
+        raise InvalidAnswer("Only scalar or logical answers are supported")
+    return elementary_equivalent(student, teacher)
 
 
 def _decimal_places(raw: str) -> tuple[Decimal, int]:
@@ -260,7 +258,7 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
     Supported: AlgEquiv, EqualComAss, FacForm, SingleFrac, LowestTerms,
     NumAbsolute, NumRelative, NumDecPlaces
     (one to fifty decimal places).
-    Student lists and sets, units, equations, matrices, and feedback-tree CAS
+    Student lists and sets, units, general relations, matrices, and feedback-tree CAS
     features are outside this intentionally limited implementation.
     """
     if name not in {"AlgEquiv", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
@@ -279,7 +277,21 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
     except (InvalidAnswer, TypeError, ZeroDivisionError) as exc:
         raise Unsupported(f"Invalid teacher expression: {exc}") from exc
 
+    from .logic import validate_logic
+    for value in (student_value, teacher_value):
+        if is_logical(value):
+            validate_logic(value)
+    if name != "AlgEquiv" and any(is_logical(x) for x in (student_value, teacher_value)):
+        raise Unsupported("Logical answers require AlgEquiv")
+
     if name == "AlgEquiv":
+        from .logic import _has_equation
+        # STACK distinguishes CAS applicability from input syntax validity.
+        # In particular, Boolean student constants can answer equations, but
+        # an equation student answer cannot answer a Boolean teacher constant.
+        if (is_logical(student_value) != is_logical(teacher_value)
+                or _has_equation(student_value) and not _has_equation(teacher_value)):
+            return {**_result(True, False), "cas_valid": False}
         return _result(True, _equiv(student_value, teacher_value))
 
     if name == "SingleFrac":

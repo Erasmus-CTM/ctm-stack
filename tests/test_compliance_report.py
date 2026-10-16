@@ -10,6 +10,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from native_compliance.report import ROOT, assemble
 from native_compliance.compatibility import assess
+from native_compliance.maxima_runner import INPUT_PREPARATION
 
 
 def write(path: Path, value: dict) -> Path:
@@ -35,7 +36,7 @@ def inputs(tmp_path: Path):
                        {"case_id": "b", "kind": "unsupported", "desired_match": False,
                         "policy_status": "out_of_contract"}]})
     maxima = write(tmp_path / "maxima.json", {"schema_version": 1, "engine": "maxima",
-                   "metadata": {"fixture_sha256": digest, "stack_sha": "pinned", "native_scope_sha256": "0" * 64}, "observations": [
+                   "metadata": {"fixture_sha256": digest, "stack_sha": "pinned", "input_preparation": INPUT_PREPARATION, "native_scope_sha256": "0" * 64}, "observations": [
                        {"case_id": "a", "status": "ok", "cas_valid": True, "correct": True},
                        {"case_id": "b", "status": "unavailable", "reason": "outside scope"}]})
     parity = write(tmp_path / "parity.json", {"schema_version": 1, "engine": "parity", "passed": True, "fixture_sha256": digest,
@@ -217,3 +218,13 @@ def test_note_display_is_independent_of_python_error_origin(tmp_path):
     report = assemble(fixture, python, maxima, parity, reference)
     assert report["cases"][0]["answer_note_status"] == "controlled_error_note_matched"
     assert report["cases"][0]["desired_status"] == "unexpected"
+
+
+def test_old_logic_preparation_cannot_be_reused(tmp_path):
+    fixture, python, maxima, parity, reference = inputs(tmp_path)
+    data = json.loads(maxima.read_text())
+    data["metadata"].pop("input_preparation")
+    write(maxima, data)
+    report = assemble(fixture, python, maxima, parity, reference)
+    assert all(row["native_status"] == "unavailable" for row in report["cases"])
+    assert "preparation" in report["results"]["native"]["error"]

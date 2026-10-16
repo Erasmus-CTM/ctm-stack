@@ -109,6 +109,22 @@ def test_browser_worker_grades_and_runs_authored_tests():
             example.locator(".stack-tests").click()
             example.locator(".stack-result .stack-verdict").wait_for(timeout=180000)
             assert "All authored tests passed" in example.locator(".stack-result").inner_text(), index
+        # Exercise held logic and new functions through validation and grading,
+        # in addition to replaying their authored XML qtests above.
+        for question_name, response, correct in (
+            ("Hyperbolic equivalence", "tanh(x)/2+1/2", True),
+            ("Zero product equations", "a=0 or b=0", True),
+            ("Zero product equations", "a^3*b^3=0", False),
+            ("Boolean equivalence", "not a or not b", True),
+        ):
+            example = next(cards.nth(i) for i in range(cards.count())
+                           if json.loads(cards.nth(i).locator(".stack-sympy-data").text_content())["question"]["name"] == question_name)
+            example.locator(".stack-answer").fill(response)
+            example.locator(".stack-validate").click()
+            example.locator('.stack-validation[data-state="valid"]').wait_for(timeout=120000)
+            example.locator(".stack-check").click()
+            example.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
+            assert example.locator(".stack-result").get_attribute("data-state") == ("correct" if correct else "retry")
         multi = None
         # Find the authored multi-input numerical case without depending on
         # the visual order of the examples.
@@ -281,3 +297,43 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             assert not errors, errors
         finally:
             browser.close()
+
+
+def test_browser_project_regression_report_keeps_suites_separate(tmp_path):
+    """UI fixture only: real runner observations are checked by the CI job."""
+    from scripts.native_compliance.port_contract import load_fixture, assemble as port_assemble
+    root = Path(__file__).resolve().parents[1]
+    cases = load_fixture(root / 'tests/port_regressions/fixtures.json')
+    python = [{'case_id':c['id'],'test':c['test'],**c.get('known_defect',{}).get('observation',c['expected'])} for c in cases]
+    native = {'observations':[{'case_id':c['id'],'status':'ok',**c.get('native_expected',
+              {k:c['expected'][k] for k in ('cas_valid','correct')})} for c in cases if c['native_scope']]}
+    parity = {'cases':[{'id':c['id'],'match':True} for c in cases]}
+    project = port_assemble(cases,python,native,parity)
+    project.update(available=True,provenance={'fixture':'synthetic UI test'},runners={})
+    legacy_count = len(json.loads((root/'tests/native_compliance/fixtures.json').read_text())['cases'])
+    (tmp_path/'port-regressions.json').write_text(json.dumps(project))
+    (tmp_path/'port-regressions.js').write_text((root/'compliance-report/port-regressions.js').read_text())
+    body = (root/'compliance-report/port-regressions.qmd').read_text().split('<div id="port-regressions-status"',1)[1]
+    (tmp_path/'index.html').write_text('<!doctype html><div id="port-regressions-status"'+body)
+    with serve(tmp_path) as url, sync_playwright() as pw:
+        options = {'headless':True}
+        if os.environ.get('STACK_SYMPY_CHROMIUM'):
+            options['executable_path'] = os.environ['STACK_SYMPY_CHROMIUM']
+        browser = pw.chromium.launch(**options)
+        page = browser.new_page()
+        page.goto(url+'/index.html')
+        page.locator('#port-regressions-list .case').first.wait_for()
+        assert page.locator('#port-regressions-list .case').count()==len(cases)
+        assert page.locator('#report-provenance').count()==0
+        assert legacy_count==2303
+        assert 'boundary checks' in page.locator('#port-regressions-status').inner_text()
+        assert 'known defects' in page.locator('#port-regressions-status').inner_text()
+        page.locator('#port-search').fill('complex-root-form')
+        assert page.locator('#port-regressions-list .case').count()==1
+        page.locator('#port-regressions-list .case').first.locator('summary').first.click()
+        page.locator('#port-regressions-list').get_by_text('Expected behavior and origin',exact=True).click()
+        assert '668' in page.locator('#port-regressions-list').inner_text()
+        page.locator('#port-search').fill('')
+        page.locator('#port-group').select_option('declared boundaries')
+        assert page.locator('#port-regressions-list .case').count()==6
+        browser.close()

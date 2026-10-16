@@ -20,6 +20,21 @@ from pathlib import Path
 
 
 STACK_SHA = "10d323311b7f39fb7b092dd10ce75f7d8632f525"
+INPUT_PREPARATION = "stack-logic-nouns-v1"
+# MP_Operation/MP_FunctionCall::toString(nounify=2), security-map.json.
+LOGIC_NOUNS = {"and": "nounand", "or": "nounor", "not": "nounnot"}
+
+
+def prepare_logic(source: str) -> str:
+    """Preserve logic as STACK does before evaluating answer-test arguments.
+
+    Tokenize strings and whole identifiers: identifiers such as order, existing
+    nounor, and text inside string literals must remain byte for byte intact.
+    This is deliberately only the traced logic-noun preparation, not PHP AST
+    validation or the rest of STACK's input processing.
+    """
+    tokens = re.finditer(r'"(?:\\.|[^"\\])*"|%?[A-Za-z_][A-Za-z_0-9]*|.', source, re.S)
+    return "".join(LOGIC_NOUNS.get(m[0], m[0]) for m in tokens)
 # controller.class.php $pops, columns: required options, CAS options, simp,
 # required raw.  Only families implemented by stack-sympy are in scope.
 TESTS = {
@@ -131,7 +146,8 @@ def scope_sha256(cases: list[dict]) -> str:
     """Fingerprint ordered direct-call eligibility, including exclusion reasons."""
     validate_cases(cases)
     scope = [[case["id"], _unavailable(case) or "available"] for case in cases]
-    canonical = json.dumps(scope, ensure_ascii=True, separators=(",", ":"))
+    canonical = json.dumps({"preparation": INPUT_PREPARATION, "cases": scope},
+                           ensure_ascii=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("ascii")).hexdigest()
 
 
@@ -142,10 +158,11 @@ def _call(case: dict) -> str:
     # invoking AT*.  Maxima parse_string alone leaves configured names such
     # as i symbolic; eval_string evaluates their bindings while simp:false
     # retains form-sensitive expressions (checked by the loader probe).
-    args = [f"eval_string({_literal(case['student'])})", f"eval_string({_literal(case['teacher'])})"]
+    args = [f"eval_string({_literal(prepare_logic(case['student']))})",
+            f"eval_string({_literal(prepare_logic(case['teacher']))})"]
     if requires_option:
         option = case["options"] or "0.05"  # controller default for NumAbsolute/Relative
-        args.append(f"eval_string({_literal(option)})")
+        args.append(f"eval_string({_literal(prepare_logic(option))})")
     if raw:
         # PHP uses get_inputform(true, 1).  For supported plain numeric input
         # the fixture's spelling is the pertinent raw input; nontrivial AST
@@ -526,6 +543,7 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs:
     ordered = [by_id[case["id"]] for case in cases]
     return {"schema_version": 1, "engine": "maxima",
             "metadata": {"reference_layer": "direct_official_maxima_AT", "stack_sha": checkout,
+                         "input_preparation": INPUT_PREPARATION,
                          "stack_library_version": library_match[1], "maxima_version": version,
                          "native_scope_sha256": scope_sha256(cases),
                          "execution_isolation": "fresh_maxima_process_per_case", "jobs": jobs,

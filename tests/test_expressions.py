@@ -120,7 +120,7 @@ class ExpressionsTest(unittest.TestCase):
             parse("2x+" * (MAX_TOKENS // 3 + 1), insertstars=1)
 
     def test_invalid_and_unsupported_constructs(self):
-        for source in ("__import__('os')", "x.__class__", "x; y", "lambda x:x", "x=2", "x**100000", "2^100000", "[1,2]", "rand(5)", "%foo"):
+        for source in ("__import__('os')", "x.__class__", "x; y", "lambda x:x", "x**100000", "2^100000", "[1,2]", "rand(5)", "%foo"):
             with self.subTest(source=source), self.assertRaises((InvalidAnswer, Unsupported)):
                 evaluate(source, student=True)
         with self.assertRaises(InvalidAnswer):

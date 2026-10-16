@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "scope_sha256": "7df0d96a6f0a0a3cbbf7b42711bfd537cc3aa568e310a266e8d2745b581085fa",
+  "scope_sha256": "f5b58718a2977649d60aea72bf40abd937f67e3d8e66b09886dd9c6447b733ed",
   "cases": {
     "73f1c53aebb5c7784de24bf9c93f219444fe25261d946988d4859c679e4d67fe-1": {
       "expected_observation": {
@@ -31,26 +31,6 @@
         "feedback": ""
       },
       "reason": "The adapter cancels decimal rationals exactly where upstream floating arithmetic rejects equality."
-    },
-    "99e3883d884cf37248a4142f8fcc88e7b84ff14184500d681f2bb3fb2a7de569-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": false,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Conservative complex principal-root simplification cannot prove the upstream trigonometric form."
-    },
-    "96a48a448c7d26bd3cb0035fe1a2b3d43cd621fe5ea6921bf9a40f2f99aa0f4e-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": false,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Conservative complex exponential simplification misses the upstream exact trigonometric expansion."
     },
     "de0885f7d37d2ae319116b55bbeb142975a2298c65f19be7a7d0c90b0ca82980-1": {
       "expected_observation": {
@@ -121,16 +101,6 @@
         "feedback": ""
       },
       "reason": "Conservative symbolic exponent distribution cannot prove the native mark."
-    },
-    "e0385186364cd2f6333d45131937e6ae7633f31a4229d579a523cf58edc73250-1": {
-      "expected_observation": {
-        "kind": "result",
-        "valid": true,
-        "correct": false,
-        "note": "",
-        "feedback": ""
-      },
-      "reason": "Trig simplification does not prove this transformed quotient."
     },
     "09b794b1ac17005f8c3d3beeafb27b7ff112300d112025ee60d87d1d7a0f67ff-1": {
       "expected_observation": {

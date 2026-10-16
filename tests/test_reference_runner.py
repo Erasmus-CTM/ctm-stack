@@ -41,6 +41,7 @@ class ReferenceRunnerTests(unittest.TestCase):
             home.mkdir()
             batch = reference.maxima_batch(source, cases, home)
         self.assertIn("stacklocallinux.mac", batch)
+        self.assertIn("a=0 nounor b=0", batch)
         for name in reference.TESTS:
             self.assertIn(f"AT{name}(", batch)
         self.assertEqual(batch.count('print(sconcat("STACKREF|'), len(cases))

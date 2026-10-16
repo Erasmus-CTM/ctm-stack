@@ -19,8 +19,10 @@ import sys
 
 try:
     from .common import matches_desired
+    from .maxima_runner import INPUT_PREPARATION
 except ImportError:  # Direct CLI invocation.
     from common import matches_desired
+    from maxima_runner import INPUT_PREPARATION
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -137,6 +139,8 @@ def validated_run(document: dict | None, read_error: str | None, expected_hash: 
     metadata = document.get("metadata")
     if engine in {"python", "native"} and not isinstance(metadata, dict):
         return None, "Missing runner metadata"
+    if engine == "native" and metadata.get("input_preparation") != INPUT_PREPARATION:
+        return None, "Native input preparation differs from current noun mapping"
     observed_hash = metadata.get("fixture_sha256") if engine in {"python", "native"} else document.get("fixture_sha256")
     if observed_hash != expected_hash:
         return None, f"Fixture SHA-256 mismatch or missing ({observed_hash!r})"
@@ -296,6 +300,46 @@ def assemble(fixture_path: Path, python_path: Path, maxima_path: Path, pyodide_p
     }
 
 
+
+def port_regressions(path: Path) -> dict:
+    """Keep project contracts and their denominator separate from legacy rows."""
+    try:
+        try:
+            from .port_contract import load_fixture, assemble as assemble_port
+        except ImportError:
+            from port_contract import load_fixture, assemble as assemble_port
+        fixture = ROOT / "tests/port_regressions/fixtures.json"
+        cases = load_fixture(fixture)
+        report, error = read_json(path)
+        if error:
+            raise ValueError(error)
+        provenance = report.get("provenance", {})
+        if (report.get("schema_version") != 1 or report.get("suite") != "project_port_regressions"
+                or provenance.get("fixture_sha256") != hashlib.sha256(fixture.read_bytes()).hexdigest()
+                or provenance.get("input_preparation") != INPUT_PREPARATION
+                or provenance.get("source_bundle_sha256") != hashlib.sha256(
+                    (ROOT / "_extensions/stack-sympy/runtime-sources.js").read_bytes()).hexdigest()):
+            raise ValueError("Port regression provenance differs from current fixture/preparation/runtime")
+        rows = report.get("cases", [])
+        if [row.get("id") for row in rows] != [case["id"] for case in cases]:
+            raise ValueError("Port regression coverage differs from fixture")
+        for case, row in zip(cases, rows):
+            if any(row.get(key) != value for key,value in case.items()):
+                raise ValueError("Port regression contract differs from fixture")
+        native = {"observations":[row["native"] for row in rows if row.get("native")]}
+        parity = {"cases":[row["parity"] for row in rows if row.get("parity")]}
+        check = assemble_port(cases, [row["python"] for row in rows if row.get("python")],
+                              native, parity, report.get("errors"))
+        if report.get("passed") is not check["passed"] or report.get("summary") != check["summary"]:
+            raise ValueError("Port regression verdict contradicts observations")
+        if any(any(row.get(key) != expected[key] for key in ("python_status","native_status","parity_status"))
+               for row,expected in zip(rows,check["cases"])):
+            raise ValueError("Port regression statuses contradict observations")
+        return {"available":True, **report}
+    except (OSError, ValueError, KeyError, TypeError) as exc:
+        return {"available":False,"passed":False,"error":str(exc),"cases":[]}
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fixture", type=Path, default=ROOT / "tests/native_compliance/fixtures.json")
@@ -312,6 +356,10 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    port_output = args.output.with_name("port-regressions.json")
+    port = port_regressions(ROOT / "test-results/compliance/port-regressions.json")
+    port_output.write_text(json.dumps(port, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Port report: {port_output}")
     print(f"Report: {args.output} ({len(report['cases'])} imported rows)")
     return 0
 
