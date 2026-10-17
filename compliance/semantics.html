@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -154,7 +189,8 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#implemented-behavior" id="toc-implemented-behavior" class="nav-link active" data-scroll-target="#implemented-behavior">Implemented behavior</a>
+  <li><a href="#how-to-read-the-evidence" id="toc-how-to-read-the-evidence" class="nav-link active" data-scroll-target="#how-to-read-the-evidence">How to read the evidence</a></li>
+  <li><a href="#implemented-scalar-and-written-form-behavior" id="toc-implemented-scalar-and-written-form-behavior" class="nav-link" data-scroll-target="#implemented-scalar-and-written-form-behavior">Implemented scalar and written-form behavior</a>
   <ul class="collapse">
   <li><a href="#written-form-cases-645-647-658-665-and-2278" id="toc-written-form-cases-645-647-658-665-and-2278" class="nav-link" data-scroll-target="#written-form-cases-645-647-658-665-and-2278">Written form: cases 645, 647, 658, 665 and 2278</a></li>
   <li><a href="#floating-point-constants-cases-32-37-and-43" id="toc-floating-point-constants-cases-32-37-and-43" class="nav-link" data-scroll-target="#floating-point-constants-cases-32-37-and-43">Floating-point constants: cases 32, 37 and 43</a></li>
@@ -164,11 +200,19 @@ window.Quarto = {
   <li><a href="#eight-domainbranch-differences-for-discussion" id="toc-eight-domainbranch-differences-for-discussion" class="nav-link" data-scroll-target="#eight-domainbranch-differences-for-discussion">Eight domain/branch differences for discussion</a></li>
   <li><a href="#two-missing-exact-proofs" id="toc-two-missing-exact-proofs" class="nav-link" data-scroll-target="#two-missing-exact-proofs">Two missing exact proofs</a></li>
   <li><a href="#reading-the-report" id="toc-reading-the-report" class="nav-link" data-scroll-target="#reading-the-report">Reading the report</a></li>
-  <li><a href="#finite-sets" id="toc-finite-sets" class="nav-link" data-scroll-target="#finite-sets">Finite sets</a>
+  <li><a href="#finite-sets" id="toc-finite-sets" class="nav-link" data-scroll-target="#finite-sets">Finite lists and sets</a>
   <ul class="collapse">
-  <li><a href="#nested-structure-form-and-applicability" id="toc-nested-structure-form-and-applicability" class="nav-link" data-scroll-target="#nested-structure-form-and-applicability">Nested structure, form and applicability</a></li>
-  <li><a href="#author-helpers-and-held-calls" id="toc-author-helpers-and-held-calls" class="nav-link" data-scroll-target="#author-helpers-and-held-calls">Author helpers and held calls</a></li>
+  <li><a href="#which-equality-is-being-tested" id="toc-which-equality-is-being-tested" class="nav-link" data-scroll-target="#which-equality-is-being-tested">Which equality is being tested?</a></li>
+  <li><a href="#trig-set-identity" id="toc-trig-set-identity" class="nav-link" data-scroll-target="#trig-set-identity">A trigonometric identity inside a set</a></li>
+  <li><a href="#stronger-set-matching" id="toc-stronger-set-matching" class="nav-link" data-scroll-target="#stronger-set-matching">Proposed stronger set-member matching</a></li>
+  <li><a href="#exact-constants-mathematical-equality-versus-compatibility" id="toc-exact-constants-mathematical-equality-versus-compatibility" class="nav-link" data-scroll-target="#exact-constants-mathematical-equality-versus-compatibility">Exact constants: mathematical equality versus compatibility</a></li>
+  <li><a href="#nested-structure-and-duplicate-scope" id="toc-nested-structure-and-duplicate-scope" class="nav-link" data-scroll-target="#nested-structure-and-duplicate-scope">Nested structure and duplicate scope</a></li>
+  <li><a href="#written-form-is-an-explicit-separate-contract" id="toc-written-form-is-an-explicit-separate-contract" class="nav-link" data-scroll-target="#written-form-is-an-explicit-separate-contract">Written form is an explicit separate contract</a></li>
+  <li><a href="#type-applicability-is-observed-implementation-behavior" id="toc-type-applicability-is-observed-implementation-behavior" class="nav-link" data-scroll-target="#type-applicability-is-observed-implementation-behavior">Type applicability is observed implementation behavior</a></li>
   </ul></li>
+  <li><a href="#decimal-precision-native-observations-and-port-boundaries" id="toc-decimal-precision-native-observations-and-port-boundaries" class="nav-link" data-scroll-target="#decimal-precision-native-observations-and-port-boundaries">Decimal precision: native observations and port boundaries</a></li>
+  <li><a href="#finite-author-helpers-and-held-execution" id="toc-finite-author-helpers-and-held-execution" class="nav-link" data-scroll-target="#finite-author-helpers-and-held-execution">Finite author helpers and held execution</a></li>
+  <li><a href="#feedback-and-the-tested-layer" id="toc-feedback-and-the-tested-layer" class="nav-link" data-scroll-target="#feedback-and-the-tested-layer">Feedback and the tested layer</a></li>
   </ul>
 </nav>
     </div>
@@ -196,10 +240,47 @@ window.Quarto = {
 
 
 <p>The comparison uses STACK revision <code>10d323311b7f39fb7b092dd10ce75f7d8632f525</code>. Case numbers below refer to the unchanged 2,303-row imported fixture. An expected acceptance is a statement in that fixture, not automatically a universally valid complex identity. Native agreement and mathematical correctness are separate axes.</p>
-<section id="implemented-behavior" class="level2">
-<h2 class="anchored" data-anchor-id="implemented-behavior">Implemented behavior</h2>
+<section id="how-to-read-the-evidence" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-read-the-evidence">How to read the evidence</h2>
+<p>Four questions are kept separate throughout this page:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Axis</th>
+<th>What it establishes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Mathematical claim</td>
+<td>Whether the expressions agree under stated domain and branch assumptions.</td>
+</tr>
+<tr class="even">
+<td>Fixture expectation</td>
+<td>What the imported STACK row asks the test to return; it is evidence of the intended test outcome.</td>
+</tr>
+<tr class="odd">
+<td>Native observation</td>
+<td>What the pinned STACK/Maxima run actually returns. This is not automatically a mathematical proof.</td>
+</tr>
+<tr class="even">
+<td>Port behavior</td>
+<td>What the bounded SymPy implementation returns or explicitly declines to support.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Documented convention</strong> means that a STACK source explicitly prescribes a behavior. <strong>Observed behavior</strong> records an implementation result. <strong>Proof or normalization limit</strong> means that a test does not establish an equality. <strong>Port boundary</strong> means that this implementation deliberately rejects an input or operation it cannot preserve. An engineering explanation is labeled as such; it does not turn an observation into an explicit convention.</p>
+<p>The collection trace below uses Maxima <strong>5.46.0</strong>, the pinned STACK revision above, port revision <code>1e72245874bfea49836e58ba48dcee30af5ee0ba</code>, and SymPy <strong>1.13.3</strong>. The report remains about the bounded CAS adapter, not all Moodle controller or question-state behavior.</p>
+</section>
+<section id="implemented-scalar-and-written-form-behavior" class="level2">
+<h2 class="anchored" data-anchor-id="implemented-scalar-and-written-form-behavior">Implemented scalar and written-form behavior</h2>
 <section id="written-form-cases-645-647-658-665-and-2278" class="level3">
 <h3 class="anchored" data-anchor-id="written-form-cases-645-647-658-665-and-2278">Written form: cases 645, 647, 658, 665 and 2278</h3>
+<p><strong>Evidence:</strong> documented written-form contract and observed native fraction handling.</p>
 <p><code>EqualComAss</code> checks more than mathematical value. STACK’s <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Rule_based.md">rule-based test documentation</a> explains that division is held as a numerator multiplied by an opaque reciprocal. The port now preserves that structure:</p>
 <table class="caption-top table">
 <colgroup>
@@ -246,6 +327,7 @@ window.Quarto = {
 </section>
 <section id="floating-point-constants-cases-32-37-and-43" class="level3">
 <h3 class="anchored" data-anchor-id="floating-point-constants-cases-32-37-and-43">Floating-point constants: cases 32, 37 and 43</h3>
+<p><strong>Evidence:</strong> observed native arithmetic, documented floating-point context, and bounded port emulation.</p>
 <p>STACK’s <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Numerical_rounding.md">numerical-rounding documentation</a> describes binary floating-point artifacts and recommends numerical tests for approximate answers. The port reproduces the following literal-constant cases with finite binary64 arithmetic and exact equality of the resulting machine values:</p>
 <table class="caption-top table">
 <colgroup>
@@ -283,10 +365,12 @@ window.Quarto = {
 </section>
 <section id="reciprocal-square-roots-case-80" class="level3">
 <h3 class="anchored" data-anchor-id="reciprocal-square-roots-case-80">Reciprocal square roots: case 80</h3>
+<p><strong>Evidence:</strong> an explicit STACK convention, reproduced within a stated port boundary.</p>
 <p>The <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Installation/index.md">installation notes</a> explicitly require <code>1/sqrt(x)</code> and <code>sqrt(1/x)</code> to count as equivalent, while acknowledging the domain debate. The port now implements that symbolic convention for a top-level reciprocal square root of a <strong>single symbol</strong>. It does not propagate the convention into logarithms, larger products, or ratios. This is a documented STACK compatibility rule, not a general principal-complex identity: at a negative real value the two principal values have opposite signs. Explicit numeric inputs such as <code>1/sqrt(-1)</code> and <code>sqrt(1/(-1))</code> remain distinct. Ratios, arbitrary root products, and nested powers are not forced into the same convention.</p>
 </section>
 <section id="principal-logarithmic-powers-case-166" class="level3">
 <h3 class="anchored" data-anchor-id="principal-logarithmic-powers-case-166">Principal logarithmic powers: case 166</h3>
+<p><strong>Evidence:</strong> a mathematical proof implemented in the port; no case-specific published STACK rationale was located.</p>
 <p>For nonzero <code>x,y</code>, principal powers give</p>
 <p><span class="math display">\[x^{\log y}=\exp(\log y\,\log x)=\exp(\log x\,\log y)=y^{\log x}.\]</span></p>
 <p>The port now certifies this through bounded exponential rewriting, a strategy also used in <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180">STACK’s equivalence routine</a>. This proof is our mathematical explanation; we did not locate a published STACK rationale for this particular row. It does not expand a logarithm of a product and does not require positive-real assumptions. The earlier description of this case as requiring a different branch convention was too conservative.</p>
@@ -378,12 +462,12 @@ window.Quarto = {
 </section>
 <section id="reading-the-report" class="level2">
 <h2 class="anchored" data-anchor-id="reading-the-report">Reading the report</h2>
-<p>The remaining ten observations stay case-pinned in the checker policy. The report distinguishes <strong>Domain/branch difference</strong> from <strong>Unproved identity</strong> and shows each case’s explanation, evidence, source links, and question for STACK. Changing a label does not turn a difference into a compatibility pass. Any changed result invalidates its old exception and must be reviewed.</p>
+<p>The eight domain/branch cases and two exact-proof cases above remain case-pinned in the checker policy. Collection normalization differences below are additional observations. The report separates <strong>Domain/branch difference</strong> from <strong>Unproved identity</strong>, with explanations, evidence, source links, and questions for STACK. A changed label does not turn a disagreement into a compatibility pass; a changed result invalidates its old exception and must be reviewed.</p>
 </section>
 <section id="finite-sets" class="level2">
-<h2 class="anchored" data-anchor-id="finite-sets">Finite sets</h2>
-<p>STACK explicitly distinguishes list and set comparison in its <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md">equivalence documentation</a>. Lists compare corresponding entries with <code>AlgEquiv</code>. Sets compare members after preparation, rather than running scalar <code>AlgEquiv</code> on every possible pairing. This avoids an expensive matching search and makes canonical forms material. The separate <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Other.md"><code>Sets</code> test</a> provides duplicate, extra, and missing-entry feedback. The port preserves submitted repetitions until this test runs. Feedback wording is brief English; full localized STACK feedback and exact ordinary notes are not claimed compatible.</p>
-<p>The port uses SymPy’s scalar canonical forms. It does not use general scalar proofs to match set members: <code>{(x+1)^2}</code> and <code>{x^2+2*x+1}</code> remain distinct. A bounded rational multiple of <code>exp(i*pi*q)</code> can use its exact rectangular form. The port does not expand trigonometric set members: both native set tests reject <code>{sin(x)^2+cos(x)^2}</code> against <code>{1}</code>, while a scalar/list <code>AlgEquiv</code> proof accepts the corresponding scalar identity. Rectangular constant conversion is limited to <code>AlgEquiv</code>; <code>Sets</code> retains structural scalar members.</p>
+<h2 class="anchored" data-anchor-id="finite-sets">Finite lists and sets</h2>
+<section id="which-equality-is-being-tested" class="level3">
+<h3 class="anchored" data-anchor-id="which-equality-is-being-tested">Which equality is being tested?</h3>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -392,45 +476,418 @@ window.Quarto = {
 </colgroup>
 <thead>
 <tr class="header">
+<th>Test and objects</th>
+<th>Native comparison route</th>
+<th>Current port contract</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AlgEquiv</code>, lists</td>
+<td>Recursively compare corresponding entries with <code>AlgEquiv</code>.</td>
+<td>The same ordered recursive contract for supported leaves.</td>
+</tr>
+<tr class="even">
+<td><code>AlgEquiv</code>, sets</td>
+<td>Prepare members with <code>ATSets_prepare</code>, then compare set membership.</td>
+<td>Compare structural SymPy members, with bounded exact rectangular conversion for certain numeric complex constants.</td>
+</tr>
+<tr class="odd">
+<td><code>Sets</code></td>
+<td>Related set preparation, with duplicate, extra- and missing-entry feedback.</td>
+<td>Structural member comparison and outer duplicate feedback; no full scalar-proof matching.</td>
+</tr>
+<tr class="even">
+<td><code>EqualComAss</code></td>
+<td>A written-form contract, after applicability/equivalence checks.</td>
+<td>Preserve written arithmetic, list order and set multiplicity within the supported held-form subset.</td>
+</tr>
+<tr class="odd">
+<td><code>SameType</code></td>
+<td>Uses <code>ATAlgEquivfun</code> applicability at this pin.</td>
+<td>Reproduces that applicability behavior; it is not a strict nested-shape validator.</td>
+</tr>
+</tbody>
+</table>
+<p>The pinned <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac#L1667-L1734">set routines</a> do not run the full scalar <code>algebraic_equivalence</code> routine on every candidate pair. STACK’s <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md">equivalence documentation</a> explains the canonical-representation strategy and the risk of expression growth from stronger generic transformations. This is a documented engineering tradeoff, not a claim that differently represented members must be mathematically unequal.</p>
+<p>The port uses its own SymPy normalization, not an emulation of every intermediate Maxima form. For example, it keeps <code>{(x+1)^2}</code> distinct from <code>{x^2+2*x+1}</code> under structural set comparison. Its bounded rational multiple of <code>exp(i*pi*q)</code> can use exact rectangular form under <code>AlgEquiv</code>; this conversion is not applied by <code>Sets</code>. Agreement on selected results does not establish identical normalization.</p>
+</section>
+<section id="trig-set-identity" class="level3">
+<h3 class="anchored" data-anchor-id="trig-set-identity">A trigonometric identity inside a set</h3>
+<p><strong>Mathematics.</strong> <code>sin(x)^2+cos(x)^2=1</code>, so the two singleton sets denote the same set. There is no domain/branch counterexample behind the rejection discussed here.</p>
+<p><strong>Observed results.</strong> Direct probes of the pinned native and port versions give:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Comparison</th>
+<th>Native STACK</th>
+<th>Port</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Scalar <code>AlgEquiv</code>: <code>sin(x)^2+cos(x)^2</code> / <code>1</code></td>
+<td>Accept</td>
+<td>Accept</td>
+</tr>
+<tr class="even">
+<td>List <code>AlgEquiv</code>: <code>[sin(x)^2+cos(x)^2]</code> / <code>[1]</code></td>
+<td>Accept</td>
+<td>Accept</td>
+</tr>
+<tr class="odd">
+<td>Set <code>AlgEquiv</code>: <code>{sin(x)^2+cos(x)^2}</code> / <code>{1}</code></td>
+<td>Reject</td>
+<td>Reject</td>
+</tr>
+<tr class="even">
+<td><code>Sets</code>: <code>{sin(x)^2+cos(x)^2}</code> / <code>{1}</code></td>
+<td>Reject</td>
+<td>Reject</td>
+</tr>
+</tbody>
+</table>
+<p>These set rejections have CAS applicability <code>true</code>; they are not syntax errors. The project controls <code>port-list-equivalence</code>, <code>port-set-trig-structural</code>, and <code>port-sets-trig</code> separately record the list/set results and Python/Pyodide parity.</p>
+<p><strong>What native preparation actually does.</strong> The source calls:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode maxima code-with-copy"><code class="sourceCode maxima"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cn">ATSets_prepare</span>(<span class="cn">S</span>) :=</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ev</span>(<span class="fu">map</span>(<span class="fu">lambda</span>([<span class="cn">ex</span>], <span class="cn">ineqprepare</span>(<span class="fu">trigreduce</span>(<span class="cn">ex</span>))), <span class="cn">S</span>), <span class="cn">simp</span>)$</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>For <code>p:sin(x)^2+cos(x)^2</code>, the trace is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Stage</th>
+<th>Native result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>trigreduce(p)</code></td>
+<td><code>(cos(2*x)+1)/2 + (1-cos(2*x))/2</code></td>
+</tr>
+<tr class="even">
+<td><code>ineqprepare(trigreduce(p))</code></td>
+<td>The same two-fraction sum.</td>
+</tr>
+<tr class="odd">
+<td>Ordinary <code>ev(...,simp)</code> in set preparation</td>
+<td>The same two-fraction sum.</td>
+</tr>
+<tr class="even">
+<td><code>ATSets_prepare({p})</code></td>
+<td><code>{(cos(2*x)+1)/2 + (1-cos(2*x))/2}</code></td>
+</tr>
+<tr class="odd">
+<td><code>ATSets_prepare({1})</code></td>
+<td><code>{1}</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>trigreduce</code> has performed a trigonometric transformation: it rewrites squared sine and cosine using double angles. It has <strong>not</strong> completed the rational arithmetic that combines the two fractions. Ordinary simplification in this pipeline leaves them separate, and the subsequent membership comparison does not invoke the stronger scalar equivalence test to bridge that gap.</p>
+<p>Further native probes establish the missing step:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode maxima code-with-copy"><code class="sourceCode maxima"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ratsimp</span>(<span class="fu">trigreduce</span>(<span class="cn">p</span>));             <span class="co">/* 1 */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">expand</span>(<span class="fu">trigreduce</span>(<span class="cn">p</span>));              <span class="co">/* 1 */</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">trigsimp</span>(<span class="cn">p</span>);                       <span class="co">/* 1 */</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ratsimp</span>(<span class="cn">ATSets_prepare</span>({<span class="cn">p</span>}));       <span class="co">/* {1} */</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Comparing the prepared member to <code>1</code> using scalar <code>AlgEquiv</code> accepts. Applying <code>ratsimp</code> to the prepared set before either set answer test also changes rejection to acceptance. These are native-CAS probes, not claims that all those author functions are exposed by the port.</p>
+<p><strong>How the port differs internally.</strong> The port’s prepared submitted set remains <code>{sin(x)^2+cos(x)^2}</code>; its reference is <code>{1}</code>. It does not perform the native half-angle rewrite here, and it does not use its scalar identity prover to match set members. Thus it reaches the same rejection through a different intermediate representation. Scalar and list <code>AlgEquiv</code> use its stronger proof path and accept.</p>
+<p><strong>Classification and rationale.</strong> This is a set-normalization/proof limit, not an explicit convention that trigonometric identities cease to hold in sets. STACK’s <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Other.md"><code>Sets</code> documentation</a> says that authors should preprocess arguments when stronger trig simplification is needed. Its broader documentation explains why automatically applying stronger transformations to all set members can be too costly. Neither source establishes that this particular simple rejection was intentionally selected as a convention.</p>
+<p><strong>Question for STACK:</strong> is author-side preprocessing the intended contract for this pair, or should bounded set-member preparation establish the identity? A stronger matching mode in the port would be an explicit behavior change, rather than evidence that the existing native set test already performs that matching.</p>
+</section>
+<section id="stronger-set-matching" class="level3">
+<h3 class="anchored" data-anchor-id="stronger-set-matching">Proposed stronger set-member matching</h3>
+<p><strong>Status and scope.</strong> This is a design proposal, not current port behavior or a claim about native STACK. For bounded flat sets of the scalar expressions already supported, a stronger checker would be a small-to-medium feature rather than a rewrite. The matching algorithm is straightforward; specifying reliable grading and feedback takes more care. Supporting nested collections and predictable computation limits broadens that work. Any stronger mode would need an explicit contract because accepting additional identities changes compatibility with the native set tests described above.</p>
+<p>Once duplicate semantics are resolved, the comparison could proceed as follows:</p>
+<ol type="1">
+<li>Recognize structurally identical members cheaply and cache those successful comparisons.</li>
+<li>Compare remaining candidate pairs using the existing scalar <code>AlgEquiv</code> proof path, under the same domain assumptions. Record proved equal, proved unequal where available, and inconclusive separately. Failure to find a proof is not itself proof of inequality.</li>
+<li>Build a bipartite graph whose edges are certified equal pairs, then find a complete matching with a standard polynomial-time algorithm. This does not require factorial permutation search. Structural matches provide the fast path; the final matcher must be able to reassign tentative pairings rather than commit greedily to the first available candidate.</li>
+</ol>
+<p>For two flat sets with 32 members each, there are at most <strong>1,024 cross-set candidate pairs</strong>. This bounds that comparison phase, not total work: comparing members within each set to resolve algebraic duplicates adds comparisons, and nested comparisons recurse. A single symbolic proof can also be expensive. Symbolic proof work, rather than graph matching, is therefore the principal runtime concern. Cached results and limits on proof work, expression growth and total recursive comparisons would be part of the design; the pair count alone does not guarantee a response time.</p>
+<p>The grading contract needs four further decisions:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Issue</th>
+<th>Required behavior or decision</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Algebraic duplicates</td>
+<td><code>{sin(x)^2+cos(x)^2,1}</code> denotes the same mathematical set as <code>{1}</code>. A bijection over the raw submitted entries would wrongly reject it. Decide how certified equal members form duplicate classes before testing cardinality or matching, while retaining original entries for <code>Sets</code> duplicate feedback. Incomplete proofs can leave those classes unresolved.</td>
+</tr>
+<tr class="even">
+<td>Nested collections</td>
+<td>Lists remain ordered and compare corresponding entries; sets use the stronger unordered comparison recursively. Preserve list/set type and nesting boundaries. Existing size/depth bounds still apply, with a shared budget across the whole comparison tree.</td>
+</tr>
+<tr class="odd">
+<td>Inconclusive results</td>
+<td>Budget exhaustion or an unproved candidate must remain distinguishable from established inequality. Accept only when the necessary equality certificates exist. An unresolved comparison must not be presented as a mathematical counterexample or definitive extra/missing-member explanation.</td>
+</tr>
+<tr class="even">
+<td>Written form</td>
+<td><code>EqualComAss</code> keeps its separate contract: written arithmetic and repeated set entries still matter. A stronger algebraic check could satisfy its equivalence prerequisite, but must not replace its held-form comparison or erase submitted form.</td>
+</tr>
+</tbody>
+</table>
+<p>For <code>Sets</code>, deterministic matching and retained submission provenance would also be needed for useful feedback when several pairings are possible. Missing/extra diagnostics should explain the checker outcome without overstating what an incomplete proof established. A first implementation could target flat exact scalar sets, followed by recursive collections and richer feedback under the same explicitly stated semantics.</p>
+<p>Adding <code>ratsimp</code> to preparation would address the traced trig example, but that is a narrower normalization improvement. It would neither implement general scalar-proof matching nor settle duplicates, recursive behavior or proof limits.</p>
+</section>
+<section id="exact-constants-mathematical-equality-versus-compatibility" class="level3">
+<h3 class="anchored" data-anchor-id="exact-constants-mathematical-equality-versus-compatibility">Exact constants: mathematical equality versus compatibility</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
 <th>Case</th>
-<th>Observation</th>
-<th>Interpretation</th>
+<th>Mathematically equal?</th>
+<th>Fixture expects</th>
+<th>Pinned native</th>
+<th>Port</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>201</td>
-<td><code>{-sqrt(2)/sqrt(3)}</code> and <code>{-2/sqrt(6)}</code> have the same SymPy canonical member.</td>
-<td>Upstream marks this a desired acceptance (<code>-3</code>); the pinned native test rejects it. This is recorded separately as a known native mathematical failure.</td>
+<td>Yes</td>
+<td>Accept (<code>-3</code>)</td>
+<td>Reject</td>
+<td>Accept</td>
 </tr>
 <tr class="even">
-<td>203</td>
-<td><code>{5/4*exp(i*pi/6)}</code> and <code>{5*sqrt(3)/8+5*i/8}</code> have identical rectangular members.</td>
-<td>Also a desired acceptance (<code>-3</code>) distinguished from native rejection.</td>
+<td>202</td>
+<td>Yes</td>
+<td>Accept (<code>-3</code>)</td>
+<td>Reject</td>
+<td>Accept</td>
 </tr>
 <tr class="odd">
+<td>203</td>
+<td>Yes</td>
+<td>Accept (<code>-3</code>)</td>
+<td>Reject</td>
+<td>Accept</td>
+</tr>
+<tr class="even">
 <td>212</td>
-<td><code>{(2-2^(5/2))/2,(2^(5/2)+2)/2}</code> and <code>{1-2^(3/2),2^(3/2)+1}</code> collapse to the same SymPy members.</td>
-<td>Upstream expects rejection (<code>0</code>), and Maxima keeps distinct prepared forms. The port accepts; this remains an explicitly counted known port difference, <strong>not a compatibility pass</strong>.</td>
+<td>Yes</td>
+<td>Reject (<code>0</code>)</td>
+<td>Reject</td>
+<td>Accept</td>
 </tr>
 </tbody>
 </table>
-<p>For case 212, <code>2^(5/2)/2 = 2^(3/2)</code> for these positive numeric constants. The disagreement is about set normalization, not a disputed complex identity. <strong>Question for STACK:</strong> should the port preserve Maxima’s normalization artifacts, or use its own canonical scalar members? A faithful Maxima-form emulation would need held member provenance before SymPy canonicalization. No one-off expression exception is used. Nested collections now use the same structural set rules recursively.</p>
-<section id="nested-structure-form-and-applicability" class="level3">
-<h3 class="anchored" data-anchor-id="nested-structure-form-and-applicability">Nested structure, form and applicability</h3>
-<p>Lists recurse through <code>AlgEquiv</code> at corresponding positions. Sets compare prepared structural members, including lists with their original order and nested sets with their own boundaries. The port does not flatten <code>{1,{2}}</code> into <code>{1,2}</code>. <code>Sets</code> reports duplicates in the submitted <strong>outer</strong> set: <code>{1,1}</code> against <code>{1}</code> is correct without an outer duplicate warning, whereas <code>{{1},{1}}</code> does warn. The documented scalar-normalization difference also affects nested radical pairs in legacy row <strong>202</strong>: the desired score is <code>-3</code>, Python accepts, and pinned native STACK rejects. It is recorded as a known native mathematical failure, separate from row 212’s known port normalization difference.</p>
-<p><a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Rule_based.md"><code>EqualComAss</code> documentation</a> explicitly gives <code>{4,4}</code> versus <code>{4}</code> as different held forms. Set constructor arguments commute but do not associate or lose multiplicity. The port checks applicability and algebraic equality before comparing those held forms. Thus reordered <code>{1,2,2}</code> / <code>{2,1,2}</code> passes, while <code>{4,4}</code> / <code>{4}</code> fails form even though its algebraic set value agrees. Nested list order still matters.</p>
-<p><code>SameType</code> uses the applicability flag from <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac">ATAlgEquivfun / ATSameTypefun</a>. That deliberately means <code>[1,[2]]</code> / <code>[9]</code> has the same type (the list-length path is applicable), and <code>{[1,2]}</code> / <code>{1,2}</code> has the same type (set comparison is applicable). <code>[1,[2]]</code> / <code>[9,{3}]</code> does not. <code>checkanswertype</code> follows this rule; author questions must use an equality test to judge content.</p>
+<ul>
+<li><strong>201:</strong> <code>{-sqrt(2)/sqrt(3)}</code> / <code>{-2/sqrt(6)}</code>. SymPy gives the members the same canonical value. STACK’s documentation explicitly describes this pair as a canonicalization limitation and recommends author-side <code>radcan</code> when appropriate; blanket use risks expression growth.</li>
+<li><strong>202:</strong> <code>{[-sqrt(2)/sqrt(3),0],[2/sqrt(6),0]}</code> / <code>{[2/sqrt(6),0],[-2/sqrt(6),0]}</code>. This is the related radical equality inside list members of a set, not a disputed complex branch identity.</li>
+<li><strong>203:</strong> <code>{5/4*exp(i*pi/6)}</code> / <code>{5*sqrt(3)/8+5*i/8}</code>. The port’s bounded rectangular conversion establishes the exact equality.</li>
+<li><strong>212:</strong> <code>{(2-2^(5/2))/2,(2^(5/2)+2)/2}</code> / <code>{1-2^(3/2),2^(3/2)+1}</code>. For these positive constants, <code>2^(5/2)/2=2^(3/2)</code>, and SymPy canonicalizes the corresponding members.</li>
+</ul>
+<p>Cases 201–203 are recorded on the separate compatibility axis as <code>known_native_mathematical_failure</code>: the native result misses the desired exact mathematical equality. Case 212 remains a counted <strong>known port normalization difference</strong>, not a native-compatibility pass, because its fixture and native comparison require rejection. Mathematical equality and compatibility status are separate statements in all four rows.</p>
+<p><strong>Question for STACK:</strong> is row 212’s expected rejection intended to assert prepared-form behavior, and what normalization should authors expect for mathematically equal set members?</p>
+<p><strong>Port design decision:</strong> preserving Maxima’s prepared-form distinctions versus using SymPy’s canonical members is a compatibility policy for this project. Faithful emulation for 212 would require held member provenance before SymPy canonicalization. There is no expression-specific grading exception for these cases.</p>
 </section>
-<section id="author-helpers-and-held-calls" class="level3">
-<h3 class="anchored" data-anchor-id="author-helpers-and-held-calls">Author helpers and held calls</h3>
-<p>Decimal set members require a separate boundary. Pinned native STACK rejects <code>{1/10}</code> versus <code>{0.1}</code> and even <code>{1/2}</code> versus <code>{0.5}</code> under both <code>AlgEquiv</code> and <code>Sets</code>: native floating members retain their numeric type, while this evaluator parses decimal tokens as exact rationals. It therefore rejects decimal literals anywhere below a set, including nested lists within that set. Use exact fractions. Direct list scalar comparisons such as <code>[1/10]</code> versus <code>[0.1]</code> still pass through the scalar literal binary64 path. Frozen collection/helper expressions also reject transitive decimal-valued author aliases, including in qtests and CASText. Collection <code>sans</code> must directly name a learner input; feedback aliases and derived learner collections are unsupported because reserialization loses that literal precision. For example, <code>[100.4-80.0]</code> versus <code>[20.4]</code> is false on the literal path but would become true if the first value were frozen as <code>[102/5]</code>. Decimal list leaves are limited to the literal constant arithmetic supported by that binary64 path: numbers, unary signs, arithmetic and bounded integer powers. Native STACK rejects <code>[sin(0.1)]</code> versus <code>[sin(1/10)]</code>, <code>[sqrt(0.5)]</code> versus <code>[sqrt(1/2)]</code> and <code>[20.4]</code> versus <code>ev([100.4-80.0],simp)</code>. Exact rational evaluation would incorrectly accept these, so decimal-bearing functions, symbolic leaves and transformed collections fail clearly. Exact-fraction versions remain supported.</p>
-<p>Finite author helpers run with normal simplification and freeze their evaluated values into variants. Lists/sets of supported scalars can use <code>set</code>, <code>setify</code>, <code>union</code>, <code>intersection</code>, <code>setdifference</code>, <code>member</code>, <code>subsetp</code> and <code>cardinality</code>; <code>listify</code> only sorts rational scalar sets, or keeps an existing list unchanged. The complete tree and output are bounded, and decimal helper arguments are rejected in favor of exact fractions. Learner helper calls are unsupported.</p>
-<p>This boundary is deliberate. Pinned native probes show that with <code>simp:false</code>, <code>setify([1,1])</code> keeps held repetitions, <code>listify({2,1})</code> keeps written order, and membership can distinguish <code>[x+x]</code> from <code>[2*x]</code>. Set intersection/difference can also depend on held set ordering. The port does not imitate that general held CAS execution: direct helper calls for <code>Sets</code>/<code>EqualComAss</code>, helper feedback variables and helper calls with question simplification off fail clearly. Simplified frozen helper values remain usable by those checks.</p>
-<p>Ordinary feedback and answer-test notes are abbreviated: negative list results do not reproduce STACK’s full nested index/reason note, and <code>EqualComAss</code> does not reproduce every native internal note. Authored PRT branch notes and their ordered qtest expectations are preserved. No Moodle/PHP controller parity is inferred from these bounded CAS and browser checks.</p>
+<section id="nested-structure-and-duplicate-scope" class="level3">
+<h3 class="anchored" data-anchor-id="nested-structure-and-duplicate-scope">Nested structure and duplicate scope</h3>
+<p>Lists retain order and repetitions. Nested sets keep their boundaries and use structural normalization recursively; <code>{1,{2}}</code> is not flattened to <code>{1,2}</code>. Lists inside sets retain list order. The port preserves submitted repetitions until the relevant test runs.</p>
+<p><code>Sets</code> duplicate feedback concerns the submitted <strong>outer</strong> set:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Submitted / reference</th>
+<th>Result under <code>Sets</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>{1,1}</code> / <code>{1}</code></td>
+<td>Correct; no outer duplicate warning.</td>
+</tr>
+<tr class="even">
+<td><code>{{1},{1}}</code> / <code>{1}</code></td>
+<td>Correct, with an outer duplicate warning.</td>
+</tr>
+</tbody>
+</table>
+<p>This describes the scope of duplicate feedback, not a general promise to report every repeated leaf in a nested collection.</p>
+</section>
+<section id="written-form-is-an-explicit-separate-contract" class="level3">
+<h3 class="anchored" data-anchor-id="written-form-is-an-explicit-separate-contract">Written form is an explicit separate contract</h3>
+<p><a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Rule_based.md"><code>EqualComAss</code> documentation</a> explicitly distinguishes <code>{4,4}</code> from <code>{4}</code> as held written forms. Set arguments commute but do not associate, lose multiplicity or flatten nested set boundaries. Thus reordered <code>{1,2,2}</code> / <code>{2,1,2}</code> passes, while <code>{4,4}</code> / <code>{4}</code> fails the form check even though their mathematical set values agree. Nested list order matters.</p>
+<p>The port checks applicability and algebraic equality before held form. This is a purposeful form-sensitive contract, unlike an unsuccessful proof of ordinary set-value equality in the trig example. Frozen teacher/qtest aliases that would lose the required written form fail at build time; this is a port preservation boundary, not a native prohibition on those aliases.</p>
+</section>
+<section id="type-applicability-is-observed-implementation-behavior" class="level3">
+<h3 class="anchored" data-anchor-id="type-applicability-is-observed-implementation-behavior">Type applicability is observed implementation behavior</h3>
+<p>At this pin, <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac"><code>ATSameTypefun</code></a> uses the applicability flag from <code>ATAlgEquivfun</code>. The port follows that behavior:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Pair</th>
+<th><code>SameType</code> result and implementation reason</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>[1,[2]]</code> / <code>[9]</code></td>
+<td>True: the unequal-list-length path is still applicable.</td>
+</tr>
+<tr class="even">
+<td><code>[1,[2]]</code> / <code>[9,{3}]</code></td>
+<td>False: equal-length lists recurse to different member types.</td>
+</tr>
+<tr class="odd">
+<td><code>{[1,2]}</code> / <code>{1,2}</code></td>
+<td>True: set/set comparison is applicable regardless of member types.</td>
+</tr>
+</tbody>
+</table>
+<p>These results are observations of the pinned predicate, not a mathematical definition of nested type or a strict shape-equality guarantee. Collection input <code>checkanswertype</code> follows the same rule. An equality test is still needed for content.</p>
+</section>
+</section>
+<section id="decimal-precision-native-observations-and-port-boundaries" class="level2">
+<h2 class="anchored" data-anchor-id="decimal-precision-native-observations-and-port-boundaries">Decimal precision: native observations and port boundaries</h2>
+<p>The native observations below are distinct from the port’s decision to reject inputs whose precision provenance cannot be preserved.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Context</th>
+<th>Pinned native observation</th>
+<th>Port contract</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Set <code>{1/10}</code> / <code>{0.1}</code>, or <code>{1/2}</code> / <code>{0.5}</code></td>
+<td>Both set tests reject.</td>
+<td>Decimal literals anywhere below a set are unsupported; use exact fractions.</td>
+</tr>
+<tr class="even">
+<td>Direct list <code>[1/10]</code> / <code>[0.1]</code></td>
+<td>Scalar/list <code>AlgEquiv</code> accepts.</td>
+<td>Direct decimal list leaves use the bounded scalar binary64 path.</td>
+</tr>
+<tr class="odd">
+<td><code>[100.4-80.0]</code> / <code>[20.4]</code></td>
+<td><code>AlgEquiv</code> rejects.</td>
+<td>Retain literal arithmetic; freezing the first answer to <code>[102/5]</code> would change the result.</td>
+</tr>
+<tr class="even">
+<td><code>[sin(0.1)]</code> / <code>[sin(1/10)]</code>; <code>[sqrt(0.5)]</code> / <code>[sqrt(1/2)]</code></td>
+<td><code>AlgEquiv</code> rejects.</td>
+<td>Decimal-bearing function and symbolic list leaves are unsupported; use exact fractions.</td>
+</tr>
+<tr class="odd">
+<td><code>[20.4]</code> / <code>ev([100.4-80.0],simp)</code></td>
+<td><code>AlgEquiv</code> rejects.</td>
+<td>Decimal-bearing transformed collections are unsupported.</td>
+</tr>
+</tbody>
+</table>
+<p>The set results are consistent with native float/rational representations remaining distinct as prepared members. They do not establish that <code>{1/2}</code> and <code>{0.5}</code> are different mathematical sets: <code>0.5</code> is exactly representable in binary. The port parses decimal tokens as exact rationals, so it cannot simply reuse its structural member keys for all native floating cases and claim parity.</p>
+<p>The port therefore imposes these deliberate engineering limits:</p>
+<ul>
+<li>Decimal list leaves support literal constant arithmetic, unary signs, and bounded integer powers; decimal-bearing functions, symbolic leaves and author transforms require exact-fraction alternatives.</li>
+<li>Frozen collection/helper definitions reject transitive decimal-valued aliases, including their use in qtests and CASText. Learner collection answers referring to decimal-derived author aliases are rejected too.</li>
+<li>Dynamic collection <code>sans</code> must directly name the learner input. Collection feedback aliases and learner-dependent collection/helper construction are unsupported because serialization can lose the literal arithmetic.</li>
+</ul>
+<p>These restrictions concern the port’s representation and native compatibility; they are not claims that native STACK forbids the same author expressions.</p>
+</section>
+<section id="finite-author-helpers-and-held-execution" class="level2">
+<h2 class="anchored" data-anchor-id="finite-author-helpers-and-held-execution">Finite author helpers and held execution</h2>
+<p>Finite helpers are author-only in the port, with bounded input/output and normal simplification. Their results freeze into question variants:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Helpers</th>
+<th>Supported port inputs/results</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>set</code>, <code>setify</code></td>
+<td>Construct a finite set; <code>setify</code> takes a list.</td>
+</tr>
+<tr class="even">
+<td><code>union</code>, <code>intersection</code>, <code>setdifference</code>, <code>subsetp</code>, <code>cardinality</code></td>
+<td>Supported finite set operations within their arity/resource bounds.</td>
+</tr>
+<tr class="odd">
+<td><code>member</code></td>
+<td>Membership in a supported list or set.</td>
+</tr>
+<tr class="even">
+<td><code>listify</code></td>
+<td>Preserve an existing list, or numerically sort rational scalar set members. Symbolic/complex/nested set ordering is unsupported.</td>
+</tr>
+</tbody>
+</table>
+<p>This supported author path requires exact fractions rather than decimal helper arguments. Learners enter collection literals, not helper calls.</p>
+<p>The <code>simp:false</code> boundary is a port scope decision. Recorded pinned native probes show why merely reusing normally simplified operations would change held behavior:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Held native probe</th>
+<th>Observation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>setify([1,1])</code></td>
+<td>Keeps held repetitions.</td>
+</tr>
+<tr class="even">
+<td><code>listify({2,1})</code></td>
+<td>Keeps written order.</td>
+</tr>
+<tr class="odd">
+<td>Membership involving <code>[x+x]</code> and <code>[2*x]</code></td>
+<td>Can distinguish their held forms.</td>
+</tr>
+<tr class="even">
+<td>Intersection/difference of held sets</td>
+<td>Can depend on written ordering.</td>
+</tr>
+</tbody>
+</table>
+<p>The port does not emulate general held CAS execution. Helper feedback variables, helper calls with question simplification off, and direct helper calls in <code>Sets</code>/<code>EqualComAss</code> fail clearly. Simplified helper results frozen in question variables remain usable by those checks. Direct normal <code>AlgEquiv</code>/<code>SameType</code> author expressions can use the supported helpers subject to the same bounds.</p>
+</section>
+<section id="feedback-and-the-tested-layer" class="level2">
+<h2 class="anchored" data-anchor-id="feedback-and-the-tested-layer">Feedback and the tested layer</h2>
+<p>The port’s ordinary feedback is abbreviated English. Negative list results do not reproduce every native nested index/reason note, and <code>EqualComAss</code> does not reproduce every internal note. Full localized feedback and exact ordinary notes are not claimed compatible.</p>
+<p>Authored PRT branch notes and their ordered qtest expectations are preserved. Neither these bounded CAS checks nor Python/Pyodide agreement establishes full Moodle/PHP-controller, input-security, or attempt-state parity.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
