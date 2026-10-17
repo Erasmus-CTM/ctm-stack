@@ -1,6 +1,6 @@
 ---
 title: "More worked questions"
-subtitle: "Equivalent expressions and numerical answer tests"
+subtitle: "Expressions, numerical checks, and matrix questions"
 ai-feedback:
   page-policy:
     math-exercise: brief-mathematics
@@ -153,16 +153,109 @@ This unmodified STACK sample has multiple answer fields and checks decimal-place
 #| review: true
 ```
 
-## Bounded matrix input
+## Find a nonidentity matrix with determinant one
 
-```{#bounded-matrices .stack-question}
-#| file: questions/bounded-matrices.xml
-#| question: Bounded matrices
-#| variants: 2
+Enter **any integer $2\times2$ matrix with determinant 1, except the identity**.
+This adapts the [math-exercise matrix-constraint example](https://erasmus-ctm.github.io/math-exercise/custom-assessment.html).
+Each of the three conditions earns one third of the score: integer entries,
+determinant one, and nonidentity. You are finding a matrix that satisfies
+conditions, rather than copying a displayed model answer.
+
+```{#determinant-one .stack-question}
+#| file: questions/determinant-one.xml
+#| question: A nonidentity integer matrix with determinant one
+#| seed: 17
+#| review: true
+#| feedback: true
+#| context: none
+```
+
+[Download XML](questions/determinant-one.xml) · [Original source and conversion record](questions/determinant-example-provenance.json)
+
+**For STACK authors:** this keeps the source exercise’s three conditions and
+partial credit, using three normal response trees. The new Python-only
+`MatrixProperty` test checks each condition; the XML is not a drop-in native
+STACK question. In native STACK, author equivalent Maxima calculations and
+response-tree checks. See [Python answer tests](docs/python-answer-tests.qmd)
+for this distinction and [matrix input](docs/matrix-input.qmd) for input limits.
+
+## Matrix problems from INGMat 3A
+
+These three questions adapt Andrey Chesnokov’s [week 3, section 3.8](https://aacchhee.github.io/ingmat3a_ntnu/pages/uke3.html#uke3-stotte-oppgaver), licensed CC BY-SA 4.0. The original math-exercise blocks and exact source revision are in the [source record](questions/course-examples-provenance.json).
+
+### Rank and pivot columns: ordinary STACK answer tests
+
+This question uses `AlgEquiv` and two equally weighted response trees. The rank
+and the complete ordered pivot list each earn half the total. It shows the
+usual STACK grading structure; it does not use the basis helper.
+
+```{#course-b-rank-pivots .stack-question}
+#| file: questions/course-b-rank-pivots.xml
+#| question: Rank and pivot columns of B
 #| seed: 17
 #| review: true
 ```
 
-The editor preserves raw cell expressions. Validation interprets them through STACK
-SymPy; checking compares dimensions and every corresponding entry. Resizing requires
-validation again. No cell-level partial credit is inferred.
+[Download XML](questions/course-b-rank-pivots.xml)
+
+### A basis for the null space of B
+
+**Python extension: `IsBasis`.** Put one proposed basis vector in each column.
+A basis is not a unique matrix: changing a vector’s nonzero scale can still
+give a correct answer. Choose the number of columns before validating.
+
+```{#course-b-nullspace .stack-question}
+#| file: questions/course-b-nullspace.xml
+#| question: A basis for the null space of B
+#| seed: 17
+#| review: true
+```
+
+[Download XML](questions/course-b-nullspace.xml)
+
+### A basis for the null space of C
+
+**Python extension: `IsBasis`.** Here you may also reorder or mix the reference
+basis vectors, provided your columns remain independent and span the same
+null space. Entry-by-entry equality with one model matrix would reject many
+correct answers, so this question uses a basis test instead.
+
+```{#course-c-nullspace .stack-question}
+#| file: questions/course-c-nullspace.xml
+#| question: A basis for the null space of C
+#| seed: 17
+#| review: true
+```
+
+[Download XML](questions/course-c-nullspace.xml)
+
+For both basis questions, **green** means that the submitted nonzero columns
+are in the target space and form an independent family among the valid columns; red columns are excluded from that diagnostic independence check. A green family can
+still be incomplete. **Yellow** marks every column of a dependent valid family;
+column order never decides which vector gets the blame. **Red** marks a zero
+vector or one outside the target space. The complete answer receives credit
+only when it is a basis; colors do not award partial credit. Edits and resizing
+clear the colors and require validation again.
+
+The basis questions extend vanilla STACK: they keep the familiar XML inputs and
+PRTs but introduce a Python-only answer test. The resizable matrix input is
+also a port extension. Read [how the Python extension works, and what the XML
+means in native STACK](docs/python-answer-tests.qmd).
+
+
+## Custom Python checker {#custom-python-checker}
+
+An author module can define a new predicate without editing this extension.
+This example accepts any positive integer multiple of the displayed number.
+The XML chooses `PythonChecker`, the authored block selects its module, and
+the usual response tree awards credit. See the [version 1 API](docs/python-checker-api.qmd)
+for the callable contract, immutable values, tests and portability.
+
+```{.stack-question #python-multiple}
+#| file: questions/python-checker.xml
+#| question: A positive integer multiple (PythonChecker)
+#| python-checkers: questions/checkers.py
+#| variants: 3
+#| seed: 17
+#| review: true
+```

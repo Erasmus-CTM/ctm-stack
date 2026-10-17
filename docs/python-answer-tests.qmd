@@ -1,0 +1,206 @@
+---
+title: "Python matrix tests and vanilla STACK"
+subtitle: "How the port can extend vanilla STACK without disguising the difference"
+---
+
+## Why add a basis test?
+
+A basis is a set of building blocks for a vector space. Its vectors must belong
+to that space, be independent, and span the whole space. There is usually no
+single correct list of vectors. Multiplying a vector by a nonzero number,
+changing the order, or taking suitable combinations can produce another basis.
+
+`AlgEquiv` compares matrices by dimensions and corresponding entries. That is
+appropriate when a question asks for a particular matrix. It would reject many
+correct answers to “give any basis.” `IsBasis` asks a different mathematical
+question: **do these vectors form a basis for the same space as the reference?**
+
+The [worked questions](../examples.qmd#matrix-problems-from-ingmat-3a) adapt
+Andrey Chesnokov's INGMat 3A exercises. For the matrix
+
+$$C=\begin{pmatrix}1&2&3\\2&4&6\end{pmatrix},$$
+
+the null-space equation is $z_1+2z_2+3z_3=0$. A reference basis is
+
+$$T=\begin{pmatrix}-2&-3\\1&0\\0&1\end{pmatrix}.$$
+
+The columns $(-5,1,1)$ and $(-1,-1,1)$ also give a correct basis: both satisfy
+the equation and they are independent. Their entries do not match $T$, which
+is why this exercise needs a basis test rather than `AlgEquiv`.
+
+## How this extends vanilla STACK
+
+This is an intentional addition to the Python port, not a newly implemented
+native STACK answer test. A familiar file format need not mean an identical
+set of mathematical capabilities.
+
+| Part of the question | What happens here | Relationship to vanilla STACK |
+|---|---|---|
+| Question text, variables, inputs and PRTs | A Moodle-style STACK XML question describes the activity | The existing structure is retained |
+| `AlgEquiv` | Compares a matrix with its expected entries | An existing native answer-test name and compatibility target |
+| `MatrixProperty` | Tests exact integer-entry, determinant or identity conditions | A new Python-only name; three PRTs retain the determinant example’s three-part grading |
+| `IsBasis` | A registered Python function checks a submitted basis against a reference space | A new Python-only answer-test name; the XML requires this port |
+| Resizable matrix dimensions | The learner chooses the number of columns within author bounds | The explicit `<matrix>` configuration is also a port extension |
+| True/false response-tree branches | The chosen branch awards the authored score and feedback | The existing PRT mechanism is retained |
+| Vector colors | The helper explains membership and dependence | Optional presentation supplied by this implementation; it does not set scores |
+
+The `IsBasis` and `MatrixProperty` files are therefore **STACK-style XML for this Python port**, not
+drop-in vanilla STACK exports. Native STACK does not gain the Python checker by
+importing the XML. A native implementation would need an equivalent custom
+Maxima checker, together with compatible input configuration. The ordinary
+rank/pivot example uses native answer-test names, but its resizable input
+configuration still needs adapting for a native installation.
+
+This is a small example of how the port could develop its own Python features
+while continuing to read existing STACK questions. It does not rename or fork
+the project, or change the meaning of an existing native answer test. The
+official native compliance inventory and its supported scope remain unchanged;
+the new examples and tests provide separate evidence for the Python extension.
+
+## What the XML says
+
+The question author supplies one known basis as the teacher answer. With vectors
+in columns, a node looks like this:
+
+```xml
+<node>
+  <name>0</name>
+  <answertest>IsBasis</answertest>
+  <sans>ans</sans>
+  <tans>T</tans>
+  <testoptions>columns</testoptions>
+  <truescoremode>=</truescoremode><truescore>1</truescore>
+  <truenextnode>-1</truenextnode><trueanswernote>basis-T</trueanswernote>
+  <falsescoremode>=</falsescoremode><falsescore>0</falsescore>
+  <falsenextnode>-1</falsenextnode><falseanswernote>basis-F</falseanswernote>
+</node>
+```
+
+`ans` must name a matrix input directly. `T` must evaluate to an independent,
+nonempty reference basis. `columns` is the default; `rows` selects vectors
+stored in rows. These are fixed option names, not executable expressions.
+
+**The reference defines the target space.** `IsBasis` does not independently
+discover that it is a null space. The author must verify that $T$ is a basis
+for the space named in the prompt. The input’s own teacher answer must itself pass `IsBasis` against the reference;
+otherwise the build fails. This catches wrong model answers and input shapes
+that would make a correct basis impossible. Our example tests independently verify
+$BT=0$ or $CT=0$ and the expected dimensions. Giving the wrong reference would
+define the wrong target even if the checker itself worked perfectly.
+
+The test checks whether each nonzero submitted vector lies in the reference
+span and whether the submitted family is independent and complete. Permuting,
+rescaling or mixing vectors is allowed whenever these conditions still hold.
+Zero vectors, vectors outside the space, repeated/dependent vectors and
+incomplete families do not pass.
+
+`IsBasis` returns a true/false decision to the PRT. It does not bypass its
+branches. The reused helper also computes a fractional diagnostic score, but
+this port deliberately does **not** turn that number into partial credit. The
+examples award one point for a complete basis and zero otherwise. This is a
+documented change from the source math-exercise checkers.
+
+## Where the Python functionality lives
+
+The reusable `assess_basis` function comes from a pinned revision of
+`Erasmus-CTM/math-exercise`. Its function body is copied unchanged into
+`stack_sympy/basis_helper.py`, with the required imports added. The
+[provenance record](../questions/course-examples-provenance.json) identifies the
+course exercises; the helper's source revision, source hash, extracted-function
+hash, module hash and AGPL license are recorded separately in
+`vendor/basis-helper-provenance.json`. No upstream math-exercise refactor is
+needed for this extraction.
+
+`stack_sympy/python_tests.py` supplies the bounded adapter and registers the
+names `IsBasis` and `MatrixProperty`. XML selects that reviewed function by name. It cannot supply
+Python source, choose imports or name arbitrary modules. These built-in names keep their reviewed registry. For a new author-supplied
+predicate, use the [PythonChecker API](python-checker-api.qmd): select a trusted
+module explicitly in Quarto or the CLI, and name one of its `CHECKERS` entries
+in XML. XML itself contains neither Python source nor an import path.
+
+The same Python modules are bundled into the browser worker and used by local
+CPython. The UI does not contain a second mathematical checker. Validation
+checks syntax, dimensions and the allowed numeric domain; it does not disclose
+whether the vectors are a basis. Grading runs the PRT and then displays the
+helper's feedback and vector colors. Quiet PRT nodes suppress that diagnostic
+feedback and coloring.
+
+## What the colors mean
+
+| Color | Meaning |
+|---|---|
+| Green | This nonzero vector belongs to the space, and the complete locally valid submitted family is independent |
+| Yellow | This nonzero vector belongs to the space, but the locally valid family is dependent; every member of that family is yellow |
+| Red | This vector is zero or outside the target space |
+
+Green is not a promise that the whole answer is complete. For example, one
+valid column in a two-dimensional space is green but cannot form a basis of
+the whole space. With dependent columns, no vector is singled out just because
+it was entered last. Invalid vectors remain red while dependence is assessed
+among the valid ones. Text feedback accompanies the colors.
+
+Editing, resizing, resetting or changing variants clears the assessment and
+requires validation again. These colors explain a checked answer; they never
+award cell, row or column credit on their own.
+
+## Present limits and evidence
+
+The first version of the built-in `IsBasis` and `MatrixProperty` supports exact rational entries, written as integers or
+fractions with bounded arithmetic. Decimals, symbolic parameters, irrational and complex entries are
+rejected. Each rational numerator and denominator is limited to 256 bits.
+Every arithmetic step is bounded before the general evaluator runs; nested
+powers cannot construct arbitrarily large integers before rejection. Scalar
+function calls are outside this extension’s arithmetic grammar, even when a
+function could simplify to a rational value. Existing native scalar tests keep
+their own syntax and semantics.
+
+Existing matrix limits also apply: 1–16 rows and columns, at most 64 entries,
+and the bounded input grammar. These limits keep rank and membership checks
+exact and predictable rather than relying on numerical tolerances.
+
+The matrix editor currently requires positive dimensions. An empty basis for
+the zero space is therefore outside this first `IsBasis` input contract,
+although the underlying general helper understands empty families. Neither
+example asks for an empty basis.
+
+Authored XML tests include different correct bases and wrong, dependent,
+incomplete and zero submissions. Unit tests also cover row orientation,
+invalid references, bounds, input validation and PRT behavior. Browser tests
+exercise the actual worker, column colors, stale-result clearing and reset.
+These checks establish the Python behavior; they are not native STACK parity
+results for `IsBasis`.
+
+## MatrixProperty: preserve a custom exercise’s three conditions
+
+The determinant-one activity comes from math-exercise’s
+`custom-special-linear-matrix` example. It asks for an integer $2\times2$
+matrix with determinant 1, different from the identity. A single model answer
+is not enough: many different matrices satisfy those constraints.
+
+`MatrixProperty` exposes a small, reviewed vocabulary of exact checks:
+
+| `testoptions` | Teacher answer (`tans`) | What is compared |
+|---|---|---|
+| `integer_entries` | `true` or `false` | Whether every entry is an integer |
+| `determinant` | An exact rational number | The determinant of a square matrix |
+| `identity` | `true` or `false` | Whether the matrix is square and equal to the identity |
+
+The source checker gave one third for integer entries, one third for determinant
+1, and one third for being different from the identity. The XML adaptation
+retains that policy using three equally weighted PRTs with teacher values
+`true`, `1`, and `false`. Each PRT uses an ordinary true/false branch. For example,
+the identity earns two thirds but not full credit; a rational noninteger matrix
+with determinant 1 can also earn two thirds. The feedback identifies which
+condition still needs work. There is no inferred per-cell partial credit.
+
+This differs from the binary IsBasis examples: the property exercise awards
+credit for separate authored requirements, while each basis exercise asks for
+a complete basis. Both scoring policies are visible in the XML. Neither is
+invented by the matrix editor.
+
+Like IsBasis, MatrixProperty is Python-only. Native STACK authors could compute
+these properties with appropriate Maxima expressions and build equivalent PRTs,
+but importing this XML alone does not install a new native answer test. The
+input model answer must satisfy every MatrixProperty node too. General matrix
+arithmetic remains outside the expression parser; these registered checks do
+not enable arbitrary matrix code in question variables or learner input.

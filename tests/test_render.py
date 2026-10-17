@@ -53,7 +53,7 @@ def test_project_renders_cards_and_deployable_assets():
         asset = page.parent / scripts[0]
         assert asset.is_file(), asset
         for sibling in ("worker.js", "runtime-sources.js", "vendor/pyodide-runtime.js",
-                        "vendor/matrix-input-provenance.json"):
+                        "vendor/matrix-input-provenance.json", "vendor/basis-helper-provenance.json"):
             assert (asset.parent / sibling).is_file(), sibling
         # Quarto may flatten registered scripts/stylesheets. Follow the HTML
         # references rather than assuming dependency-resource paths for them.

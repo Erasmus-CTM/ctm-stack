@@ -1,0 +1,185 @@
+---
+title: "Author your own Python checker"
+subtitle: "PythonChecker API version 1"
+---
+
+`PythonChecker` lets an author add a Python predicate without modifying the
+extension's registry. It is a Python-port extension: importing its XML into
+Moodle does not install the checker in native STACK. Existing native answer
+tests and the 2,303-row native compatibility inventory keep their meanings.
+
+## A complete example
+
+The [positive-multiple exercise](../examples.qmd#custom-python-checker) accepts
+many correct values. Its trusted author module, `questions/checkers.py`, exports
+a dictionary of names and functions:
+
+```python
+def positive_multiple(student, teacher):
+    if student.is_Integer is not True:
+        return {"valid": False, "correct": False,
+                "feedback": "Enter an integer value."}
+    return bool(student > 0 and student % teacher == 0)
+
+CHECKERS = {"positive_multiple": positive_multiple}
+```
+
+The XML uses an ordinary response-tree node:
+
+```xml
+<answertest>PythonChecker</answertest>
+<sans>ans</sans>
+<tans>d</tans>
+<testoptions>positive_multiple</testoptions>
+```
+
+The node's ordinary true/false branches own its scores, feedback, notes and
+next-node choices. The checker cannot supply a score. `sans` must name a learner
+input directly. `tans` supplies a parsed teacher value or a frozen author value;
+it can provide parameters such as the divisor here. `testoptions` is a single,
+case-sensitive ASCII identifier, starting with a letter, followed by letters,
+digits or underscores, at most 64 characters. It is never code or a file path.
+
+Select the module explicitly in the authored Quarto block:
+
+```{.stack-question #docs-custom-multiple}
+#| file: ../questions/python-checker.xml
+#| question: A positive integer multiple (PythonChecker)
+#| python-checkers: ../questions/checkers.py
+#| variants: 3
+#| seed: 17
+#| review: true
+```
+
+Use **Show source** below the card to copy its authored block. Both paths are relative to the `.qmd` file. CLI paths are relative to the working
+directory; the same selection works for rendering and authored tests:
+
+```bash
+PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
+  --file questions/python-checker.xml --python-checkers questions/checkers.py
+```
+
+For Python callers, use `import_xml(xml_path, python_checkers=module_path)`.
+This attaches the source without executing it. Explicitly call
+`stack_sympy.checkers.preflight(question, variants)` to perform build checks;
+`grade()` and `run_question_tests()` execute the attached checker when visited.
+
+## Callable and value contract
+
+Each `CHECKERS` value must accept two positional arguments, `student` and
+`teacher`. Functions must complete synchronously. Coroutines, generators and
+asynchronous results are rejected. There is no raw answer string, mutable
+environment, context object or separate configuration argument in version 1.
+Use a named wrapper or a frozen structured `tans` value for parameters.
+
+Values have already passed the port's parser and input configuration. Both
+arguments use this immutable vocabulary from `stack_sympy.checker_api`:
+
+| Input value | Callback representation |
+|---|---|
+| Scalar | SymPy `Expr`, including symbolic, irrational and complex values |
+| Matrix | SymPy `ImmutableMatrix`, exported as `Matrix` |
+| List | `ListValue`; ordered members in `.args` |
+| Finite set | `SetValue`; submitted repetitions and order retained in `.args` |
+| Equation | `Equation`; left and right sides in `.args` |
+| Held logic | `Logical`; `.operator` and `.operands` |
+| Logical constants | SymPy `true` and `false` |
+
+`collection_items` is also exported for collection inspection. Mutable author
+lists are converted recursively. Matrices expose normal SymPy methods such as
+`.det()`, `.rank()` and `.shape`. Lists and sets stay distinct from matrices.
+Held equations and logic retain their structure and multiplicity; they are not
+automatically changed into simplifying SymPy Boolean expressions. This is a
+value API, without a promise to preserve the student's written arithmetic form.
+
+Unlike the built-in `IsBasis` and `MatrixProperty`, the general API does not
+impose an exact-rational-only matrix domain. A checker must explicitly decide
+which mathematical domain it accepts. Existing input shape, decimal provenance,
+collection and logical bounds still apply; the API does not expand the parser.
+Nonfinite arguments are rejected before invocation.
+
+## Results and feedback
+
+Return an actual Python `bool` for a valid true/false predicate, or a dictionary:
+
+```python
+{"valid": True, "correct": False, "feedback": "Try another value."}
+```
+
+`valid` and `correct` are required Python booleans. Integer truth values, SymPy
+boolean objects, unresolved relations, `None`, unknown keys, `score` and `note`
+are rejected. Use an explicit mathematical decision and convert a known Boolean
+with `bool(...)` where needed; never coerce an unresolved symbolic relation.
+`valid=False, correct=True` is an error.
+
+`valid=False` declares an input outside the checker's domain. Grading marks that
+input invalid and displays its diagnostic; it does not choose the false branch.
+A mathematically wrong answer in the supported domain should return
+`valid=True, correct=False` so the authored false branch runs.
+
+Optional `feedback` is plain text, at most 4,096 characters. HTML-looking text
+is shown literally. Authored branch feedback retains the existing sanitized
+CASText handling. The authored PRT branch notes, rather than a callback note,
+are what qtests compare. Quiet nodes suppress callback diagnostics.
+
+For a matrix, a valid result may also include one diagnostic axis:
+
+```python
+{"valid": True, "correct": False,
+ "assessment": {"columns": ["correct", "dependent"]}}
+```
+
+Use exactly one of `rows` or `columns`, with one status per submitted row or
+column. Statuses are `correct`, `incorrect` or `dependent`. Assessment is not
+allowed on invalid results. It controls optional editor diagnostics; it does
+not set `correct` or award credit. If multiple visited, nonquiet nodes supply
+assessment for an input, the last supplied assessment wins. Edits, resizing,
+reset and variant changes clear the displayed assessment.
+
+## Execution and author errors
+
+At build time, the selected file is read once and embedded as exactly
+`api_version`, `source` and `sha256` in the question payload. Version 1 accepts
+1–65,536 UTF-8 source bytes and at most 32 registry entries. Every execution
+verifies the version and digest. The digest records provenance, not trust.
+CPython and the browser worker execute the same embedded source; neither
+discovers a Python path from the XML or fetches a checker from the network.
+
+CLI build preflight checks every referenced identifier and signature, even on
+unreachable nodes. It then grades the model answers through each frozen
+variant's actual PRT paths. It requires valid, well-formed execution, without
+forcing every predicate true or requiring a total score of one. A diagnostic
+predicate can intentionally return false; later nodes may be guarded by earlier
+branches. Author qtests must assert the intended scores, alternate correct
+answers, wrong answers and important branches.
+
+`instantiate()` and **Validate answers** never load or execute custom Python,
+including module-level code. Validation checks the existing syntax and input
+rules; checker-specific domain diagnostics appear on **Check answer**.
+
+A fresh temporary module namespace is used for each invocation. Registry state
+is not shared between nodes, cards, variants, repeated checks or qtests. Author
+stdout/stderr is discarded so `print()` cannot corrupt CLI HTML/JSON. Checkers
+must be deterministic and must not mutate imported module state: fresh local
+namespaces cannot undo changes to shared imported modules.
+
+Syntax/import failures, missing identifiers, bad signatures, exceptions and
+malformed results are contextual author errors. They are never silently scored
+as a wrong answer. Use a deliberate invalid result for supported domain checks.
+
+## Portability and publication
+
+Author modules are trusted Python code, executed at build time and in the
+browser worker; this mechanism is not a sandbox. The source is public in the
+static page. Keep secrets and provider keys out of it. Use portable standard
+library code, the pinned SymPy version and documented bundled helpers. The API
+does not install packages, bundle local imports or provide server services.
+
+Existing browser worker timeouts terminate runaway grading. Ordinary CPython
+library calls have no automatic checker time limit, so build/test automation
+should apply its own process timeout. Parser bounds do not bound arbitrary
+author computation.
+
+AI Feedback receives the existing minimal status/score evidence, without the
+Python source, registry, teacher values or custom diagnostic messages. Generated
+question/source groups remain excluded from explicit context extraction.

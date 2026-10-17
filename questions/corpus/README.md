@@ -18,5 +18,6 @@ remain unchanged; the gallery names the authoring cause explicitly.
 
 `AlgMap-15.1` uses `{ta1,ta2}` as a set-valued answer and `elementp(?,ans)`
 in its response tree. Its opening `{` is valid ASCII Maxima syntax, rather than
-an encoding defect. It remains outside the scalar-input subset, with a specific
-set-support diagnostic; no XML sanitization is applied.
+an encoding defect. The set-valued answer is supported, but the `?` placeholder in this custom
+Maxima membership expression is outside the parser grammar. The question remains
+blocked for that explicit syntax reason; no XML sanitization is applied.

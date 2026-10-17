@@ -19,6 +19,161 @@ from test_render import ROOT, question_pages, render_site
 CORPUS = Path(__file__).resolve().parents[1] / "questions/corpus"
 
 
+def test_browser_python_checker_source_parity_feedback_and_card_isolation(browser_site):
+    """Author source executes in real Pyodide, separately for each card/call."""
+    from stack_sympy.engine import run_question_tests
+    with serve(browser_site) as url, sync_playwright() as pw:
+        options = {"headless": True}
+        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+            options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
+        browser = pw.chromium.launch(**options)
+        try:
+            page = browser.new_page()
+            errors = []
+            page.on('pageerror', lambda error: errors.append(str(error)))
+            page.goto(url + '/custom.html', wait_until='domcontentloaded')
+            card = page.locator('[data-stack-id="custom-multiple"]')
+            other = page.locator('[data-stack-id="custom-other"]')
+            payload = json.loads(card.locator('.stack-sympy-data').text_content())
+            divisor = int(payload['variants'][0]['env']['d'])
+
+            def check(item, answer, state):
+                item.locator('.stack-answer').fill(str(answer))
+                item.locator('.stack-validate').click()
+                item.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
+                item.locator('.stack-check').click()
+                item.locator(f'.stack-result[data-state="{state}"]').wait_for(timeout=180000)
+
+            check(card, divisor * 3, 'correct')
+            check(card, 'x', 'invalid')
+            assert 'Enter an integer value.' in card.inner_text()
+            assert card.locator('.stack-answer').get_attribute('aria-invalid') == 'true'
+            check(other, divisor + 1, 'correct')
+            assert '<b>Literal custom diagnostic</b>' in other.inner_text()
+            assert other.locator('.stack-prt-feedback b, .stack-feedback b').count() == 0
+            check(card, divisor + 1, 'retry')
+            check(other, divisor + 1, 'correct')  # fresh module globals on every call
+            check(card, divisor * 2, 'correct')
+            card.locator('.stack-tests').click()
+            card.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
+            assert 'All authored tests passed' in card.inner_text()
+            # Independently compare complete qtest results, not only UI labels.
+            actual = page.evaluate("""async payload => {
+              const script = [...document.scripts].find(x => x.src.includes('stack-sympy.js'));
+              const worker = new Worker(new URL('worker.js', script.src));
+              try {
+                return await new Promise((resolve, reject) => {
+                  const timer = setTimeout(() => reject(Error('Worker parity timeout')), 180000);
+                  worker.onmessage = event => { clearTimeout(timer); resolve(event.data); };
+                  worker.onerror = reject;
+                  worker.postMessage({id: 1, type:'tests', question:payload.question,
+                                      variant:payload.variants[0]});
+                });
+              } finally { worker.terminate(); }
+            }""", payload)
+            assert actual['ok'], actual
+            expected = run_question_tests(payload['question'], variants=[payload['variants'][0]])
+            assert actual['result'] == expected
+            # Custom source and diagnostics must not enter optional AI hints.
+            card.locator('.stack-feedback-button').click()
+            prompt = card.locator('.ai-feedback-prompt').inner_text()
+            for forbidden in ('CHECKERS', 'def positive_multiple', 'python_checkers',
+                              'Enter an integer value.', 'positive integer multiple of the given number.'):
+                assert forbidden not in prompt
+            card.locator('.stack-answer').fill('1')
+            assert card.locator('.stack-check').is_disabled()
+            card.locator('.stack-reset').click()
+            assert card.locator('.stack-answer').input_value() == ''
+            card.locator('.stack-variant').select_option('1')
+            assert card.locator('.stack-answer').input_value() == ''
+            assert not errors, errors
+        finally:
+            browser.close()
+
+
+def test_browser_python_basis_and_ordinary_matrix_questions(browser_site):
+    """Actual bundled Python tests, alternate bases, colors and stale state."""
+    with serve(browser_site) as url, sync_playwright() as pw:
+        options = {"headless": True}
+        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+            options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
+        browser = pw.chromium.launch(**options)
+        try:
+            page = browser.new_page()
+            errors = []
+            page.on("pageerror", lambda error: errors.append(str(error)))
+            page.goto(url + "/bases.html", wait_until="domcontentloaded")
+            card = page.locator('[data-stack-id="course-c-nullspace"]')
+            host = card.locator(".stack-matrix")
+            cells = host.locator("input[data-matrix-row]")
+
+            def fill(values):
+                assert cells.count() == len(values)
+                for cell, value in zip(cells.all(), values):
+                    cell.fill(str(value))
+
+            def check(expected):
+                card.locator(".stack-validate").click()
+                card.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
+                # Validation has not assessed basis correctness.
+                assert host.locator("input.math-input-ok, input.math-input-dependent, input.math-input-wrong").count() == 0
+                card.locator(".stack-check").click()
+                card.locator(f'.stack-result[data-state="{expected}"]').wait_for(timeout=180000)
+
+            fill([-2, 1, 0])  # independent but incomplete
+            check("retry")
+            assert host.locator("input.math-input-ok").count() == 3
+            assert "span" in card.locator(".stack-feedback").inner_text()
+            assert "%" not in card.locator(".stack-verdict").inner_text()
+            host.locator('[data-dynamic-action="add-col"]').click()
+            assert host.locator("input.math-input-ok").count() == 0
+            assert card.locator(".stack-check").is_disabled()
+            fill([-2, -4, 1, 2, 0, 0])
+            check("retry")
+            assert host.locator("input.math-input-dependent").count() == 6
+            fill([-2, 1, 1, 0, 0, 0])
+            check("retry")
+            assert host.locator("input.math-input-ok").count() == 3
+            assert host.locator("input.math-input-wrong").count() == 3
+            fill([-5, -1, 1, -1, 1, 1])  # a different, mixed basis
+            check("correct")
+            assert host.locator("input.math-input-ok").count() == 6
+            cells.first.fill("x")
+            assert host.locator("input.math-input-ok").count() == 0
+            assert card.locator(".stack-result").inner_text() == ""
+            card.locator(".stack-validate").click()
+            card.locator('.stack-result[data-state="invalid"]').wait_for(timeout=180000)
+            assert card.locator(".stack-check").is_disabled()
+            fill([-5, -1, 1, -1, 1, 1])
+            card.locator(".stack-validate").click()
+            card.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
+            card.locator(".stack-check").click()
+            cells.first.fill("0")  # discard a grading result after an edit
+            page.wait_for_timeout(1000)
+            assert card.locator(".stack-result").inner_text() == ""
+            assert host.locator("input.math-input-ok").count() == 0
+            card.locator(".stack-reset").click()
+            assert cells.count() == 3
+            assert cells.evaluate_all("xs => xs.map(x => x.value)") == ["", "", ""]
+            for identifier in ("course-b-nullspace", "course-c-nullspace", "course-b-rank-pivots", "determinant-one"):
+                item = page.locator(f'[data-stack-id="{identifier}"]')
+                item.locator(".stack-tests").click()
+                item.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
+                assert "All authored tests passed" in item.locator(".stack-result").inner_text()
+            determinant = page.locator('[data-stack-id="determinant-one"]')
+            determinant_cells = determinant.locator("input[data-matrix-row]")
+            for values, state in (([1, 0, 0, 1], "retry"), ([2, 1, 1, 1], "correct")):
+                for cell, value in zip(determinant_cells.all(), values):
+                    cell.fill(str(value))
+                determinant.locator(".stack-validate").click()
+                determinant.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
+                determinant.locator(".stack-check").click()
+                determinant.locator(f'.stack-result[data-state="{state}"]').wait_for(timeout=180000)
+            assert not errors, errors
+        finally:
+            browser.close()
+
+
 def test_browser_bounded_matrix_editor_worker_and_stale_evidence(browser_site):
     """The vendored editor feeds raw cells to the real Worker/Pyodide grader."""
     with serve(browser_site) as url, sync_playwright() as pw:

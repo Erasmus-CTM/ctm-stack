@@ -17,6 +17,9 @@ from .expressions import (InvalidAnswer, Node, Unsupported, canonical_form, eval
                           parse, is_logical, is_collection, validate_collection,
                           AUTHOR_COLLECTION_FUNCTIONS)
 
+from .python_tests import PYTHON_TESTS, preflight_matrix_source
+from .checkers import invoke as invoke_checker
+
 MAX_DECIMAL_PLACES = 50
 
 
@@ -317,22 +320,27 @@ def _lowest_terms(node: Node, env, assumptions, negative: bool = False) -> bool:
 
 def answer_test(name: str, student: Node | str, teacher: str, options: str = "", *,
                 env: Mapping[str, Any] | None = None, raw: str | None = None,
-                assumptions: Mapping[str, bool] | None = None) -> dict:
+                assumptions: Mapping[str, bool] | None = None,
+                python_checkers: dict | None = None) -> dict:
     """Evaluate one supported STACK test; return valid/correct/note/feedback.
 
     Supported: AlgEquiv, EqualComAss, FacForm, SingleFrac, LowestTerms,
     NumAbsolute, NumRelative, NumDecPlaces
     (one to fifty decimal places).
     Nested scalar collections support AlgEquiv, Sets, SameType and EqualComAss.
-    Matrices support AlgEquiv, SameType and EqualComAss. Units, general relations and feedback-tree CAS
+    Matrices support AlgEquiv, SameType and EqualComAss. IsBasis is a separate
+    Python-only registered extension, not a native STACK parity claim.
+    Units, general relations and feedback-tree CAS
     features are outside this intentionally limited implementation.
     """
-    if name not in {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
+    if name != "PythonChecker" and name not in PYTHON_TESTS and name not in {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
                     "NumAbsolute", "NumRelative", "NumDecPlaces"}:
         raise Unsupported(f"Answer test {name!r} is unsupported")
     env = {} if env is None else env
     try:
         student_ast = parse(student) if isinstance(student, str) else student
+        if name in PYTHON_TESTS:
+            preflight_matrix_source(student_ast, env)
         student_value = evaluate(student_ast, env, assumptions=assumptions, student=True)
     except (InvalidAnswer, TypeError, ZeroDivisionError) as exc:
         return _result(False, False, "invalid", str(exc))
@@ -340,9 +348,17 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
         teacher_ast = parse(teacher)
         if name not in {"AlgEquiv", "SameType"} and _helper_call(teacher_ast):
             raise Unsupported("Direct finite helper calls require AlgEquiv or SameType; use a frozen evaluated author value")
+        if name == "IsBasis":
+            preflight_matrix_source(teacher_ast, env)
         teacher_value = evaluate(teacher_ast, env, assumptions=assumptions)
     except (InvalidAnswer, TypeError, ZeroDivisionError) as exc:
         raise Unsupported(f"Invalid teacher expression: {exc}") from exc
+
+    if name == "PythonChecker":
+        return invoke_checker(python_checkers, options, student_value, teacher_value)
+
+    if name in PYTHON_TESTS:
+        return PYTHON_TESTS[name](student_value, teacher_value, options, student_ast, teacher_ast)
 
     for value in (student_value, teacher_value):
         validate_collection(value)

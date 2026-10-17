@@ -44,11 +44,16 @@ Select a count above or use the filters. Open a case to see the expected and act
 <details class="methodology">
 <summary>Scope and technical details</summary>
 
-This compares CAS answer-test functions rather than complete Moodle grading sessions. The port currently provides ten answer-test families, including bounded nested scalar lists/sets with `AlgEquiv`, `Sets`, `SameType` and `EqualComAss`. Cases outside port coverage stay in the inventory and are labeled by the missing answer test or unsupported input/feature. Some direct reference calls are also omitted because they need parser or controller preparation.
+This compares CAS answer-test functions rather than complete Moodle grading sessions. The port currently provides ten native-compatible answer-test families, including bounded nested scalar lists/sets with `AlgEquiv`, `Sets`, `SameType` and `EqualComAss`, and bounded matrices with `AlgEquiv`, `SameType` and `EqualComAss`. Cases outside port coverage stay in the inventory and are labeled by the missing answer test or unsupported input/feature. Some direct reference calls are also omitted because they need parser or controller preparation.
 
 “Test applicability” asks whether an answer test can compare the supplied values. It is separate from input syntax validity and from the final accept/reject mark. Form tests such as `EqualComAss` can reject mathematically equivalent expressions.
 
 Source codes `0` and `1` mean expected rejection and acceptance; `-1` expects a controlled error. Codes `-2` and `-3` flag source-authored native deviations. Only specifically reviewed cases are labeled “Known STACK issue.” Ordinary feedback notes are retained but not generally compared; asserted controlled-error notes are checked separately.
+
+The Python-only `IsBasis` and `MatrixProperty` tests are documented in the
+[Python extension guide](../docs/python-answer-tests.html). Their example, unit
+and browser checks are separate from this native report; they do not enlarge
+the 2,303-row inventory or its native coverage counts.
 
 Browser agreement includes input/scope classifications as well as graded results. The summary separates these. STACK coverage counts available observations, not compatibility passes.
 

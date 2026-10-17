@@ -26,11 +26,15 @@ Expand and collect the polynomial below. An equivalent factored answer earns par
 
 ## What is supported?
 
-This is a bounded port of STACK, with **algebraic inputs, finite nested scalar lists/sets, and numerical inputs** and ten answer tests:
+This is a bounded port of STACK, with **algebraic inputs, finite nested scalar lists/sets, numerical inputs, and bounded matrix inputs**. Ten native-compatible answer-test families are implemented:
 
 `AlgEquiv`, `Sets`, `SameType`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, and `NumDecPlaces`.
 
-`AlgEquiv` also handles supported Boolean expressions and polynomial equations. Nested lists and sets support `AlgEquiv`, `Sets`, `SameType` and written-form `EqualComAss`. Matrices, logical collection members and units inputs, arbitrary Maxima code, and the full Moodle assessment workflow are outside the current scope. See the [precise support limits](docs/authoring.qmd#what-the-adapter-checks) before adapting a question.
+`AlgEquiv` also handles supported Boolean expressions and polynomial equations. Nested lists and sets support `AlgEquiv`, `Sets`, `SameType` and written-form `EqualComAss`. Matrices support `AlgEquiv`, `SameType` and `EqualComAss`, with raw-cell editing and optional bounded resizing. General matrix arithmetic, logical collection members, units inputs, arbitrary Maxima code, and the full Moodle assessment workflow remain outside the current scope. See the [precise support limits](docs/authoring.qmd#what-the-adapter-checks) before adapting a question.
+
+Author-supplied predicates use the [PythonChecker v1 API](docs/python-checker-api.qmd), with an explicitly selected module and ordinary PRT scoring.
+
+The Python port also adds `IsBasis` (any basis for a reference space) and `MatrixProperty` (selected exact matrix constraints). These are explicitly Python-only tests, separate from native compatibility counts. Try the [matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one), or read [how this extends vanilla STACK](docs/python-answer-tests.qmd).
 
 ## Use your own question
 

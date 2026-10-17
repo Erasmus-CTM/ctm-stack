@@ -81,6 +81,8 @@ def generate() -> str:
         "",
         f"**Attribution and reuse.** Questions are from [STACK / maths/moodle-qtype_stack]({repository_url}), pinned at commit [`{manifest['commit']}`]({commit_url}). The unchanged question exports carry the [CC BY-SA 4.0 license]({source_root}samplequestions/COPYING.txt), also [included locally](questions/corpus/COPYING.txt); see each pinned source link below. The [manifest](questions/corpus/manifest.json) records the exact upstream path and SHA-256 for every XML file.",
         "",
+        "The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one) also include an adapted determinant-one task and two basis problems. Those use explicitly Python-only MatrixProperty/IsBasis tests and are separate from the 35 unchanged native exports and their baseline counts. See [matrix authoring guidance](docs/matrix-input.qmd) and [how the Python tests extend vanilla STACK](docs/python-answer-tests.qmd).",
+        "",
         "## Browse all 35",
         "",
         "| Question | Topic | Adapter status | Original XML |",

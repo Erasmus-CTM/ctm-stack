@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 import math
 import random
 import re
@@ -11,6 +12,7 @@ from typing import Mapping
 import sympy as sp
 
 from .assessment import answer_test
+from .python_tests import PYTHON_TESTS, rational_matrix, preflight_matrix_source
 from .expressions import InvalidAnswer, Node, Unsupported, assignments, canonical_form, evaluate, form_latex, parse
 from .importer import UnsupportedQuestion
 from .expressions import (MatrixValue, is_logical, is_collection, validate_collection, collection_items,
@@ -272,6 +274,20 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                 if (node["test"] not in {"AlgEquiv", "SameType"}
                         and any(_collection_helper(parse(node[field])) for field in ("student", "teacher"))):
                     raise UnsupportedQuestion(name, where, "Direct finite helper calls require AlgEquiv or SameType; use a frozen evaluated author value")
+                if node["test"] == "PythonChecker":
+                    # A later node may be guarded by an earlier predicate.
+                    # Check syntax, not its potentially unsafe teacher value.
+                    from .checkers import checker_identifier, validate_descriptor
+                    checker_identifier(node["options"])
+                    validate_descriptor(question.get("python_checkers"))
+                    parse(node["student"])
+                    parse(node["teacher"])
+                    for branch in ("true", "false"):
+                        render_castext(node[branch]["feedback"], env, name, where + "/" + branch + "feedback",
+                                       inputs=inputmap, feedback=prtmap, assumptions=assumptions,
+                                       form_expression=(lambda expr: _qtest_answer(question, expr, env, preserve_form=True))
+                                       if not question.get("simplify", True) else None)
+                    continue
                 # Use actual typed teacher placeholders so collection arithmetic
                 # and unsupported tests are rejected while building the question.
                 student_value = evaluate(node["student"], preview_env, assumptions=assumptions)
@@ -282,15 +298,20 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                         raise UnsupportedQuestion(name, where, "Collection checks require a direct learner input name to preserve literal precision; teacher collections must use frozen author values")
                 for value in (student_value, teacher_value):
                     validate_collection(value)
-                if any(isinstance(value, MatrixValue) for value in (student_value, teacher_value)) and node["test"] not in {"AlgEquiv", "SameType", "EqualComAss"}:
+                if any(isinstance(value, MatrixValue) for value in (student_value, teacher_value)) and node["test"] not in {"AlgEquiv", "SameType", "EqualComAss", *PYTHON_TESTS}:
                     raise UnsupportedQuestion(name, where, "Matrices require AlgEquiv, SameType or EqualComAss")
                 if (any(is_collection(x) for x in (student_value, teacher_value))
-                        and node["test"] not in {"AlgEquiv", "Sets", "SameType", "EqualComAss"}):
+                        and node["test"] not in {"AlgEquiv", "Sets", "SameType", "EqualComAss", *PYTHON_TESTS}):
                     raise UnsupportedQuestion(name, where, "Collections require AlgEquiv, Sets, SameType or EqualComAss")
                 if is_logical(teacher_value):
                     validate_logic(teacher_value)
-                    if node["test"] != "AlgEquiv":
+                    if node["test"] != "AlgEquiv" and node["test"] not in PYTHON_TESTS:
                         raise UnsupportedQuestion(name, where, "Logical answers require AlgEquiv")
+                if node["test"] in PYTHON_TESTS:
+                    model_result = answer_test(node["test"], node["student"], node["teacher"], node["options"],
+                                               env=preview_env, assumptions=assumptions)
+                    if not model_result["valid"] or not model_result["correct"]:
+                        raise UnsupportedQuestion(name, where, node["test"] + " input teacher must itself satisfy the test")
                 if node["test"] == "FacForm":
                     if not node["options"]:
                         raise UnsupportedQuestion(name, where + "/testoptions", "FacForm requires a polynomial variable option")
@@ -334,6 +355,9 @@ def _input_validation(inp, raw, env, assumptions, question=None):
         tree = parse(raw, insertstars=inp.get("insertstars", 0))
         if any(n.value.lower() in {w.lower() for w in inp["forbidwords"]} for n in _walk(tree) if n.kind in {"name", "call"}):
             raise InvalidAnswer("Contains a forbidden word")
+        if question is not None and any(n["test"] in PYTHON_TESTS and n["student"] == inp["name"]
+                                        for p in question["prts"] for n in p["nodes"]):
+            preflight_matrix_source(tree, env)
         if inp["forbidfloat"] and any(n.kind == "number" and ("." in n.value or "e" in n.value.lower()) for n in _walk(tree)):
             raise InvalidAnswer("Decimal numbers are forbidden")
         if inp["requirelowestterms"]:
@@ -359,6 +383,9 @@ def _input_validation(inp, raw, env, assumptions, question=None):
             if any(n.kind == "name" and n.value in definitions and _decimal_source(definitions[n.value], definitions)
                    for n in _walk(tree)):
                 raise InvalidAnswer("Decimal author aliases in collection answers lose literal precision; use exact fractions")
+        if question is not None and any(n["test"] in PYTHON_TESTS and n["student"] == inp["name"]
+                                        for p in question["prts"] for n in p["nodes"]):
+            rational_matrix(value, tree)
         if inp.get("checkanswertype"):
             teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
             if (is_collection(value) or is_collection(teacher)) and not same_type(value, teacher):
@@ -554,13 +581,25 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
                 teacher = node["teacher"]
                 if node["test"] == "EqualComAss" and not question.get("simplify", True):
                     teacher = _qtest_answer(question, teacher, env, preserve_form=True)
-                result = answer_test(node["test"], tested_student, teacher, node["options"],
-                                     env=penv, raw=raw_student or (tested_student if isinstance(tested_student, str) else ""), assumptions=assumptions)
+                if node["test"] == "PythonChecker":
+                    from .checkers import invoke
+                    result = invoke(question.get("python_checkers"), node["options"],
+                                    student_values[node["student"]],
+                                    evaluate(teacher, penv, assumptions=assumptions))
+                else:
+                    result = answer_test(node["test"], tested_student, teacher, node["options"],
+                                         env=penv, raw=raw_student or (tested_student if isinstance(tested_student, str) else ""), assumptions=assumptions)
             except (InvalidAnswer, Unsupported, TypeError, ZeroDivisionError) as exc:
                 raise UnsupportedQuestion(question["name"], f"prt[{prt['name']}]/node[{current}]", str(exc)) from exc
             if not result["valid"]:
+                if node["test"] == "PythonChecker":
+                    detail = input_results[node["student"]]
+                    detail.update(valid=False, feedback=result["feedback"] if not node["quiet"] else "Invalid answer")
+                    detail.pop("assessment", None)
                 return {"status": "invalid", "score": 0.0, "inputs": input_results, "prts": prt_results,
-                        "feedback": result["feedback"]}
+                        "feedback": input_results[node["student"]]["feedback"] if node["test"] == "PythonChecker" else result["feedback"]}
+            if node["test"] in {*PYTHON_TESTS, "PythonChecker"} and "assessment" in result and not node["quiet"]:
+                input_results[node["student"]]["assessment"] = result["assessment"]
             branch_name = "true" if result["correct"] else "false"
             branch = node[branch_name]
             score = _branch_score(score, branch)
@@ -575,7 +614,7 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
                 if rendered:
                     feedback.append(rendered)
                 if result["feedback"]:
-                    feedback.append(result["feedback"])
+                    feedback.append(html.escape(result["feedback"]) if node["test"] == "PythonChecker" else result["feedback"])
             branches.append({"node": current, "branch": branch_name, "note": branch["note"]})
             current = str(branch["next"])
         prt_results[prt["name"]] = {"score": round(max(0.0, min(1.0, score)), 10),
@@ -589,6 +628,12 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
             "feedback": " ".join(p["feedback"] for p in prt_results.values() if p["feedback"])}
 
 
+def _input_uses_written_form(question, key):
+    return any(n["test"] in {"EqualComAss", "FacForm", "SingleFrac", "LowestTerms"}
+               and re.search(rf"\b{re.escape(key)}\b", n["student"])
+               for p in question["prts"] for n in p["nodes"])
+
+
 def run_question_tests(question: dict, seeds=(1,), variants=None) -> dict:
     """Run native qtests. Each author input is evaluated in the variant env."""
     variants = list(variants) if variants is not None else [instantiate(question, s) for s in seeds]
@@ -599,8 +644,7 @@ def run_question_tests(question: dict, seeds=(1,), variants=None) -> dict:
             raw = {}
             for key, expression in test["inputs"].items():
                 try:
-                    form = any(n["test"] in {"EqualComAss", "FacForm", "SingleFrac", "LowestTerms"} and re.search(rf"\b{re.escape(key)}\b", n["student"])
-                               for p in question["prts"] for n in p["nodes"])
+                    form = _input_uses_written_form(question, key)
                     raw[key] = _qtest_answer(question, expression, env, preserve_form=form)
                 except (Unsupported, InvalidAnswer, ValueError) as exc:
                     raise UnsupportedQuestion(question["name"], f"qtest[{test['testcase']}]/testinput[{key}]", str(exc)) from exc

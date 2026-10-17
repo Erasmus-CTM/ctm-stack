@@ -486,9 +486,10 @@
         if (type === 'grade' || type === 'validate') {
           matrixEditors.forEach(function (editor, host) {
             var detail = (result.inputs || {})[host.dataset.name];
-            // Input validity is presentation only. PRTs alone award credit;
-            // no cell correctness or partial credit is inferred here.
-            editor.setState({status: detail && detail.valid === false ? 'invalid' : 'empty'});
+            // Only an explicit Python answer test supplies vector assessment.
+            // These colors explain its result; PRT branches still award credit.
+            editor.setState(type === 'grade' && detail && detail.assessment ? detail.assessment :
+              {status: detail && detail.valid === false ? 'invalid' : 'empty'});
           });
         }
       } catch (error) {

@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "engine_revision": "dfc3ed55e04159be2ff13c71a163469a467d8dc9",
-  "adapter_source_sha256": "d2b73549537a5ef26e41d21472132ed6b407d25ea622f5ebb07aa0e64420274d",
-  "python_version": "3.14.3",
+  "engine_revision": "b65d548a32ddf18693e9e7af7ea52c50e02f546f + quiet-result fix (identified by adapter_source_sha256)",
+  "adapter_source_sha256": "0e0df206f54952e5b317be83d041410a6cdbc703a75b9ccbf71e95a59a0fc5b4",
+  "python_version": "3.12.10",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",
   "timeout_seconds_per_file": 10,

@@ -1,0 +1,30 @@
+---
+title: Python basis test browser checks
+---
+
+```{#course-b-rank-pivots .stack-question}
+#| file: questions/course-b-rank-pivots.xml
+#| question: Rank and pivot columns of B
+#| seed: 17
+#| review: true
+```
+
+```{#course-b-nullspace .stack-question}
+#| file: questions/course-b-nullspace.xml
+#| question: A basis for the null space of B
+#| seed: 17
+#| review: true
+```
+
+```{#course-c-nullspace .stack-question}
+#| file: questions/course-c-nullspace.xml
+#| question: A basis for the null space of C
+#| seed: 17
+#| review: true
+```
+
+```{#determinant-one .stack-question}
+#| file: questions/determinant-one.xml
+#| question: A nonidentity integer matrix with determinant one
+#| review: true
+```

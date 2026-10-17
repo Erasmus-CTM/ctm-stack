@@ -64,6 +64,7 @@ local function setup()
       {name = 'worker.js', path = 'worker.js'},
       {name = 'runtime-sources.js', path = 'runtime-sources.js'},
       {name = 'vendor/matrix-input-provenance.json', path = 'vendor/matrix-input-provenance.json'},
+      {name = 'vendor/basis-helper-provenance.json', path = 'vendor/basis-helper-provenance.json'},
       {name = 'vendor/pyodide-runtime.js', path = 'vendor/pyodide-runtime.js'}
     }
   })
@@ -118,6 +119,12 @@ local function render(block)
   local args = {'-m', 'stack_sympy.cli', 'render', '--errors-to-stdout', '--file', inputPath,
     '--question', opts.question, '--id', identifier,
     '--variants', tostring(variants), '--seed', tostring(seed)}
+  if opts['python-checkers'] then
+    local checkerPath = pandoc.path.is_absolute(opts['python-checkers']) and opts['python-checkers']
+      or pandoc.path.normalize(pandoc.path.join({pandoc.path.directory(quarto.doc.input_file), opts['python-checkers']}))
+    table.insert(args, '--python-checkers')
+    table.insert(args, checkerPath)
+  end
   if review then table.insert(args, '--review') end
   if diagnostics then table.insert(args, '--diagnostics') end
   local environment = pandoc.system.environment()
