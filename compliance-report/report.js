@@ -36,7 +36,7 @@ function caseElement(row) {
   if(row.test==='EqualComAss' && /AlgEquiv-true/.test(row.native?.answer_note || ''))body.append(node('p','STACK proves the values equivalent, but rejects their written forms under EqualComAss.'));
   const comparisons=node('div',undefined,'additional-badges');for(const key of extra)comparisons.append(U.badge(specs[key].name,specs[key].get(row)));body.append(comparisons);
   const raw=node('details',undefined,'technical-details');raw.append(node('summary','Raw observations and source'));
-  raw.append(U.details('Source fixture',{student:row.student,teacher:row.teacher,options:row.options,expected_score:row.expected_score,answer_note:row.answer_note,notes:row.notes,extra_fields:row.extra_fields}),
+  raw.append(U.details('Original test case',{student:row.student,teacher:row.teacher,options:row.options,expected_score:row.expected_score,answer_note:row.answer_note,notes:row.notes,extra_fields:row.extra_fields}),
     U.details('Port observation',row.python),U.details('STACK observation',row.native),U.details('Reviewed comparison',row.compatibility),U.details('Browser observation',row.parity),U.details('Answer-note handling',row.answer_note_status));
   const source=node('p');source.append(`Case ID: ${row.id} · `,U.link(row.source_url,`Upstream source, line ${row.source_line ?? 'unknown'}`));raw.append(source);body.append(raw);box.append(body);return box;
 }
@@ -47,7 +47,7 @@ function initialize(data) {
   const domain=report.cases.filter(r=>r.desired_status==='known_defect' && r.discussion?.category==='domain_review').length;
   const proofs=report.cases.filter(r=>r.desired_status==='known_defect' && r.discussion?.category==='proof_limitation').length;
   overview.append(node('strong',`${report.cases.length.toLocaleString()} source cases · ${issues} recorded differences or limitations`));
-  if(domain || proofs)overview.append(node('p',`${domain} domain/branch differences need an explicit contract with STACK; ${proofs} identities still lack a certified proof. Open each case for the explanation, counterexample where applicable, sources, and question for discussion.`));
+  if(domain || proofs)overview.append(node('p',`${domain} domain or branch differences need agreed assumptions with STACK; ${proofs} identities still lack a certified proof. Open each case for the explanation, counterexample where applicable, sources, and question for discussion.`));
   const outside=report.cases.filter(r=>r.desired_status==='out_of_contract');
   const missingTests=outside.filter(r=>specs.desired.get(r)==='port_test_unsupported').length;
   const missingInputs=outside.filter(r=>specs.desired.get(r)==='port_not_supported').length;
@@ -65,7 +65,7 @@ function initialize(data) {
   $('report-provenance').append(U.details('Saved run and provenance',{generated_at:report.generated_at,...p,scope:report.scope}));
   if(p.run_url)$('report-provenance').append(U.link(p.run_url,'Original run and artifacts'));
   for(const [name,result] of Object.entries(report.results))$('report-runners').append(U.details(`${name}: saved runner details`,result));
-  if(/^[0-9a-f]{40}$/.test(p.code_sha || ''))$('fixture-link').append(U.link(`https://github.com/Erasmus-CTM/stack-sympy/blob/${p.code_sha}/tests/native_compliance/fixtures.json`,'Source fixture at this run'));
+  if(/^[0-9a-f]{40}$/.test(p.code_sha || ''))$('fixture-link').append(U.link(`https://github.com/Erasmus-CTM/stack-sympy/blob/${p.code_sha}/tests/native_compliance/fixtures.json`,'Original test case at this run'));
   update();
 }
 fetch('report.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(`HTTP ${r.status}`);return r.json();}).then(initialize).catch(error=>{

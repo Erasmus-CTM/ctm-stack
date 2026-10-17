@@ -14,7 +14,7 @@ globalThis.ReportUI = (() => {
     boundary_pass: ['Expected input handling', 'neutral', 'The case was correctly refused or reported as invalid; it was not a successful mathematical comparison.'],
     known_defect: ['Known port issue', 'notice', 'The port differs from the expected behavior. This is a recorded limitation.'],
     known_port_defect: ['Known port issue', 'notice', 'The port and STACK differ because of a recorded port limitation.'],
-    domain_review: ['Domain/branch difference', 'notice', 'The engines use different assumptions or symbolic conventions. The intended contract needs discussion with STACK.'],
+    domain_review: ['Domain/branch difference', 'notice', 'The engines use different assumptions or symbolic conventions. The intended assumptions need clarification with STACK.'],
     proof_limitation: ['Unproved identity', 'notice', 'The port cannot certify the desired identity; its required domain and exact proof need review.'],
     known_native_mathematical_failure: ['Known STACK issue', 'notice', 'A reviewed case where STACK differs from the expected behavior.'],
     known_port_limitation: ['Known applicability difference', 'notice', 'The final mark agrees, but the engines differ about whether the answer test applies.'],
@@ -25,12 +25,12 @@ globalThis.ReportUI = (() => {
     match_controlled_error: ['Same expected error', 'good', 'Both implementations report the asserted controlled error.'],
     match_desired: ['As expected', 'good', 'STACK produced the expected answer-test result.'],
     matches_desired: ['As expected', 'good', 'STACK produced the expected answer-test result.'],
-    out_of_contract: ['Outside port scope', 'neutral', 'This case is outside the subset declared by the port.'],
+    out_of_contract: ['Outside port scope', 'neutral', 'This case uses a feature the port does not yet support.'],
     outside_port_scope: ['Not run for input checks', 'neutral', 'This suite does not run the native comparison for these invalid or unsupported input checks.'],
     port_test_unsupported: ['Answer test not yet implemented in port', 'neutral', 'The port does not implement this answer test. The comparison runner therefore did not invoke STACK for this family. This is a port coverage gap, not a missing STACK feature.'],
     reference_preparation_not_run: ['STACK not run: input preparation needed', 'neutral', 'This direct-call comparison did not invoke STACK because the input needs parser or controller handling. See the specific reason in the case.'],
     port_not_supported: ['Input or feature not yet supported by port', 'neutral', 'The port implements this answer test, but does not yet support this input type, syntax, mathematical domain, or option. See the case’s specific reason.'],
-    port_input_error: ['Port reported an input/reference error', 'neutral', 'The port reported an input, reference, or option error instead of a comparable mark. This does not establish that the original STACK input was invalid.'],
+    port_input_error: ['Port reported an input/reference error', 'neutral', 'The port reported a problem reading the answer, model answer, or test setting instead of giving a mark. This does not establish that the original STACK input was invalid.'],
     no_mark_comparison: ['No mark comparison', 'neutral', 'Both engines did not produce comparable accept/reject marks.'],
     no_applicability_comparison: ['No applicability comparison', 'neutral', 'Both engines did not produce comparable applicability flags.'],
     not_compared: ['Not compared', 'neutral', 'There are no comparable observations for this comparison.'],
@@ -91,7 +91,7 @@ globalThis.ReportUI = (() => {
     parity: {name:'Browser vs Python', help:'Does the browser produce the same behavior as the Python port?', get:parityStatus},
     native_mark: {name:'Final mark agreement', help:'Do the port and STACK both accept or both reject?', get:r => r.native_mark_status==='not_compared' ? 'no_mark_comparison' : nativeStatus(r,'native_mark_status')},
     native_applicability: {name:'Test applicability', help:'Do both engines agree that this answer test can compare the supplied values?', get:r => r.native_applicability_status==='not_compared' ? 'no_applicability_comparison' : nativeStatus(r,'native_applicability_status')},
-    native_desired: {name:'STACK vs expected', help:'Does STACK produce the source fixture’s expected behavior?', get:r => r.native_desired_status==='not_compared' && r.native?.status==='unavailable' ? nativeStatus(r,'native_status') : r.native_desired_status},
+    native_desired: {name:'STACK vs expected', help:'Does STACK produce the result expected by the original test case?', get:r => r.native_desired_status==='not_compared' && r.native?.status==='unavailable' ? nativeStatus(r,'native_status') : r.native_desired_status},
   };
   const counts = (rows, spec) => rows.reduce((out,r) => {const key=spec.get(r); out[key]=(out[key]||0)+1; return out;},{});
   function comparison(key, spec, rows, cards, filters, onChange) {
@@ -159,11 +159,11 @@ globalThis.ReportUI = (() => {
   const testHelp = name => ({AlgEquiv:'AlgEquiv checks equivalence.',EqualComAss:'EqualComAss checks equivalence and written form; equivalent values may still be rejected.',FacForm:'FacForm checks equivalence and factorized form.',SingleFrac:'SingleFrac checks equivalence and a single written fraction.',LowestTerms:'LowestTerms checks the written fraction’s form, not its value against the reference.',NumAbsolute:'NumAbsolute uses an absolute numerical tolerance.',NumRelative:'NumRelative uses a relative numerical tolerance.',NumDecPlaces:'NumDecPlaces checks the value and the written decimal places.'}[name] || `${name} is the source answer test.`);
   function conclusion(row, port=false) {
     const status=port ? row.python_status : row.desired_status;
-    if (status==='known_defect' && row.discussion?.category==='domain_review') return 'Recorded domain/branch difference: the port rejects an unconstrained identity that STACK accepts. This needs an explicit convention or assumption, not a blanket rewrite.';
+    if (status==='known_defect' && row.discussion?.category==='domain_review') return 'Domain or branch difference: the port rejects an identity that STACK accepts. The required assumptions or conventions need to be stated.';
     if (status==='known_defect' && row.discussion?.category==='proof_limitation') return 'Unproved identity: the desired acceptance is not yet certified by the port. This is separate from an intentional convention difference.';
     if (row.native_status==='branch_convention_difference') return 'Known compatibility difference: the port rejects this equality using the principal complex fifth root. STACK accepts it using the negative real fifth root. The browser agrees with the port. This is a difference in root conventions.';
     if (status==='known_defect') return 'Known port issue: the port does not produce the expected answer-test result. Browser agreement does not resolve this limitation.';
-    if (status==='boundary_pass') return row.expected?.kind==='unsupported' ? 'Expected boundary behavior: this syntax is intentionally unsupported. No mathematical answer was graded.' : 'Expected boundary behavior: the input is correctly reported as invalid. No mathematical answer was graded.';
+    if (status==='boundary_pass') return row.expected?.kind==='unsupported' ? 'This notation is not supported, as expected. No mathematical answer was graded.' : 'The answer is correctly reported as invalid. No mathematical answer was graded.';
     if (status==='out_of_contract') return `${state(portStatus(row))[0]}. This row records a port coverage gap or input error, not successful compatibility.`;
     if (row.native_status==='known_native_mathematical_failure' || row.native_desired_status==='known_native_mathematical_failure') return 'Reviewed STACK issue: the native result differs from the expected behavior. See the case-specific explanation below.';
     if (String(status).startsWith('unexpected')) return 'This result needs investigation: it does not meet the recorded expectation.';

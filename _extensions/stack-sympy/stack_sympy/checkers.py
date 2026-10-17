@@ -7,7 +7,6 @@ variant construction never do. No registries or callable instances are cached.
 from __future__ import annotations
 
 from contextlib import contextmanager, redirect_stdout, redirect_stderr
-import hashlib
 import inspect
 from pathlib import Path
 import re
@@ -36,22 +35,19 @@ def checker_identifier(identifier):
 
 def source_descriptor(path):
     source = Path(path).read_bytes().decode("utf-8")
-    descriptor = {"api_version": API_VERSION, "source": source,
-                  "sha256": hashlib.sha256(source.encode("utf-8")).hexdigest()}
+    descriptor = {"api_version": API_VERSION, "source": source}
     validate_descriptor(descriptor)
     return descriptor
 
 
 def validate_descriptor(descriptor):
-    if type(descriptor) is not dict or set(descriptor) != {"api_version", "source", "sha256"}:
+    if type(descriptor) is not dict or set(descriptor) != {"api_version", "source"}:
         raise CheckerError("PythonChecker requires an explicit python-checkers source descriptor")
     if type(descriptor["api_version"]) is not int or descriptor["api_version"] != API_VERSION:
         raise CheckerError("Unsupported PythonChecker API version")
     source = descriptor["source"]
     if not isinstance(source, str) or not 0 < len(source.encode("utf-8")) <= MAX_SOURCE_BYTES:
         raise CheckerError("PythonChecker source must be 1–65536 UTF-8 bytes")
-    if descriptor["sha256"] != hashlib.sha256(source.encode("utf-8")).hexdigest():
-        raise CheckerError("PythonChecker source digest mismatch")
     return source
 
 
@@ -69,7 +65,7 @@ def _registry(descriptor):
     source = validate_descriptor(descriptor)
     # The module is temporary (normal __name__/dataclass behavior), with no
     # callable/namespace reuse even for repeated grading of the same question.
-    name = "_stack_python_checker_" + descriptor["sha256"]
+    name = "_stack_python_checker"
     previous = sys.modules.get(name)
     module = ModuleType(name)
     module.__file__ = "<PythonChecker>"

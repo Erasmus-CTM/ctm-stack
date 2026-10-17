@@ -35,6 +35,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             card = page.locator('[data-stack-id="custom-multiple"]')
             other = page.locator('[data-stack-id="custom-other"]')
             payload = json.loads(card.locator('.stack-sympy-data').text_content())
+            assert set(payload['question']['python_checkers']) == {'api_version', 'source'}
             divisor = int(payload['variants'][0]['env']['d'])
 
             def check(item, answer, state):
@@ -56,7 +57,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             check(card, divisor * 2, 'correct')
             card.locator('.stack-tests').click()
             card.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
-            assert 'All authored tests passed' in card.inner_text()
+            assert 'All question tests passed' in card.inner_text()
             # Independently compare complete qtest results, not only UI labels.
             actual = page.evaluate("""async payload => {
               const script = [...document.scripts].find(x => x.src.includes('stack-sympy.js'));
@@ -86,6 +87,20 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             assert card.locator('.stack-answer').input_value() == ''
             card.locator('.stack-variant').select_option('1')
             assert card.locator('.stack-answer').input_value() == ''
+            spd = page.locator('[data-stack-id="custom-spd"]')
+            cells = spd.locator('input[data-matrix-row]')
+            for values, state in (([2, 1, 1, 2], 'correct'),
+                                  ([-1, 0, 0, -1], 'retry'),
+                                  ([2, 1, 0, 2], 'retry')):
+                for cell, value in zip(cells.all(), values):
+                    cell.fill(str(value))
+                spd.locator('.stack-validate').click()
+                spd.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
+                spd.locator('.stack-check').click()
+                spd.locator(f'.stack-result[data-state="{state}"]').wait_for(timeout=180000)
+            spd.locator('.stack-tests').click()
+            spd.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
+            assert 'All question tests passed' in spd.inner_text()
             assert not errors, errors
         finally:
             browser.close()
@@ -159,7 +174,7 @@ def test_browser_python_basis_and_ordinary_matrix_questions(browser_site):
                 item = page.locator(f'[data-stack-id="{identifier}"]')
                 item.locator(".stack-tests").click()
                 item.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
-                assert "All authored tests passed" in item.locator(".stack-result").inner_text()
+                assert "All question tests passed" in item.locator(".stack-result").inner_text()
             determinant = page.locator('[data-stack-id="determinant-one"]')
             determinant_cells = determinant.locator("input[data-matrix-row]")
             for values, state in (([1, 0, 0, 1], "retry"), ([2, 1, 1, 1], "correct")):
@@ -259,7 +274,7 @@ def test_browser_bounded_matrix_editor_worker_and_stale_evidence(browser_site):
             assert card.locator('.ai-feedback-output').inner_text() == ''
             card.locator('.stack-tests').click()
             card.locator('.stack-result .stack-verdict').wait_for(timeout=180000)
-            assert 'All authored tests passed' in card.locator('.stack-result').inner_text()
+            assert 'All question tests passed' in card.locator('.stack-result').inner_text()
             assert not errors, errors
         finally:
             browser.close()
@@ -332,7 +347,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         # bundled Python engine, rather than a JavaScript imitation.
         card.locator(".stack-tests").click()
         card.locator(".stack-result .stack-verdict").wait_for(timeout=180000)
-        assert "All authored tests passed" in card.locator(".stack-result").inner_text()
+        assert "All question tests passed" in card.locator(".stack-result").inner_text()
 
         card.locator(".stack-answer").first.fill("!!!")
         assert card.locator(".stack-check").is_disabled()
@@ -383,7 +398,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
             assert example.locator(".stack-answer").count() > 0
             example.locator(".stack-tests").click()
             example.locator(".stack-result .stack-verdict").wait_for(timeout=180000)
-            assert "All authored tests passed" in example.locator(".stack-result").inner_text(), index
+            assert "All question tests passed" in example.locator(".stack-result").inner_text(), index
         # Exercise held logic and new functions through validation and grading,
         # in addition to replaying their authored XML qtests above.
         for question_name, response, correct in (
@@ -537,7 +552,7 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
                     card.locator(".stack-tests").click()
                     card.locator(".stack-result .stack-verdict").wait_for(timeout=180000)
                     assert card.locator(".stack-result").get_attribute("data-state") == "correct"
-                    assert "All authored tests passed" in card.locator(".stack-result").inner_text()
+                    assert "All question tests passed" in card.locator(".stack-result").inner_text()
                     assert len(card.locator(".stack-test-list li").all_inner_texts()) == 1
                     continue
                 name = payload["question"]["name"].removesuffix(" (corrected teaching copy)")
@@ -555,7 +570,7 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
                 card.locator(".stack-tests").click()
                 card.locator(".stack-result .stack-verdict").wait_for(timeout=180000)
                 assert card.locator(".stack-result").get_attribute("data-state") == "correct", name
-                assert "All authored tests passed" in card.locator(".stack-result").inner_text(), name
+                assert "All question tests passed" in card.locator(".stack-result").inner_text(), name
                 cases = card.locator(".stack-test-list li").all_inner_texts()
                 question = next(q for q in import_xml(CORPUS.parents[1] / teaching_source(entry)[0])
                                 if q["name"] == teaching_source(entry)[1])

@@ -1,6 +1,5 @@
 """Public custom checker contract, independent of native compatibility claims."""
 from copy import deepcopy
-import hashlib
 import json
 from pathlib import Path
 
@@ -19,8 +18,7 @@ MODULE = ROOT / "questions/checkers.py"
 
 
 def descriptor(body):
-    return {"api_version": 1, "source": body,
-            "sha256": hashlib.sha256(body.encode()).hexdigest()}
+    return {"api_version": 1, "source": body}
 
 
 def module(expression):
@@ -113,9 +111,9 @@ def test_invalid_feedback_and_escaped_grading_feedback_and_quiet():
     assert not grade(q, {"ans": "3"})["feedback"]
 
 
-@pytest.mark.parametrize("mutation", [lambda d: d.update(api_version=2), lambda d: d.update(sha256='wrong'),
+@pytest.mark.parametrize("mutation", [lambda d: d.update(api_version=2),
     lambda d: d.update(extra=1), lambda d: d.update(source='x'*65537)])
-def test_descriptor_version_integrity_and_bounds(mutation):
+def test_descriptor_version_and_bounds(mutation):
     d = module("True")
     mutation(d)
     with pytest.raises(CheckerError):
@@ -155,12 +153,67 @@ def test_source_attachment_and_cli_print_isolation(tmp_path, capsys):
                     python_checkers=str(source))
     assert 'AUTHOR OUTPUT' not in output.split('<script')[0]
     payload = json.loads(output.split('class="stack-sympy-data">')[1].split('</script>')[0])
-    assert set(payload['question']['python_checkers']) == {'api_version','source','sha256'}
+    assert set(payload['question']['python_checkers']) == {'api_version','source'}
     assert str(tmp_path) not in output
     assert main(['test', '--file', str(XML), '--python-checkers', str(source)]) == 0
     result = json.loads(capsys.readouterr().out)
     assert result['passed']
     assert run_question_tests(question(), seeds=(1,17,47))['passed']
+
+
+def test_checker_filename_is_read_at_build_and_updates_on_the_next_build(tmp_path):
+    source = tmp_path / 'checker.py'
+    source.write_text("def positive_multiple(a,b): return True\nCHECKERS={'positive_multiple':positive_multiple}\n")
+    first = import_xml(XML, python_checkers=source)[0]
+    source.write_text("def positive_multiple(a,b): return False\nCHECKERS={'positive_multiple':positive_multiple}\n")
+    second = import_xml(XML, python_checkers=source)[0]
+    # A built page carries its selected file contents; rendering again reads
+    # the current file. Authors provide neither a manifest nor a checksum.
+    assert grade(first, {'ans':'3'})['score'] == 1
+    assert grade(second, {'ans':'3'})['score'] == 0
+    assert set(first['python_checkers']) == {'api_version', 'source'}
+
+
+@pytest.mark.parametrize('answer,correct', [
+    ('matrix([1,0],[0,1])', True),
+    ('matrix([2,1],[1,2])', True),
+    ('matrix([1/2,1/4],[1/4,1])', True),
+    ('matrix([-1,0],[0,-1])', False),  # positive determinant is insufficient
+    ('matrix([1,1],[1,1])', False),  # positive semidefinite is insufficient
+    ('matrix([2,1],[0,2])', False),  # nonsymmetric, even with positive quadratic form
+    ('matrix([1,2],[2,1])', False),
+    ('matrix([1,0,0],[0,-1,0],[0,0,-1])', False),  # middle principal minor
+    ('matrix([2,1,0],[1,2,1],[0,1,2])', True),
+    ('matrix([1,0,0],[0,1,0])', False),
+])
+def test_spd_example_checks_symmetry_and_all_leading_principal_minors(answer, correct):
+    source = source_descriptor(ROOT / 'questions/spd-checker.py')
+    result = answer_test('PythonChecker', answer, 'true', 'is_spd', python_checkers=source)
+    assert result['valid'] and result['correct'] is correct
+    opposite = answer_test('PythonChecker', answer, 'false', 'is_spd', python_checkers=source)
+    assert opposite['valid'] and opposite['correct'] is not correct
+
+
+@pytest.mark.parametrize('answer', [
+    'matrix([x,0],[0,1])', 'matrix([sqrt(2),0],[0,1])',
+    'matrix([%i,0],[0,1])',
+])
+def test_spd_example_explains_its_exact_rational_domain(answer):
+    result = answer_test('PythonChecker', answer, 'true', 'is_spd',
+                         python_checkers=source_descriptor(ROOT / 'questions/spd-checker.py'))
+    assert not result['valid'] and not result['correct']
+    assert 'integers or exact fractions' in result['feedback']
+
+
+def test_spd_xml_and_filename_work_through_build_tests_and_grading():
+    q = import_xml(ROOT / 'questions/symmetric-positive-definite.xml',
+                   python_checkers=ROOT / 'questions/spd-checker.py')[0]
+    preflight(q, [instantiate(q)])
+    assert run_question_tests(q, seeds=(1,17,47))['passed']
+    assert grade(q, {'ansm':'matrix([2,1],[1,2])'})['score'] == 1
+    assert grade(q, {'ansm':'matrix([-1,0],[0,-1])'})['score'] == 0
+    assert grade(q, {'ansm':'matrix([x,0],[0,1])'})['status'] == 'invalid'
+    assert grade(q, {'ansm':'matrix([0.5,0],[0,1])'})['status'] == 'invalid'
 
 
 def test_import_rejects_expressions_and_paths_as_checker_identifiers():

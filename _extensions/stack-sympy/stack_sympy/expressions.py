@@ -54,7 +54,8 @@ LOGIC_PRECEDENCE = {"xor": 0, "xnor": 0, "implies": 1, "or": 2, "and": 4, "not":
 LOGIC_LATEX = {"and": r" \land ", "or": r" \lor ", "implies": r" \rightarrow ",
                "xor": r" \oplus ", "xnor": r" \leftrightarrow "}
 AUTHOR_COLLECTION_FUNCTIONS = frozenset({"set", "setify", "listify", "union", "intersection", "setdifference", "member", "subsetp", "cardinality"})
-_AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | AUTHOR_COLLECTION_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "lcm", "num", "denom", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
+AUTHOR_BASIS_FUNCTIONS = frozenset({"nullspace_basis", "columnspace_basis", "rowspace_basis"})
+_AUTHOR_FUNCTIONS = _STUDENT_FUNCTIONS | AUTHOR_COLLECTION_FUNCTIONS | AUTHOR_BASIS_FUNCTIONS | {"diff", "expand", "factor", "ratsimp", "cancel", "ev", "float", "rand", "rand_with_step", "lcm", "num", "denom", "decimalplaces", "dispdp", "displaydp", "significantfigures", "dispsf"}
 
 
 @dataclass(frozen=True)
@@ -661,6 +662,14 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                     return MatrixValue(*(visit(c, depth + 1) for c in n.children))
                 except Unsupported as exc:
                     raise InvalidAnswer(str(exc)) from exc
+            if name in AUTHOR_BASIS_FUNCTIONS:
+                if not simplify:
+                    raise Unsupported("Basis model helpers require simplification")
+                if len(n.children) != 1:
+                    raise Unsupported(f"{name} requires one defining matrix")
+                from .python_tests import basis_model, preflight_matrix_source
+                preflight_matrix_source(n.children[0], env)
+                return basis_model(visit(n.children[0], depth + 1), name.removesuffix("_basis"))
             if name in AUTHOR_COLLECTION_FUNCTIONS:
                 if not simplify:
                     raise Unsupported("Finite collection helpers require simplification")

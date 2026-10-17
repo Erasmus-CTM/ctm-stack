@@ -3,15 +3,24 @@ title: "STACK questions with AI Feedback"
 subtitle: "Interactive practice on Quarto teaching pages"
 ---
 
-Bring selected Moodle STACK questions to a teaching website, with SymPy answer checking and **AI Feedback for guided hints and explanations**. Supported questions run in the learner's browser without a Moodle session, retaining their XML, response trees and authored question tests.
+Bring selected Moodle STACK questions to a teaching website. Learners practise
+in their browser, see how their answers are interpreted, and can request
+guided **AI Feedback** alongside the question's mathematical grading. The
+exported XML, scoring rules and author tests remain available for inspection.
 
-**Quarto** turns plain-text teaching material into web pages. This extension adds interactive STACK question cards to those pages, which you can publish as a static website.
+**Quarto** turns plain-text teaching material into web pages. STACK SymPy adds
+interactive question cards to those pages for publication as a static site.
 
-## Try a question
+## For teachers
 
-Expand and collect the polynomial below. An equivalent factored answer earns partial credit. Press **Validate answers** to inspect your expression, then **Check answer** to grade it. Change the variant to try fresh coefficients.
+### Try a question {#try-a-question}
 
-**AI Feedback** adds guided hints and explanations alongside the question's deterministic grading. Open its panel for help as you work. The review controls let STACK authors inspect the question's own tests.
+Expand and collect the polynomial below. An equivalent factored answer earns
+partial credit. Press **Validate answers** to inspect your expression, then
+**Check answer** to grade it. Change the variant to try fresh coefficients.
+The **AI Feedback** panel offers guided hints and explanations; it does not
+replace the question's scoring. Review controls let authors replay the
+question's own tests.
 
 ```{.stack-question}
 #| file: questions/polynomial-expansion.xml
@@ -22,32 +31,52 @@ Expand and collect the polynomial below. An equivalent factored answer earns par
 #| feedback: true
 ```
 
-[Download the native STACK XML](questions/polynomial-expansion.xml) · [See the other examples](examples.qmd)
+[Download this STACK XML](questions/polynomial-expansion.xml) ·
+[Try more questions](examples.qmd)
 
-## What is supported?
+### What is supported? {#what-is-supported}
 
-This is a bounded port of STACK, with **algebraic inputs, finite nested scalar lists/sets, numerical inputs, and bounded matrix inputs**. Ten native-compatible answer-test families are implemented:
+| Teaching task | What to try next |
+|---|---|
+| Equivalent algebra or a required written form | [Rational and form-sensitive questions](examples.qmd#algebraic-equivalence-and-written-form) |
+| A measured number with tolerance or reported decimal places | [Numerical questions](examples.qmd#numerical-answers-and-precision) |
+| Polynomial equations or Boolean propositions | [Equations and logic](examples.qmd#equations-and-logic) |
+| Ordered lists, sets and nested finite collections | [Collection questions](examples.qmd#collections) |
+| A particular matrix, any basis, or a matrix meeting conditions | [Matrix examples](examples.qmd#matrix-conditions) and [choosing an answer test](docs/python-checker-api.qmd#choose-the-mathematical-test) |
+| Another authored condition, such as positive definiteness | [Live SPD question](examples.qmd#symmetric-positive-definite-matrix) and its [authoring walkthrough](docs/python-checker-api.qmd#author-the-spd-checker) |
 
-`AlgEquiv`, `Sets`, `SameType`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, and `NumDecPlaces`.
+These activities cover a defined part of STACK. The [authoring guide](docs/authoring.qmd#what-the-adapter-checks) maps teaching tasks to supported tests; its [developer reference](docs/authoring.qmd#for-developers) records precise input, expression and grading limits.
+The [question corpus](corpus.qmd) shows which unchanged imports currently run
+and which need author attention.
 
-`AlgEquiv` also handles supported Boolean expressions and polynomial equations. Nested lists and sets support `AlgEquiv`, `Sets`, `SameType` and written-form `EqualComAss`. Matrices support `AlgEquiv`, `SameType` and `EqualComAss`, with raw-cell editing and optional bounded resizing. General matrix arithmetic, logical collection members, units inputs, arbitrary Maxima code, and the full Moodle assessment workflow remain outside the current scope. See the [precise support limits](docs/authoring.qmd#what-the-adapter-checks) before adapting a question.
-
-Author-supplied predicates use the [PythonChecker v1 API](docs/python-checker-api.qmd), with an explicitly selected module and ordinary PRT scoring.
-
-The Python port also adds `IsBasis` (any basis for a reference space) and `MatrixProperty` (selected exact matrix constraints). These are explicitly Python-only tests, separate from native compatibility counts. Try the [matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one), or read [how this extends vanilla STACK](docs/python-answer-tests.qmd).
-
-## Use your own question
+### Use your own question {#use-your-own-question}
 
 1. Export a supported question from Moodle as STACK XML.
-2. Add STACK SymPy and AI Feedback to a Quarto project, then embed the named question in a page.
-3. Render the project and publish the resulting website.
+2. Add STACK SymPy to a Quarto project and embed the named question in a page.
+3. Run its author tests, render the site and inspect an alternate correct and
+   an incorrect answer before publishing.
 
-The [authoring guide](docs/authoring.qmd) has the installation steps, embedding example and AI Feedback setup. It also explains how to replay your authored tests and inspect unsupported features.
+The [authoring guide](docs/authoring.qmd) gives the installation steps,
+embedding example and AI Feedback setup. For a question asking for any basis
+or any matrix with a chosen property, start with [Python answer
+tests](docs/python-checker-api.qmd). A native Moodle STACK version of a
+Python-only question needs equivalent Maxima checks.
 
-## Explore the port
+## For developers
 
-- [Worked examples](examples.qmd): grading different answer forms and using feedback.
-- [Question corpus](corpus.qmd): imported STACK questions, replay results and known authoring issues.
+### Explore the port {#explore-the-port}
+
+The existing STACK answer-test families implemented here are `AlgEquiv`,
+`Sets`, `SameType`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`,
+`NumAbsolute`, `NumRelative` and `NumDecPlaces`. The Python-only `IsBasis`,
+`MatrixProperty` and author-supplied `PythonChecker` tests add tasks such as
+alternate bases and matrix conditions without changing those native test
+names. Ordinary response trees still control scores and feedback.
+
+- [Python answer-test guide](docs/python-checker-api.qmd): matrix choices,
+  teacher values, callback contract and complete SPD example.
 - [STACK compliance](compliance/): comparisons with upstream answer-test cases.
-- [Port regressions](compliance/port-regressions.html): focused checks for discoveries made during the port.
-- [Source and development guide](https://github.com/Erasmus-CTM/stack-sympy#readme): installation details and implementation notes.
+- [Port regressions](compliance/port-regressions.html): focused checks for
+  mathematical behavior discovered during the port.
+- [Source and development guide](https://github.com/Erasmus-CTM/stack-sympy#readme):
+  setup and implementation notes.

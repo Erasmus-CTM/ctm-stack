@@ -10,6 +10,7 @@ import sympy as sp
 from stack_sympy.assessment import answer_test
 from stack_sympy.engine import grade, instantiate, run_question_tests, validate
 from stack_sympy.expressions import Unsupported
+from stack_sympy.expressions import evaluate, InvalidAnswer
 from stack_sympy.importer import import_xml, UnsupportedQuestion
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -116,9 +117,85 @@ def test_unreachable_or_wrong_model_answer_rejected_before_display():
 
 
 def test_invalid_reference_rejected_at_build_time():
-    source = SOURCE.read_text().replace(REFERENCE, "matrix([-2,-4],[1,2],[0,0])")
+    source = SOURCE.read_text().replace("<tans>A</tans><testoptions>nullspace</testoptions>",
+                                      "<tans>matrix([-2,-4],[1,2],[0,0])</tans><testoptions>columns</testoptions>")
     with pytest.raises(UnsupportedQuestion, match="independent"):
         instantiate(import_xml(source)[0])
+
+
+@pytest.mark.parametrize("candidate,correct,statuses", [
+    (REFERENCE, True, ["correct", "correct"]),
+    ("matrix([-5,-1],[1,-1],[1,1])", True, ["correct", "correct"]),
+    ("matrix([-2],[1],[0])", False, ["correct"]),
+    ("matrix([-2,-4],[1,2],[0,0])", False, ["dependent", "dependent"]),
+    ("matrix([-2,1],[1,0],[0,0])", False, ["correct", "incorrect"]),
+    ("matrix([0,0],[0,0],[0,0])", False, ["incorrect", "incorrect"]),
+    ("matrix([1,0],[0,1])", False, ["incorrect", "incorrect"]),
+])
+def test_nullspace_is_defined_by_original_rectangular_matrix(candidate, correct, statuses):
+    # No known basis is supplied to the checker. Row scaling and redundant
+    # constraints describe the same null space.
+    for defining in ("matrix([1,2,3],[2,4,6])", "matrix([-3,-6,-9])"):
+        result = answer_test("IsBasis", candidate, defining, "nullspace")
+        assert result["valid"] and result["correct"] is correct
+        assert result["assessment"] == {"columns": statuses}
+
+
+@pytest.mark.parametrize("defining,option,candidate,correct,statuses", [
+    ("matrix([1,2,0],[0,1,1],[1,3,1])", "columnspace",
+     "matrix([3,1],[1,1],[4,2])", True, ["correct", "correct"]),
+    ("matrix([1,2,0],[0,1,1],[1,3,1])", "columnspace",
+     "matrix([1],[0],[1])", False, ["correct"]),
+    ("matrix([1,2,0],[0,1,1],[1,3,1])", "columnspace",
+     "matrix([1,0],[0,0],[1,1])", False, ["correct", "incorrect"]),
+    ("matrix([1,0,1,2],[0,1,1,1],[1,1,2,3])", "rowspace",
+     "matrix([1,1,2,3],[1,-1,0,1])", True, ["correct", "correct"]),
+    ("matrix([1,0,1,2],[0,1,1,1],[1,1,2,3])", "rowspace",
+     "matrix([1,0,1,2],[2,0,2,4])", False, ["dependent", "dependent"]),
+    ("matrix([1,0,1,2],[0,1,1,1],[1,1,2,3])", "rowspace",
+     "matrix([1,0,0])", False, ["incorrect"]),
+])
+def test_column_and_row_space_membership(defining, option, candidate, correct, statuses):
+    result = answer_test("IsBasis", candidate, defining, option)
+    assert result["valid"] and result["correct"] is correct
+    assert result["assessment"] == {"rows" if option == "rowspace" else "columns": statuses}
+
+
+def test_basis_model_helpers_compute_answers_from_the_matrix_and_are_author_only():
+    source = "matrix([1,2,3],[2,4,6])"
+    null_model = evaluate("nullspace_basis(" + source + ")")
+    matrix = sp.Matrix([list(row.args) for row in null_model.args])
+    defining = sp.Matrix([[1, 2, 3], [2, 4, 6]])
+    assert defining * matrix == sp.zeros(2, 2)
+    assert matrix.rank() == 2
+    for space in ("nullspace", "columnspace", "rowspace"):
+        model = evaluate(space + "_basis(" + source + ")")
+        assert answer_test("IsBasis", str(model), source, space)["correct"]
+        with pytest.raises(InvalidAnswer, match="not allowed in student input"):
+            evaluate(space + "_basis(" + source + ")", student=True)
+
+
+@pytest.mark.parametrize("source", [
+    "nullspace_basis(matrix([1,0],[0,1]))",  # zero-dimensional target
+    "columnspace_basis(matrix([0,0]))",
+    "rowspace_basis(matrix([0,0]))",
+    "nullspace_basis(matrix([1.0,2]))",
+    "nullspace_basis(matrix([x,2]))",
+    "nullspace_basis(matrix([((2^100)^100)^100,2]))",
+    "nullspace_basis(matrix([1,2]),1)",
+])
+def test_basis_model_helpers_reject_unrepresentable_or_invalid_targets(source):
+    with pytest.raises((InvalidAnswer, Unsupported)):
+        evaluate(source)
+
+
+def test_defining_matrix_changes_the_target_and_generated_model():
+    question = import_xml(SOURCE)[0]
+    question["variables"] = "A:matrix([1,0,0],[0,1,0]);"
+    question["qtests"] = []
+    assert grade(question, {"ans": "matrix([0],[0],[3])"})["score"] == 1
+    assert grade(question, {"ans": REFERENCE})["score"] == 0
+    assert "nullspace_basis(A)" == question["inputs"][0]["teacher"]
 
 
 def test_python_test_requires_direct_matrix_input_and_rejects_arbitrary_names():

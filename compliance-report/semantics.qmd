@@ -1,9 +1,18 @@
 ---
-title: "Semantics: behavior, questions, and future work"
-subtitle: "Native agreement, author decisions, and bounded port choices"
+title: "Semantics for STACK authors"
+subtitle: "Questions, evidence and compatibility conventions"
 toc: true
 toc-depth: 2
 ---
+
+This page is for **STACK authors and maintainers** reviewing mathematical
+conventions and compatibility questions. Start with the prioritized questions
+below, then follow the linked cases, sources and observations.
+
+Teachers adapting exercises can start with the [authoring guide](../docs/authoring.html)
+and [report interpretation](index.qmd#for-teachers). Developers reproducing
+comparisons can use the [report's development reference](index.qmd#for-developers).
+
 
 This page compares a bounded SymPy CAS adapter with pinned STACK behavior. Case
 numbers refer to the unchanged 2,303-row imported fixture. An expected acceptance
@@ -57,7 +66,7 @@ EqualComAss. Other native matrix answer tests remain an explicit port limitation
 native STACK supports more, including LowestTerms. Separately, the Python-only
 IsBasis and MatrixProperty extensions support basis and exact constraint tasks.
 They are outside this native inventory and are documented in the
-[Python extension guide](../docs/python-answer-tests.html). There is no cell partial-credit policy: PRT scores
+[Python answer tests](../docs/python-checker-api.html). There is no cell partial-credit policy: PRT scores
 remain author-defined and the default feedback concerns the whole matrix.
 Fixed dimensions are validated before grading; learner-selected dimensions
 must stay inside the configured bounds.

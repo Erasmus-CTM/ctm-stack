@@ -85,7 +85,25 @@ def test_vendored_matrix_editor_matches_audited_source_manifest():
 
 
 def question_blocks(qmd):
-    return re.findall(r'^```\{[^\n}]*\.stack-question[^\n}]*\}\n.*?\n```', qmd.read_text(), re.M | re.S)
+    # A displayed Markdown example may contain a question fence inside a longer
+    # outer fence. Only top-level question fences produce live cards.
+    blocks, current = [], []
+    fence, question = None, False
+    for line in qmd.read_text().splitlines():
+        if fence is None:
+            opening = re.fullmatch(r' {0,3}(`{3,}|~{3,})(.*)', line)
+            if opening:
+                fence = opening[1]
+                question = bool(re.fullmatch(r'\{[^}]*\.stack-question[^}]*\}', opening[2].strip()))
+                current = [line]
+        else:
+            current.append(line)
+            closing = line.strip()
+            if len(closing) >= len(fence) and set(closing) == {fence[0]}:
+                if question:
+                    blocks.append('\n'.join(current))
+                fence = None
+    return blocks
 
 
 def question_pages():
@@ -154,9 +172,9 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
     for entry in entries:
         assert f'id="{entry["id"]}"' in output
         assert f'questions/corpus/{entry["file"]}' in output
-        assert html.escape(entry["source_url"], quote=True) in output
         assert (render_site() / "questions/corpus" / entry["file"]).is_file()
     assert "CC BY-SA 4.0" in output
+    assert 'id="sources"' in output
     assert (render_site() / "questions/corpus/manifest.json").is_file()
     assert (render_site() / "questions/corpus/baseline.json").is_file()
 

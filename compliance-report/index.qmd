@@ -1,13 +1,29 @@
 ---
 title: "STACK compliance"
-subtitle: "Expected behavior, engine agreement, and known limitations"
+subtitle: "Teaching implications first, followed by comparison details"
 ---
 
-Each source case compares a submitted answer with a reference using a named STACK answer test. The SymPy port implements a subset of STACK; this page shows its coverage gaps, expected behavior, and agreement with STACK and the browser.
+STACK authors and maintainers reviewing conventions can go directly to
+[semantics questions and evidence](semantics.qmd#author-attention).
 
-**Port** is this SymPy implementation. **STACK** is the reference Maxima implementation. **Expected** is the source fixture’s intended accept, reject, or error result. Only STACK tests with a fully supported equivalent in the Python port were run.
+## For teachers
 
-[Semantics and open questions](semantics.qmd) explains the implemented conventions and the remaining case-specific questions for discussion with STACK. Recorded domain differences and unproved identities remain visible and individually pinned; browser agreement does not resolve them.
+Each case asks whether a particular STACK answer test accepts a submitted
+answer. This report shows which cases STACK SymPy can check, where its result
+agrees with STACK, and where a teacher should expect a difference.
+
+### How to read the results
+
+**Port** means STACK SymPy. **STACK** means the reference Moodle/Maxima answer
+test. **Expected** is the outcome recorded in the original case. Green can
+mean that a wrong answer was correctly rejected. A matching result for one
+case does not establish that every question using that test behaves identically.
+
+State the mathematical domain, distinguish written form from value, and use
+numerical tests for approximate answers. The [semantics discussions for STACK authors](semantics.qmd#author-attention) record the detailed conventions and unresolved questions. Start with the
+[authoring guide](../docs/authoring.html) when preparing a question, and run its
+own tests as well as inspecting the examples. [Python answer tests and SPD](../docs/python-checker-api.html)
+are documented separately from this native comparison.
 
 <div class="status-legend" aria-label="How to read the colors">
   <span class="tone-good">Green: expected behavior or agreement</span>
@@ -27,7 +43,7 @@ Each source case compares a submitted answer with a reference using a named STAC
 <div id="extra-filters" class="report-controls"></div>
 </details>
 
-## Cases {#case-results}
+### Cases {#case-results}
 
 Select a count above or use the filters. Open a case to see the expected and actual results.
 
@@ -40,29 +56,46 @@ Select a count above or use the filters. Open a case to see the expected and act
 <p id="case-count" role="status"></p>
 <div id="case-list" class="case-list"></div>
 <button type="button" id="show-more" hidden>Show more cases</button>
+</div>
 
-<details class="methodology">
-<summary>Scope and technical details</summary>
+## For developers
 
-This compares CAS answer-test functions rather than complete Moodle grading sessions. The port currently provides ten native-compatible answer-test families, including bounded nested scalar lists/sets with `AlgEquiv`, `Sets`, `SameType` and `EqualComAss`, and bounded matrices with `AlgEquiv`, `SameType` and `EqualComAss`. Cases outside port coverage stay in the inventory and are labeled by the missing answer test or unsupported input/feature. Some direct reference calls are also omitted because they need parser or controller preparation.
+### Scope and interpretation
 
-“Test applicability” asks whether an answer test can compare the supplied values. It is separate from input syntax validity and from the final accept/reject mark. Form tests such as `EqualComAss` can reject mathematically equivalent expressions.
+The inventory contains 2,303 imported answer-test cases. It compares CAS
+functions, not complete Moodle grading sessions. The port currently provides
+ten native-compatible answer-test families. Unsupported cases remain visible
+by missing test or input feature; some direct STACK calls require parser or
+controller preparation and are not compared.
 
-Source codes `0` and `1` mean expected rejection and acceptance; `-1` expects a controlled error. Codes `-2` and `-3` flag source-authored native deviations. Only specifically reviewed cases are labeled “Known STACK issue.” Ordinary feedback notes are retained but not generally compared; asserted controlled-error notes are checked separately.
+“Test applicability” asks whether a test can compare the supplied values. It
+is separate from syntax validity and the accept/reject mark. Form tests may
+reject equivalent expressions. Browser agreement includes invalid/unsupported
+classifications as well as graded results; the summary distinguishes them.
 
-The Python-only `IsBasis` and `MatrixProperty` tests are documented in the
-[Python extension guide](../docs/python-answer-tests.html). Their example, unit
-and browser checks are separate from this native report; they do not enlarge
-the 2,303-row inventory or its native coverage counts.
+Source codes `0` and `1` request rejection and acceptance; `-1` requests a
+controlled error. Codes `-2` and `-3` flag source-authored native deviations.
+Only reviewed cases receive the “Known STACK issue” label. Ordinary notes are
+retained but not generally compared; asserted controlled-error notes are
+checked separately.
 
-Browser agreement includes input/scope classifications as well as graded results. The summary separates these. STACK coverage counts available observations, not compatibility passes.
+The Python-only `IsBasis`, `MatrixProperty` and `PythonChecker` tests do not
+increase the native inventory or its coverage counts. Their authored, unit
+and browser checks establish separate Python behavior. See the
+[developer reference](../docs/python-checker-api.html#for-developers).
+
+### Saved evidence and reproduction
+
+The detailed [conventions reference](semantics.qmd) records
+case-specific reasoning, sources and open questions. The
+[development guide](https://github.com/Erasmus-CTM/stack-sympy#supported-subset-and-grading-behavior)
+explains how to reproduce the reports. A normal website render reads the
+saved results; it does not rerun STACK comparisons.
 
 <div id="report-provenance"></div>
 <div id="report-runners"></div>
-</details>
 
-<p class="report-downloads"><a href="report.json" download>Download saved results</a> · <span id="fixture-link"></span> · <a href="port-regressions.qmd">Project regression cases</a></p>
-</div>
+<p class="report-downloads"><a href="report.json" download>Download saved results</a> · <span id="fixture-link"></span> · <a href="port-regressions.html">Project regression cases</a></p>
 
 <script src="report-ui.js" defer></script>
 <script src="report.js" defer></script>

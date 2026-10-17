@@ -1,90 +1,84 @@
 ---
-title: "Bounded matrices"
+title: "Matrix input and grading"
 ---
 
-Matrix values use `matrix([a,b],[c,d])`. They retain their type and rectangular
-shape separately from ordinary lists. Dimensions are positive, each axis is at
-most 16, and the matrix has at most 64 scalar entries. Ragged, empty, partially
-filled and zero-dimensional matrices are rejected. Entries use the existing
-bounded scalar parser; nested collections, equations and logical values are
-outside this contract.
+A matrix question can ask for one particular matrix, any basis of a space,
+or any matrix with a stated property. Choose the mathematical test first;
+the editor collects entries, while the answer test and response tree decide
+correctness and marks. Try the [matrix questions](../examples.qmd#find-a-nonidentity-matrix-with-determinant-one)
+before adapting one.
 
-`AlgEquiv` checks dimensions and then corresponding scalar entries with the
-existing algebraic equivalence machinery. `SameType` checks the supported matrix
-type contract. `EqualComAss` preserves written arithmetic in corresponding
-entries. Other native matrix answer tests are rejected explicitly. The separate Python-only
-`IsBasis` and `MatrixProperty` tests add basis and exact constraint checks; see
-[Python answer tests](python-answer-tests.qmd) for their distinct contract. Decimal literals and
-author-value provenance follow the existing scalar rules. No algebraic set
-matching or trig-set normalization policy changes are included.
+## For teachers
 
-Use native `<input><type>matrix</type>...` for an editor fixed to the evaluated
-teacher answer's shape. Learner-selected dimensions use this explicit port
-extension inside the input, shown in [the basis examples](../examples.qmd#a-basis-for-the-null-space-of-b):
+### Decisions for a question author {#decisions-for-a-question-author}
+
+| What the prompt asks | Appropriate check | Teacher value in the PRT |
+|---|---|---|
+| A particular matrix | `AlgEquiv` compares dimensions and corresponding entries; `EqualComAss` also checks written form. | The expected matrix. |
+| Any basis of a null, column or row space | `IsBasis` checks membership, independence and completeness. | The original matrix $A$, with `nullspace`, `columnspace` or `rowspace` selected. |
+| Integer entries, a given determinant or nonidentity | Separate `MatrixProperty` nodes can give separate marks. | The expected property result: `true`, an exact determinant such as `1`, or `false`. |
+| Another condition, such as symmetric positive definiteness | A named `PythonChecker` function in an author file. | The value the function needs, such as `true` for the [SPD example](../examples.qmd#symmetric-positive-definite-matrix). |
+
+An entry-by-entry check would reject many correct answers to “give any
+basis” or “give any matrix satisfying these conditions.” See [Python answer
+tests](python-checker-api.qmd) for the choice and the [complete SPD authoring
+walkthrough](python-checker-api.qmd#author-the-spd-checker) for a custom rule.
+An equivalent native Moodle STACK question needs corresponding Maxima checks;
+these Python test names are specific to this port.
+
+If the shape is part of the task, let learners choose a bounded number of
+columns for null or column-space bases, or rows for row-space bases. An empty
+basis cannot currently be entered because the editor needs positive
+dimensions. For a fixed-size task, the model answer determines the editor's
+shape. The built-in `IsBasis` and `MatrixProperty` tests require exact
+rational entries (integers or fractions). An author-supplied `PythonChecker`
+can choose another domain within the input limits. Set any partial credit in
+the response trees; neither correct cells nor green basis vectors earn marks
+by themselves.
+
+### What learners see
+
+A learner fills matrix cells, presses **Validate answers** to inspect the
+interpreted matrix, then presses **Check answer**. Empty cells are invalid.
+The editor retains typed forms such as `x+x` or `1/2`; resizing keeps cells
+that still fit and leaves new cells blank. Editing, resizing, resetting or
+switching variants clears an earlier result and requires validation again.
+After an `IsBasis` check, vector colors explain membership and dependence,
+but the response tree still determines the score.
+
+## For developers
+
+### XML input and learner-selected dimensions
+
+Use `<input><type>matrix</type>...` for a fixed-size matrix; the input model
+answer supplies its dimensions. For learner-selected columns, as in the
+[basis examples](../examples.qmd#a-basis-for-the-null-space-of-b), add:
 
 ```xml
 <matrix>
-  <rows initial="2" min="1" max="4" resizable="1"/>
-  <cols initial="2" min="1" max="4" resizable="1"/>
+  <rows initial="3" min="3" max="3" resizable="0"/>
+  <cols initial="1" min="1" max="3" resizable="1"/>
 </matrix>
 ```
 
-Each axis requires all four attributes; a fixed axis has `resizable="0"` and
-equal `initial`, `min`, and `max`. The product of the two maxima must not exceed
-64. This syntax is a STACK SymPy extension, not an assertion that native STACK
-imports these extra elements.
+Each axis requires `initial`, `min`, `max` and `resizable`. A fixed axis uses
+`resizable="0"` with equal initial, minimum and maximum. The product of the
+two maxima may not exceed 64. This sizing element is a STACK SymPy extension
+and needs adaptation for native Moodle STACK. The input model and authored
+tests must fit the configured dimensions. For a matrix-defined space, the
+input model can use `nullspace_basis(A)`, `columnspace_basis(A)` or
+`rowspace_basis(A)` while the PRT uses the original `A`.
 
-Raw cells such as `x+x`, `0.1` and `1/2` remain unchanged in the editor. The
-consumer serializes a matrix expression with each cell enclosed in parentheses
-and lets its own parser interpret it. Empty cells remain invalid; resizing never
-inserts numerical zeros. Surviving cells retain their raw values when resized.
-The validation preview exposes the interpreted matrix before checking.
+### Supported values and tests
 
-Editing, resizing, programmatic writes, resetting and changing variants invalidate
-prior validation, grading and AI-feedback evidence. Reset returns the dimensions
-and raw cells to their initial blank state. The editor presents input validity and, after an explicit `IsBasis` check, supplied
-vector diagnostics. It does not infer cell, row, column or partial-credit grading. Authored PRTs remain
-the only source of awarded scores.
+Author expressions write a matrix as `matrix([a,b],[c,d])`, distinct from a
+nested list. Matrices must be rectangular and complete, with 1–16 rows and
+columns and at most 64 scalar entries. Cells cannot contain collections,
+equations or logical values. The supported native STACK matrix tests here are
+`AlgEquiv`, `SameType` and `EqualComAss`; other native matrix tests and
+general matrix arithmetic are outside this port's current support.
 
-The reusable editor is maintained in
-[math-exercise](https://github.com/Erasmus-CTM/math-exercise), with standalone
-`matrix-input.js` and `matrix-input.css`. STACK SymPy vendors audited commit
-`f238da6d9a43d58d1fdf9ad592ac6223225268e0`; exact source links and SHA-256 checksums
-are recorded in `_extensions/stack-sympy/vendor/matrix-input-provenance.json`.
-The editor itself loads no math-exercise checker or runtime, so the extensions
-work independently. The Python basis helper is separately extracted, pinned and
-reviewed; it runs inside this port’s own grader, not a math-exercise runtime. Update by copying both standalone files from one audited upstream
-commit, updating the manifest and rerunning matrix browser tests.
-
-The component API is `MatrixInput.create({idPrefix, zeroDimensions, maxEntries,
-labels, onChange})`, followed by `renderHTML(spec)` and `mount(wrapper)`.
-`spec` contains `name`, `rows` and `cols`; each axis has `auto`, `initial`, `min`
-and `max`. The mounted handle provides `read`, `write`, `resize`, `reset`,
-`destroy` and `setState`. Read/write values are `{type:'matrix',rows,cols,raw}`
-with raw strings in row-major order; notifications distinguish edits, resizes
-and writes. STACK explicitly selects `zeroDimensions:'reject'` and `maxEntries:64`.
-`setState` only displays supplied status and optional cell/row/column states;
-consumers own all parsing and assessment policy.
-
-## Decisions for a question author
-
-Choose the mathematical task before choosing a matrix answer test. `AlgEquiv`
-compares a particular matrix entry by entry; it is unsuitable for “give any
-basis” or “give any matrix satisfying these conditions.” Use the documented
-Python-only IsBasis or MatrixProperty tests for those tasks, or supply an
-equivalent custom checker in native STACK. Do not replace a family of valid
-answers by equality with one convenient model answer.
-
-Choose fixed dimensions when the shape is given. If the number of basis
-vectors or pivot indices is part of the answer, use bounded learner-selected
-columns. Blank cells are invalid, and this port cannot represent an empty
-basis with a zero-column matrix. Make sure every model answer and authored
-qtest fits the configured dimensions; the build checks this.
-
-Specify the allowed number domain: the native-compatible matrix tests inherit
-the supported scalar rules, while Python matrix tests currently require
-bounded exact rational arithmetic. Decide partial credit explicitly in the
-PRTs. Native matrix comparison does not automatically award credit for correct
-cells, and green basis vectors do not by themselves earn part marks. Review
-wrong shapes, dependent and incomplete families, alternative correct answers,
-and written-form or decimal-sensitive cases before publishing.
+Raw cells remain unchanged until validation interprets them. The editor does
+not create zeros for blank cells or compute marks. The reusable component and
+its provenance are recorded in the project source tree; question authors
+configure it through XML.

@@ -1,15 +1,25 @@
 ---
 title: "Authoring and support"
+subtitle: "A teaching workflow, followed by the complete authoring reference"
+toc-depth: 3
 ---
 
-## Start with a native export
+Start with the teaching choices below. The [developer reference](#for-developers)
+collects all question-block options, supported notation and integration details.
+For matrix questions, see [matrix input](matrix-input.qmd); for a basis, a
+matrix condition or SPD, see [Python answer tests](python-checker-api.qmd).
 
-Install STACK SymPy and AI Feedback in your Quarto project, and install SymPy in the Python environment Quarto uses:
+## For teachers
+
+### Start with a native export {#start-with-a-native-export}
+
+Install STACK SymPy in your Quarto project and SymPy in the Python environment
+that Quarto uses. Add AI Feedback if you want guided hints:
 
 ```bash
 quarto add Erasmus-CTM/stack-sympy
-quarto add Erasmus-CTM/ai-feedback
 python -m pip install 'sympy==1.13.3'
+quarto add Erasmus-CTM/ai-feedback
 ```
 
 Add the question filter to `_quarto.yml`:
@@ -19,7 +29,8 @@ filters:
   - stack-sympy
 ```
 
-Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<question type="stack">`. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a `stack-question` block at its XML path and exact `<name><text>…</text></name>`. The filter embeds a selected question and precomputes the requested variants when Quarto renders. Unchanged native XML remains the source of truth and can be imported back into Moodle. Port-only Python tests and resizable matrix settings require adaptation for Moodle; see [Python portability](python-answer-tests.qmd#how-this-extends-vanilla-stack) and the [PythonChecker API](python-checker-api.qmd).
+Export a supported Moodle STACK question as XML and keep it in your project.
+Use its filename and exact question name in a Quarto block:
 
 ```{.stack-question}
 #| file: ../questions/polynomial-expansion.xml
@@ -30,22 +41,249 @@ Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<quest
 #| feedback: true
 ```
 
-Run `quarto render`, then serve the generated site over HTTP. The [README](https://github.com/Erasmus-CTM/stack-sympy#install-in-a-quarto-project) also covers local development setup.
+This page sits in `docs/`, so its filename starts with `../questions/`. A page
+at the project root would use `questions/`. The three variants provide fresh
+coefficients; a fixed seed reproduces this port's choices. It does not reproduce
+Moodle's random sequence. Omit `feedback: true` if you do not need AI hints.
 
-The learner submits in two steps: **Validate answers** parses the current fields and displays the expression form (for example, `x+x` rather than a simplified `2*x`), then **Check answer** grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading. The polynomial example sets `<insertstars>1</insertstars>`, so `x**2+8x+15` previews as one sum and receives full credit in its first variant.
+A learner first presses **Validate answers** to review the interpreted answer,
+then **Check answer** to receive a mark. Editing an answer requires validation
+again. **Run question tests** appears when `review: true` is selected. Below
+each card, **Show source** and **Show STACK source** provide the Quarto block
+and question XML for inspection and copying.
 
-Below a rendered question, **Show source** reveals its authored Quarto fenced block and **Show STACK source** reveals the original XML file contents. Both panels start closed; they are available for inspecting and copying a working example.
+### Choose what counts as correct {#what-the-adapter-checks}
 
-The options are `file` and `question` (required), `seed` (signed integer, default 1), `variants` (1–20, default 1), `review` (`true` or `false`, default false), and `diagnostics` (`true` or `false`, default false). `feedback: true` opts a card into the [shared AI Feedback extension](https://github.com/Erasmus-CTM/ai-feedback); cards without it need no AI dependency. Install both extensions in the same project; feedback requires AI Feedback 0.8.0+ and Quarto 1.8.27+. `context: auto` (default) uses nearby visible prose; `context: none` omits it; `context: id1,id2` includes tagged blocks such as `::: {#id1 .ai-context}` (`.ai-feedback-context` and `.math-exercise-context` are shared aliases). `feedback-language` sets the explanation language (default document `lang`). `feedback-policy` selects an existing named policy from `ai-feedback.policy-files` or page policy files. A stable `label` targets exercise-specific policy settings; otherwise the card ID is used. The shared mathematics policy (`math-exercise`) supplies the default hints and is also the YAML integration namespace for STACK cards. A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle's Maxima backend.
+| Teaching task | Answer test or feature | Where to start |
+|---|---|---|
+| Equivalent expressions | `AlgEquiv` | [Rational expressions](../examples.qmd#equivalent-rational-expression); state domain restrictions in the prompt. |
+| Expanded, factorized or fractional form | `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms` | [Form-sensitive practice](../index.qmd#try-a-question) and the [form reference](#answer-entry-and-form). `LowestTerms` checks form only; pair it with a value check when value matters. |
+| Approximate measurements or written precision | `NumAbsolute`, `NumRelative`, `NumDecPlaces` | [Numerical checks](../examples.qmd#three-numerical-checks). |
+| Lists, sets and nested collections | `AlgEquiv`, `Sets`, `SameType`, `EqualComAss` | [Collection examples](../examples.qmd#finite-lists-and-sets); decide whether order and repetitions matter. |
+| Boolean expressions and polynomial equations | `AlgEquiv` | [Boolean equivalence](../examples.qmd#boolean-equivalence) and [zero-product equations](../examples.qmd#zero-product-equations). |
+| A particular matrix | Matrix input with `AlgEquiv`, `SameType` or `EqualComAss` | [Matrix input and grading](matrix-input.qmd). |
+| Any basis of a matrix's null, column or row space | `IsBasis` | [Basis questions](python-checker-api.qmd#basis-questions-use-the-matrix-in-the-question). Supply the original matrix and choose the space. |
+| A matrix with stated properties | `MatrixProperty` or a filename-selected `PythonChecker` | [Matrix conditions](python-checker-api.qmd#matrix-conditions-and-partial-credit), including the [SPD walkthrough](python-checker-api.qmd#author-the-spd-checker). |
+| Another mathematical rule | `PythonChecker` | [Custom checker API](python-checker-api.qmd#for-developers). |
+| Partial credit and targeted feedback | Weighted response trees (PRTs) | [Three numerical checks](../examples.qmd#three-numerical-checks) and [determinant-one conditions](../examples.qmd#find-a-nonidentity-matrix-with-determinant-one). |
+| Guided hints | Optional AI Feedback | [Choose a teaching policy](#choose-a-teaching-policy). |
 
-Feedback uses a learner's current answer, visible question text and selected context. A preceding matching **Check answer** can contribute minimal result status, finite score; XML, source panels, teacher answers, qtests, grader configuration, grader feedback messages and answer notes are excluded. It never grades a response or replaces **Validate answers** and **Check answer**. The shared settings panel lets a learner choose copy-prompt mode or configure their own compatible provider; no API key is placed in the page. The same [explicit teaching policies](https://github.com/Erasmus-CTM/ai-feedback/blob/main/docs/feedback-policies.md) are inherited across integrations, using `math-exercise` for STACK's mathematics policy namespace.
+The [question corpus](../corpus.qmd) shows unchanged imports and the features
+that still need adaptation. The [detailed semantics for STACK authors](../compliance/semantics.html#author-attention)
+explain important differences from Moodle. This is a defined subset of STACK;
+unsupported authoring features stop the build instead of receiving an invented
+grading rule.
 
-## Choose a teaching policy
+### Choose a teaching policy {#choose-a-teaching-policy}
 
-The shared `math-exercise` defaults offer four steps, ending with a worked
-solution. Loading policy definitions does not select them. The example site
-loads [feedback/course.yml](../feedback/course.yml) and explicitly selects its
-course policy in `_quarto.yml`:
+AI Feedback gives guided questions, concepts, procedures and a worked solution.
+It supports **copy-prompt mode** and a learner-configured provider. Deterministic
+answer tests still award the marks; AI Feedback does not grade the response.
+
+Choose the material that should accompany a request for help:
+
+| Context option | What the feedback sees |
+|---|---|
+| `context: auto` | Visible teaching prose in the preceding section; this is the default. |
+| `context: expansion-hint` | The teaching block tagged with that ID. Use comma-separated IDs for several blocks. |
+| `context: none` | The question and current response, without nearby teaching prose. |
+
+For example, tag a short explanation with `.ai-context` and reference it from
+the question:
+
+````markdown
+::: {#expansion-hint .ai-context}
+Distributivity gives $a(b+c)=ab+ac$.
+:::
+
+```{.stack-question}
+#| file: questions/polynomial-expansion.xml
+#| question: Expand a product (form-sensitive)
+#| feedback: true
+#| context: expansion-hint
+```
+````
+
+`feedback-language` chooses the explanation language; otherwise the document's
+language is used. A named `feedback-policy` can change the sequence or word
+limit. The [rational-expression example](../examples.qmd#equivalent-rational-expression)
+uses a guiding question followed by a worked explanation. The
+[policy configuration reference](#policy-configuration) explains how to define
+and select these policies.
+
+Feedback uses the current answer, visible question and selected context. A
+matching answer check may supply its status and score. Teacher answers, source
+panels, question tests, Python code and detailed grader messages are excluded.
+Provider keys are not embedded in the page. Editing removes stale feedback and
+check evidence; choosing another variant restarts the hints.
+
+### Validate and publish {#validate-and-publish}
+
+Keep tests for alternate correct answers, common mistakes and the intended
+partial credit. Run the question's author tests, render the page, and review
+its variants before publishing:
+
+```bash
+PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
+  --file questions/polynomial-expansion.xml
+quarto render
+python -m http.server --directory _site 8000
+```
+
+Serve the page over HTTP, including locally. Opening an HTML file directly is
+not a reliable way to run browser workers. The first answer check downloads
+Pyodide and SymPy, so learners need network access. Grading then runs in the
+browser. The page does not provide Moodle's attempt history or persistence.
+
+While adapting a question, `diagnostics: true` displays a build problem in the
+page. Remove that option before publication so an unsupported question stops
+the build. Compare representative responses in Moodle when native STACK
+compatibility matters for your assessment.
+
+### Questions with many correct answers {#extend-the-python-port}
+
+An input model is one valid response, not a list of everything a learner may
+submit. Use `IsBasis` for any basis, `MatrixProperty` for its three built-in
+conditions, or `PythonChecker` for a custom condition. The normal response-tree
+branches still decide the credit. The [Python answer-test guide](python-checker-api.qmd)
+contains the teacher workflow and a complete developer walkthrough for SPD.
+
+## For developers
+
+### Question-block options {#question-block-options}
+
+All options below are written as `#| key: value` inside a `.stack-question`
+block. File paths are relative to the containing `.qmd` page.
+
+| Option | Default or requirement | Purpose |
+|---|---|---|
+| `file` | Required | XML filename. |
+| `question` | Required | Exact XML question name. |
+| `seed` | `1`; signed 32-bit integer | Starting seed for repeatable variants. |
+| `variants` | `1`; from 1 to 20 | Number of variants prepared at build time. |
+| `review` | `false` | Show **Run question tests** for the selected variant. |
+| `diagnostics` | `false` | Display build errors while authoring. |
+| `feedback` | `false` | Enable the separately installed AI Feedback extension. |
+| `context` | `auto` | Nearby prose, `none`, or comma-separated context IDs. |
+| `feedback-language` | Document `lang` | Language for AI explanations. |
+| `feedback-policy` | Inherited policy | Name of a policy loaded by the shared feedback extension. |
+| `label` | Generated card ID | Stable exercise key for policy overrides. A Quarto block ID also identifies a card. |
+| `python-checkers` | Omitted | Python filename read during the build; register named functions in `CHECKERS`. No source manifest is required. |
+
+The base extension requires Python 3.11+, SymPy 1.13.3, Quarto 1.4+ and HTML
+output with JavaScript. AI Feedback requires version 0.8.0+ of that extension
+and Quarto 1.8.27+. Set `STACK_SYMPY_PYTHON` to the Python interpreter to use
+when Quarto's default interpreter is not the required environment.
+
+### Input and XML reference {#input-and-xml-reference}
+
+The source is a Moodle STACK `<quiz>` containing named `<question type="stack">`
+entries. Category and description entries are skipped. Retain inputs, PRTs,
+deployed seeds and `<qtest>` cases. Unsupported fields and HTML/CASText fail
+with a question-specific location.
+
+| XML input setting | Handling |
+|---|---|
+| `type` | `algebraic`, scalar `numerical`, or rectangular `matrix`. |
+| `tans` | The input's model answer. A PRT node's `tans` is a separate test argument. |
+| `strictsyntax`, `insertstars` | Strict syntax is required. Insertion mode `0` requires explicit `*`; mode `1` also accepts adjacent products. |
+| `forbidwords`, `forbidfloat` | Reject configured words or decimal literals. |
+| `requirelowestterms` | Reject reducible written integer fractions during validation. |
+| `checkanswertype` | Check the supported STACK applicability/type rule; this is not a full shape or equality check. |
+| `mustverify`, `showvalidation` | Verification metadata and preview visibility are retained; this UI always requires validation before grading. Supported visibility values are `0`, `1`, `3`. |
+| `syntaxhint`, `boxsize` | Parse the authored hint and size text fields within the supported limits. |
+| `matrix` | Optional fixed/resizable dimension settings; see [matrix input](matrix-input.qmd#for-developers). |
+
+`allowwords` and input `options` must be empty; nondefault syntax attributes
+and other insertion modes are unsupported. Question-level `assumereal` and
+`assumepositive` affect symbolic assumptions. `questionsimplify=0` preserves
+supported written forms when they survive variant preparation; unsupported
+held expressions fail clearly.
+
+CASText supports `{@expression@}` for scalars, collections and matrices, and
+`{@left=right@}` for a displayed scalar equality. The placeholders
+`[[input:name]]`, `[[validation:name]]` and `[[feedback:name]]` connect the
+question text to inputs and response trees. HTML is sanitized. This does not
+provide arbitrary Maxima evaluation or all STACK text directives.
+
+### Answer entry and form {#answer-entry-and-form}
+
+Supported scalar notation includes arithmetic `+ - * / ^` (also `**`),
+parentheses, symbols and the constants `%pi`, `%e`, `%i`. Functions are `sqrt`,
+`sin`, `cos`, `tan`, `sec`, `csc`, `cot`, `sinh`, `cosh`, `tanh`, `sech`, `csch`,
+`coth`, `exp`, `log`, `abs`, rational-polynomial `gcd` and real scalar `mod`.
+Aliases are `ln`, `cosec`, `cosech`. `mod(x,0)=x` follows Maxima's convention.
+With insertion mode `1`, `2x`, `2(x+1)` and `(x+1)(x-1)` are products; `xy`
+remains one symbol and spaces alone never imply multiplication.
+
+Form tests `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms` require a direct
+input name in `sans`. `EqualComAss` preserves structure up to commutative and
+associative reordering. `FacForm` requires one polynomial variable in
+`testoptions` and handles univariate rational polynomials. `SingleFrac` checks
+an equivalent single written fraction or atomic answer. `LowestTerms` checks
+written integer fractions and supported denominator restrictions, without
+comparing the teacher value or cancelling symbolic polynomial factors.
+
+`NumAbsolute` and `NumRelative` use the configured tolerance; omitted or
+syntactically malformed options default to `0.05`. `NumDecPlaces` requires an
+explicit count from 1 to 50 and checks trailing zeros as written precision.
+Use a numerical answer test for an approximate measurement rather than treating
+algebraic equivalence as a tolerance test.
+
+### Lists, sets and equations {#lists-sets-and-equations}
+
+Lists use `[...]`; sets use `{...}`. Both may nest and be empty. Limits are 32
+entries per container, six collection levels and 128 total collection nodes,
+with scalar expression leaves. List comparison is ordered. Set comparison
+normalizes members without a general proof of every possible scalar identity;
+see [set conventions](../compliance/semantics.html#finite-sets).
+`Sets` explains outer duplicates and missing/extra members. `EqualComAss`
+retains list order, nested boundaries and repeated set entries. `SameType`
+follows applicability: two sets have the same type, and different-length lists
+can have the same type. It does not establish equality.
+
+Use exact fractions in sets and prepared author collections. Direct decimal
+list entries have narrower support: literal constant arithmetic with integer
+powers works; decimal-bearing functions, symbolic terms, transformed collections
+and transitive author aliases do not. Collection tests require a direct learner
+input, preserving the literal arithmetic used by the comparison.
+
+`AlgEquiv` also supports Boolean constants and `and`, `or`, `not`, `implies`,
+`xor`, `xnor`, with `nounand`, `nounor`, `nounnot` aliases and at most eight
+Boolean variables. Supported polynomial equations and their disjunctions use
+a product-of-residuals rule: `a=0 or b=0` matches `a*b=0`. Root multiplicity is
+retained. Conjunctions/negations of equations, variable denominators and mixtures
+of equations with Boolean propositions are unsupported. Principal complex
+roots and logarithms require attention to their domains; the
+[conventions reference](../compliance/semantics.html) records the
+known differences and proof limits.
+
+### Author variables and helpers {#author-variables-and-helpers}
+
+Write assignments as `name:expression;`; list indexing is 1-based. In addition
+to the scalar functions above, authors can use:
+
+| Purpose | Supported helpers |
+|---|---|
+| Variants | `rand`, `rand_with_step`. |
+| Scalar algebra/calculus | `diff`, `expand`, `factor`, `ratsimp`, `cancel`, `ev(expr)`, `ev(expr,simp)`, `num`, `denom`, integer `lcm`. |
+| Decimal/significant-figure display | `decimalplaces`, `dispdp`, `displaydp`, `significantfigures`, `dispsf`. |
+| Finite collections | `set`, `setify`, `listify`, `union`, `intersection`, `setdifference`, `member`, `subsetp`, `cardinality`. |
+| Model basis generation | `nullspace_basis`, `columnspace_basis`, `rowspace_basis`. The basis checker still receives the original matrix. |
+
+`ratsimp` preserves a supported common-denominator form. `listify(list)` keeps
+order; sorting a set with `listify` supports rational scalar members only.
+Finite helpers require normal simplification and exact fractions. Prepare their
+results in question variables before using form-sensitive collection tests;
+helper feedback variables and held helper execution are unsupported. `float`
+is recognized, but floating-point author values cannot be stored in prepared
+variants and are rejected. Learners cannot call author-only helpers.
+
+### Policy configuration {#policy-configuration}
+
+Loading definitions with `policy-files` or `page-policy-files` does not select
+a policy. Select `project-policy` or `page-policy` explicitly; STACK uses the
+shared `math-exercise` policy namespace. This site's configuration is:
 
 ```yaml
 ai-feedback:
@@ -54,10 +292,9 @@ ai-feedback:
     math-exercise: course-mathematics
 ```
 
-A policy can inherit those defaults and specialize them by name:
+A named policy can inherit settings and replace its hint sequence:
 
 ```yaml
-# feedback/course.yml
 ai-feedback:
   policies:
     course-mathematics:
@@ -74,64 +311,42 @@ ai-feedback:
           allow-full-solution: true
 ```
 
-Select the specialization with `#| feedback-policy: two-step-practice` on a
-feedback-enabled STACK block. `#| label: rational-practice` gives it a stable
-key for YAML `exercises.math-exercise` overrides. `examples.qmd` also selects
-`page-policy: {math-exercise: brief-mathematics}` in its front matter. Its other
-cards inherit four steps; only the selected card replaces the sequence with
-two. Omitted fields inherit, while a supplied `steps` list replaces every step
-and its permissions. `base-prompt` changes the continuing teaching instructions;
-`step-prompt` describes one step. Use neither the retired `prompt` field nor
-an authored `integrations`/`defaults` section.
+Place this definition in a policy YAML file and select
+`feedback-policy: two-step-practice` on a card. A stable `label` targets
+`exercises.math-exercise` overrides. The policy resolver applies defaults,
+project/page selections, exercise overrides, the selected policy and its
+ancestry, then the current step. `steps` replaces the inherited list;
+`base-prompt` supplies ongoing instructions and `step-prompt` one step.
+The retired `prompt`, inline `integrations` and inline `defaults` settings
+are rejected. See the [shared policy reference](https://github.com/Erasmus-CTM/ai-feedback/blob/main/docs/feedback-policies.md).
 
-Edits clear stale feedback and Check evidence while preserving hint progress.
-Check resets progress by default; a selected policy can set `reset-on-run: false`
-to preserve it. Selecting a different variant always restarts progress. Feedback
-collects a snapshot without running validation, grading, or authored tests.
+Edits cancel stale responses and clear grading evidence while retaining hint
+progress. Check resets hints by default; `reset-on-run: false` preserves progress.
+Changing variants always resets hints. Only a displayed reply or a generated
+copy prompt advances the step. `.ai-feedback-context` and `.math-exercise-context`
+are aliases of `.ai-context`. Explicit `jsxgraph:diagram-id` references can include
+visual context through the shared extension; diagrams are not collected implicitly.
 
-## What the adapter checks
+### Tests, runtime and contribution {#tests-and-evidence}
 
-| Supported here | Scope |
-|---|---|
-| Source | Moodle STACK XML `<quiz>` with named STACK questions; category and description entries are skipped. |
-| Inputs | Scalar algebraic, finite nested list/set and numerical text answers, plus bounded matrix editors, with strict syntax and `<insertstars>0</insertstars>` or `<insertstars>1</insertstars>`. Mode 0 requires `*`; mode 1 also accepts adjacent `2x`, `2(x+1)`, `(x+1)(x-1)`, and `(x+1)x`. Both keep `xy` as one symbol; whitespace alone never means multiplication. Other insertstars modes fail at import. |
-| Variables | A small, safely parsed Maxima-like assignment and arithmetic subset, including exact matrix values in `matrix([a,b],[c,d])` syntax, including `rand(n)` for seeded variants and two-integer `lcm(a,b)`. `ratsimp` preserves a common-denominator form for supported scalar expressions. |
-| Scalar functions | Elementary functions include `ln` as an alias for `log`, bounded rational-polynomial `gcd(a,b)`, and real scalar `mod(a,b)`, including Maxima's `mod(x,0)=x`. Author expressions also support `num`, `denom`, `ev(expr)`, and `ev(expr,simp)`. Symbolic complex logarithms requiring branch proofs remain unsupported. |
-| Native-compatible tests | `AlgEquiv`, `Sets`, `SameType`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, `NumDecPlaces`. The four form-sensitive tests require `sans` to name an input directly. `FacForm` also requires one polynomial variable in `<testoptions>` (a symbol or an author alias resolving to one); it checks equivalence and factorization of univariate polynomials over the rationals. Blank or syntactically malformed absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist. |
-| PRTs | Acyclic node graphs with `=`, `+`, and `−` score operations, weighted response trees, branch feedback and notes. |
-| Author tests | Native `<qtest>` inputs and expected PRT score, penalty, and answer note. |
+PRTs are acyclic response-tree graphs with `=`, `+`, `-` branch score operations,
+feedback, notes and weighted aggregation. Branch-specific penalties are not
+supported. Native `<qtest>` cases check scores, initial-attempt penalty and
+ordered answer notes, including anchored notes and `NULL`. The browser has no
+Moodle attempt state. For custom predicates, also select the checker filename
+on CLI tests; see the [Python guide](python-checker-api.qmd#for-developers).
 
-This is a deliberately limited evaluator, not a replacement for Moodle STACK or its Maxima CAS. `questionsimplify=0` (`simp:false`) is accepted when any `EqualComAss` teacher form can be preserved after freezing author variables; otherwise the build rejects it. In this mode, supported `{@expression@}` CASText also preserves authored arithmetic form and groups substitutions inside existing TeX math. `EqualComAss`, `FacForm`, `SingleFrac`, and `LowestTerms` require a direct input name in `sans` to preserve the student’s written form. `FacForm` considers the written factors, including common integer content, and rejects expressions outside its bounded polynomial subset or a missing/non-symbol variable option. `SingleFrac` requires an equivalent single written fraction (or equivalent atomic answer) and excludes divisions nested in its numerator or denominator. `LowestTerms` checks reducible written integer fractions and supported denominator restrictions; it does not compare the teacher expression or factor symbolic polynomials. Build-time validation rejects unsupported author features rather than silently grading them differently. Symbolic equivalence uses SymPy transformations rather than randomized substitution. Decimal-place grading reads the literal answer so a trailing zero is meaningful. Native qtest answer notes are checked using STACK-style ordered subsequence matching, including anchored beginning/end notes and `NULL`: a terminal note can pass even if earlier PRT nodes contributed notes. The review interface and qtests help an author inspect the selected seeds, but they do not establish complete parity with all STACK configurations.
+The same Python core runs locally and in a Pyodide worker. Quarto prepares
+variants at build time; the worker validates, grades and replays tests. A worker
+timeout can stop runaway grading. The [native comparison](../compliance/) and
+[project regression report](../compliance/port-regressions.html) provide separate
+evidence, not a blanket compatibility claim. These reports are generated by CI;
+a normal `quarto render` does not rerun their mathematical comparisons.
 
-Finite collections use an `algebraic` input: square brackets for lists, braces for sets, including nested mixtures and empty collections. Leaves must be scalar expressions. Limits are 32 entries per container, six levels and 128 collection-tree nodes. `AlgEquiv` recurses by list position and compares normalized set members; `Sets` explains outer duplicate and missing/extra entries. `EqualComAss` preserves written arithmetic, list order, and set multiplicity without flattening sets. Written previews display the entered structure. Use direct input names for form tests; held teacher/qtest aliases fail the build if freezing loses their written form.
-
-`SameType` and `checkanswertype=1` follow STACK applicability: wrong-length lists still have the same type, equal-length lists recursively check member types, and any two sets have the same type. They do not replace an equality test or validate every nested set member's shape. Frozen collection variables must use exact fractions rather than decimal literals.
-
-Decimals anywhere inside a set (including a list within a set) are unsupported; use exact fractions. Direct list answers retain literal scalar decimal comparisons. Collection checks require `sans` to name the learner input directly: feedback aliases and derived learner collections lose literal precision when serialized. Teacher collections and helper operations must use author values, and transitive decimal aliases are rejected in collection/helper expressions, qtests and CASText.
-
-Decimal list leaves support literal constant arithmetic with integer powers only. Decimal-bearing function calls, symbolic coefficients and transformed collections such as `ev([0.1],simp)` are rejected; use exact fractions for these expressions. This restriction preserves the decimal spelling and operations needed by native binary64 comparison.
-
-Author-only finite helpers are `set`, `setify`, `listify`, `union`, `intersection`, `setdifference`, `member`, `subsetp` and `cardinality`. They work in simplified question variables, with bounded input/output. `listify(set)` supports rational scalar members in numeric order; `listify(list)` keeps the list's order and repetitions. Freeze helper results before using `Sets`/`EqualComAss`; direct helper calls in those held tests, helper feedback variables and `questionsimplify=0` helper calls are unsupported. Learners enter collection literals. See the [nested](../examples.qmd#nested-collections-and-written-form) and [author-helper examples](../examples.qmd#finite-author-helpers), and the [normalization differences](../compliance/semantics.html#finite-sets).
-
-CASText also renders a scalar equality such as `{@p=ta@}` as an equation for display. `AlgEquiv` additionally supports bounded polynomial equation inputs and disjunctions, with root multiplicity retained. For example, `a=0 or b=0` matches `a*b=0`, while `a^3*b^3=0` does not. It also supports pure Boolean expressions and elementary hyperbolic functions such as `cosh` and `tanh`. See the [examples](../examples.qmd#hyperbolic-equivalence) and the README for the precise limits.
-
-## Validate and publish
-
-For an extension-only installation, install `sympy==1.13.3` in the Python environment used by Quarto. Run `python -m stack_sympy.cli test --file questions/polynomial-expansion.xml` after placing `_extensions/stack-sympy` on `PYTHONPATH`, then render with `quarto render`. Serve the `_site` directory through an HTTP server, including locally: `python -m http.server --directory _site 8000`. Browser grading loads Pyodide and SymPy; its first use downloads runtime packages, so it needs network access. Review the generated question and run its qtests before publishing any assessment. If a source uses features outside the supported subset, `#| diagnostics: true` displays the location of a build error in the page during authoring; remove it for production so unsupported questions fail the render.
-
-See [bounded matrix inputs](matrix-input.qmd) for fixed and learner-selected dimensions,
-raw-cell handling and the pinned standalone editor API.
-
-## Extend the Python port
-
-The port also supports explicitly named Python-only answer tests. `MatrixProperty`
-checks integer entries, a determinant, or identity; three ordinary PRTs preserve
-the determinant-one example’s requirement-level partial credit. `IsBasis`
-accepts any exact rational basis for a reference space, while keeping the
-existing XML inputs and true/false PRT branches. See [Python answer tests](python-answer-tests.qmd)
-for the contract, the source helper, worked examples, and the difference from
-vanilla STACK XML portability.
-
-For author-supplied predicates without editing the extension registry, use the
-[PythonChecker v1 API](python-checker-api.qmd). Select a trusted module in the
-Quarto block or CLI; XML chooses a named predicate, and PRTs retain scoring.
+For a source checkout, install `requirements-dev.txt`, run
+`PYTHONPATH=_extensions/stack-sympy python -m pytest -q tests`, check the runtime
+bundle with `python scripts/bundle_runtime.py --check`, and consult the
+[development guide](https://github.com/Erasmus-CTM/stack-sympy#design-and-contribution)
+for browser/native checks. Include a minimal XML question and its qtests when
+reporting a grading issue. General matrix arithmetic, inequalities, units,
+arbitrary Maxima scripts and Moodle's full attempt workflow remain unsupported.
