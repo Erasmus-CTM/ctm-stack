@@ -80,6 +80,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-contrib/ai-feedback-0.7.0/feedback-dom.js"></script>
 <script src="../site_libs/quarto-contrib/ai-feedback-0.7.0/ai-feedback.js"></script>
 <link href="../site_libs/quarto-contrib/ai-feedback-0.7.0/ai-feedback.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/stack-sympy-0.1.10/matrix-input.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/stack-sympy-0.1.10/stack-sympy.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
@@ -495,6 +496,7 @@ A policy can inherit those defaults and specialize them by name:"><pre class="so
 <section id="validate-and-publish" class="level2">
 <h2 class="anchored" data-anchor-id="validate-and-publish">Validate and publish</h2>
 <p>For an extension-only installation, install <code>sympy==1.13.3</code> in the Python environment used by Quarto. Run <code>python -m stack_sympy.cli test --file questions/polynomial-expansion.xml</code> after placing <code>_extensions/stack-sympy</code> on <code>PYTHONPATH</code>, then render with <code>quarto render</code>. Serve the <code>_site</code> directory through an HTTP server, including locally: <code>python -m http.server --directory _site 8000</code>. Browser grading loads Pyodide and SymPy; its first use downloads runtime packages, so it needs network access. Review the generated question and run its qtests before publishing any assessment. If a source uses features outside the supported subset, <code>#| diagnostics: true</code> displays the location of a build error in the page during authoring; remove it for production so unsupported questions fail the render.</p>
+<p>See <a href="matrix-input.qmd">bounded matrix inputs</a> for fixed and learner-selected dimensions, raw-cell handling and the pinned standalone editor API.</p>
 
 
 </section>
@@ -918,5 +920,6 @@ A policy can inherit those defaults and specialize them by name:"><pre class="so
 
 
 
+<script src="../site_libs/quarto-contrib/stack-sympy-0.1.10/matrix-input.js"></script>
 <script src="../site_libs/quarto-contrib/stack-sympy-0.1.10/stack-sympy.js"></script>
 </body></html>

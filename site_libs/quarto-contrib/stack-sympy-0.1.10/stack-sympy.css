@@ -15,7 +15,7 @@
 .stack-sympy .stack-heading { margin: 0 0 1rem; font-size: 1.15rem; }
 .stack-sympy .stack-prompt { line-height: 1.65; }
 .stack-sympy .stack-prompt p:last-child { margin-bottom: .5rem; }
-.stack-sympy .stack-answer {
+.stack-sympy input.stack-answer {
   max-width: 100%;
   padding: .45rem .6rem;
   margin: .2rem .25rem;
@@ -25,13 +25,15 @@
   color: #172c3b;
   font: inherit;
 }
-.stack-sympy .stack-answer:focus-visible, .stack-sympy button:focus-visible,
+.stack-sympy input.stack-answer:focus-visible, .stack-sympy button:focus-visible,
 .stack-sympy select:focus-visible { outline: 3px solid #67bfdc; outline-offset: 2px; }
-.stack-sympy .stack-answer[aria-invalid="true"] { border-color: #b7433e; }
+.stack-sympy input.stack-answer[aria-invalid="true"] { border-color: #b7433e; }
+.stack-sympy .stack-matrix { display: inline-block; vertical-align: middle; overflow-x: auto; }
+.stack-sympy .stack-reset { color: var(--stack-accent); background: white; }
 .stack-sympy .stack-variant-wrap { display: flex; gap: .7rem; align-items: center; margin: 0 0 1rem; }
 .stack-sympy select { padding: .4rem .5rem; border: 1px solid #9aaebb; border-radius: .3rem; background: white; }
 .stack-sympy .stack-actions { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; margin: 1rem 0 .3rem; }
-.stack-sympy button {
+.stack-sympy .stack-actions button {
   padding: .55rem .95rem;
   border: 1px solid var(--stack-accent);
   border-radius: .35rem;
@@ -47,7 +49,7 @@
   font-size: .875rem;
   line-height: 1.25;
 }
-.stack-sympy button,
+.stack-sympy .stack-actions button,
 .ai-feedback-button {
   box-sizing: border-box;
   height: 40px;
@@ -72,8 +74,8 @@
   border-radius: .35rem;
   background: #f0f5f7;
 }
-.stack-sympy button:hover { filter: brightness(.91); }
-.stack-sympy button:disabled { opacity: .55; cursor: progress; }
+.stack-sympy .stack-actions button:hover { filter: brightness(.91); }
+.stack-sympy .stack-actions button:disabled { opacity: .55; cursor: progress; }
 .stack-sympy .stack-result:not(:empty) {
   margin-top: 1rem;
   padding: .7rem .9rem;
@@ -127,5 +129,5 @@
 }
 .stack-source code { color: inherit; background: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .stack-sympy button { transition: filter .15s ease; }
+  .stack-sympy .stack-actions button { transition: filter .15s ease; }
 }

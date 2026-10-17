@@ -1,6 +1,8 @@
 (function () {
   'use strict';
   var current = document.currentScript;
+  // Keep the pinned implementation when another extension loads its own editor.
+  var MatrixInput = window.MatrixInput;
   var workerURL = new URL('worker.js', current.src);
   var worker = null;
   var pending = null;
@@ -267,13 +269,78 @@
     var validatedSnapshot = null;
     var checkedEvidence = null;
     var feedbackHandle = null;
+    var matrixEditors = new Map();
     var check = card.querySelector('.stack-check');
     var validate = card.querySelector('.stack-validate');
     if (check) check.disabled = true;
+    function cellSource(raw) {
+      var depth = 0;
+      for (var i = 0; i < raw.length; i++) {
+        var ch = raw[i];
+        if (ch === '(') depth++;
+        else if (ch === ')') { if (--depth < 0) return '()'; }
+        else if (ch === '[' || ch === ']' || ch === '{' || ch === '}' || ch === ',' && depth === 0) return '()';
+      }
+      return depth === 0 ? '(' + raw + ')' : '()';
+    }
     function readAnswers() {
       var answers = {};
-      card.querySelectorAll('.stack-answer[data-name]').forEach(function (input) { answers[input.dataset.name] = input.value; });
+      card.querySelectorAll('.stack-answer[data-name]').forEach(function (input) {
+        var editor = matrixEditors.get(input);
+        if (!editor) { answers[input.dataset.name] = input.value; return; }
+        var value = editor.read();
+        var rows = [];
+        for (var r = 0; r < value.rows; r++) {
+          // Parentheses keep raw commas/brackets inside their own scalar cell.
+          // Incomplete cells become () and are rejected by the bounded parser.
+          rows.push('[' + value.raw.slice(r * value.cols, (r + 1) * value.cols)
+            .map(cellSource).join(',') + ']');
+        }
+        answers[input.dataset.name] = 'matrix(' + rows.join(',') + ')';
+      });
       return answers;
+    }
+    function mountMatrices() {
+      card.querySelectorAll('.stack-matrix[data-name]').forEach(function (host, index) {
+        if (matrixEditors.has(host)) return;
+        if (!MatrixInput) throw new Error('The bundled matrix input could not load.');
+        var renderer = MatrixInput.create({
+          idPrefix: card.dataset.stackId + '-matrix-' + index,
+          zeroDimensions: 'reject', maxEntries: 64,
+          labels: {matrixRows: 'Rows', matrixColumns: 'Columns',
+            matrixAddRow: 'Add row', matrixRemoveRow: 'Remove row',
+            matrixAddColumn: 'Add column', matrixRemoveColumn: 'Remove column'},
+          onChange: function () { invalidate(); }
+        });
+        host.innerHTML = renderer.renderHTML(JSON.parse(host.dataset.matrixSpec)).html;
+        matrixEditors.set(host, renderer.mount(host));
+      });
+    }
+    function destroyMatrices() {
+      matrixEditors.forEach(function (editor) { editor.destroy(); });
+      matrixEditors.clear();
+    }
+    function clearPresentation() {
+      var output = card.querySelector('.stack-result');
+      clearMath(output);
+      output.replaceChildren();
+      output.removeAttribute('data-state');
+      matrixEditors.forEach(function (editor) { editor.setState({status: 'empty'}); });
+      card.querySelectorAll('.stack-answer[data-name]').forEach(function (item) { item.removeAttribute('aria-invalid'); });
+      card.querySelectorAll('.stack-validation, .stack-feedback').forEach(function (item) {
+        clearMath(item);
+        item.textContent = '';
+        delete item.dataset.latex;
+        delete item.dataset.state;
+      });
+    }
+    function invalidate() {
+      version++;
+      validatedSnapshot = null;
+      checkedEvidence = null;
+      if (feedbackHandle) feedbackHandle.cancel({ clearOutput: true });
+      if (check) check.disabled = true;
+      clearPresentation();
     }
     var variantAt = function () {
       var index = selector ? Number(selector.value) : 0;
@@ -324,7 +391,10 @@
           getRequest: function () {
             var answers = readAnswers();
             var names = Object.keys(answers);
-            if (!names.some(function (name) { return answers[name].trim(); })) {
+            if (!Array.from(card.querySelectorAll('.stack-answer[data-name]')).some(function (input) {
+              var editor = matrixEditors.get(input);
+              return editor ? editor.read().raw.some(function (cell) { return cell.trim(); }) : input.value.trim();
+            })) {
               throw new Error('Enter an answer before requesting feedback.');
             }
             var identity = responseIdentity();
@@ -350,7 +420,8 @@
       if (feedbackHandle) feedbackHandle.reset();
       if (check) check.disabled = true;
       card.querySelectorAll('.stack-answer[data-name]').forEach(function (item) {
-        item.value = '';
+        var editor = matrixEditors.get(item);
+        if (editor) editor.reset(); else item.value = '';
         item.removeAttribute('aria-invalid');
       });
       var output = card.querySelector('.stack-result');
@@ -368,31 +439,20 @@
       var variant = variantAt();
       var prompt = card.querySelector('.stack-prompt');
       if (prompt && variant) {
+        destroyMatrices();
         clearMath(prompt);
         prompt.innerHTML = variant.question_html;
+        mountMatrices();
         math(prompt);
       }
       clear();
     });
     card.addEventListener('input', function (event) {
       if (event.target.matches('.stack-answer[data-name]')) {
-        version++;
-        validatedSnapshot = null;
-        checkedEvidence = null;
-        if (feedbackHandle) feedbackHandle.cancel({ clearOutput: true });
-        if (check) check.disabled = true;
-        event.target.removeAttribute('aria-invalid');
-        var output = card.querySelector('.stack-result');
-        clearMath(output);
-        output.replaceChildren();
-        card.querySelectorAll('.stack-validation, .stack-feedback').forEach(function (item) {
-          clearMath(item);
-          item.textContent = '';
-          delete item.dataset.latex;
-          delete item.dataset.state;
-        });
+        invalidate();
       }
     });
+    card.addEventListener('reset', function () { clear(); });
     async function act(type, button) {
       var resultBox = card.querySelector('.stack-result');
       if (type === 'grade') {
@@ -423,6 +483,14 @@
           validatedSnapshot = result.status === 'valid' ? snapshot : null;
           if (check) check.disabled = validatedSnapshot === null;
         } else showTests(card, result);
+        if (type === 'grade' || type === 'validate') {
+          matrixEditors.forEach(function (editor, host) {
+            var detail = (result.inputs || {})[host.dataset.name];
+            // Input validity is presentation only. PRTs alone award credit;
+            // no cell correctness or partial credit is inferred here.
+            editor.setState({status: detail && detail.valid === false ? 'invalid' : 'empty'});
+          });
+        }
       } catch (error) {
         if (generation === version) message(resultBox, 'Could not check this answer: ' + error.message, 'error');
       } finally {
@@ -434,6 +502,14 @@
     if (validate) validate.addEventListener('click', function () { act('validate', validate); });
     var tests = card.querySelector('.stack-tests');
     if (tests) tests.addEventListener('click', function () { act('tests', tests); });
+    var actions = card.querySelector('.stack-actions');
+    if (actions) {
+      var reset = node('button', 'stack-reset', 'Reset answers');
+      reset.type = 'button';
+      reset.addEventListener('click', clear);
+      actions.appendChild(reset);
+    }
+    mountMatrices();
     math(card);
   }
 
