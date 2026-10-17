@@ -1,15 +1,15 @@
 ---
 title: "Question corpus"
-subtitle: "Thirty unchanged STACK exports, with a measured adapter boundary"
+subtitle: "Thirty-five unchanged STACK exports, with a measured adapter boundary"
 ---
 
-These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **Only the 19 questions whose authored tests passed on every replayed seed have interactive cards.** The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.
+These are 35 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **The 23 questions whose authored tests passed on every replayed seed have interactive cards.** One additional, clearly labeled presentation teaching copy demonstrates a matrix question whose original HTML remains unsupported. Other originals remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.
 
-The [reproducible baseline](questions/corpus/baseline.json) reports **19 passed**, **1 with test mismatches**, and **10 blocked** (3 at import, 7 at instantiation). It retained **73 authored test cases** and replayed **138 seed/case combinations** across 20 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.
+The [reproducible baseline](questions/corpus/baseline.json) reports **23 passed**, **1 with test mismatches**, and **11 blocked** (3 at import, 8 at instantiation). It retained **82 authored test cases** and replayed **162 seed/case combinations** across 24 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.
 
 **Attribution and reuse.** Questions are from [STACK / maths/moodle-qtype_stack](https://github.com/maths/moodle-qtype_stack), pinned at commit [`10d323311b7f39fb7b092dd10ce75f7d8632f525`](https://github.com/maths/moodle-qtype_stack/commit/10d323311b7f39fb7b092dd10ce75f7d8632f525). The unchanged question exports carry the [CC BY-SA 4.0 license](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/COPYING.txt), also [included locally](questions/corpus/COPYING.txt); see each pinned source link below. The [manifest](questions/corpus/manifest.json) records the exact upstream path and SHA-256 for every XML file.
 
-## Browse all 30
+## Browse all 35
 
 | Question | Topic | Adapter status | Original XML |
 |---|---|---|---|
@@ -43,10 +43,30 @@ The [reproducible baseline](questions/corpus/baseline.json) reports **19 passed*
 | [Matrices_find det 2*2](#matrices-find-det-2-2) | Topics / LinearAlgebra / Matrix Calculations | Unsupported at instantiation | [Download](questions/corpus/Matrices_find-det-2-2.xml) |
 | [Inequality_1](#inequality-1) | Topics / Inequalities | Unsupported at instantiation | [Download](questions/corpus/Inequality_1.xml) |
 | [Numerical input (min sf)](#numerical-input-min-sf) | Features / input type sample questions | Unsupported at import | [Download](questions/corpus/Numerical_input_min_sf.xml) |
+| [LinearAlgebra_elementary_1](#linearalgebra-elementary-1) | Linear algebra / Matrix input | Passed authored tests | [Download](questions/corpus/LinearAlgebra_elementary_1.xml) |
+| [LinearAlgebra_elementary_2](#linearalgebra-elementary-2) | Linear algebra / Matrix input | Passed authored tests | [Download](questions/corpus/LinearAlgebra_elementary_2.xml) |
+| [LinearAlgebra_elementary_3](#linearalgebra-elementary-3) | Linear algebra / Matrix input | Passed authored tests | [Download](questions/corpus/LinearAlgebra_elementary_3.xml) |
+| [LinearAlgebra_elementary_4](#linearalgebra-elementary-4) | Linear algebra / Matrix input | Passed authored tests | [Download](questions/corpus/LinearAlgebra_elementary_4.xml) |
+| [7.3.26 (Write sim. eqns. with matrices)](#matrix-system) | Introductory Mathematics / Matrix equations | Unsupported at instantiation | [Download](questions/corpus/7-3-26-(Write-sim-eqns-with-matrices).xml) |
+
+## Five matrix-input problems
+
+The four elementary-row-operation problems below run directly from unchanged official exports: [row 2 plus a multiple of row 3](#linearalgebra-elementary-1), [row 1 plus a multiple of row 3](#linearalgebra-elementary-2), [row 2 plus a multiple of row 1](#linearalgebra-elementary-3), and [row 1 minus a multiple of row 2](#linearalgebra-elementary-4). Together their original tests pass all 24 recorded seed/case combinations. Each uses a fixed 3 by 3 matrix editor and whole-matrix algebraic equivalence; no automatic cell partial credit is added.
+
+The fifth asks learners to write a system of three linear equations as a coefficient matrix and a column vector. Its original XML is [preserved unchanged](questions/corpus/7-3-26-(Write-sim-eqns-with-matrices).xml) and remains blocked by an unsupported inline HTML style. This explicitly attributed presentation teaching copy removes that style and closes its list; variables, answers, PRT and authored qtest are unchanged. Its original qtest passes on the first three deployed seeds. This is a presentation adaptation, not evidence that the original export runs unchanged.
+
+```{.stack-question}
+#| file: questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml
+#| question: 7.3.26 (Write sim. eqns. with matrices) (presentation teaching copy)
+#| seed: 1930245414
+#| review: true
+```
+
+[Download presentation teaching XML](questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml)  -  [Pinned original source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Introductory-Mathematics/Week-07---Simultaneous-Equations/7-3-26-(Write-sim-eqns-with-matrices).xml)  -  [Adaptation and licensing](questions/corrected/README.md)
 
 ## Ready to try
 
-These 19 cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the card's XML tests on the displayed seed; the [baseline](questions/corpus/baseline.json) describes the unchanged imports. Three cards explicitly use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.
+These 23 cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the card's XML tests on the displayed seed; the [baseline](questions/corpus/baseline.json) describes the unchanged imports. Three cards explicitly use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.
 
 ### AlgMap-1.5 {#algmap-1-5}
 
@@ -304,6 +324,58 @@ Topics / Logs and Exponentials · 1 input · 3 authored tests · baseline seeds 
 
 [Download original XML](questions/corpus/Logs_1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Logs-and-Exponentials/Logs_1.xml)
 
+### LinearAlgebra_elementary_1 {#linearalgebra-elementary-1}
+
+Linear algebra / Matrix input · 1 input · 2 authored tests · baseline seeds `948077501`, `2115177529`, `1223528597`.
+
+```{.stack-question}
+#| file: questions/corpus/LinearAlgebra_elementary_1.xml
+#| question: LinearAlgebra_elementary_1
+#| seed: 948077501
+#| review: true
+```
+
+[Download original XML](questions/corpus/LinearAlgebra_elementary_1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_1.xml)
+
+### LinearAlgebra_elementary_2 {#linearalgebra-elementary-2}
+
+Linear algebra / Matrix input · 1 input · 2 authored tests · baseline seeds `404337827`, `765269806`, `1906938980`.
+
+```{.stack-question}
+#| file: questions/corpus/LinearAlgebra_elementary_2.xml
+#| question: LinearAlgebra_elementary_2
+#| seed: 404337827
+#| review: true
+```
+
+[Download original XML](questions/corpus/LinearAlgebra_elementary_2.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_2.xml)
+
+### LinearAlgebra_elementary_3 {#linearalgebra-elementary-3}
+
+Linear algebra / Matrix input · 1 input · 2 authored tests · baseline seeds `386876637`, `1073163127`, `1496670985`.
+
+```{.stack-question}
+#| file: questions/corpus/LinearAlgebra_elementary_3.xml
+#| question: LinearAlgebra_elementary_3
+#| seed: 386876637
+#| review: true
+```
+
+[Download original XML](questions/corpus/LinearAlgebra_elementary_3.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_3.xml)
+
+### LinearAlgebra_elementary_4 {#linearalgebra-elementary-4}
+
+Linear algebra / Matrix input · 1 input · 2 authored tests · baseline seeds `2043088205`, `724623537`, `347081126`.
+
+```{.stack-question}
+#| file: questions/corpus/LinearAlgebra_elementary_4.xml
+#| question: LinearAlgebra_elementary_4
+#| seed: 2043088205
+#| review: true
+```
+
+[Download original XML](questions/corpus/LinearAlgebra_elementary_4.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_4.xml)
+
 ## Authored test mismatches
 
 These cases disagree with expectations authored in the XML and are kept out of the interactive gallery. Reviewed causes are named below; an authored-test mismatch alone does not identify whether the cause is the port or the original question. The [baseline JSON](questions/corpus/baseline.json) retains the exact expected and observed results.
@@ -379,3 +451,9 @@ Topics / Inequalities · **Unsupported at instantiation at seed `1959651692`.** 
 Features / input type sample questions · **Unsupported at import.** `input[ans1]/options`: input-specific options are unsupported.
 
 [Download original XML](questions/corpus/Numerical_input_min_sf.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Features/input-type-sample-questions/Numerical_input_min_sf.xml) · [Replay record](questions/corpus/baseline.json)
+
+### 7.3.26 (Write sim. eqns. with matrices) {#matrix-system}
+
+Introductory Mathematics / Matrix equations · **Unsupported at instantiation at seed `1930245414`.** `questiontext`: unsupported HTML attribute &#x27;style&#x27; on &lt;ul&gt;.
+
+[Download original XML](questions/corpus/7-3-26-(Write-sim-eqns-with-matrices).xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Introductory-Mathematics/Week-07---Simultaneous-Equations/7-3-26-(Write-sim-eqns-with-matrices).xml) · [Replay record](questions/corpus/baseline.json)

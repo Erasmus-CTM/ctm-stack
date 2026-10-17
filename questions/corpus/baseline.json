@@ -1,26 +1,50 @@
 {
   "schema_version": 1,
-  "engine_revision": "b3be2a4fd6a2e4ffc57e652772eb97708283bb09",
+  "engine_revision": "dfc3ed55e04159be2ff13c71a163469a467d8dc9",
   "adapter_source_sha256": "d2b73549537a5ef26e41d21472132ed6b407d25ea622f5ebb07aa0e64420274d",
   "python_version": "3.14.3",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",
   "timeout_seconds_per_file": 10,
   "summary": {
-    "total": 30,
+    "total": 35,
     "stages": {
       "qtests_mismatch": 1,
-      "qtests_pass": 19,
+      "qtests_pass": 23,
       "unsupported_import": 3,
-      "unsupported_instantiate": 7
+      "unsupported_instantiate": 8
     },
-    "imported": 27,
-    "instantiated_all_seeds": 20,
-    "replayed_cases": 138,
+    "imported": 32,
+    "instantiated_all_seeds": 24,
+    "replayed_cases": 162,
     "failed_cases": 2,
     "failed_checks": 2
   },
   "questions": [
+    {
+      "diagnostic": {
+        "location": "questiontext",
+        "message": "7.3.26 (Write sim. eqns. with matrices): questiontext: unsupported HTML attribute 'style' on <ul>",
+        "reason": "unsupported HTML attribute 'style' on <ul>",
+        "seed": 1930245414,
+        "type": "UnsupportedQuestion"
+      },
+      "failed_cases": 0,
+      "failed_checks": 0,
+      "file": "7-3-26-(Write-sim-eqns-with-matrices).xml",
+      "id": "matrix-system",
+      "imported_questions": 1,
+      "instantiated_seeds": [],
+      "mismatches": [],
+      "native_qtests": 1,
+      "replayed_cases": 0,
+      "seeds": [
+        1930245414,
+        812684119,
+        1827462946
+      ],
+      "status": "unsupported_instantiate"
+    },
     {
       "failed_cases": 0,
       "failed_checks": 0,
@@ -656,6 +680,90 @@
         361610374
       ],
       "status": "unsupported_import"
+    },
+    {
+      "failed_cases": 0,
+      "failed_checks": 0,
+      "file": "LinearAlgebra_elementary_1.xml",
+      "id": "linearalgebra-elementary-1",
+      "imported_questions": 1,
+      "instantiated_seeds": [
+        948077501,
+        2115177529,
+        1223528597
+      ],
+      "mismatches": [],
+      "native_qtests": 2,
+      "replayed_cases": 6,
+      "seeds": [
+        948077501,
+        2115177529,
+        1223528597
+      ],
+      "status": "qtests_pass"
+    },
+    {
+      "failed_cases": 0,
+      "failed_checks": 0,
+      "file": "LinearAlgebra_elementary_2.xml",
+      "id": "linearalgebra-elementary-2",
+      "imported_questions": 1,
+      "instantiated_seeds": [
+        404337827,
+        765269806,
+        1906938980
+      ],
+      "mismatches": [],
+      "native_qtests": 2,
+      "replayed_cases": 6,
+      "seeds": [
+        404337827,
+        765269806,
+        1906938980
+      ],
+      "status": "qtests_pass"
+    },
+    {
+      "failed_cases": 0,
+      "failed_checks": 0,
+      "file": "LinearAlgebra_elementary_3.xml",
+      "id": "linearalgebra-elementary-3",
+      "imported_questions": 1,
+      "instantiated_seeds": [
+        386876637,
+        1073163127,
+        1496670985
+      ],
+      "mismatches": [],
+      "native_qtests": 2,
+      "replayed_cases": 6,
+      "seeds": [
+        386876637,
+        1073163127,
+        1496670985
+      ],
+      "status": "qtests_pass"
+    },
+    {
+      "failed_cases": 0,
+      "failed_checks": 0,
+      "file": "LinearAlgebra_elementary_4.xml",
+      "id": "linearalgebra-elementary-4",
+      "imported_questions": 1,
+      "instantiated_seeds": [
+        2043088205,
+        724623537,
+        347081126
+      ],
+      "mismatches": [],
+      "native_qtests": 2,
+      "replayed_cases": 6,
+      "seeds": [
+        2043088205,
+        724623537,
+        347081126
+      ],
+      "status": "qtests_pass"
     },
     {
       "failed_cases": 0,

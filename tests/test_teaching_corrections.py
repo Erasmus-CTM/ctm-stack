@@ -9,6 +9,20 @@ from stack_sympy.importer import import_xml
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def test_matrix_system_teaching_copy_changes_only_presentation():
+    filename = "7-3-26-(Write-sim-eqns-with-matrices).xml"
+    original = (ROOT / "questions/corpus" / filename).read_text()
+    corrected = (ROOT / "questions/corrected" / filename).read_text()
+    expected = original.replace(
+        "<text>7.3.26 (Write sim. eqns. with matrices)</text>",
+        "<text>7.3.26 (Write sim. eqns. with matrices) (presentation teaching copy)</text>",
+    ).replace('<ul style="list-style-type:none;">', '<ul>').replace('</li>]]>', '</li></ul>]]>')
+    assert corrected == expected
+    question = import_xml(ROOT / "questions/corrected" / filename)[0]
+    result = run_question_tests(question, seeds=[1930245414, 812684119, 1827462946])
+    assert result["passed"], result
+
+
 def test_corrected_copies_replay_their_author_tests_on_every_deployed_seed():
     for path in sorted((ROOT / "questions/corrected").glob("*.xml")):
         question = import_xml(path)[0]

@@ -12,15 +12,17 @@ from stack_sympy.importer import import_xml
 class CorpusTests(unittest.TestCase):
     def test_all_xml_has_exact_provenance_and_native_metadata(self):
         entries = validate_manifest(verify_upstream=True)
-        self.assertEqual(len(entries), 30)
-        self.assertEqual(sum(e["qtest_count"] for e in entries), 73)
+        self.assertEqual(len(entries), 35)
+        self.assertEqual(sum(e["qtest_count"] for e in entries), 82)
         self.assertTrue(all(len(seeds_for(e)) <= 3 for e in entries))
-        self.assertEqual(len(list(MANIFEST.parent.glob("*.xml"))), 30)
+        self.assertEqual(len(list(MANIFEST.parent.glob("*.xml"))), 35)
 
     def test_corrected_authored_qtests_replay(self):
         entries = {e["file"]: e for e in validate_manifest()}
         for file in ("AlgMap-1-6.xml", "AlgMap-1-5.xml", "AlgMap-10-1.xml", "AlgMap-13-1-.xml",
-                     "AlgMap-2-5.xml", "AlgMap-4-13.xml"):
+                     "AlgMap-2-5.xml", "AlgMap-4-13.xml",
+                     "LinearAlgebra_elementary_1.xml", "LinearAlgebra_elementary_2.xml",
+                     "LinearAlgebra_elementary_3.xml", "LinearAlgebra_elementary_4.xml"):
             passing = replay_one(entries[file])
             self.assertEqual(passing["status"], "qtests_pass", file)
             self.assertEqual(passing["replayed_cases"], passing["native_qtests"] * len(passing["seeds"]))
@@ -40,6 +42,10 @@ class CorpusTests(unittest.TestCase):
         self.assertEqual(by_file["Complex_Convert_1.xml"]["status"], "qtests_pass")
         self.assertEqual(by_file["AlgMap-15-1.xml"]["diagnostic"]["location"], "instantiation")
         self.assertIn("Unexpected character '?'", by_file["AlgMap-15-1.xml"]["diagnostic"]["reason"])
+        system = by_file["7-3-26-(Write-sim-eqns-with-matrices).xml"]
+        self.assertEqual(system["status"], "unsupported_instantiate")
+        self.assertEqual(system["diagnostic"]["location"], "questiontext")
+        self.assertIn("unsupported HTML attribute 'style'", system["diagnostic"]["reason"])
 
     def test_seed_specific_mismatch_is_recorded_without_promoting_question(self):
         report = json.loads(BASELINE.read_text(encoding="utf-8"))

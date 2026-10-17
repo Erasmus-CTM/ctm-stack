@@ -115,7 +115,11 @@ def test_rendered_questions_show_authored_block_and_original_xml():
                 re.findall(r'[#.][\w-]+', block.split("\n", 1)[0]))
             path = re.search(r"^#\| file: (.+)$", block, re.M).group(1)
             xml = by_language["language-xml"]
-            assert xml.text == (qmd.parent / path).read_text()
+            # Pandoc code blocks add a terminal newline and may retain an
+            # additional blank line already present in the source export.
+            # Only display-terminal LF is normalized; all other content must
+            # agree. Corpus byte provenance is checked independently by SHA.
+            assert xml.text.rstrip("\n") == (qmd.parent / path).read_text().rstrip("\n"), path
             assert not list(xml.find("quiz")), "XML should be escaped as code"
 
 
@@ -134,15 +138,19 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
                for nav in doc.find("nav") for a in nav.find("a"))
     assert {entry["id"] for entry in entries} == reports.keys()
     passing = [entry for entry in entries if reports[entry["id"]]["status"] == "qtests_pass"]
-    assert len(doc.find("script", "stack-sympy-data")) == len(passing)
+    # One markup-only teaching derivative is deliberately separate from the
+    # unchanged-export baseline, where its original remains unsupported.
+    assert len(doc.find("script", "stack-sympy-data")) == len(passing) + 1
     assert not doc.find(css_class="stack-diagnostic")
     panels = doc.find("details", "stack-source")
-    assert len(panels) == 2 * len(passing)
+    assert len(panels) == 2 * (len(passing) + 1)
     assert all("open" not in panel.attrs for panel in panels)
     rendered_xml = [code.text for panel in panels for code in panel.find("code", "language-xml")]
-    assert len(rendered_xml) == len(passing)
-    for entry, source in zip(passing, rendered_xml):
-        assert source == (ROOT / teaching_source(entry)[0]).read_text()
+    assert len(rendered_xml) == len(passing) + 1
+    matrix_copy = ROOT / "questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml"
+    assert rendered_xml[0].rstrip("\n") == matrix_copy.read_text().rstrip("\n")
+    for entry, source in zip(passing, rendered_xml[1:]):
+        assert source.rstrip("\n") == (ROOT / teaching_source(entry)[0]).read_text().rstrip("\n"), entry["file"]
     for entry in entries:
         assert f'id="{entry["id"]}"' in output
         assert f'questions/corpus/{entry["file"]}' in output

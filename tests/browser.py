@@ -370,11 +370,21 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             page.on("pageerror", lambda error: errors.append(str(error)))
             page.goto(url + "/corpus.html", wait_until="domcontentloaded")
             cards = page.locator(".stack-sympy:not(.stack-diagnostic)")
-            assert cards.count() == len(expected)
+            assert cards.count() == len(expected) + 1
             by_name = {}
             for index in range(cards.count()):
                 card = cards.nth(index)
                 payload = json.loads(card.locator("script.stack-sympy-data").text_content())
+                if payload["question"]["name"].endswith(" (presentation teaching copy)"):
+                    assert payload["question"]["name"] == "7.3.26 (Write sim. eqns. with matrices) (presentation teaching copy)"
+                    assert payload["variants"][0]["seed"] == 1930245414
+                    assert card.locator(".stack-answer").count() == 2
+                    card.locator(".stack-tests").click()
+                    card.locator(".stack-result .stack-verdict").wait_for(timeout=180000)
+                    assert card.locator(".stack-result").get_attribute("data-state") == "correct"
+                    assert "All authored tests passed" in card.locator(".stack-result").inner_text()
+                    assert len(card.locator(".stack-test-list li").all_inner_texts()) == 1
+                    continue
                 name = payload["question"]["name"].removesuffix(" (corrected teaching copy)")
                 assert name in expected and name not in by_name, name
                 entry, report = expected[name]
