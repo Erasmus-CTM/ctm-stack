@@ -368,9 +368,9 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
 </section>
 <section id="what-is-supported" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-supported">What is supported?</h2>
-<p>This is a bounded port of STACK, with <strong>scalar algebraic and numerical inputs</strong> and eight answer tests:</p>
-<p><code>AlgEquiv</code>, <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, <code>LowestTerms</code>, <code>NumAbsolute</code>, <code>NumRelative</code>, and <code>NumDecPlaces</code>.</p>
-<p><code>AlgEquiv</code> also handles supported Boolean expressions and polynomial equations. General set, list, matrix and units inputs, arbitrary Maxima code, and the full Moodle assessment workflow are outside the current scope. See the <a href="./docs/authoring.html#what-the-adapter-checks">precise support limits</a> before adapting a question.</p>
+<p>This is a bounded port of STACK, with <strong>algebraic inputs, finite nested scalar lists/sets, and numerical inputs</strong> and ten answer tests:</p>
+<p><code>AlgEquiv</code>, <code>Sets</code>, <code>SameType</code>, <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, <code>LowestTerms</code>, <code>NumAbsolute</code>, <code>NumRelative</code>, and <code>NumDecPlaces</code>.</p>
+<p><code>AlgEquiv</code> also handles supported Boolean expressions and polynomial equations. Nested lists and sets support <code>AlgEquiv</code>, <code>Sets</code>, <code>SameType</code> and written-form <code>EqualComAss</code>. Matrices, logical collection members and units inputs, arbitrary Maxima code, and the full Moodle assessment workflow are outside the current scope. See the <a href="./docs/authoring.html#what-the-adapter-checks">precise support limits</a> before adapting a question.</p>
 </section>
 <section id="use-your-own-question" class="level2">
 <h2 class="anchored" data-anchor-id="use-your-own-question">Use your own question</h2>

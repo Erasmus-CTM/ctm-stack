@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "engine_revision": "92c618b8392a8fb86d94815593dd195e0b3a007b",
-  "adapter_source_sha256": "2804faa76c77721612f45507f55133a7e65395ad95e2c83564e22de3955212ad",
+  "engine_revision": "88ba6ee2a753ff79431d06dd9e3c95dba635bbb3",
+  "adapter_source_sha256": "c40e4963a433c7100386936a08a712068af1f471075aeec2543195931741c123",
   "python_version": "3.12.14",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",
@@ -10,13 +10,13 @@
     "total": 30,
     "stages": {
       "qtests_mismatch": 1,
-      "qtests_pass": 18,
+      "qtests_pass": 19,
       "unsupported_import": 4,
-      "unsupported_instantiate": 7
+      "unsupported_instantiate": 6
     },
     "imported": 26,
-    "instantiated_all_seeds": 19,
-    "replayed_cases": 132,
+    "instantiated_all_seeds": 20,
+    "replayed_cases": 138,
     "failed_cases": 2,
     "failed_checks": 2
   },
@@ -193,9 +193,9 @@
     },
     {
       "diagnostic": {
-        "location": "input[ans]/tans",
-        "message": "AlgMap-15.1: input[ans]/tans: Set expressions {...} are not yet supported",
-        "reason": "Set expressions {...} are not yet supported",
+        "location": "instantiation",
+        "message": "AlgMap-15.1: instantiation: Unexpected character '?' (U+003F) at position 1",
+        "reason": "Unexpected character '?' (U+003F) at position 1",
         "seed": 2060820372,
         "type": "UnsupportedQuestion"
       },
@@ -589,28 +589,25 @@
       "status": "qtests_pass"
     },
     {
-      "diagnostic": {
-        "location": "input[ans1]/tans",
-        "message": "Complex_Convert_1: input[ans1]/tans: only scalar teacher answers are supported",
-        "reason": "only scalar teacher answers are supported",
-        "seed": 817828831,
-        "type": "UnsupportedQuestion"
-      },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "Complex_Convert_1.xml",
       "id": "complex-convert-1",
       "imported_questions": 1,
-      "instantiated_seeds": [],
+      "instantiated_seeds": [
+        817828831,
+        1302743320,
+        2023109718
+      ],
       "mismatches": [],
       "native_qtests": 2,
-      "replayed_cases": 0,
+      "replayed_cases": 6,
       "seeds": [
         817828831,
         1302743320,
         2023109718
       ],
-      "status": "unsupported_instantiate"
+      "status": "qtests_pass"
     },
     {
       "diagnostic": {

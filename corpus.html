@@ -164,6 +164,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#algmap-11-8" id="toc-algmap-11-8" class="nav-link" data-scroll-target="#algmap-11-8">AlgMap-11.8</a></li>
   <li><a href="#algmap-13-1" id="toc-algmap-13-1" class="nav-link" data-scroll-target="#algmap-13-1">AlgMap-13.1</a></li>
   <li><a href="#algmap-14-1" id="toc-algmap-14-1" class="nav-link" data-scroll-target="#algmap-14-1">AlgMap-14.1</a></li>
+  <li><a href="#complex-convert-1" id="toc-complex-convert-1" class="nav-link" data-scroll-target="#complex-convert-1">Complex_Convert_1</a></li>
   <li><a href="#logs-1" id="toc-logs-1" class="nav-link" data-scroll-target="#logs-1">Logs_1</a></li>
   </ul></li>
   <li><a href="#authored-test-mismatches" id="toc-authored-test-mismatches" class="nav-link" data-scroll-target="#authored-test-mismatches">Authored test mismatches</a>
@@ -178,7 +179,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#algmap-7-10" id="toc-algmap-7-10" class="nav-link" data-scroll-target="#algmap-7-10">AlgMap-7.10</a></li>
   <li><a href="#algmap-12-1" id="toc-algmap-12-1" class="nav-link" data-scroll-target="#algmap-12-1">AlgMap-12.1</a></li>
   <li><a href="#algmap-15-1" id="toc-algmap-15-1" class="nav-link" data-scroll-target="#algmap-15-1">AlgMap-15.1</a></li>
-  <li><a href="#complex-convert-1" id="toc-complex-convert-1" class="nav-link" data-scroll-target="#complex-convert-1">Complex_Convert_1</a></li>
   <li><a href="#limits-1" id="toc-limits-1" class="nav-link" data-scroll-target="#limits-1">Limits_1</a></li>
   <li><a href="#matrices-find-det-2-2" id="toc-matrices-find-det-2-2" class="nav-link" data-scroll-target="#matrices-find-det-2-2">Matrices_find det 2*2</a></li>
   <li><a href="#inequality-1" id="toc-inequality-1" class="nav-link" data-scroll-target="#inequality-1">Inequality_1</a></li>
@@ -210,8 +210,8 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. <strong>Only the 18 questions whose authored tests passed on every replayed seed have interactive cards.</strong> The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.</p>
-<p>The <a href="questions/corpus/baseline.json">reproducible baseline</a> reports <strong>18 passed</strong>, <strong>1 with test mismatches</strong>, and <strong>11 blocked</strong> (4 at import, 7 at instantiation). It retained <strong>73 authored test cases</strong> and replayed <strong>132 seed/case combinations</strong> across 19 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.</p>
+<p>These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. <strong>Only the 19 questions whose authored tests passed on every replayed seed have interactive cards.</strong> The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.</p>
+<p>The <a href="questions/corpus/baseline.json">reproducible baseline</a> reports <strong>19 passed</strong>, <strong>1 with test mismatches</strong>, and <strong>10 blocked</strong> (4 at import, 6 at instantiation). It retained <strong>73 authored test cases</strong> and replayed <strong>138 seed/case combinations</strong> across 20 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.</p>
 <p><strong>Attribution and reuse.</strong> Questions are from <a href="https://github.com/maths/moodle-qtype_stack">STACK / maths/moodle-qtype_stack</a>, pinned at commit <a href="https://github.com/maths/moodle-qtype_stack/commit/10d323311b7f39fb7b092dd10ce75f7d8632f525"><code>10d323311b7f39fb7b092dd10ce75f7d8632f525</code></a>. The unchanged question exports carry the <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/COPYING.txt">CC BY-SA 4.0 license</a>, also <a href="questions/corpus/COPYING.txt">included locally</a>; see each pinned source link below. The <a href="questions/corpus/manifest.json">manifest</a> records the exact upstream path and SHA-256 for every XML file.</p>
 <section id="browse-all-30" class="level2">
 <h2 class="anchored" data-anchor-id="browse-all-30">Browse all 30</h2>
@@ -372,7 +372,7 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td><a href="#complex-convert-1">Complex_Convert_1</a></td>
 <td>Topics / Complex Numbers</td>
-<td>Unsupported at instantiation</td>
+<td>Passed authored tests</td>
 <td><a href="questions/corpus/Complex_Convert_1.xml">Download</a></td>
 </tr>
 <tr class="even">
@@ -410,7 +410,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="ready-to-try" class="level2">
 <h2 class="anchored" data-anchor-id="ready-to-try">Ready to try</h2>
-<p>These 18 cards use the first seed from each replay. Press <strong>Validate answers</strong>, then <strong>Check answer</strong>. <strong>Run author tests</strong> replays the card’s XML tests on the displayed seed; the <a href="questions/corpus/baseline.json">baseline</a> describes the unchanged imports. Three cards explicitly use <a href="questions/corrected/README.md">corrected teaching copies</a> for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.</p>
+<p>These 19 cards use the first seed from each replay. Press <strong>Validate answers</strong>, then <strong>Check answer</strong>. <strong>Run author tests</strong> replays the card’s XML tests on the displayed seed; the <a href="questions/corpus/baseline.json">baseline</a> describes the unchanged imports. Three cards explicitly use <a href="questions/corrected/README.md">corrected teaching copies</a> for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.</p>
 <section id="algmap-1-5" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-1-5">AlgMap-1.5</h3>
 <p>Algebra Refresher / 01 Combinations of arithmetic operations · 1 input · 2 authored tests · baseline seeds <code>128137392</code>, <code>2051957692</code>, <code>1375878840</code>.</p>
@@ -3366,11 +3366,184 @@ ta2:ratsimp((cf1*v+k1)/(cf2*v));&lt;/text&gt;
 </code></pre></details></div></div>
 <p><a href="questions/corpus/AlgMap-14-1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/14-Algebraic-fractions-involving-factorising/AlgMap-14-1.xml">Pinned upstream source</a></p>
 </section>
+<section id="complex-convert-1" class="level3">
+<h3 class="anchored" data-anchor-id="complex-convert-1">Complex_Convert_1</h3>
+<p>Topics / Complex Numbers · 1 input · 2 authored tests · baseline seeds <code>817828831</code>, <code>1302743320</code>, <code>2023109718</code>.</p>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-18"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Consider the complex number \[z={- 2 \sqrt{2} + 2 \sqrt{2} i} \] Evaluate the modulus of \(z\) \((r = |z|)\) and the principal value of the argument of \(z\) (\(\theta = \mathrm{Arg}(z)\)). Enter your results in the correct order, i.e. \([r,\theta]\).</p>
+<p>&nbsp;</p>
+<p>\([r,\theta] = \) <input class="stack-answer" data-name="ans1" aria-label="Answer ans1" size="20" autocomplete="off"> <span class="stack-validation" data-name="ans1" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-18","question":{"name":"Complex_Convert_1","questiontext":"\u003cp\u003eConsider the complex number \\[z={@z1@} \\] Evaluate the modulus of \\(z\\) \\((r = |z|)\\) and the principal value of the argument of \\(z\\) (\\(\\theta = \\mathrm{Arg}(z)\\)). Enter your results in the correct order, i.e. \\([r,\\theta]\\).\u003c/p\u003e\n\u003cp\u003e \u003c/p\u003e\n\u003cp\u003e\\([r,\\theta] = \\) [[input:ans1]] [[validation:ans1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003e\\[r=\\sqrt{x^2+y^2}\\] \\[r=\\sqrt{\\left({@x@}\\right)^2+\\left({@y@}\\right)^2}=\\sqrt{{@x*x@}+{@y*y@}}\\] \\[r=\\sqrt{@x*x+y*y@}={@rval@}\\] \\[tan(\\mathrm{arg}(z))=\\frac{y}{x}=\\frac{@y@}{@x@}={@y/x@}\\] \\[\\mathrm{arg}(z)={@argsol@} + k\\cdot\\pi\\] Considering the appropriate quadrant of the complex plane to fix \\(k\\), we find that \\[\\mathrm{arg}(z)={@principaltheta@}\\].\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:Result]]\u003c/p\u003e","questionnote":"\\(z={@z1@}\\)  gives \\([{@modsol@},{@principaltheta@}]\\)","variables":"argset:[Pi/6,Pi/4,Pi/3];\n n1:rand(3)+1;\n modsol:rand(5)+1;\n argsol:ev(((-1)^rand(2))*(rand(2)*Pi-argset[n1]),simp);\n z1:ev(modsol*cos(argsol) + modsol*i*sin(argsol),simp);\n x:modsol*cos(argsol);\n y:modsol*sin(argsol);\n rval:sqrt(x*x+y*y);\n principaltheta:%pi - mod (%pi - argsol, 2*%pi);","defaultgrade":1.0,"penalty":0.0,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans1","type":"algebraic","teacher":"[modsol,principaltheta]","boxsize":20,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":true,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"Result","value":2.0,"autosimplify":true,"feedbackvariables":"","nodes":[{"name":"0","test":"AlgEquiv","student":"ans1","teacher":"[modsol,principaltheta]","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"Result-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":-1,"note":"Result-0-F","feedback":""}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans1":"[modsol,principaltheta]"},"expected":{"Result":{"score":1.0,"penalty":0.0,"note":"Result-0-T"}}},{"testcase":"2","description":"","inputs":{"ans1":"[x,y]"},"expected":{"Result":{"score":0.0,"penalty":0.0,"note":"Result-0-F"}}}],"deployedseeds":[817828831,1302743320,2023109718,1885837562,987432883,1651673644,927277669,812708432,727047184,1166488693,1719118035,1330127074,1855378840,710572634,2071272006,1565230007,929362269,763010241,572262086,96601302,1065357600,1368599549,2059212278,1989353230,1173992613]},"variants":[{"seed":817828831,"env":{"argset":"[pi/6,pi/4,pi/3]","n1":"2","modsol":"4","argsol":"3*pi/4","z1":"-2*sqrt(2) + 2*sqrt(2)*I","x":"-2*sqrt(2)","y":"2*sqrt(2)","rval":"4","principaltheta":"3*pi/4"},"question_html":"\u003cp\u003eConsider the complex number \\[z={- 2 \\sqrt{2} + 2 \\sqrt{2} i} \\] Evaluate the modulus of \\(z\\) \\((r = |z|)\\) and the principal value of the argument of \\(z\\) (\\(\\theta = \\mathrm{Arg}(z)\\)). Enter your results in the correct order, i.e. \\([r,\\theta]\\).\u003c/p\u003e\n\u003cp\u003e \u003c/p\u003e\n\u003cp\u003e\\([r,\\theta] = \\) \u003cinput class=\"stack-answer\" data-name=\"ans1\" aria-label=\"Answer ans1\" size=\"20\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans1\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003e\\[r=\\sqrt{x^2+y^2}\\] \\[r=\\sqrt{\\left({- 2 \\sqrt{2}}\\right)^2+\\left({2 \\sqrt{2}}\\right)^2}=\\sqrt{{8}+{8}}\\] \\[r=\\sqrt{16}={4}\\] \\[tan(\\mathrm{arg}(z))=\\frac{y}{x}=\\frac{2 \\sqrt{2}}{- 2 \\sqrt{2}}={-1}\\] \\[\\mathrm{arg}(z)={\\frac{3 \\pi}{4}} + k\\cdot\\pi\\] Considering the appropriate quadrant of the complex plane to fix \\(k\\), we find that \\[\\mathrm{arg}(z)={\\frac{3 \\pi}{4}}\\].\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"Result\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"\\(z={- 2 \\sqrt{2} + 2 \\sqrt{2} i}\\)  gives \\([{4},{\\frac{3 \\pi}{4}}]\\)"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+#| file: questions/corpus/Complex_Convert_1.xml
+#| question: Complex_Convert_1
+#| seed: 817828831
+#| review: true
+```</code></pre></details><details class="stack-source"><summary>Show STACK source</summary><pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;quiz&gt;
+  &lt;question type="stack"&gt;
+    &lt;name&gt;
+      &lt;text&gt;Complex_Convert_1&lt;/text&gt;
+    &lt;/name&gt;
+    &lt;questiontext format="html"&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;Consider the complex number \[z={@z1@} \] Evaluate the modulus of \(z\) \((r = |z|)\) and the principal value of the argument of \(z\) (\(\theta = \mathrm{Arg}(z)\)). Enter your results in the correct order, i.e. \([r,\theta]\).&lt;/p&gt;
+&lt;p&gt;&nbsp;&lt;/p&gt;
+&lt;p&gt;\([r,\theta] = \) [[input:ans1]] [[validation:ans1]]&lt;/p&gt;]]&gt;&lt;/text&gt;
+    &lt;/questiontext&gt;
+    &lt;generalfeedback format="html"&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;\[r=\sqrt{x^2+y^2}\] \[r=\sqrt{\left({@x@}\right)^2+\left({@y@}\right)^2}=\sqrt{{@x*x@}+{@y*y@}}\] \[r=\sqrt{@x*x+y*y@}={@rval@}\] \[tan(\mathrm{arg}(z))=\frac{y}{x}=\frac{@y@}{@x@}={@y/x@}\] \[\mathrm{arg}(z)={@argsol@} + k\cdot\pi\] Considering the appropriate quadrant of the complex plane to fix \(k\), we find that \[\mathrm{arg}(z)={@principaltheta@}\].&lt;/p&gt;]]&gt;&lt;/text&gt;
+    &lt;/generalfeedback&gt;
+    &lt;defaultgrade&gt;1&lt;/defaultgrade&gt;
+    &lt;penalty&gt;0&lt;/penalty&gt;
+    &lt;hidden&gt;0&lt;/hidden&gt;
+    &lt;idnumber/&gt;
+    &lt;stackversion&gt;
+      &lt;text/&gt;
+    &lt;/stackversion&gt;
+    &lt;questionvariables&gt;
+      &lt;text&gt;argset:[Pi/6,Pi/4,Pi/3];
+ n1:rand(3)+1;
+ modsol:rand(5)+1;
+ argsol:ev(((-1)^rand(2))*(rand(2)*Pi-argset[n1]),simp);
+ z1:ev(modsol*cos(argsol) + modsol*i*sin(argsol),simp);
+ x:modsol*cos(argsol);
+ y:modsol*sin(argsol);
+ rval:sqrt(x*x+y*y);
+ principaltheta:%pi - mod (%pi - argsol, 2*%pi);&lt;/text&gt;
+    &lt;/questionvariables&gt;
+    &lt;specificfeedback format="html"&gt;
+      &lt;text&gt;&lt;![CDATA[&lt;p&gt;[[feedback:Result]]&lt;/p&gt;]]&gt;&lt;/text&gt;
+    &lt;/specificfeedback&gt;
+    &lt;questionnote format="moodle_auto_format"&gt;
+      &lt;text&gt;\(z={@z1@}\)  gives \([{@modsol@},{@principaltheta@}]\)&lt;/text&gt;
+    &lt;/questionnote&gt;
+    &lt;questiondescription format="moodle_auto_format"&gt;
+      &lt;text/&gt;
+    &lt;/questiondescription&gt;
+    &lt;questionsimplify&gt;1&lt;/questionsimplify&gt;
+    &lt;assumepositive&gt;0&lt;/assumepositive&gt;
+    &lt;assumereal&gt;0&lt;/assumereal&gt;
+    &lt;scientificnotation&gt;*10&lt;/scientificnotation&gt;
+    &lt;multiplicationsign&gt;dot&lt;/multiplicationsign&gt;
+    &lt;sqrtsign&gt;1&lt;/sqrtsign&gt;
+    &lt;complexno&gt;i&lt;/complexno&gt;
+    &lt;inversetrig&gt;cos-1&lt;/inversetrig&gt;
+    &lt;logicsymbol&gt;lang&lt;/logicsymbol&gt;
+    &lt;matrixparens&gt;[&lt;/matrixparens&gt;
+    &lt;isbroken&gt;0&lt;/isbroken&gt;
+    &lt;variantsselectionseed/&gt;
+    &lt;input&gt;
+      &lt;name&gt;ans1&lt;/name&gt;
+      &lt;type&gt;algebraic&lt;/type&gt;
+      &lt;tans&gt;[modsol,principaltheta]&lt;/tans&gt;
+      &lt;boxsize&gt;20&lt;/boxsize&gt;
+      &lt;strictsyntax&gt;1&lt;/strictsyntax&gt;
+      &lt;insertstars&gt;0&lt;/insertstars&gt;
+      &lt;syntaxhint/&gt;
+      &lt;syntaxattribute&gt;0&lt;/syntaxattribute&gt;
+      &lt;forbidwords/&gt;
+      &lt;allowwords/&gt;
+      &lt;forbidfloat&gt;1&lt;/forbidfloat&gt;
+      &lt;requirelowestterms&gt;1&lt;/requirelowestterms&gt;
+      &lt;checkanswertype&gt;1&lt;/checkanswertype&gt;
+      &lt;mustverify&gt;1&lt;/mustverify&gt;
+      &lt;showvalidation&gt;1&lt;/showvalidation&gt;
+      &lt;options/&gt;
+    &lt;/input&gt;
+    &lt;prt&gt;
+      &lt;name&gt;Result&lt;/name&gt;
+      &lt;value&gt;2.0000000&lt;/value&gt;
+      &lt;autosimplify&gt;1&lt;/autosimplify&gt;
+      &lt;feedbackstyle&gt;1&lt;/feedbackstyle&gt;
+      &lt;feedbackvariables&gt;
+        &lt;text/&gt;
+      &lt;/feedbackvariables&gt;
+      &lt;node&gt;
+        &lt;name&gt;0&lt;/name&gt;
+        &lt;description/&gt;
+        &lt;answertest&gt;AlgEquiv&lt;/answertest&gt;
+        &lt;sans&gt;ans1&lt;/sans&gt;
+        &lt;tans&gt;[modsol,principaltheta]&lt;/tans&gt;
+        &lt;testoptions/&gt;
+        &lt;quiet&gt;0&lt;/quiet&gt;
+        &lt;truescoremode&gt;=&lt;/truescoremode&gt;
+        &lt;truescore&gt;1.0000000&lt;/truescore&gt;
+        &lt;truepenalty/&gt;
+        &lt;truenextnode&gt;-1&lt;/truenextnode&gt;
+        &lt;trueanswernote&gt;Result-0-T &lt;/trueanswernote&gt;
+        &lt;truefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/truefeedback&gt;
+        &lt;falsescoremode&gt;=&lt;/falsescoremode&gt;
+        &lt;falsescore&gt;0.0000000&lt;/falsescore&gt;
+        &lt;falsepenalty/&gt;
+        &lt;falsenextnode&gt;-1&lt;/falsenextnode&gt;
+        &lt;falseanswernote&gt;Result-0-F &lt;/falseanswernote&gt;
+        &lt;falsefeedback format="html"&gt;
+          &lt;text/&gt;
+        &lt;/falsefeedback&gt;
+      &lt;/node&gt;
+    &lt;/prt&gt;
+    &lt;deployedseed&gt;817828831&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1302743320&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;2023109718&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1885837562&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;987432883&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1651673644&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;927277669&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;812708432&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;727047184&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1166488693&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1719118035&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1330127074&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1855378840&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;710572634&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;2071272006&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1565230007&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;929362269&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;763010241&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;572262086&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;96601302&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1065357600&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1368599549&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;2059212278&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1989353230&lt;/deployedseed&gt;
+    &lt;deployedseed&gt;1173992613&lt;/deployedseed&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;1&lt;/testcase&gt;
+      &lt;description/&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans1&lt;/name&gt;
+        &lt;value&gt;[modsol,principaltheta]&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;Result&lt;/name&gt;
+        &lt;expectedscore&gt;1.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.0000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;Result-0-T&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+    &lt;qtest&gt;
+      &lt;testcase&gt;2&lt;/testcase&gt;
+      &lt;description/&gt;
+      &lt;testinput&gt;
+        &lt;name&gt;ans1&lt;/name&gt;
+        &lt;value&gt;[x,y]&lt;/value&gt;
+      &lt;/testinput&gt;
+      &lt;expected&gt;
+        &lt;name&gt;Result&lt;/name&gt;
+        &lt;expectedscore&gt;0.0000000&lt;/expectedscore&gt;
+        &lt;expectedpenalty&gt;0.0000000&lt;/expectedpenalty&gt;
+        &lt;expectedanswernote&gt;Result-0-F&lt;/expectedanswernote&gt;
+      &lt;/expected&gt;
+    &lt;/qtest&gt;
+  &lt;/question&gt;
+&lt;/quiz&gt;
+</code></pre></details></div></div>
+<p><a href="questions/corpus/Complex_Convert_1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Complex-Numbers/Complex_Convert_1.xml">Pinned upstream source</a></p>
+</section>
 <section id="logs-1" class="level3">
 <h3 class="anchored" data-anchor-id="logs-1">Logs_1</h3>
 <p>Topics / Logs and Exponentials · 1 input · 3 authored tests · baseline seeds <code>1531295862</code>, <code>864648734</code>, <code>1099277693</code>.</p>
-<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-18"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Given that \(\ln(a)={8}\) , express: \[\log_{a}(x^{5})\] as a single multiple of a natural logarithm.</p>
-<p>\(\log_{a}(x^{5}) = \) <input class="stack-answer" data-name="ans1" aria-label="Answer ans1" size="20" autocomplete="off"> <span class="stack-validation" data-name="ans1" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-18","question":{"name":"Logs_1","questiontext":"\u003cp\u003eGiven that \\(\\ln(a)={@a@}\\) , express: \\[\\log_{a}(x^{@n@})\\] as a single multiple of a natural logarithm.\u003c/p\u003e\n\u003cp\u003e\\(\\log_{a}(x^{@ n @}) = \\) [[input:ans1]] [[validation:ans1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eBelow are the basic rules of logarithms.\u003cbr /\u003e\\[\\log_{b}(mn) = \\log_{b}(m) +\\log_{b}(n)\\]\u003cbr /\u003e\\[\\log_{b}\\left(\\frac{m}{n}\\right) = \\log_{b}(m) -\\log_{b}(n)\\]\u003cbr /\u003e\\[\\log_{b}(m^n) = n\\cdot\\log_{b}(m)\\]\u003c/p\u003e\n\u003cp\u003e\\[\\log_{a}(m)=\\frac{\\log_{b}(m)}{\\log_{b}(a)}\\]\u003c/p\u003e\n\u003cp\u003e\u003cbr /\u003eHence \\[\\log_{a}(x^{@n@}) = {@n@}\\log_{a}(x) = {@n@}\\frac{\\ln(x)}{\\ln(a)}\\]\u003c/p\u003e\n\u003cp\u003e\\[ = {@n@}\\frac{\\ln(x)}{@a@}={@correctanswer@}\\]\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:Result]]\u003c/p\u003e","questionnote":"When \\(\\displaystyle \\ln(a)={@a@}, \\log_{a}(x^{@n@}) ={@correctanswer@}\\)","variables":"a:rand(8)+2;\n n:rand(8)+2;\n correctanswer:ev(n*ln(x)/a);\n wronganswer1:ev(n*a/ln(x));\n wronganswer2:n*a*ln(x);","defaultgrade":1.0,"penalty":0.0,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans1","type":"algebraic","teacher":"correctanswer","boxsize":20,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":true,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"Result","value":1.0,"autosimplify":true,"feedbackvariables":"","nodes":[{"name":"0","test":"AlgEquiv","student":"ans1","teacher":"correctanswer","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"Result-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":1,"note":"Result-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans1","teacher":"wronganswer1","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"Result-1-T","feedback":"\u003cp\u003eCheck the Log Laws\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":2,"note":"Result-1-F","feedback":""}},{"name":"2","test":"AlgEquiv","student":"ans1","teacher":"wronganswer2","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"Result-2-T","feedback":"\u003cp\u003eCheck the Log Laws\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"Result-2-F","feedback":""}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans1":"correctanswer"},"expected":{"Result":{"score":1.0,"penalty":0.0,"note":"Result-0-T"}}},{"testcase":"2","description":"","inputs":{"ans1":"wronganswer1"},"expected":{"Result":{"score":0.0,"penalty":0.0,"note":"Result-1-T"}}},{"testcase":"3","description":"","inputs":{"ans1":"wronganswer2"},"expected":{"Result":{"score":0.0,"penalty":0.0,"note":"Result-2-T"}}}],"deployedseeds":[1531295862,864648734,1099277693,1731809073,209765752,1273387083,1610313421,2071319725,73064170,1410745669,1363551006,1556989561,1814621817,1819508562]},"variants":[{"seed":1531295862,"env":{"a":"8","n":"5","correctanswer":"5*log(x)/8","wronganswer1":"40/log(x)","wronganswer2":"40*log(x)"},"question_html":"\u003cp\u003eGiven that \\(\\ln(a)={8}\\) , express: \\[\\log_{a}(x^{5})\\] as a single multiple of a natural logarithm.\u003c/p\u003e\n\u003cp\u003e\\(\\log_{a}(x^{5}) = \\) \u003cinput class=\"stack-answer\" data-name=\"ans1\" aria-label=\"Answer ans1\" size=\"20\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans1\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eBelow are the basic rules of logarithms.\u003cbr\u003e\\[\\log_{b}(mn) = \\log_{b}(m) +\\log_{b}(n)\\]\u003cbr\u003e\\[\\log_{b}\\left(\\frac{m}{n}\\right) = \\log_{b}(m) -\\log_{b}(n)\\]\u003cbr\u003e\\[\\log_{b}(m^n) = n\\cdot\\log_{b}(m)\\]\u003c/p\u003e\n\u003cp\u003e\\[\\log_{a}(m)=\\frac{\\log_{b}(m)}{\\log_{b}(a)}\\]\u003c/p\u003e\n\u003cp\u003e\u003cbr\u003eHence \\[\\log_{a}(x^{5}) = {5}\\log_{a}(x) = {5}\\frac{\\ln(x)}{\\ln(a)}\\]\u003c/p\u003e\n\u003cp\u003e\\[ = {5}\\frac{\\ln(x)}{8}={\\frac{5 \\log{\\left(x \\right)}}{8}}\\]\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"Result\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"When \\(\\displaystyle \\ln(a)={8}, \\log_{a}(x^{5}) ={\\frac{5 \\log{\\left(x \\right)}}{8}}\\)"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-19"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option></select></label></div><div class="stack-prompt stack-question"><p>Given that \(\ln(a)={8}\) , express: \[\log_{a}(x^{5})\] as a single multiple of a natural logarithm.</p>
+<p>\(\log_{a}(x^{5}) = \) <input class="stack-answer" data-name="ans1" aria-label="Answer ans1" size="20" autocomplete="off"> <span class="stack-validation" data-name="ans1" aria-live="polite"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-19","question":{"name":"Logs_1","questiontext":"\u003cp\u003eGiven that \\(\\ln(a)={@a@}\\) , express: \\[\\log_{a}(x^{@n@})\\] as a single multiple of a natural logarithm.\u003c/p\u003e\n\u003cp\u003e\\(\\log_{a}(x^{@ n @}) = \\) [[input:ans1]] [[validation:ans1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eBelow are the basic rules of logarithms.\u003cbr /\u003e\\[\\log_{b}(mn) = \\log_{b}(m) +\\log_{b}(n)\\]\u003cbr /\u003e\\[\\log_{b}\\left(\\frac{m}{n}\\right) = \\log_{b}(m) -\\log_{b}(n)\\]\u003cbr /\u003e\\[\\log_{b}(m^n) = n\\cdot\\log_{b}(m)\\]\u003c/p\u003e\n\u003cp\u003e\\[\\log_{a}(m)=\\frac{\\log_{b}(m)}{\\log_{b}(a)}\\]\u003c/p\u003e\n\u003cp\u003e\u003cbr /\u003eHence \\[\\log_{a}(x^{@n@}) = {@n@}\\log_{a}(x) = {@n@}\\frac{\\ln(x)}{\\ln(a)}\\]\u003c/p\u003e\n\u003cp\u003e\\[ = {@n@}\\frac{\\ln(x)}{@a@}={@correctanswer@}\\]\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:Result]]\u003c/p\u003e","questionnote":"When \\(\\displaystyle \\ln(a)={@a@}, \\log_{a}(x^{@n@}) ={@correctanswer@}\\)","variables":"a:rand(8)+2;\n n:rand(8)+2;\n correctanswer:ev(n*ln(x)/a);\n wronganswer1:ev(n*a/ln(x));\n wronganswer2:n*a*ln(x);","defaultgrade":1.0,"penalty":0.0,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans1","type":"algebraic","teacher":"correctanswer","boxsize":20,"strictsyntax":true,"insertstars":0,"forbidwords":[],"forbidfloat":true,"requirelowestterms":true,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"Result","value":1.0,"autosimplify":true,"feedbackvariables":"","nodes":[{"name":"0","test":"AlgEquiv","student":"ans1","teacher":"correctanswer","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"Result-0-T","feedback":""},"false":{"mode":"=","score":0.0,"next":1,"note":"Result-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans1","teacher":"wronganswer1","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"Result-1-T","feedback":"\u003cp\u003eCheck the Log Laws\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":2,"note":"Result-1-F","feedback":""}},{"name":"2","test":"AlgEquiv","student":"ans1","teacher":"wronganswer2","options":"","quiet":false,"true":{"mode":"=","score":0.0,"next":-1,"note":"Result-2-T","feedback":"\u003cp\u003eCheck the Log Laws\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"Result-2-F","feedback":""}}]}],"qtests":[{"testcase":"1","description":"","inputs":{"ans1":"correctanswer"},"expected":{"Result":{"score":1.0,"penalty":0.0,"note":"Result-0-T"}}},{"testcase":"2","description":"","inputs":{"ans1":"wronganswer1"},"expected":{"Result":{"score":0.0,"penalty":0.0,"note":"Result-1-T"}}},{"testcase":"3","description":"","inputs":{"ans1":"wronganswer2"},"expected":{"Result":{"score":0.0,"penalty":0.0,"note":"Result-2-T"}}}],"deployedseeds":[1531295862,864648734,1099277693,1731809073,209765752,1273387083,1610313421,2071319725,73064170,1410745669,1363551006,1556989561,1814621817,1819508562]},"variants":[{"seed":1531295862,"env":{"a":"8","n":"5","correctanswer":"5*log(x)/8","wronganswer1":"40/log(x)","wronganswer2":"40*log(x)"},"question_html":"\u003cp\u003eGiven that \\(\\ln(a)={8}\\) , express: \\[\\log_{a}(x^{5})\\] as a single multiple of a natural logarithm.\u003c/p\u003e\n\u003cp\u003e\\(\\log_{a}(x^{5}) = \\) \u003cinput class=\"stack-answer\" data-name=\"ans1\" aria-label=\"Answer ans1\" size=\"20\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans1\" aria-live=\"polite\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eBelow are the basic rules of logarithms.\u003cbr\u003e\\[\\log_{b}(mn) = \\log_{b}(m) +\\log_{b}(n)\\]\u003cbr\u003e\\[\\log_{b}\\left(\\frac{m}{n}\\right) = \\log_{b}(m) -\\log_{b}(n)\\]\u003cbr\u003e\\[\\log_{b}(m^n) = n\\cdot\\log_{b}(m)\\]\u003c/p\u003e\n\u003cp\u003e\\[\\log_{a}(m)=\\frac{\\log_{b}(m)}{\\log_{b}(a)}\\]\u003c/p\u003e\n\u003cp\u003e\u003cbr\u003eHence \\[\\log_{a}(x^{5}) = {5}\\log_{a}(x) = {5}\\frac{\\ln(x)}{\\ln(a)}\\]\u003c/p\u003e\n\u003cp\u003e\\[ = {5}\\frac{\\ln(x)}{8}={\\frac{5 \\log{\\left(x \\right)}}{8}}\\]\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"Result\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"When \\(\\displaystyle \\ln(a)={8}, \\log_{a}(x^{5}) ={\\frac{5 \\log{\\left(x \\right)}}{8}}\\)"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
 #| file: questions/corpus/Logs_1.xml
 #| question: Logs_1
 #| seed: 1531295862
@@ -3630,13 +3803,8 @@ ta2:ratsimp((cf1*v+k1)/(cf2*v));&lt;/text&gt;
 </section>
 <section id="algmap-15-1" class="level3">
 <h3 class="anchored" data-anchor-id="algmap-15-1">AlgMap-15.1</h3>
-<p>Algebra Refresher / 15 Quadratic equations · <strong>Unsupported at instantiation at seed <code>2060820372</code>.</strong> <code>input[ans]/tans</code>: Set expressions {…} are not yet supported.</p>
+<p>Algebra Refresher / 15 Quadratic equations · <strong>Unsupported at instantiation at seed <code>2060820372</code>.</strong> <code>instantiation</code>: Unexpected character '?' (U+003F) at position 1.</p>
 <p><a href="questions/corpus/AlgMap-15-1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/15-Quadratic-equations/AlgMap-15-1.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Replay record</a></p>
-</section>
-<section id="complex-convert-1" class="level3">
-<h3 class="anchored" data-anchor-id="complex-convert-1">Complex_Convert_1</h3>
-<p>Topics / Complex Numbers · <strong>Unsupported at instantiation at seed <code>817828831</code>.</strong> <code>input[ans1]/tans</code>: only scalar teacher answers are supported.</p>
-<p><a href="questions/corpus/Complex_Convert_1.xml">Download original XML</a> · <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/Complex-Numbers/Complex_Convert_1.xml">Pinned upstream source</a> · <a href="questions/corpus/baseline.json">Replay record</a></p>
 </section>
 <section id="limits-1" class="level3">
 <h3 class="anchored" data-anchor-id="limits-1">Limits_1</h3>

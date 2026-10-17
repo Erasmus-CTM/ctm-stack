@@ -31,7 +31,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 354,
+        "elapsed_ms": 389,
         "scope": "supported"
       },
       "native": {
@@ -54,7 +54,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 354,
+          "elapsed_ms": 389,
           "scope": "supported"
         },
         "pyodide": {
@@ -100,7 +100,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 709,
+        "elapsed_ms": 941,
         "scope": "supported"
       },
       "native": {
@@ -123,7 +123,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 709,
+          "elapsed_ms": 941,
           "scope": "supported"
         },
         "pyodide": {
@@ -169,7 +169,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 264,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -192,7 +192,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 264,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -238,7 +238,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 329,
+        "elapsed_ms": 372,
         "scope": "supported"
       },
       "native": {
@@ -261,7 +261,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 329,
+          "elapsed_ms": 372,
           "scope": "supported"
         },
         "pyodide": {
@@ -307,7 +307,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 289,
+        "elapsed_ms": 348,
         "scope": "supported"
       },
       "native": {
@@ -330,7 +330,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 289,
+          "elapsed_ms": 348,
           "scope": "supported"
         },
         "pyodide": {
@@ -370,7 +370,7 @@
         "test": "AlgEquiv",
         "kind": "invalid_student",
         "message": "Non-finite value",
-        "elapsed_ms": 264,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": null,
@@ -382,7 +382,7 @@
           "test": "AlgEquiv",
           "kind": "invalid_student",
           "message": "Non-finite value",
-          "elapsed_ms": 264,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -425,7 +425,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 285,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -448,7 +448,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 285,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -494,7 +494,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 298,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -517,7 +517,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 298,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -563,7 +563,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 293,
+        "elapsed_ms": 348,
         "scope": "supported"
       },
       "native": {
@@ -586,7 +586,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 293,
+          "elapsed_ms": 348,
           "scope": "supported"
         },
         "pyodide": {
@@ -632,7 +632,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 300,
+        "elapsed_ms": 350,
         "scope": "supported"
       },
       "native": {
@@ -655,7 +655,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 300,
+          "elapsed_ms": 350,
           "scope": "supported"
         },
         "pyodide": {
@@ -701,7 +701,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 317,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -724,7 +724,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 317,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -770,7 +770,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 308,
+        "elapsed_ms": 364,
         "scope": "supported"
       },
       "native": {
@@ -793,7 +793,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 308,
+          "elapsed_ms": 364,
           "scope": "supported"
         },
         "pyodide": {
@@ -839,7 +839,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 287,
+        "elapsed_ms": 359,
         "scope": "supported"
       },
       "native": {
@@ -862,7 +862,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 287,
+          "elapsed_ms": 359,
           "scope": "supported"
         },
         "pyodide": {
@@ -908,7 +908,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 295,
+        "elapsed_ms": 361,
         "scope": "supported"
       },
       "native": {
@@ -931,7 +931,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 295,
+          "elapsed_ms": 361,
           "scope": "supported"
         },
         "pyodide": {
@@ -977,7 +977,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 297,
+        "elapsed_ms": 354,
         "scope": "supported"
       },
       "native": {
@@ -1000,7 +1000,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 297,
+          "elapsed_ms": 354,
           "scope": "supported"
         },
         "pyodide": {
@@ -1046,7 +1046,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 291,
+        "elapsed_ms": 348,
         "scope": "supported"
       },
       "native": {
@@ -1069,7 +1069,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 291,
+          "elapsed_ms": 348,
           "scope": "supported"
         },
         "pyodide": {
@@ -1115,7 +1115,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 307,
+        "elapsed_ms": 360,
         "scope": "supported"
       },
       "native": {
@@ -1138,7 +1138,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 307,
+          "elapsed_ms": 360,
           "scope": "supported"
         },
         "pyodide": {
@@ -1184,7 +1184,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 311,
+        "elapsed_ms": 364,
         "scope": "supported"
       },
       "native": {
@@ -1207,7 +1207,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 311,
+          "elapsed_ms": 364,
           "scope": "supported"
         },
         "pyodide": {
@@ -1253,7 +1253,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 300,
+        "elapsed_ms": 350,
         "scope": "supported"
       },
       "native": {
@@ -1276,7 +1276,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 300,
+          "elapsed_ms": 350,
           "scope": "supported"
         },
         "pyodide": {
@@ -1322,7 +1322,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 318,
+        "elapsed_ms": 357,
         "scope": "supported"
       },
       "native": {
@@ -1345,7 +1345,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 318,
+          "elapsed_ms": 357,
           "scope": "supported"
         },
         "pyodide": {
@@ -1391,7 +1391,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 286,
+        "elapsed_ms": 353,
         "scope": "supported"
       },
       "native": {
@@ -1414,7 +1414,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 286,
+          "elapsed_ms": 353,
           "scope": "supported"
         },
         "pyodide": {
@@ -1461,7 +1461,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 323,
+        "elapsed_ms": 346,
         "scope": "supported"
       },
       "native": {
@@ -1485,7 +1485,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 323,
+          "elapsed_ms": 346,
           "scope": "supported"
         },
         "pyodide": {
@@ -1533,7 +1533,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 297,
+        "elapsed_ms": 349,
         "scope": "supported"
       },
       "native": {
@@ -1557,7 +1557,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 297,
+          "elapsed_ms": 349,
           "scope": "supported"
         },
         "pyodide": {
@@ -1604,7 +1604,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 539,
+        "elapsed_ms": 674,
         "scope": "supported"
       },
       "native": {
@@ -1627,7 +1627,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 539,
+          "elapsed_ms": 674,
           "scope": "supported"
         },
         "pyodide": {
@@ -1674,7 +1674,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 526,
+        "elapsed_ms": 676,
         "scope": "supported"
       },
       "native": {
@@ -1698,7 +1698,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 526,
+          "elapsed_ms": 676,
           "scope": "supported"
         },
         "pyodide": {
@@ -1745,7 +1745,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 410,
+        "elapsed_ms": 505,
         "scope": "supported"
       },
       "native": {
@@ -1768,7 +1768,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 410,
+          "elapsed_ms": 505,
           "scope": "supported"
         },
         "pyodide": {
@@ -1820,7 +1820,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 389,
+        "elapsed_ms": 470,
         "scope": "supported"
       },
       "native": {
@@ -1843,7 +1843,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 389,
+          "elapsed_ms": 470,
           "scope": "supported"
         },
         "pyodide": {
@@ -1890,7 +1890,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 267,
+        "elapsed_ms": 320,
         "scope": "supported"
       },
       "native": {
@@ -1914,7 +1914,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 267,
+          "elapsed_ms": 320,
           "scope": "supported"
         },
         "pyodide": {
@@ -1962,7 +1962,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 270,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -1986,7 +1986,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 270,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -2034,7 +2034,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 296,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -2058,7 +2058,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 296,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -2105,7 +2105,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 267,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -2128,7 +2128,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 267,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -2174,7 +2174,7 @@
         "correct": false,
         "note": "wrong_decimal_places",
         "feedback": "Incorrect number of decimal places",
-        "elapsed_ms": 260,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -2197,7 +2197,7 @@
           "correct": false,
           "note": "wrong_decimal_places",
           "feedback": "Incorrect number of decimal places",
-          "elapsed_ms": 260,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -2243,7 +2243,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 299,
+        "elapsed_ms": 354,
         "scope": "supported"
       },
       "native": {
@@ -2266,7 +2266,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 299,
+          "elapsed_ms": 354,
           "scope": "supported"
         },
         "pyodide": {
@@ -2312,7 +2312,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 412,
+        "elapsed_ms": 500,
         "scope": "supported"
       },
       "native": {
@@ -2335,7 +2335,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 412,
+          "elapsed_ms": 500,
           "scope": "supported"
         },
         "pyodide": {
@@ -2381,7 +2381,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 290,
+        "elapsed_ms": 354,
         "scope": "supported"
       },
       "native": {
@@ -2404,7 +2404,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 290,
+          "elapsed_ms": 354,
           "scope": "supported"
         },
         "pyodide": {
@@ -2445,7 +2445,7 @@
         "kind": "unsupported",
         "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
         "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-        "elapsed_ms": 285,
+        "elapsed_ms": 348,
         "scope": "unsupported"
       },
       "native": null,
@@ -2458,7 +2458,7 @@
           "kind": "unsupported",
           "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
           "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-          "elapsed_ms": 285,
+          "elapsed_ms": 348,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2497,7 +2497,7 @@
         "kind": "unsupported",
         "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
         "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-        "elapsed_ms": 289,
+        "elapsed_ms": 350,
         "scope": "unsupported"
       },
       "native": null,
@@ -2510,7 +2510,7 @@
           "kind": "unsupported",
           "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
           "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-          "elapsed_ms": 289,
+          "elapsed_ms": 350,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2549,7 +2549,7 @@
         "kind": "unsupported",
         "reason": "Equation logic supports equations and disjunctions of equations",
         "message": "Equation logic supports equations and disjunctions of equations",
-        "elapsed_ms": 299,
+        "elapsed_ms": 349,
         "scope": "unsupported"
       },
       "native": null,
@@ -2562,7 +2562,7 @@
           "kind": "unsupported",
           "reason": "Equation logic supports equations and disjunctions of equations",
           "message": "Equation logic supports equations and disjunctions of equations",
-          "elapsed_ms": 299,
+          "elapsed_ms": 349,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2601,7 +2601,7 @@
         "kind": "unsupported",
         "reason": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
         "message": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
-        "elapsed_ms": 252,
+        "elapsed_ms": 315,
         "scope": "unsupported"
       },
       "native": null,
@@ -2614,7 +2614,7 @@
           "kind": "unsupported",
           "reason": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
           "message": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
-          "elapsed_ms": 252,
+          "elapsed_ms": 315,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2653,7 +2653,7 @@
         "kind": "unsupported",
         "reason": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
         "message": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
-        "elapsed_ms": 266,
+        "elapsed_ms": 315,
         "scope": "unsupported"
       },
       "native": null,
@@ -2666,7 +2666,7 @@
           "kind": "unsupported",
           "reason": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
           "message": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
-          "elapsed_ms": 266,
+          "elapsed_ms": 315,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2705,7 +2705,7 @@
         "kind": "unsupported",
         "reason": "Plus/minus input requires explicit alternatives",
         "message": "Plus/minus input requires explicit alternatives",
-        "elapsed_ms": 260,
+        "elapsed_ms": 314,
         "scope": "unsupported"
       },
       "native": null,
@@ -2718,7 +2718,7 @@
           "kind": "unsupported",
           "reason": "Plus/minus input requires explicit alternatives",
           "message": "Plus/minus input requires explicit alternatives",
-          "elapsed_ms": 260,
+          "elapsed_ms": 314,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2763,7 +2763,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 254,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -2787,7 +2787,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 254,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -2834,7 +2834,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 289,
+        "elapsed_ms": 350,
         "scope": "supported"
       },
       "native": {
@@ -2857,7 +2857,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 289,
+          "elapsed_ms": 350,
           "scope": "supported"
         },
         "pyodide": {
@@ -2903,7 +2903,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 291,
+        "elapsed_ms": 353,
         "scope": "supported"
       },
       "native": {
@@ -2926,7 +2926,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 291,
+          "elapsed_ms": 353,
           "scope": "supported"
         },
         "pyodide": {
@@ -2972,7 +2972,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 281,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -2995,7 +2995,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 281,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -3041,7 +3041,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 287,
+        "elapsed_ms": 350,
         "scope": "supported"
       },
       "native": {
@@ -3064,7 +3064,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 287,
+          "elapsed_ms": 350,
           "scope": "supported"
         },
         "pyodide": {
@@ -3110,7 +3110,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 279,
+        "elapsed_ms": 352,
         "scope": "supported"
       },
       "native": {
@@ -3133,7 +3133,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 279,
+          "elapsed_ms": 352,
           "scope": "supported"
         },
         "pyodide": {
@@ -3179,7 +3179,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 252,
+        "elapsed_ms": 325,
         "scope": "supported"
       },
       "native": {
@@ -3202,7 +3202,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 252,
+          "elapsed_ms": 325,
           "scope": "supported"
         },
         "pyodide": {
@@ -3248,7 +3248,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 267,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -3271,7 +3271,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 267,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -3317,7 +3317,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 268,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -3340,7 +3340,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 268,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -3386,7 +3386,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 296,
+        "elapsed_ms": 350,
         "scope": "supported"
       },
       "native": {
@@ -3409,7 +3409,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 296,
+          "elapsed_ms": 350,
           "scope": "supported"
         },
         "pyodide": {
@@ -3455,7 +3455,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 258,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -3478,7 +3478,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 258,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -3524,7 +3524,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 257,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -3547,7 +3547,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 257,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -3593,7 +3593,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 279,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -3616,7 +3616,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 279,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -3663,7 +3663,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 267,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -3687,7 +3687,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 267,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -3734,7 +3734,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 262,
+        "elapsed_ms": 321,
         "scope": "supported"
       },
       "native": {
@@ -3757,7 +3757,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 262,
+          "elapsed_ms": 321,
           "scope": "supported"
         },
         "pyodide": {
@@ -3803,7 +3803,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 306,
+        "elapsed_ms": 352,
         "scope": "supported"
       },
       "native": {
@@ -3826,7 +3826,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 306,
+          "elapsed_ms": 352,
           "scope": "supported"
         },
         "pyodide": {
@@ -3872,7 +3872,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 286,
+        "elapsed_ms": 353,
         "scope": "supported"
       },
       "native": {
@@ -3895,7 +3895,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 286,
+          "elapsed_ms": 353,
           "scope": "supported"
         },
         "pyodide": {
@@ -3941,7 +3941,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 257,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -3964,7 +3964,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 257,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -4010,7 +4010,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 254,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -4033,7 +4033,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 254,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -4079,7 +4079,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 256,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -4102,7 +4102,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 256,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -4148,7 +4148,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 287,
+        "elapsed_ms": 349,
         "scope": "supported"
       },
       "native": {
@@ -4171,7 +4171,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 287,
+          "elapsed_ms": 349,
           "scope": "supported"
         },
         "pyodide": {
@@ -4219,7 +4219,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 291,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -4242,7 +4242,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 291,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -4283,7 +4283,7 @@
         "kind": "unsupported",
         "reason": "Symbolic complex logarithms require branch-aware proof",
         "message": "Symbolic complex logarithms require branch-aware proof",
-        "elapsed_ms": 264,
+        "elapsed_ms": 319,
         "scope": "unsupported"
       },
       "native": null,
@@ -4296,7 +4296,7 @@
           "kind": "unsupported",
           "reason": "Symbolic complex logarithms require branch-aware proof",
           "message": "Symbolic complex logarithms require branch-aware proof",
-          "elapsed_ms": 264,
+          "elapsed_ms": 319,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -4340,7 +4340,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 261,
+        "elapsed_ms": 322,
         "scope": "supported"
       },
       "native": {
@@ -4363,7 +4363,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 261,
+          "elapsed_ms": 322,
           "scope": "supported"
         },
         "pyodide": {
@@ -4409,7 +4409,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 265,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -4432,7 +4432,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 265,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -4478,7 +4478,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 287,
+        "elapsed_ms": 347,
         "scope": "supported"
       },
       "native": {
@@ -4501,7 +4501,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 287,
+          "elapsed_ms": 347,
           "scope": "supported"
         },
         "pyodide": {
@@ -4547,7 +4547,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 291,
+        "elapsed_ms": 361,
         "scope": "supported"
       },
       "native": {
@@ -4570,7 +4570,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 291,
+          "elapsed_ms": 361,
           "scope": "supported"
         },
         "pyodide": {
@@ -4616,7 +4616,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 396,
+        "elapsed_ms": 491,
         "scope": "supported"
       },
       "native": {
@@ -4639,7 +4639,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 396,
+          "elapsed_ms": 491,
           "scope": "supported"
         },
         "pyodide": {
@@ -4686,7 +4686,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 262,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -4710,7 +4710,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 262,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -4758,7 +4758,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 307,
+        "elapsed_ms": 349,
         "scope": "supported"
       },
       "native": {
@@ -4782,7 +4782,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 307,
+          "elapsed_ms": 349,
           "scope": "supported"
         },
         "pyodide": {
@@ -4830,7 +4830,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 266,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -4854,7 +4854,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 266,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -4901,7 +4901,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 282,
+        "elapsed_ms": 347,
         "scope": "supported"
       },
       "native": {
@@ -4924,7 +4924,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 282,
+          "elapsed_ms": 347,
           "scope": "supported"
         },
         "pyodide": {
@@ -4971,7 +4971,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 261,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -4995,7 +4995,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 261,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -5043,7 +5043,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 263,
+        "elapsed_ms": 321,
         "scope": "supported"
       },
       "native": {
@@ -5067,7 +5067,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 263,
+          "elapsed_ms": 321,
           "scope": "supported"
         },
         "pyodide": {
@@ -5115,7 +5115,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 263,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -5139,7 +5139,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 263,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -5187,7 +5187,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 254,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -5211,7 +5211,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 254,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -5259,7 +5259,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 260,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -5283,7 +5283,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 260,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -5330,7 +5330,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 267,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -5353,7 +5353,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 267,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -5399,7 +5399,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 298,
+        "elapsed_ms": 348,
         "scope": "supported"
       },
       "native": {
@@ -5422,7 +5422,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 298,
+          "elapsed_ms": 348,
           "scope": "supported"
         },
         "pyodide": {
@@ -5468,7 +5468,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 297,
+        "elapsed_ms": 348,
         "scope": "supported"
       },
       "native": {
@@ -5491,7 +5491,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 297,
+          "elapsed_ms": 348,
           "scope": "supported"
         },
         "pyodide": {
@@ -5537,7 +5537,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 263,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -5560,7 +5560,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 263,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -5606,7 +5606,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 264,
+        "elapsed_ms": 321,
         "scope": "supported"
       },
       "native": {
@@ -5629,7 +5629,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 264,
+          "elapsed_ms": 321,
           "scope": "supported"
         },
         "pyodide": {
@@ -5675,7 +5675,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 271,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -5698,7 +5698,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 271,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -5744,7 +5744,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 287,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -5767,7 +5767,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 287,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -5813,7 +5813,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 292,
+        "elapsed_ms": 350,
         "scope": "supported"
       },
       "native": {
@@ -5836,7 +5836,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 292,
+          "elapsed_ms": 350,
           "scope": "supported"
         },
         "pyodide": {
@@ -5882,7 +5882,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 373,
+        "elapsed_ms": 469,
         "scope": "supported"
       },
       "native": {
@@ -5905,7 +5905,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 373,
+          "elapsed_ms": 469,
           "scope": "supported"
         },
         "pyodide": {
@@ -5951,7 +5951,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 316,
+        "elapsed_ms": 353,
         "scope": "supported"
       },
       "native": {
@@ -5974,7 +5974,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 316,
+          "elapsed_ms": 353,
           "scope": "supported"
         },
         "pyodide": {
@@ -5992,27 +5992,4383 @@
       "python_status": "pass",
       "native_status": "match_desired",
       "parity_status": "match"
+    },
+    {
+      "id": "port-list-empty",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "[]",
+      "teacher": "[]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-list-empty",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-list-empty",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-list-empty",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-empty",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-list-empty",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-list-ordered",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "[1,2]",
+      "teacher": "[1,2]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-list-ordered",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 315,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-list-ordered",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-list-ordered",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-ordered",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 315,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-list-ordered",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-list-order-matters",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "[2,1]",
+      "teacher": "[1,2]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-list-order-matters",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATList_wrongentries",
+        "feedback": "Check list positions: 1, 2.",
+        "elapsed_ms": 322,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-list-order-matters",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "(ATList_wrongentries 1, 2). ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-list-order-matters",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-order-matters",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATList_wrongentries",
+          "feedback": "Check list positions: 1, 2.",
+          "elapsed_ms": 322,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-list-order-matters",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATList_wrongentries",
+          "feedback": "Check list positions: 1, 2."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-list-length",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "[1,1]",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-list-length",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATList_wronglen",
+        "feedback": "The list has the wrong number of entries.",
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-list-length",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATList_wronglen. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-list-length",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-length",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATList_wronglen",
+          "feedback": "The list has the wrong number of entries.",
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-list-length",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATList_wronglen",
+          "feedback": "The list has the wrong number of entries."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-list-equivalence",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "[x+x,sin(x)^2+cos(x)^2]",
+      "teacher": "[2*x,1]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-list-equivalence",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 377,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-list-equivalence",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-list-equivalence",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-equivalence",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 377,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-list-equivalence",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-list-float-product",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "[452]",
+      "teacher": "[4.52*10^2]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-list-float-product",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATList_wrongentries",
+        "feedback": "Check list positions: 1.",
+        "elapsed_ms": 318,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-list-float-product",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "(ATList_wrongentries 1). ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-list-float-product",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-float-product",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATList_wrongentries",
+          "feedback": "Check list positions: 1.",
+          "elapsed_ms": 318,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-list-float-product",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATList_wrongentries",
+          "feedback": "Check list positions: 1."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-list-float-subtraction",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "[100.4-80.0]",
+      "teacher": "[20.4]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-list-float-subtraction",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATList_wrongentries",
+        "feedback": "Check list positions: 1.",
+        "elapsed_ms": 351,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-list-float-subtraction",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "(ATList_wrongentries 1). ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-list-float-subtraction",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-float-subtraction",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATList_wrongentries",
+          "feedback": "Check list positions: 1.",
+          "elapsed_ms": 351,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-list-float-subtraction",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATList_wrongentries",
+          "feedback": "Check list positions: 1."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-list-float-third",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "[1/3]",
+      "teacher": "[0.3333333333333333]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-list-float-third",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-list-float-third",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-list-float-third",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-float-third",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-list-float-third",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-set-empty",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "{}",
+      "teacher": "{}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-set-empty",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-set-empty",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-set-empty",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-set-empty",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-set-empty",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-set-order",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "{2,1}",
+      "teacher": "{1,2}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-set-order",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-set-order",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-set-order",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-set-order",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-set-order",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-set-duplicates",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "{1,2,1+1}",
+      "teacher": "{1,2}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-set-duplicates",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 349,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-set-duplicates",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-set-duplicates",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-set-duplicates",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 349,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-set-duplicates",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-set-rationals",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "{2/4,x+x}",
+      "teacher": "{2*x,1/2}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-set-rationals",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 351,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-set-rationals",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-set-rationals",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-set-rationals",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 351,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-set-rationals",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-set-not-pairwise",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "{(x+1)^2}",
+      "teacher": "{x^2+2*x+1}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-set-not-pairwise",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATSet_wrongentries",
+        "feedback": "Check the elements of the set.",
+        "elapsed_ms": 351,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-set-not-pairwise",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATSet_wrongentries. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-set-not-pairwise",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-set-not-pairwise",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSet_wrongentries",
+          "feedback": "Check the elements of the set.",
+          "elapsed_ms": 351,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-set-not-pairwise",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSet_wrongentries",
+          "feedback": "Check the elements of the set."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-sets-trig",
+      "group": "finite scalar collections",
+      "test": "Sets",
+      "student": "{sin(x)^2+cos(x)^2}",
+      "teacher": "{1}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned native set preparation does not establish this scalar trigonometric identity; members compare structurally.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-sets-trig",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATSets_wrongentries | ATSets_missingentries",
+        "feedback": "Extra elements: sin(x)**2 + cos(x)**2. Missing elements: 1.",
+        "elapsed_ms": 353,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-sets-trig",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATSets_wrongentries. ATSets_missingentries. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-sets-trig",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-sets-trig",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_wrongentries | ATSets_missingentries",
+          "feedback": "Extra elements: sin(x)**2 + cos(x)**2. Missing elements: 1.",
+          "elapsed_ms": 353,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-sets-trig",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_wrongentries | ATSets_missingentries",
+          "feedback": "Extra elements: sin(x)**2 + cos(x)**2. Missing elements: 1."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-sets-duplicates",
+      "group": "finite scalar collections",
+      "test": "Sets",
+      "student": "{1,2,1+1}",
+      "teacher": "{1,2}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-sets-duplicates",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "ATSets_duplicates",
+        "feedback": "Repeated elements were removed from the set.",
+        "elapsed_ms": 351,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-sets-duplicates",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATSets_duplicates. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-sets-duplicates",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-sets-duplicates",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "ATSets_duplicates",
+          "feedback": "Repeated elements were removed from the set.",
+          "elapsed_ms": 351,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-sets-duplicates",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "ATSets_duplicates",
+          "feedback": "Repeated elements were removed from the set."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-sets-missing",
+      "group": "finite scalar collections",
+      "test": "Sets",
+      "student": "{1}",
+      "teacher": "{1,2}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-sets-missing",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATSets_missingentries",
+        "feedback": "Missing elements: 2.",
+        "elapsed_ms": 321,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-sets-missing",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATSets_missingentries. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-sets-missing",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-sets-missing",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_missingentries",
+          "feedback": "Missing elements: 2.",
+          "elapsed_ms": 321,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-sets-missing",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_missingentries",
+          "feedback": "Missing elements: 2."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-sets-extra",
+      "group": "finite scalar collections",
+      "test": "Sets",
+      "student": "{1,2,3}",
+      "teacher": "{1,2}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-sets-extra",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATSets_wrongentries",
+        "feedback": "Extra elements: 3.",
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-sets-extra",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATSets_wrongentries. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-sets-extra",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-sets-extra",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_wrongentries",
+          "feedback": "Extra elements: 3.",
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-sets-extra",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_wrongentries",
+          "feedback": "Extra elements: 3."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-sets-both",
+      "group": "finite scalar collections",
+      "test": "Sets",
+      "student": "{1,3}",
+      "teacher": "{1,2}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-sets-both",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATSets_wrongentries | ATSets_missingentries",
+        "feedback": "Extra elements: 3. Missing elements: 2.",
+        "elapsed_ms": 316,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-sets-both",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATSets_wrongentries. ATSets_missingentries. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-sets-both",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-sets-both",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_wrongentries | ATSets_missingentries",
+          "feedback": "Extra elements: 3. Missing elements: 2.",
+          "elapsed_ms": 316,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-sets-both",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_wrongentries | ATSets_missingentries",
+          "feedback": "Extra elements: 3. Missing elements: 2."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-sets-empty",
+      "group": "finite scalar collections",
+      "test": "Sets",
+      "student": "{}",
+      "teacher": "{}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-sets-empty",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 318,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-sets-empty",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-sets-empty",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-sets-empty",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 318,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-sets-empty",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-list-set-type",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "[1]",
+      "teacher": "{1}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-list-set-type",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false,
+        "note": "",
+        "feedback": "The answer and teacher must have the same collection type.",
+        "elapsed_ms": 318,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-list-set-type",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": false,
+        "correct": false,
+        "answer_note": "ATAlgEquiv_SA_not_set. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-list-set-type",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-set-type",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": false,
+          "note": "",
+          "feedback": "The answer and teacher must have the same collection type.",
+          "elapsed_ms": 318,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-list-set-type",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": false,
+          "note": "",
+          "feedback": "The answer and teacher must have the same collection type."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-sets-type",
+      "group": "finite scalar collections",
+      "test": "Sets",
+      "student": "[1]",
+      "teacher": "{1}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered lists preserve scalar AlgEquiv; sets compare normalized members and preserve duplicate feedback.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-sets-type",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false,
+        "note": "ATSets_SA_not_set",
+        "feedback": "Enter a set using braces {...}.",
+        "elapsed_ms": 315,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-sets-type",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": false,
+        "correct": false,
+        "answer_note": "ATSets_SA_not_set. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-sets-type",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-sets-type",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": false,
+          "note": "ATSets_SA_not_set",
+          "feedback": "Enter a set using braces {...}.",
+          "elapsed_ms": 315,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-sets-type",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": false,
+          "note": "ATSets_SA_not_set",
+          "feedback": "Enter a set using braces {...}."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-list",
+      "group": "nested collection applicability",
+      "test": "AlgEquiv",
+      "student": "[[1]]",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Nested collections are supported; this candidate has a different element/root type from the reference.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested-list",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false,
+        "note": "ATList_wrongentries",
+        "feedback": "Check list positions: 1.",
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested-list",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": false,
+        "correct": false,
+        "answer_note": "(ATList_wrongentries 1: ATAlgEquiv_SA_not_expression). ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested-list",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-list",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": false,
+          "note": "ATList_wrongentries",
+          "feedback": "Check list positions: 1.",
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-list",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": false,
+          "note": "ATList_wrongentries",
+          "feedback": "Check list positions: 1."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-set",
+      "group": "nested collection applicability",
+      "test": "AlgEquiv",
+      "student": "{{1}}",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Nested collections are supported; this candidate has a different element/root type from the reference.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested-set",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false,
+        "note": "",
+        "feedback": "The answer and teacher must have the same collection type.",
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested-set",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": false,
+        "correct": false,
+        "answer_note": "ATAlgEquiv_SA_not_list. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested-set",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-set",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": false,
+          "note": "",
+          "feedback": "The answer and teacher must have the same collection type.",
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-set",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": false,
+          "note": "",
+          "feedback": "The answer and teacher must have the same collection type."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-list-logical",
+      "group": "finite collection boundaries",
+      "test": "AlgEquiv",
+      "student": "[x=1]",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Flat scalar collections only; nested/logical elements and more than 32 entries remain outside scope.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-list-logical",
+        "test": "AlgEquiv",
+        "kind": "unsupported",
+        "reason": "Collection leaves must be scalar expressions",
+        "message": "Collection leaves must be scalar expressions",
+        "elapsed_ms": 316,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-list-logical",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-list-logical",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection leaves must be scalar expressions",
+          "message": "Collection leaves must be scalar expressions",
+          "elapsed_ms": 316,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-list-logical",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection leaves must be scalar expressions",
+          "message": "Collection leaves must be scalar expressions"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-set-logical",
+      "group": "finite collection boundaries",
+      "test": "AlgEquiv",
+      "student": "{true}",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Flat scalar collections only; nested/logical elements and more than 32 entries remain outside scope.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-set-logical",
+        "test": "AlgEquiv",
+        "kind": "unsupported",
+        "reason": "Collection leaves must be scalar expressions",
+        "message": "Collection leaves must be scalar expressions",
+        "elapsed_ms": 319,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-set-logical",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-set-logical",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection leaves must be scalar expressions",
+          "message": "Collection leaves must be scalar expressions",
+          "elapsed_ms": 319,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-set-logical",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection leaves must be scalar expressions",
+          "message": "Collection leaves must be scalar expressions"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-collection-limit",
+      "group": "finite collection boundaries",
+      "test": "AlgEquiv",
+      "student": "[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Flat scalar collections only; nested/logical elements and more than 32 entries remain outside scope.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-collection-limit",
+        "test": "AlgEquiv",
+        "kind": "unsupported",
+        "reason": "Collection size exceeds supported bound",
+        "message": "Collection size exceeds supported bound",
+        "elapsed_ms": 316,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-collection-limit",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-collection-limit",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection size exceeds supported bound",
+          "message": "Collection size exceeds supported bound",
+          "elapsed_ms": 316,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-collection-limit",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection size exceeds supported bound",
+          "message": "Collection size exceeds supported bound"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-set-trig-structural",
+      "group": "finite scalar collections",
+      "test": "AlgEquiv",
+      "student": "{sin(x)^2+cos(x)^2}",
+      "teacher": "{1}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned native set preparation does not establish this scalar trigonometric identity; members compare structurally.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-set-trig-structural",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATSet_wrongentries",
+        "feedback": "Check the elements of the set.",
+        "elapsed_ms": 350,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-set-trig-structural",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATSet_wrongentries. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-set-trig-structural",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-set-trig-structural",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSet_wrongentries",
+          "feedback": "Check the elements of the set.",
+          "elapsed_ms": 350,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-set-trig-structural",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSet_wrongentries",
+          "feedback": "Check the elements of the set."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-nested-list",
+      "group": "nested collections and checks",
+      "test": "AlgEquiv",
+      "student": "[1,[x+x]]",
+      "teacher": "[1,[2*x]]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-nested-list",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 354,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-nested-list",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-nested-list",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested2-nested-list",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 354,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-nested-list",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-set-of-lists",
+      "group": "nested collections and checks",
+      "test": "AlgEquiv",
+      "student": "{[x+x]}",
+      "teacher": "{[2*x]}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-set-of-lists",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 352,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-set-of-lists",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-set-of-lists",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested2-set-of-lists",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 352,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-set-of-lists",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-set-inner-list-order",
+      "group": "nested collections and checks",
+      "test": "AlgEquiv",
+      "student": "{[1,2]}",
+      "teacher": "{[2,1]}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-set-inner-list-order",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATSet_wrongentries",
+        "feedback": "Check the elements of the set.",
+        "elapsed_ms": 317,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-set-inner-list-order",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATSet_wrongentries. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-set-inner-list-order",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested2-set-inner-list-order",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSet_wrongentries",
+          "feedback": "Check the elements of the set.",
+          "elapsed_ms": 317,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-set-inner-list-order",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSet_wrongentries",
+          "feedback": "Check the elements of the set."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-list-inner-set",
+      "group": "nested collections and checks",
+      "test": "AlgEquiv",
+      "student": "[{1,1}]",
+      "teacher": "[{1}]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-list-inner-set",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-list-inner-set",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-list-inner-set",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested2-list-inner-set",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-list-inner-set",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-sets-inner-list-repeat",
+      "group": "nested collections and checks",
+      "test": "Sets",
+      "student": "{[1,1]}",
+      "teacher": "{[1]}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-sets-inner-list-repeat",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true,
+        "note": "ATSets_wrongentries | ATSets_missingentries",
+        "feedback": "Extra elements: [1,1]. Missing elements: [1].",
+        "elapsed_ms": 318,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-sets-inner-list-repeat",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATSets_wrongentries. ATSets_missingentries. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-sets-inner-list-repeat",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-nested2-sets-inner-list-repeat",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_wrongentries | ATSets_missingentries",
+          "feedback": "Extra elements: [1,1]. Missing elements: [1].",
+          "elapsed_ms": 318,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-sets-inner-list-repeat",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "cas_valid": true,
+          "note": "ATSets_wrongentries | ATSets_missingentries",
+          "feedback": "Extra elements: [1,1]. Missing elements: [1]."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-sets-inner-set-repeat",
+      "group": "nested collections and checks",
+      "test": "Sets",
+      "student": "{{1,1}}",
+      "teacher": "{{1}}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-sets-inner-set-repeat",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 318,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-sets-inner-set-repeat",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-sets-inner-set-repeat",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-nested2-sets-inner-set-repeat",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 318,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-sets-inner-set-repeat",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-sets-list-duplicate",
+      "group": "nested collections and checks",
+      "test": "Sets",
+      "student": "{[1,2],[1,2]}",
+      "teacher": "{[1,2]}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-sets-list-duplicate",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "ATSets_duplicates",
+        "feedback": "Repeated elements were removed from the set.",
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-sets-list-duplicate",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATSets_duplicates. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-sets-list-duplicate",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-nested2-sets-list-duplicate",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "ATSets_duplicates",
+          "feedback": "Repeated elements were removed from the set.",
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-sets-list-duplicate",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "ATSets_duplicates",
+          "feedback": "Repeated elements were removed from the set."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-sets-set-duplicate",
+      "group": "nested collections and checks",
+      "test": "Sets",
+      "student": "{{1},{1}}",
+      "teacher": "{{1}}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-sets-set-duplicate",
+        "test": "Sets",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "ATSets_duplicates",
+        "feedback": "Repeated elements were removed from the set.",
+        "elapsed_ms": 323,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-sets-set-duplicate",
+        "test": "Sets",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATSets_duplicates. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-sets-set-duplicate",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-nested2-sets-set-duplicate",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "ATSets_duplicates",
+          "feedback": "Repeated elements were removed from the set.",
+          "elapsed_ms": 323,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-sets-set-duplicate",
+          "test": "Sets",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "ATSets_duplicates",
+          "feedback": "Repeated elements were removed from the set."
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-type-nested-list",
+      "group": "nested collections and checks",
+      "test": "SameType",
+      "student": "[1,[2]]",
+      "teacher": "[9,[3]]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-type-nested-list",
+        "test": "SameType",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "cas_valid": true,
+        "elapsed_ms": 318,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-type-nested-list",
+        "test": "SameType",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-type-nested-list",
+        "test": "SameType",
+        "python": {
+          "case_id": "port-nested2-type-nested-list",
+          "test": "SameType",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true,
+          "elapsed_ms": 318,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-type-nested-list",
+          "test": "SameType",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-type-nested-mismatch",
+      "group": "nested collections and checks",
+      "test": "SameType",
+      "student": "[1,[2]]",
+      "teacher": "[9,{3}]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-type-nested-mismatch",
+        "test": "SameType",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "note": "",
+        "feedback": "",
+        "cas_valid": true,
+        "elapsed_ms": 318,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-type-nested-mismatch",
+        "test": "SameType",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-type-nested-mismatch",
+        "test": "SameType",
+        "python": {
+          "case_id": "port-nested2-type-nested-mismatch",
+          "test": "SameType",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true,
+          "elapsed_ms": 318,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-type-nested-mismatch",
+          "test": "SameType",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-type-list-length",
+      "group": "nested collections and checks",
+      "test": "SameType",
+      "student": "[1,[2]]",
+      "teacher": "[9]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-type-list-length",
+        "test": "SameType",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "cas_valid": true,
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-type-list-length",
+        "test": "SameType",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-type-list-length",
+        "test": "SameType",
+        "python": {
+          "case_id": "port-nested2-type-list-length",
+          "test": "SameType",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true,
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-type-list-length",
+          "test": "SameType",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-type-set-members",
+      "group": "nested collections and checks",
+      "test": "SameType",
+      "student": "{[1,2]}",
+      "teacher": "{{1,2}}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-type-set-members",
+        "test": "SameType",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "cas_valid": true,
+        "elapsed_ms": 317,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-type-set-members",
+        "test": "SameType",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-type-set-members",
+        "test": "SameType",
+        "python": {
+          "case_id": "port-nested2-type-set-members",
+          "test": "SameType",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true,
+          "elapsed_ms": 317,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-type-set-members",
+          "test": "SameType",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-form-set-repeat-reorder",
+      "group": "nested collections and checks",
+      "test": "EqualComAss",
+      "student": "{1,2,2}",
+      "teacher": "{2,1,2}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-form-set-repeat-reorder",
+        "test": "EqualComAss",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "cas_valid": true,
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-form-set-repeat-reorder",
+        "test": "EqualComAss",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-form-set-repeat-reorder",
+        "test": "EqualComAss",
+        "python": {
+          "case_id": "port-nested2-form-set-repeat-reorder",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true,
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-form-set-repeat-reorder",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-form-set-repeat-count",
+      "group": "nested collections and checks",
+      "test": "EqualComAss",
+      "student": "{4,4}",
+      "teacher": "{4}",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-form-set-repeat-count",
+        "test": "EqualComAss",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "note": "",
+        "feedback": "",
+        "cas_valid": true,
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-form-set-repeat-count",
+        "test": "EqualComAss",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": false,
+        "answer_note": "ATEqualComAss (AlgEquiv-true). ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-form-set-repeat-count",
+        "test": "EqualComAss",
+        "python": {
+          "case_id": "port-nested2-form-set-repeat-count",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true,
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-form-set-repeat-count",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-form-nested-set-order",
+      "group": "nested collections and checks",
+      "test": "EqualComAss",
+      "student": "[[1,2],{3,4}]",
+      "teacher": "[[1,2],{4,3}]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-form-nested-set-order",
+        "test": "EqualComAss",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "cas_valid": true,
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-form-nested-set-order",
+        "test": "EqualComAss",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-form-nested-set-order",
+        "test": "EqualComAss",
+        "python": {
+          "case_id": "port-nested2-form-nested-set-order",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true,
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-form-nested-set-order",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "cas_valid": true
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested2-form-nested-list-order",
+      "group": "nested collections and checks",
+      "test": "EqualComAss",
+      "student": "[[1,2],{3,4}]",
+      "teacher": "[[2,1],{3,4}]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Pinned official STACK/Maxima control for recursive collection structure, applicability, multiplicity or form.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested2-form-nested-list-order",
+        "test": "EqualComAss",
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "note": "",
+        "feedback": "",
+        "cas_valid": false,
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested2-form-nested-list-order",
+        "test": "EqualComAss",
+        "status": "ok",
+        "cas_valid": false,
+        "correct": false,
+        "answer_note": "ATEqualComAss (AlgEquiv-false)(ATList_wrongentries 1: (ATList_wrongentries 1, 2)). ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested2-form-nested-list-order",
+        "test": "EqualComAss",
+        "python": {
+          "case_id": "port-nested2-form-nested-list-order",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "cas_valid": false,
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested2-form-nested-list-order",
+          "test": "EqualComAss",
+          "kind": "result",
+          "valid": true,
+          "correct": false,
+          "note": "",
+          "feedback": "",
+          "cas_valid": false
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-union",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{1,2,3}",
+      "teacher": "union({1,2},{2,3})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-union",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 321,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-union",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-union",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-union",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 321,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-union",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-intersection",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{2}",
+      "teacher": "intersection({1,2},{2,3})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-intersection",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-intersection",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-intersection",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-intersection",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-intersection",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-difference",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{1}",
+      "teacher": "setdifference({1,2},{2})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-difference",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-difference",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-difference",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-difference",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-difference",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-member",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "true",
+      "teacher": "member([x+x],{[2*x]})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-member",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 349,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-member",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATLogic_True. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-member",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-member",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 349,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-member",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-subset",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "true",
+      "teacher": "subsetp({[x+x]},{[2*x]})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-subset",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 347,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-subset",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "ATLogic_True. ",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-subset",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-subset",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 347,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-subset",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-cardinality",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "2",
+      "teacher": "cardinality({1,1,2})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-cardinality",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-cardinality",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-cardinality",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-cardinality",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-cardinality",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-constructor",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{1,2}",
+      "teacher": "set(2,1,1)",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-constructor",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 315,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-constructor",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-constructor",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-constructor",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 315,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-constructor",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-setify",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{1,2}",
+      "teacher": "setify([2,1,1])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-setify",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 315,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-setify",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-setify",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-setify",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 315,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-setify",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-listify",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "[1/3,1/2]",
+      "teacher": "listify({2/4,1/3})",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-listify",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 317,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-listify",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-listify",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-listify",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 317,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-listify",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-listify-list",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "[2,1,1]",
+      "teacher": "listify([2,1,1])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-listify-list",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 317,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-listify-list",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-listify-list",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-listify-list",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 317,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-listify-list",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-author-set-union-empty",
+      "group": "finite author helpers",
+      "test": "AlgEquiv",
+      "student": "{}",
+      "teacher": "union()",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Author-only finite helper under normal AlgEquiv simplification; structural members and bounded output.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-author-set-union-empty",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 322,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-author-set-union-empty",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-author-set-union-empty",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-author-set-union-empty",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 322,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-author-set-union-empty",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-boundary-student-operation",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "union({1},{2})",
+      "teacher": "{1,2}",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-nested-boundary-student-operation",
+        "test": "AlgEquiv",
+        "kind": "unsupported",
+        "reason": "Finite collection helpers are author-only and require AlgEquiv or SameType",
+        "message": "Finite collection helpers are author-only and require AlgEquiv or SameType",
+        "elapsed_ms": 319,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-nested-boundary-student-operation",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-boundary-student-operation",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Finite collection helpers are author-only and require AlgEquiv or SameType",
+          "message": "Finite collection helpers are author-only and require AlgEquiv or SameType",
+          "elapsed_ms": 319,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-boundary-student-operation",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Finite collection helpers are author-only and require AlgEquiv or SameType",
+          "message": "Finite collection helpers are author-only and require AlgEquiv or SameType"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-boundary-listify-order",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "[]",
+      "teacher": "listify({x,1})",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-nested-boundary-listify-order",
+        "test": "AlgEquiv",
+        "kind": "unsupported",
+        "exception_type": "Unsupported",
+        "message": "listify ordering supports rational scalar set members only",
+        "phase": "evaluation",
+        "elapsed_ms": 319,
+        "scope": "supported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-nested-boundary-listify-order",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-boundary-listify-order",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "exception_type": "Unsupported",
+          "message": "listify ordering supports rational scalar set members only",
+          "phase": "evaluation",
+          "elapsed_ms": 319,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-boundary-listify-order",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "exception_type": "Unsupported",
+          "message": "listify ordering supports rational scalar set members only",
+          "phase": "evaluation"
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-boundary-helper-type",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "{}",
+      "teacher": "setify({1,2})",
+      "options": "",
+      "expected": {
+        "kind": "invalid_teacher"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-nested-boundary-helper-type",
+        "test": "AlgEquiv",
+        "kind": "invalid_teacher",
+        "message": "setify requires a list",
+        "elapsed_ms": 316,
+        "scope": "supported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-nested-boundary-helper-type",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-boundary-helper-type",
+          "test": "AlgEquiv",
+          "kind": "invalid_teacher",
+          "message": "setify requires a list",
+          "elapsed_ms": 316,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-boundary-helper-type",
+          "test": "AlgEquiv",
+          "kind": "invalid_teacher",
+          "message": "setify requires a list"
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-boundary-helper-arity",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "{}",
+      "teacher": "setdifference({1})",
+      "options": "",
+      "expected": {
+        "kind": "invalid_teacher"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-nested-boundary-helper-arity",
+        "test": "AlgEquiv",
+        "kind": "invalid_teacher",
+        "message": "setdifference has an unsupported number of arguments",
+        "elapsed_ms": 318,
+        "scope": "supported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-nested-boundary-helper-arity",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-boundary-helper-arity",
+          "test": "AlgEquiv",
+          "kind": "invalid_teacher",
+          "message": "setdifference has an unsupported number of arguments",
+          "elapsed_ms": 318,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-boundary-helper-arity",
+          "test": "AlgEquiv",
+          "kind": "invalid_teacher",
+          "message": "setdifference has an unsupported number of arguments"
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-boundary-depth",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "[[[[[[[1]]]]]]]",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-nested-boundary-depth",
+        "test": "AlgEquiv",
+        "kind": "unsupported",
+        "reason": "Collection depth exceeds supported bound",
+        "message": "Collection depth exceeds supported bound",
+        "elapsed_ms": 314,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-nested-boundary-depth",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-boundary-depth",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection depth exceeds supported bound",
+          "message": "Collection depth exceeds supported bound",
+          "elapsed_ms": 314,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-boundary-depth",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection depth exceeds supported bound",
+          "message": "Collection depth exceeds supported bound"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-boundary-tree-size",
+      "group": "nested collection boundaries",
+      "test": "AlgEquiv",
+      "student": "[[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]]",
+      "teacher": "[1]",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Explicit nested/helper syntax, type, ordering or resource boundary.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-nested-boundary-tree-size",
+        "test": "AlgEquiv",
+        "kind": "unsupported",
+        "reason": "Collection tree exceeds supported bound",
+        "message": "Collection tree exceeds supported bound",
+        "elapsed_ms": 320,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-nested-boundary-tree-size",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-boundary-tree-size",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection tree exceeds supported bound",
+          "message": "Collection tree exceeds supported bound",
+          "elapsed_ms": 320,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-boundary-tree-size",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Collection tree exceeds supported bound",
+          "message": "Collection tree exceeds supported bound"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-decimal-precision-0",
+      "group": "nested collection precision boundaries",
+      "test": "AlgEquiv",
+      "student": "{0.1}",
+      "teacher": "{1/10}",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Native float set members differ from exact rationals; direct list leaves retain scalar binary64 comparison.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-nested-decimal-precision-0",
+        "test": "AlgEquiv",
+        "kind": "unsupported",
+        "reason": "Decimal literals inside sets require exact fractions",
+        "message": "Decimal literals inside sets require exact fractions",
+        "elapsed_ms": 317,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-nested-decimal-precision-0",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-decimal-precision-0",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Decimal literals inside sets require exact fractions",
+          "message": "Decimal literals inside sets require exact fractions",
+          "elapsed_ms": 317,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-decimal-precision-0",
+          "test": "AlgEquiv",
+          "kind": "unsupported",
+          "reason": "Decimal literals inside sets require exact fractions",
+          "message": "Decimal literals inside sets require exact fractions"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-decimal-precision-1",
+      "group": "nested collection precision boundaries",
+      "test": "Sets",
+      "student": "{{0.1}}",
+      "teacher": "{{1/10}}",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Native float set members differ from exact rationals; direct list leaves retain scalar binary64 comparison.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-nested-decimal-precision-1",
+        "test": "Sets",
+        "kind": "unsupported",
+        "reason": "Decimal literals inside sets require exact fractions",
+        "message": "Decimal literals inside sets require exact fractions",
+        "elapsed_ms": 317,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-nested-decimal-precision-1",
+        "test": "Sets",
+        "python": {
+          "case_id": "port-nested-decimal-precision-1",
+          "test": "Sets",
+          "kind": "unsupported",
+          "reason": "Decimal literals inside sets require exact fractions",
+          "message": "Decimal literals inside sets require exact fractions",
+          "elapsed_ms": 317,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-decimal-precision-1",
+          "test": "Sets",
+          "kind": "unsupported",
+          "reason": "Decimal literals inside sets require exact fractions",
+          "message": "Decimal literals inside sets require exact fractions"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-decimal-precision-2",
+      "group": "nested collection precision boundaries",
+      "test": "EqualComAss",
+      "student": "{[0.5]}",
+      "teacher": "{[1/2]}",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Native float set members differ from exact rationals; direct list leaves retain scalar binary64 comparison.",
+      "native_scope": false,
+      "python": {
+        "case_id": "port-nested-decimal-precision-2",
+        "test": "EqualComAss",
+        "kind": "unsupported",
+        "reason": "Decimal literals inside sets require exact fractions",
+        "message": "Decimal literals inside sets require exact fractions",
+        "elapsed_ms": 317,
+        "scope": "unsupported"
+      },
+      "native": null,
+      "parity": {
+        "id": "port-nested-decimal-precision-2",
+        "test": "EqualComAss",
+        "python": {
+          "case_id": "port-nested-decimal-precision-2",
+          "test": "EqualComAss",
+          "kind": "unsupported",
+          "reason": "Decimal literals inside sets require exact fractions",
+          "message": "Decimal literals inside sets require exact fractions",
+          "elapsed_ms": 317,
+          "scope": "unsupported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-decimal-precision-2",
+          "test": "EqualComAss",
+          "kind": "unsupported",
+          "reason": "Decimal literals inside sets require exact fractions",
+          "message": "Decimal literals inside sets require exact fractions"
+        },
+        "eligible": false,
+        "match": true
+      },
+      "python_status": "boundary_pass",
+      "native_status": "outside_port_scope",
+      "parity_status": "match"
+    },
+    {
+      "id": "port-nested-decimal-precision-3",
+      "group": "nested collection precision boundaries",
+      "test": "AlgEquiv",
+      "student": "[[1/10]]",
+      "teacher": "[[0.1]]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Native float set members differ from exact rationals; direct list leaves retain scalar binary64 comparison.",
+      "native_scope": true,
+      "python": {
+        "case_id": "port-nested-decimal-precision-3",
+        "test": "AlgEquiv",
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true,
+        "note": "",
+        "feedback": "",
+        "elapsed_ms": 320,
+        "scope": "supported"
+      },
+      "native": {
+        "case_id": "port-nested-decimal-precision-3",
+        "test": "AlgEquiv",
+        "status": "ok",
+        "cas_valid": true,
+        "correct": true,
+        "answer_note": "",
+        "controlled_error": false
+      },
+      "parity": {
+        "id": "port-nested-decimal-precision-3",
+        "test": "AlgEquiv",
+        "python": {
+          "case_id": "port-nested-decimal-precision-3",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": "",
+          "elapsed_ms": 320,
+          "scope": "supported"
+        },
+        "pyodide": {
+          "case_id": "port-nested-decimal-precision-3",
+          "test": "AlgEquiv",
+          "kind": "result",
+          "valid": true,
+          "correct": true,
+          "cas_valid": true,
+          "note": "",
+          "feedback": ""
+        },
+        "eligible": true,
+        "match": true
+      },
+      "python_status": "pass",
+      "native_status": "match_desired",
+      "parity_status": "match"
     }
   ],
   "summary": {
     "python": {
-      "pass": 80,
-      "boundary_pass": 8
+      "pass": 132,
+      "boundary_pass": 20
     },
     "native": {
-      "match_desired": 79,
-      "outside_port_scope": 8,
+      "match_desired": 131,
+      "outside_port_scope": 20,
       "branch_convention_difference": 1
     },
     "parity": {
-      "match": 88
+      "match": 152
     }
   },
   "errors": {},
   "provenance": {
-    "code_sha": "b8b01e01fe2f423ca86b7decd69834a9efa0d9dd",
-    "fixture_sha256": "13cb208bfcd9bc7a808420b56fbf55432e4051408b46faf7e9261b86a698cc6a",
-    "source_bundle_sha256": "2777fb3f8032ec3daf2266c0e9f695b8b7ffd1a06303dc8cbba11b61ee2ee34e",
+    "code_sha": "1e72245874bfea49836e58ba48dcee30af5ee0ba",
+    "fixture_sha256": "e993d8f77c5ab6cd76afa0478611fca1ad60dfc2206ef1abb45e44a102add48e",
+    "source_bundle_sha256": "6c54c3a9f73905da75f1f4c3368856e58e4bd28be82fea319ff9ca4b9775fdcb",
     "stack_sha": "10d323311b7f39fb7b092dd10ce75f7d8632f525",
     "input_preparation": "stack-logic-nouns-numeric-default-v2",
     "sympy_version": "1.13.3",
@@ -6025,7 +10381,7 @@
       "input_preparation": "stack-logic-nouns-numeric-default-v2",
       "stack_library_version": "2026080600",
       "maxima_version": "Maxima 5.46.0",
-      "native_scope_sha256": "c3ff0691a44ca5e7411b3999e61be04328ac178df3c8a875c98f8ec70d10c9fb",
+      "native_scope_sha256": "e0c75f60ddd017ec4cd9e854d406d4efe98d8d5d5e8401a0c7fc9a20f531b7bf",
       "execution_isolation": "fresh_maxima_process_per_case",
       "jobs": 4,
       "loader_warmup": true,
@@ -6064,9 +10420,9 @@
     "parity": {
       "schema_version": 1,
       "engine": "parity",
-      "fixture_sha256": "13cb208bfcd9bc7a808420b56fbf55432e4051408b46faf7e9261b86a698cc6a",
-      "python_report_sha256": "a0ed98920cc59e8e7a7564de6eced9399650b5fa3a6c9caa8b8d10d2bcd940a3",
-      "source_bundle_sha256": "2777fb3f8032ec3daf2266c0e9f695b8b7ffd1a06303dc8cbba11b61ee2ee34e",
+      "fixture_sha256": "e993d8f77c5ab6cd76afa0478611fca1ad60dfc2206ef1abb45e44a102add48e",
+      "python_report_sha256": "c5508a2838ceb4e9c421fb1ec09cb500fea90e5bb0157d08b10eaa4cb85069ab",
+      "source_bundle_sha256": "6c54c3a9f73905da75f1f4c3368856e58e4bd28be82fea319ff9ca4b9775fdcb",
       "pyodide_version": "0.27.2",
       "sympy_version": "1.13.3",
       "browser_versions": {
@@ -6074,16 +10430,16 @@
         "pyodide_version": "0.27.2"
       },
       "summary": {
-        "total": 88,
-        "python_observed": 88,
-        "pyodide_observed": 88,
-        "matched": 88,
+        "total": 152,
+        "python_observed": 152,
+        "pyodide_observed": 152,
+        "matched": 152,
         "mismatched": 0,
-        "python_supported": 81,
-        "pyodide_supported": 81,
-        "eligible": 81,
-        "eligible_matched": 81,
-        "unsupported_agreement": 7,
+        "python_supported": 135,
+        "pyodide_supported": 135,
+        "eligible": 136,
+        "eligible_matched": 136,
+        "unsupported_agreement": 17,
         "python_faults": 0,
         "pyodide_faults": 0
       },
