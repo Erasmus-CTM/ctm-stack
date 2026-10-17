@@ -180,7 +180,7 @@ window.Quarto = {
   </li>  
         <li>
     <a class="dropdown-item" href="../docs/python-checker-api.html#author-the-spd-checker">
- <span class="dropdown-text">SPD checker walkthrough</span></a>
+ <span class="dropdown-text">Positive-definiteness checker walkthrough</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../docs/authoring.html#for-developers">
@@ -299,13 +299,13 @@ window.Quarto = {
 <td>The expected property result: <code>true</code>, an exact determinant such as <code>1</code>, or <code>false</code>.</td>
 </tr>
 <tr class="even">
-<td>Another condition, such as symmetric positive definiteness</td>
-<td>A named <code>PythonChecker</code> function in an author file.</td>
-<td>The value the function needs, such as <code>true</code> for the <a href="../examples.html#symmetric-positive-definite-matrix">SPD example</a>.</td>
+<td>Another condition, such as Hermitian symmetry or positive definiteness</td>
+<td>A named <code>PythonChecker</code> function in an author file. Combine conditions in one PRT or give them separate marks in two PRTs.</td>
+<td>The value the function needs, such as <code>true</code> for the <a href="../examples.html#symmetric-positive-definite-matrix">positive-definiteness examples</a>.</td>
 </tr>
 </tbody>
 </table>
-<p>An entry-by-entry check would reject many correct answers to “give any basis” or “give any matrix satisfying these conditions.” See <a href="../docs/python-checker-api.html">Python answer tests</a> for the choice and the <a href="../docs/python-checker-api.html#author-the-spd-checker">complete SPD authoring walkthrough</a> for a custom rule. An equivalent native Moodle STACK question needs corresponding Maxima checks; these Python test names are specific to this port.</p>
+<p>An entry-by-entry check would reject many correct answers to “give any basis” or “give any matrix satisfying these conditions.” See <a href="../docs/python-checker-api.html">Python answer tests</a> for the choice and the <a href="../docs/python-checker-api.html#author-the-spd-checker">positive-definiteness walkthrough</a> for both combined and separately weighted Hermitian-symmetry/positivity rules. The independent positivity check asks for <span class="math inline">\(\operatorname{Re}(z^*Az)&gt;0\)</span> for every nonzero complex <span class="math inline">\(z\)</span>; a non-Hermitian matrix can meet it. Full credit in the combined example also requires <span class="math inline">\(A=A^*\)</span>, which becomes ordinary symmetry for real entries. The example checker accepts exact integer or fractional real and imaginary parts, such as <code>1/2+%i/3</code>. An equivalent native Moodle STACK question needs corresponding Maxima checks; these Python test names are specific to this port.</p>
 <p>If the shape is part of the task, let learners choose a bounded number of columns for null or column-space bases, or rows for row-space bases. An empty basis cannot currently be entered because the editor needs positive dimensions. For a fixed-size task, the model answer determines the editor’s shape. The built-in <code>IsBasis</code> and <code>MatrixProperty</code> tests require exact rational entries (integers or fractions). An author-supplied <code>PythonChecker</code> can choose another domain within the input limits. Set any partial credit in the response trees; neither correct cells nor green basis vectors earn marks by themselves.</p>
 </section>
 <section id="what-learners-see" class="level3">

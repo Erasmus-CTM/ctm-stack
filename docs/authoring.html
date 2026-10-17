@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
         <li>
     <a class="dropdown-item" href="../docs/python-checker-api.html#author-the-spd-checker">
- <span class="dropdown-text">SPD checker walkthrough</span></a>
+ <span class="dropdown-text">Positive-definiteness checker walkthrough</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../docs/authoring.html#for-developers">
@@ -257,7 +257,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Start with the teaching choices below. The <a href="#for-developers">developer reference</a> collects all question-block options, supported notation and integration details. For matrix questions, see <a href="../docs/matrix-input.html">matrix input</a>; for a basis, a matrix condition or SPD, see <a href="../docs/python-checker-api.html">Python answer tests</a>.</p>
+<p>Start with the teaching choices below. The <a href="#for-developers">developer reference</a> collects all question-block options, supported notation and integration details. For matrix questions, see <a href="../docs/matrix-input.html">matrix input</a>; for a basis, a matrix condition or positive definiteness, see <a href="../docs/python-checker-api.html">Python answer tests</a>.</p>
 <section id="for-teachers" class="level2">
 <h2 class="anchored" data-anchor-id="for-teachers">For teachers</h2>
 <section id="start-with-a-native-export" class="level3">
@@ -503,7 +503,7 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
 <tr class="even">
 <td>A matrix with stated properties</td>
 <td><code>MatrixProperty</code> or a filename-selected <code>PythonChecker</code></td>
-<td><a href="../docs/python-checker-api.html#matrix-conditions-and-partial-credit">Matrix conditions</a>, including the <a href="../docs/python-checker-api.html#author-the-spd-checker">SPD walkthrough</a>.</td>
+<td><a href="../docs/python-checker-api.html#matrix-conditions-and-partial-credit">Matrix conditions</a>, including the <a href="../docs/python-checker-api.html#author-the-spd-checker">positive-definiteness walkthrough</a>.</td>
 </tr>
 <tr class="odd">
 <td>Another mathematical rule</td>
@@ -585,7 +585,7 @@ Keep tests for alternate correct answers, common mistakes and the intended parti
 </section>
 <section id="extend-the-python-port" class="level3">
 <h3 class="anchored" data-anchor-id="extend-the-python-port">Questions with many correct answers</h3>
-<p>An input model is one valid response, not a list of everything a learner may submit. Use <code>IsBasis</code> for any basis, <code>MatrixProperty</code> for its three built-in conditions, or <code>PythonChecker</code> for a custom condition. The normal response-tree branches still decide the credit. The <a href="../docs/python-checker-api.html">Python answer-test guide</a> contains the teacher workflow and a complete developer walkthrough for SPD.</p>
+<p>An input model is one valid response, not a list of everything a learner may submit. Use <code>IsBasis</code> for any basis, <code>MatrixProperty</code> for its three built-in conditions, or <code>PythonChecker</code> for a custom condition. The normal response-tree branches still decide the credit. The <a href="../docs/python-checker-api.html">Python answer-test guide</a> contains the teacher workflow and a complete developer walkthrough for positive definiteness.</p>
 </section>
 </section>
 <section id="for-developers" class="level2">
