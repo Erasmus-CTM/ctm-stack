@@ -78,39 +78,53 @@ and the missing general API contract. The builtins' rational-domain description
 is now distinguished from the generic API. The author guide links the complete
 API, portability contract and executable positive-multiple example.
 
-## Validation evidence
+## Final validation evidence
 
-The original branch CI run 39048871211 passed 722 tests and 149 subtests, with
-one skip, and passed native reference/compliance, project regressions and
-CPython/Pyodide parity. It stopped at corpus fingerprint drift before browser
-tests/publication. These are historical results on `1490f17`, not validation of
-the new API.
+Tested implementation: `3c995cd310c4bc2f30f747604d4b9cccfa51549e`.
+[Complete Linux workflow](https://github.com/Erasmus-CTM/stack-sympy/actions/runs/39053500680)
+passed, including publication of the tested feature preview and matching reports.
 
-The initial local regenerated baseline had identical question records and
-summary: 35 originals, 23 passing questions, 1 known mismatch, 3 unsupported
-imports, 8 unsupported instantiations, 162 replayed cases and 2 failed checks.
-Only revision/runtime/source fingerprint fields changed. The fingerprint now
-includes every runtime Python module rather than a manually incomplete list.
+| Check | Computed result |
+|---|---|
+| Python/unit/render suite | 769 passed; 149 subtests passed; 1 skipped |
+| Real browser suite | 13 passed, including the new author-module test |
+| Fresh corpus scan | Baseline matches: 35 originals, 23 passing questions, 1 known mismatch, 11 unsupported questions, 162 replayed cases |
+| Independent scalar native reference | 65 of 65 match |
+| Legacy Python desired outcomes | All 2,303 inventory rows classified; zero unexpected outcomes |
+| Official STACK/Maxima observations and comparison | Passed |
+| Legacy CPython/Pyodide parity | Passed |
+| Project regressions across Python, native STACK and Pyodide | Passed |
+| Inspectable report assembly and publication | Passed |
 
-Local focused API/builtin/importer/engine run: 115 tests and 27 subtests passed
-under Python 3.12.10, SymPy 1.13.3, pytest 9.1.1. Astra xhigh approved the final core implementation, tests and API documentation
-with no remaining blocking findings; exact-head Linux/browser CI is still
-pending. A broader Windows run passed 739 tests and 149 subtests with one skip;
-six native-runner tests hit missing symlink privileges, one native-image mock
-hit a zero-resolution timer, and one parity check saw a runtime bundle made
-stale by a subsequent signature fix. The bundle was regenerated and the
-focused API/parity run then passed 49 tests. The first Linux run on `b65d548` passed 765 tests and 149 subtests (1 skip);
-its only failure was corpus-page copy drift caused by JSON serialization
-changing 1.0 to 1. The Python generator output was restored and checked
-against the generated corpus page. A final independent documentation review
-also found a quiet invalid-result diagnostic retained in the Python return
-value; that field now matches the generic input feedback, with a regression
-test and renewed Astra xhigh approval. Final rerun evidence follows below. Local Quarto attempts with
-both installed 1.9.35 and pinned 1.8.27 were blocked by Windows Deno cache/CMD
-environment errors; no local render/browser success is claimed.
+The new browser test compares complete custom-checker qtest results against
+CPython using the same embedded descriptor and source. It also checks fresh
+state, two cards with the same ID and different source, invalid feedback,
+literal HTML-looking feedback, editing/reset/variant clearing and AI prompt
+exclusions. The pre-existing matrix/basis/feedback browser tests also pass.
+
+Local focused API/builtin/importer/engine checks passed 115 tests and 27
+subtests. The API file alone passed 47 tests. Runtime bundle freshness,
+corpus-page generator equality and the complete runtime source fingerprint
+were checked. All regenerated corpus question records and summary compare
+equal to the original branch baseline; native source XML is untouched.
+
+Original branch run 39048871211 had stopped at source-fingerprint drift. The
+first follow-up Linux run on `b65d548` exposed corpus-page copy drift when JSON
+serialization changed 1.0 to 1; restoring the Python generator's numeric format
+resolved it. The final passing run above supersedes those incomplete runs.
+Local Windows Quarto attempts were blocked by Deno cache/CMD environment
+errors; render/browser success is established by the Linux evidence above.
+
+Astra xhigh approved the revised design before implementation and approved the
+final implementation, tests, documentation and quiet-result correction with no
+remaining blocking findings. A separate independent documentation review
+confirmed the public contract and identified the final quiet-result fix.
+Final CI evidence was independently reviewed against the exact implementation
+SHA. Audit-record-only updates after that SHA do not change runtime sources,
+examples, tests or the baseline.
 
 ## Runs needed
 
-Final exact-head Linux Python/render/browser workflow, fresh corpus comparison,
-native compliance/project regressions and independent final CI-evidence review.
-No PR is to be merged automatically.
+None for the requested API, browser-validation and documentation-audit scope.
+Existing declared native incompatibilities and unsupported cases remain visible
+and are not represented as compatibility successes. No PR is merged automatically.
