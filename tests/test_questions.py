@@ -13,7 +13,7 @@ QUESTION_DIR = Path(__file__).resolve().parents[1] / "questions"
 
 class AuthoredQuestionsTest(unittest.TestCase):
     def test_moodle_export_shape_and_authored_tests(self):
-        for filename in ("polynomial-expansion.xml", "rational-equivalence.xml", "numerical-measurement.xml", "hyperbolic-equivalence.xml", "zero-product.xml", "boolean-equivalence.xml", "finite-collections.xml"):
+        for filename in ("polynomial-expansion.xml", "rational-equivalence.xml", "numerical-measurement.xml", "hyperbolic-equivalence.xml", "zero-product.xml", "boolean-equivalence.xml", "finite-collections.xml", "nested-collections.xml", "finite-author-helpers.xml"):
             with self.subTest(filename=filename):
                 path = QUESTION_DIR / filename
                 xml = ElementTree.parse(path).getroot()

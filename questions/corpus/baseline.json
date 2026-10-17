@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "engine_revision": "b8b01e01fe2f423ca86b7decd69834a9efa0d9dd",
-  "adapter_source_sha256": "476ec545e41fead6a755a43d39c1c22169b2a7e1d4f61f6d386f6ea896714634",
+  "engine_revision": "88ba6ee2a753ff79431d06dd9e3c95dba635bbb3",
+  "adapter_source_sha256": "c40e4963a433c7100386936a08a712068af1f471075aeec2543195931741c123",
   "python_version": "3.12.14",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",
@@ -194,8 +194,8 @@
     {
       "diagnostic": {
         "location": "instantiation",
-        "message": "AlgMap-15.1: instantiation: Unexpected character '?' (U+003F) at position 9",
-        "reason": "Unexpected character '?' (U+003F) at position 9",
+        "message": "AlgMap-15.1: instantiation: Unexpected character '?' (U+003F) at position 1",
+        "reason": "Unexpected character '?' (U+003F) at position 1",
         "seed": 2060820372,
         "type": "UnsupportedQuestion"
       },

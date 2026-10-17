@@ -178,5 +178,73 @@ The disagreement is about set normalization, not a disputed complex identity.
 **Question for STACK:** should the port preserve Maxima's normalization artifacts,
 or use its own canonical scalar members? A faithful Maxima-form emulation would
 need held member provenance before SymPy canonicalization. No one-off expression
-exception is used. Nested collections and collection form/type tests are deferred
-to a separate increment.
+exception is used. Nested collections now use the same structural set rules recursively.
+
+### Nested structure, form and applicability
+
+Lists recurse through `AlgEquiv` at corresponding positions. Sets compare prepared
+structural members, including lists with their original order and nested sets
+with their own boundaries. The port does not flatten `{1,{2}}` into `{1,2}`.
+`Sets` reports duplicates in the submitted **outer** set: `{{1,1}}` against `{{1}}`
+is correct without an outer duplicate warning, whereas `{{1},{1}}` does warn.
+The documented scalar-normalization difference also affects nested radical
+pairs in legacy row **202**: the desired score is `-3`, Python accepts, and pinned
+native STACK rejects. It is recorded as a known native mathematical failure,
+separate from row 212's known port normalization difference.
+
+[`EqualComAss` documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Rule_based.md)
+explicitly gives `{4,4}` versus `{4}` as different held forms. Set constructor
+arguments commute but do not associate or lose multiplicity. The port checks
+applicability and algebraic equality before comparing those held forms. Thus
+reordered `{1,2,2}` / `{2,1,2}` passes, while `{4,4}` / `{4}` fails form even though
+its algebraic set value agrees. Nested list order still matters.
+
+`SameType` uses the applicability flag from
+[ATAlgEquivfun / ATSameTypefun](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac).
+That deliberately means `[1,[2]]` / `[9]` has the same type (the list-length path
+is applicable), and `{[1,2]}` / `{{1,2}}` has the same type (set comparison is
+applicable). `[1,[2]]` / `[9,{3}]` does not. `checkanswertype` follows this rule;
+author questions must use an equality test to judge content.
+
+### Author helpers and held calls
+
+Decimal set members require a separate boundary. Pinned native STACK rejects
+`{1/10}` versus `{0.1}` and even `{1/2}` versus `{0.5}` under both `AlgEquiv`
+and `Sets`: native floating members retain their numeric type, while this
+evaluator parses decimal tokens as exact rationals. It therefore rejects decimal
+literals anywhere below a set, including nested lists within that set. Use exact
+fractions. Direct list scalar comparisons such as `[1/10]` versus `[0.1]` still
+pass through the scalar literal binary64 path. Frozen collection/helper expressions
+also reject transitive decimal-valued author aliases, including in qtests and
+CASText. Collection `sans` must directly name a learner input; feedback aliases
+and derived learner collections are unsupported because reserialization loses
+that literal precision. For example, `[100.4-80.0]` versus `[20.4]` is false on
+the literal path but would become true if the first value were frozen as `[102/5]`.
+Decimal list leaves are limited to the literal constant arithmetic supported by
+that binary64 path: numbers, unary signs, arithmetic and bounded integer powers.
+Native STACK rejects `[sin(0.1)]` versus `[sin(1/10)]`, `[sqrt(0.5)]` versus
+`[sqrt(1/2)]` and `[20.4]` versus `ev([100.4-80.0],simp)`. Exact rational
+evaluation would incorrectly accept these, so decimal-bearing functions,
+symbolic leaves and transformed collections fail clearly. Exact-fraction
+versions remain supported.
+
+Finite author helpers run with normal simplification and freeze their evaluated
+values into variants. Lists/sets of supported scalars can use `set`, `setify`,
+`union`, `intersection`, `setdifference`, `member`, `subsetp` and `cardinality`;
+`listify` only sorts rational scalar sets, or keeps an existing list unchanged.
+The complete tree and output are bounded, and decimal helper arguments are
+rejected in favor of exact fractions. Learner helper calls are unsupported.
+
+This boundary is deliberate. Pinned native probes show that with `simp:false`,
+`setify([1,1])` keeps held repetitions, `listify({2,1})` keeps written order, and
+membership can distinguish `[x+x]` from `[2*x]`. Set intersection/difference can
+also depend on held set ordering. The port does not imitate that general held
+CAS execution: direct helper calls for `Sets`/`EqualComAss`, helper feedback
+variables and helper calls with question simplification off fail clearly.
+Simplified frozen helper values remain usable by those checks.
+
+Ordinary feedback and answer-test notes are abbreviated: negative list results
+do not reproduce STACK's full nested index/reason note, and `EqualComAss` does
+not reproduce every native internal note. Authored PRT branch notes and their
+ordered qtest expectations are preserved. No Moodle/PHP controller parity is
+inferred from these bounded CAS and browser checks.

@@ -37,7 +37,7 @@ def test_type_mismatch_is_syntactically_valid_cas_inapplicable(test,student,teac
     assert result['valid'] and not result['cas_valid'] and not result['correct']
 
 
-@pytest.mark.parametrize('source', ['[[1]]','[{1}]','{{1}}','[true]','{x=1}','[x or y]',
+@pytest.mark.parametrize('source', ['[true]','{x=1}','[x or y]',
                                      '['+','.join(['1']*(MAX_COLLECTION_ITEMS+1))+']'])
 def test_flat_scalar_boundary(source):
     with pytest.raises(Unsupported):
@@ -46,7 +46,7 @@ def test_flat_scalar_boundary(source):
     assert classify_case(case)['kind']=='unsupported'
 
 
-@pytest.mark.parametrize('test', ['EqualComAss','FacForm','SingleFrac','LowestTerms','NumAbsolute','NumRelative','NumDecPlaces'])
+@pytest.mark.parametrize('test', ['FacForm','SingleFrac','LowestTerms','NumAbsolute','NumRelative','NumDecPlaces'])
 def test_collections_reject_other_answer_tests(test):
     with pytest.raises(Unsupported,match='Collections require'):
         answer_test(test,'[1]','[1]','1')
@@ -65,8 +65,7 @@ def test_sets_feedback_and_original_multiplicity_survive_alias_and_freeze():
     assert all(s in wrong['feedback'] for s in ['Repeated','Extra elements: 3','Missing elements: 2'])
     assert answer_test('Sets','{}','{}')['correct']
     assert evaluate('nested[2]',env)==[sp.Integer(2)]
-    with pytest.raises(Unsupported,match='flat'):
-        evaluate('nested',env,student=True)
+    assert evaluate('nested',env,student=True)==[[sp.Integer(1)],[sp.Integer(2)]]
     assert evaluate('['+','.join(['1']*MAX_COLLECTION_ITEMS)+']',student=True)
 
 
@@ -101,12 +100,12 @@ def test_frozen_xml_collections_validate_grade_and_replay():
 
 
 def test_question_build_fails_for_outside_scope_and_nested_aliases():
-    for test in ['EqualComAss','LowestTerms','NumAbsolute']:
+    for test in ['LowestTerms','NumAbsolute']:
         q=question();q['prts'][0]['nodes'][0]['test']=test
         with pytest.raises(UnsupportedQuestion,match='Collections require'):
             instantiate(q,17)
-    q=question();q['variables']+=' broken:[[1]];';q['inputs'][0]['teacher']='broken'
-    with pytest.raises(UnsupportedQuestion,match='flat'):
+    q=question();q['variables']+=' broken:[[true]];';q['inputs'][0]['teacher']='broken'
+    with pytest.raises(UnsupportedQuestion,match='scalar'):
         instantiate(q,17)
     q=question();q['inputs'][0]['type']='numerical'
     with pytest.raises(UnsupportedQuestion,match='numerical answer'):

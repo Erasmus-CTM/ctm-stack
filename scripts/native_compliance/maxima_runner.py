@@ -40,6 +40,7 @@ def prepare_logic(source: str) -> str:
 TESTS = {
     "AlgEquiv": (False, True, False),
     "Sets": (False, False, False),
+    "SameType": (False, True, False),
     "EqualComAss": (False, False, False),
     "FacForm": (True, False, False),
     "SingleFrac": (False, False, False),

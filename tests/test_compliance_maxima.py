@@ -39,9 +39,9 @@ class NativeMaximaTests(unittest.TestCase):
         fixture = json.loads((ROOT / "tests/native_compliance/fixtures.json").read_text())
         native.validate_cases(fixture["cases"])
         self.assertEqual(len(fixture["cases"]), 2303)
-        self.assertEqual(sum(native._unavailable(row) is None for row in fixture["cases"]), 852)
+        self.assertEqual(sum(native._unavailable(row) is None for row in fixture["cases"]), 872)
         self.assertEqual(native.scope_sha256(fixture["cases"]),
-                         "9de6aa8586025357a8bcc4b2c867c61db34694db9e233a3d6231fb2a65c179c8")
+                         "bc673a54411f6ae9987f03d987aae1bb21744f35ea023fef20be42c5c3c67d38")
         self.assertEqual(native._unavailable(case(test="NumAbsolute", options="")), None)
         self.assertEqual(native._unavailable(case(test="NotImplemented")), "test_family_not_implemented")
         self.assertEqual(native._unavailable(case(student="")), "empty_answer_requires_php_controller")

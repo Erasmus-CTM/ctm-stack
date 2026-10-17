@@ -173,10 +173,41 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         collection.locator('.stack-result[data-state="retry"]').wait_for(timeout=120000)
         text = collection.locator('.stack-feedback[data-name="explained"]').inner_text()
         assert 'Extra elements' in text and 'Missing elements' in text
-        collection.locator('.stack-answer[data-name="sequence"]').fill('[[1]]')
+        collection.locator('.stack-answer[data-name="sequence"]').fill('[[true]]')
         collection.locator('.stack-validate').click()
         collection.locator('.stack-result[data-state="invalid"]').wait_for(timeout=120000)
         assert collection.locator('.stack-check').is_disabled()
+        nested = page.locator('[data-stack-id="nested-collections"]')
+        data = json.loads(nested.locator('.stack-sympy-data').text_content())
+        a = data['variants'][0]['env']['a']
+        responses = {'nested':f'[[{a},x+x],{{{{3,2}},1}},[]]',
+                     'families':f'{{[{a},2*x],{{2,1}},[{a},2*x]}}',
+                     'form':'{[1,1+x],{2,x+x,2}}'}
+        for name,response in responses.items():
+            nested.locator(f'.stack-answer[data-name="{name}"]').fill(response)
+        nested.locator('.stack-validate').click()
+        nested.locator('.stack-result[data-state="valid"]').wait_for(timeout=120000)
+        preview = nested.locator('.stack-validation[data-name="form"]')
+        assert 'x + x' in preview.get_attribute('data-latex')
+        nested.locator('.stack-check').click()
+        nested.locator('.stack-result[data-state="correct"]').wait_for(timeout=120000)
+        assert 'Repeated elements' in nested.locator('.stack-feedback[data-name="families"]').inner_text()
+        nested.locator('.stack-answer[data-name="form"]').fill('{[1,1+x],{2,2*x,2}}')
+        nested.locator('.stack-validate').click()
+        nested.locator('.stack-result[data-state="valid"]').wait_for(timeout=120000)
+        nested.locator('.stack-check').click()
+        nested.locator('.stack-result[data-state="retry"]').wait_for(timeout=120000)
+        assert 'written arithmetic' in nested.locator('.stack-feedback[data-name="form"]').inner_text()
+        nested.locator('.stack-answer[data-name="form"]').fill('[[x+x,2,2],[1,x+1]]')
+        nested.locator('.stack-validate').click()
+        nested.locator('.stack-result[data-state="valid"]').wait_for(timeout=120000)
+        nested.locator('.stack-check').click()
+        nested.locator('.stack-result[data-state="retry"]').wait_for(timeout=120000)
+        assert 'same outer collection type' in nested.locator('.stack-feedback[data-name="form"]').inner_text()
+        nested.locator('.stack-answer[data-name="form"]').fill('setify([1,2])')
+        nested.locator('.stack-validate').click()
+        nested.locator('.stack-result[data-state="invalid"]').wait_for(timeout=120000)
+        assert nested.locator('.stack-check').is_disabled()
         multi = page.locator('[data-stack-id="measurements"]')
         for answer in multi.locator(".stack-answer").all():
             answer.fill("0.00")

@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 
 SUPPORTED_TESTS = frozenset({
-    "AlgEquiv", "Sets", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
+    "AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
     "NumAbsolute", "NumRelative", "NumDecPlaces",
 })
 CONTROLLED_ERRORS = frozenset({"invalid_student", "invalid_teacher", "invalid_option"})

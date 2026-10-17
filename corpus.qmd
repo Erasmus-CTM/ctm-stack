@@ -352,7 +352,7 @@ Algebra Refresher / 12 Simultaneous linear equations · **Unsupported at import.
 
 ### AlgMap-15.1 {#algmap-15-1}
 
-Algebra Refresher / 15 Quadratic equations · **Unsupported at instantiation at seed `2060820372`.** `instantiation`: Unexpected character &#x27;?&#x27; (U+003F) at position 9.
+Algebra Refresher / 15 Quadratic equations · **Unsupported at instantiation at seed `2060820372`.** `instantiation`: Unexpected character &#x27;?&#x27; (U+003F) at position 1.
 
 [Download original XML](questions/corpus/AlgMap-15-1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/15-Quadratic-equations/AlgMap-15-1.xml) · [Replay record](questions/corpus/baseline.json)
 
