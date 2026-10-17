@@ -178,6 +178,30 @@ partial credit, using three normal response trees. The new Python-only
 equivalent Maxima checks. See [Python answer tests](docs/python-checker-api.qmd)
 and [matrix input](docs/matrix-input.qmd) for authoring choices.
 
+## Symmetric positive definite matrix {#symmetric-positive-definite-matrix}
+
+Give any symmetric positive definite $2\times2$ matrix with integer or
+exact-fraction entries. If your answer is
+$\begin{pmatrix}a&b\\b&c\end{pmatrix}$, the checker requires $a>0$ and
+$ac-b^2>0$. Try the identity and then a different answer, such as
+$\begin{pmatrix}2&1\\1&2\end{pmatrix}$. A symmetric matrix with determinant
+zero does not pass.
+
+This condition is an author-supplied `PythonChecker`, not a `MatrixProperty`
+option. The XML passes the learner's matrix and the expected property value
+`true` to `is_spd`; the response tree awards credit. The Quarto block selects
+the Python **filename**. See the [complete authoring walkthrough](docs/python-checker-api.qmd#symmetric-positive-definite-matrices).
+
+```{.stack-question #spd-example}
+#| file: questions/symmetric-positive-definite.xml
+#| question: A symmetric positive definite matrix
+#| python-checkers: questions/spd-checker.py
+#| review: true
+```
+
+[Download question XML](questions/symmetric-positive-definite.xml) ·
+[View the complete Python checker](questions/spd-checker.py)
+
 ## Matrix problems from INGMat 3A
 
 These three questions adapt a linear algebra course's rank and null-space exercises.

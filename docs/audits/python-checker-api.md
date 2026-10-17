@@ -1,5 +1,10 @@
 # PythonChecker v1 design and implementation audit
 
+This is a historical audit of the initial implementation. Custom checker
+loading has since been simplified to filename selection without source digest
+checks; see [the follow-up](filename-checkers-and-spd.md) and the
+[current author guide](../python-checker-api.qmd).
+
 ## Source and scope
 
 Follow-up to `feature/python-custom-checkers` at

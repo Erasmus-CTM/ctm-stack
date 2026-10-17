@@ -35,6 +35,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             card = page.locator('[data-stack-id="custom-multiple"]')
             other = page.locator('[data-stack-id="custom-other"]')
             payload = json.loads(card.locator('.stack-sympy-data').text_content())
+            assert set(payload['question']['python_checkers']) == {'api_version', 'source'}
             divisor = int(payload['variants'][0]['env']['d'])
 
             def check(item, answer, state):
@@ -86,6 +87,20 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             assert card.locator('.stack-answer').input_value() == ''
             card.locator('.stack-variant').select_option('1')
             assert card.locator('.stack-answer').input_value() == ''
+            spd = page.locator('[data-stack-id="custom-spd"]')
+            cells = spd.locator('input[data-matrix-row]')
+            for values, state in (([2, 1, 1, 2], 'correct'),
+                                  ([-1, 0, 0, -1], 'retry'),
+                                  ([2, 1, 0, 2], 'retry')):
+                for cell, value in zip(cells.all(), values):
+                    cell.fill(str(value))
+                spd.locator('.stack-validate').click()
+                spd.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
+                spd.locator('.stack-check').click()
+                spd.locator(f'.stack-result[data-state="{state}"]').wait_for(timeout=180000)
+            spd.locator('.stack-tests').click()
+            spd.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
+            assert 'All question tests passed' in spd.inner_text()
             assert not errors, errors
         finally:
             browser.close()

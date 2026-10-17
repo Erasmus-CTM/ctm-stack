@@ -13,6 +13,10 @@ matrix type, and `EqualComAss` also checks the written form of entries. Those
 are the supported native STACK matrix tests here. For a question asking for
 **any** basis or a matrix satisfying conditions, choose the Python-only
 `IsBasis` or `MatrixProperty` test described in [Python answer tests](python-checker-api.qmd).
+For another condition, such as symmetric positive definiteness, select an
+author-supplied `PythonChecker` function from a Python file in the Quarto block.
+The matrix editor only collects the answer; the chosen predicate and PRT
+branches decide correctness and credit.
 
 Use a normal `<input><type>matrix</type>...` for a fixed-size editor; it takes
 its shape from the input model answer. To let learners choose the number of
@@ -51,7 +55,10 @@ compares a particular matrix entry by entry; it is unsuitable for “give any
 basis” or “give any matrix satisfying these conditions.” Use the documented
 Python-only IsBasis or MatrixProperty tests for those tasks, or supply an
 equivalent custom checker in native STACK. Do not replace a family of valid
-answers by equality with one convenient model answer.
+answers by equality with one convenient model answer. In a `MatrixProperty`
+node, `tans` states the expected property result (`true`, `false`, or an exact
+determinant), rather than a reference matrix. A custom `PythonChecker` likewise
+receives the parsed matrix and the teacher value selected in its PRT node.
 
 Choose fixed dimensions when the shape is given. If the number of basis
 vectors is part of the answer, use bounded learner-selected columns for null

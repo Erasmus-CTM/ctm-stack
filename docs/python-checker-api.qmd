@@ -18,8 +18,8 @@ questions](../examples.qmd#find-a-nonidentity-matrix-with-determinant-one).
 | Give this particular matrix | `AlgEquiv` | Equal dimensions and equivalent corresponding entries. This is a native STACK answer-test name. |
 | Give any basis of a matrix's null, column, or row space | `IsBasis` | Any independent family spanning the requested space. |
 | Give any basis of a space specified by basis vectors | `IsBasis` | Any independent family with the same span as those vectors. |
-| Give a matrix satisfying stated conditions | `MatrixProperty` | Exact integer-entry, determinant, or identity conditions. Separate PRTs can award marks for separate requirements. |
-| Apply another authored mathematical rule | `PythonChecker` | The result of a named function in a selected author module. |
+| Give a matrix satisfying one of the built-in conditions | `MatrixProperty` | Exact integer-entry, determinant, or identity checks. Separate PRTs can award marks for separate requirements. |
+| Give a matrix satisfying another condition, such as positive definiteness | `PythonChecker` | A named function in a selected author file decides the condition. |
 
 The three Python tests are extensions of this port. A STACK XML file that uses
 them still has familiar inputs and PRTs, but importing it into Moodle does not
@@ -98,15 +98,129 @@ comparison with one model matrix would miss other correct answers.
 | `determinant` | Exact rational value, such as `1` | Does a square matrix have this determinant? |
 | `identity` | `true` or `false` | Is this the identity matrix? |
 
-All submitted entries must be exact rationals. Set true and false branch
+All submitted entries must be exact rationals for this built-in test. Set true and false branch
 scores and feedback for each PRT explicitly; the editor does not infer
-per-cell marks. The model answer must satisfy the authored nodes. These option
-names choose defined conditions, not Python expressions to execute from XML.
+per-cell marks. The model answer must satisfy the authored nodes. In these
+nodes, `tans` is the expected **result of the property**: `1` for determinant,
+`true` to require integer entries, and `false` to exclude the identity. It is
+not the original matrix from the question. These three option names are the
+complete built-in `MatrixProperty` vocabulary; for another matrix condition,
+write a `PythonChecker` function.
 
-## Write a custom checker
+For example, a node asking for determinant $1$ has `<tans>1</tans>` and
+`<testoptions>determinant</testoptions>`. The learner's matrix is named in
+`<sans>ansm</sans>`; the model matrix belongs to the **input's** `tans`.
 
-Use `PythonChecker` when the built-in tests do not express the condition. The
-[positive-multiple example](../examples.qmd#custom-python-checker) checks any
+## Symmetric positive definite matrices {#symmetric-positive-definite-matrices}
+
+Suppose learners must give **any symmetric positive definite $2\times2$
+matrix** with integer or exact-fraction entries. `AlgEquiv` would compare
+entries with one model answer. `MatrixProperty` has no positive-definiteness
+option. A small `PythonChecker` function can express this mathematical rule:
+for a real symmetric matrix, Sylvester's criterion requires every leading
+principal determinant to be positive. For
+$\begin{pmatrix}a&b\\b&c\end{pmatrix}$, that means $a>0$ and $ac-b^2>0$.
+
+### 1. Save the checker file
+
+Save this complete code as [`questions/spd-checker.py`](../questions/spd-checker.py).
+The `CHECKERS` dictionary makes `is_spd` available by name:
+
+```python
+"""Check symmetric positive definiteness for exact rational matrices."""
+
+
+def is_spd(ansm, expected):
+    if any(entry.is_Rational is not True for entry in ansm):
+        return {"valid": False, "correct": False,
+                "feedback": "Use integers or exact fractions in every cell."}
+
+    if ansm.rows != ansm.cols or ansm != ansm.T:
+        positive = False
+    else:
+        # Sylvester's criterion for real symmetric matrices.
+        positive = all(ansm[:k, :k].det() > 0 for k in range(1, ansm.rows + 1))
+
+    correct = bool(positive) == bool(expected)
+    return {"valid": True, "correct": correct,
+            "feedback": "" if correct else
+                "The matrix must be symmetric, with every leading principal determinant positive."}
+
+
+CHECKERS = {"is_spd": is_spd}
+```
+
+The function receives the parsed learner matrix as `ansm` and the expected
+property result as `expected`. An entry outside the exact-rational domain
+produces an invalid-input message. A well-formed matrix that is not SPD
+returns `valid=True, correct=False` for this exercise and follows the PRT's
+false branch. A plain `True` or `False` would also work if no diagnostic is
+needed.
+
+### 2. Connect it to the question XML
+
+In the [complete question XML](../questions/symmetric-positive-definite.xml),
+the matrix input `ansm` uses `<tans>matrix([1,0],[0,1])</tans>` as a model
+answer. This fixes the editor at $2\times2$; the identity is **one** accepted
+answer, not the only one. The response-tree node selects the learner matrix,
+passes the desired property value, and awards marks on its normal branches:
+
+```xml
+<answertest>PythonChecker</answertest>
+<sans>ansm</sans>
+<tans>true</tans>
+<testoptions>is_spd</testoptions>
+<truescoremode>=</truescoremode><truescore>1</truescore>
+<falsescoremode>=</falsescoremode><falsescore>0</falsescore>
+```
+
+Here `tans` means **the checker should find SPD to be true**. It is a
+parameter passed to the custom function, not automatically the original
+matrix in the prompt. The XML's seven author tests include another correct
+integer matrix, a fractional correct matrix, and negative definite,
+semidefinite, nonsymmetric and indefinite examples. The checker decides
+`correct`; the PRT alone awards credit and gives authored branch feedback.
+
+### 3. Add the question to a Quarto page
+
+Use just the checker **filename** alongside the XML file and question name:
+
+```{.stack-question #docs-spd-matrix}
+#| file: ../questions/symmetric-positive-definite.xml
+#| question: A symmetric positive definite matrix
+#| python-checkers: ../questions/spd-checker.py
+#| review: true
+```
+
+This live card and the [examples page](../examples.qmd#symmetric-positive-definite-matrix)
+use the same files. Paths are relative to this `.qmd` page; a root-level page
+uses `questions/...`. Quarto reads the Python file at build time and includes
+its contents for the browser checker. The author supplies only that filename.
+The XML names `is_spd` but contains no Python source or file path.
+
+### 4. Run the author tests
+
+From the project root, run:
+
+```bash
+PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
+  --file questions/symmetric-positive-definite.xml \
+  --python-checkers questions/spd-checker.py
+quarto render
+```
+
+Then try a different correct response such as `matrix([2,1],[1,2])`, as well
+as a symmetric matrix with a nonpositive determinant. The author tests check
+the stated cases; inspect the rendered question before publication.
+
+## PythonChecker API and a scalar example
+
+Use `PythonChecker` when the built-in tests do not express the condition. Save
+a Python file beside your question materials, register a named function in
+its `CHECKERS` dictionary, then give Quarto that **filename** in
+`#| python-checkers:`. Quarto reads the file when it builds the page and
+includes its source for browser grading; the XML only names the function.
+The [positive-multiple example](../examples.qmd#custom-python-checker) checks any
 positive integer multiple of a given number. Its author module contains:
 
 ```python
@@ -139,7 +253,9 @@ Select the module on the Quarto question block as well:
 #| review: true
 ```
 
-The paths in this block are relative to this page. `sans` must directly name
+Both filenames in this block are relative to this `.qmd` page. For the CLI,
+filenames are relative to the working directory. There is no separate source
+configuration to maintain. `sans` must directly name
 an input. `tans` can be a parsed teacher answer or author value, such as the
 divisor `d`; `testoptions` names one entry in `CHECKERS`. It is a single
 case-sensitive ASCII identifier of at most 64 characters, beginning with a letter
@@ -152,8 +268,11 @@ site.
 
 Each registered function must be callable with the two positional arguments
 `student` and `teacher`, and finish synchronously. They are parsed values, not
-raw answer strings. The API does not pass a context object, question state or
-separate configuration argument. Scalar expressions are SymPy expressions; matrices are
+raw answer strings. The function receives the submitted answer and whatever
+teacher value the PRT's `tans` selects. This could be an expected Boolean for
+a property question or a reference matrix for a different task. The API does
+not pass a context object, question state or separate configuration argument.
+Scalar expressions are SymPy expressions; matrices are
 immutable SymPy matrices. Lists and finite sets are distinct `ListValue` and
 `SetValue` objects with ordered `.args` (a set retains its submitted entries).
 Equations have two `.args`; held logic has `.operator` and `.operands`;

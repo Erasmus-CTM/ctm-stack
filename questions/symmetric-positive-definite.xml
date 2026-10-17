@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Project example, CC BY-SA 4.0. Uses spd-checker.py selected in Quarto. -->
+<quiz><question type="stack">
+<name><text>A symmetric positive definite matrix</text></name>
+<questionvariables><text></text></questionvariables>
+<questionsimplify>1</questionsimplify>
+<questiontext format="html"><text><![CDATA[<p>Give any symmetric positive definite \(2\times2\) matrix. Use integers or exact fractions.</p><p>[[input:ansm]] [[validation:ansm]] [[feedback:result]]</p>]]></text></questiontext>
+<generalfeedback format="html"><text><![CDATA[<p>A real symmetric matrix is positive definite when all its leading principal determinants are positive. For \(\begin{pmatrix}a&amp;b\\b&amp;c\end{pmatrix}\), this means \(a>0\) and \(ac-b^2>0\). For example, \(\begin{pmatrix}2&amp;1\\1&amp;2\end{pmatrix}\) has leading principal determinants 2 and 3.</p>]]></text></generalfeedback>
+<defaultgrade>1</defaultgrade><penalty>0.1</penalty>
+<input><name>ansm</name><type>matrix</type><tans>matrix([1,0],[0,1])</tans><strictsyntax>1</strictsyntax><insertstars>0</insertstars><forbidfloat>1</forbidfloat><checkanswertype>1</checkanswertype><mustverify>1</mustverify><showvalidation>1</showvalidation></input>
+<prt><name>result</name><value>1</value><autosimplify>1</autosimplify><node><name>0</name><answertest>PythonChecker</answertest><sans>ansm</sans><tans>true</tans><testoptions>is_spd</testoptions>
+<truescoremode>=</truescoremode><truescore>1</truescore><truenextnode>-1</truenextnode><trueanswernote>spd-T</trueanswernote>
+<falsescoremode>=</falsescoremode><falsescore>0</falsescore><falsenextnode>-1</falsenextnode><falseanswernote>spd-F</falseanswernote>
+</node></prt>
+<qtest><testcase>1</testcase><testinput><name>ansm</name><value>matrix([1,0],[0,1])</value></testinput><expected><name>result</name><expectedscore>1</expectedscore><expectedpenalty>0</expectedpenalty><expectedanswernote>spd-T</expectedanswernote></expected></qtest>
+<qtest><testcase>2</testcase><testinput><name>ansm</name><value>matrix([2,1],[1,2])</value></testinput><expected><name>result</name><expectedscore>1</expectedscore><expectedpenalty>0</expectedpenalty><expectedanswernote>spd-T</expectedanswernote></expected></qtest>
+<qtest><testcase>3</testcase><testinput><name>ansm</name><value>matrix([1/2,1/4],[1/4,1])</value></testinput><expected><name>result</name><expectedscore>1</expectedscore><expectedpenalty>0</expectedpenalty><expectedanswernote>spd-T</expectedanswernote></expected></qtest>
+<qtest><testcase>4</testcase><testinput><name>ansm</name><value>matrix([-1,0],[0,-1])</value></testinput><expected><name>result</name><expectedscore>0</expectedscore><expectedpenalty>0.1</expectedpenalty><expectedanswernote>spd-F</expectedanswernote></expected></qtest>
+<qtest><testcase>5</testcase><testinput><name>ansm</name><value>matrix([1,1],[1,1])</value></testinput><expected><name>result</name><expectedscore>0</expectedscore><expectedpenalty>0.1</expectedpenalty><expectedanswernote>spd-F</expectedanswernote></expected></qtest>
+<qtest><testcase>6</testcase><testinput><name>ansm</name><value>matrix([1,2],[0,1])</value></testinput><expected><name>result</name><expectedscore>0</expectedscore><expectedpenalty>0.1</expectedpenalty><expectedanswernote>spd-F</expectedanswernote></expected></qtest>
+<qtest><testcase>7</testcase><testinput><name>ansm</name><value>matrix([1,2],[2,1])</value></testinput><expected><name>result</name><expectedscore>0</expectedscore><expectedpenalty>0.1</expectedpenalty><expectedanswernote>spd-F</expectedanswernote></expected></qtest>
+</question></quiz>
