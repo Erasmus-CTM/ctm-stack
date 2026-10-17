@@ -17,15 +17,19 @@ before adapting one.
 | A particular matrix | `AlgEquiv` compares dimensions and corresponding entries; `EqualComAss` also checks written form. | The expected matrix. |
 | Any basis of a null, column or row space | `IsBasis` checks membership, independence and completeness. | The original matrix $A$, with `nullspace`, `columnspace` or `rowspace` selected. |
 | Integer entries, a given determinant or nonidentity | Separate `MatrixProperty` nodes can give separate marks. | The expected property result: `true`, an exact determinant such as `1`, or `false`. |
-| Another condition, such as symmetry or positive definiteness | A named `PythonChecker` function in an author file. Combine conditions in one PRT or give them separate marks in two PRTs. | The value the function needs, such as `true` for the [SPD examples](../examples.qmd#symmetric-positive-definite-matrix). |
+| Another condition, such as Hermitian symmetry or positive definiteness | A named `PythonChecker` function in an author file. Combine conditions in one PRT or give them separate marks in two PRTs. | The value the function needs, such as `true` for the [positive-definiteness examples](../examples.qmd#symmetric-positive-definite-matrix). |
 
 An entry-by-entry check would reject many correct answers to “give any
 basis” or “give any matrix satisfying these conditions.” See [Python answer
-tests](python-checker-api.qmd) for the choice and the [complete SPD authoring
-walkthrough](python-checker-api.qmd#author-the-spd-checker) for combined and
-separately weighted symmetry/positive-definiteness rules. Positive
-definiteness means $x^T A x>0$ for every nonzero real $x$; a nonsymmetric
-matrix can meet it, so it is a separate condition from $A=A^T$.
+tests](python-checker-api.qmd) for the choice and the
+[positive-definiteness walkthrough](python-checker-api.qmd#author-the-spd-checker)
+for both combined and separately weighted Hermitian-symmetry/positivity
+rules. The independent
+positivity check asks for $\operatorname{Re}(z^*Az)>0$ for every nonzero
+complex $z$; a non-Hermitian matrix can meet it. Full credit in the
+combined example also requires $A=A^*$, which becomes ordinary symmetry
+for real entries. The example checker accepts exact integer or fractional
+real and imaginary parts, such as `1/2+%i/3`.
 An equivalent native Moodle STACK question needs corresponding Maxima checks;
 these Python test names are specific to this port.
 

@@ -209,19 +209,21 @@ The question uses three normal response trees, one per condition. The
 Python-only `MatrixProperty` checks each condition; see [which matrix test to
 choose](docs/python-checker-api.qmd#choose-the-mathematical-test).
 
-#### Symmetric positive definite matrix {#symmetric-positive-definite-matrix}
+#### A positive definite matrix {#symmetric-positive-definite-matrix}
 
-Give any $2\times2$ matrix with **both** symmetry and positive definiteness,
-using integers or exact fractions. Symmetry means $A=A^T$; positive
-definiteness means $x^T A x>0$ for every nonzero real $x$. The identity and
-$\begin{pmatrix}2&1\\1&2\end{pmatrix}$ both pass. The combined `is_spd`
-checker makes one decision and its response tree awards full credit only for
-both conditions. Compare this with the separate-check question below, and
-see [all four mathematical outcomes](docs/python-checker-api.qmd#symmetric-positive-definite-matrices).
+Give any real symmetric or complex Hermitian positive definite $2\times2$
+matrix, using integers or exact fractions for both real and imaginary
+parts. Enter `%i` for $i$. The identity,
+$\begin{pmatrix}2&1\\1&2\end{pmatrix}$ and
+`matrix([2,%i],[-%i,2])` all pass. The combined `is_hpd` checker makes one
+decision and its response tree awards full credit only when both Hermitian
+symmetry and positivity hold. Compare this with the separate-check
+question below; the [teacher explanation](docs/python-checker-api.qmd#symmetric-positive-definite-matrices)
+shows the exact mathematical test.
 
 ```{.stack-question #spd-example}
 #| file: questions/symmetric-positive-definite.xml
-#| question: A symmetric positive definite matrix
+#| question: A positive definite matrix
 #| python-checkers: questions/spd-checker.py
 #| review: true
 ```
@@ -229,19 +231,19 @@ see [all four mathematical outcomes](docs/python-checker-api.qmd#symmetric-posit
 [Download question XML](questions/symmetric-positive-definite.xml) ·
 [View the complete Python checker](questions/spd-checker.py)
 
-#### Symmetry and positive definiteness separately {#symmetry-and-positive-definiteness-separately}
+#### Hermitian symmetry and positive definiteness separately {#symmetry-and-positive-definiteness-separately}
 
-This version has two response trees. One checks symmetry; the other checks
-positive definiteness through $x^T A x>0$. Each condition earns half the
-marks. Try $\begin{pmatrix}2&1\\0&2\end{pmatrix}$: it is positive definite
-but not symmetric, so it earns the positivity half. Try
-$\begin{pmatrix}1&2\\2&1\end{pmatrix}$ for symmetry without positive
-definiteness. For the exact criterion and a four-case comparison, see the
-[teacher explanation](docs/python-checker-api.qmd#symmetric-positive-definite-matrices).
+This version has two response trees. One checks $A=A^*$; the other checks
+$\operatorname{Re}(z^*Az)>0$ for every nonzero complex $z$. Each condition
+earns half the marks. Try `matrix([1,%i],[%i,1])`: its Hermitian part is
+the identity, so it earns the positivity half, although it is not
+Hermitian. The real matrix $\begin{pmatrix}1&2\\2&1\end{pmatrix}$ earns
+only the Hermitian-symmetry half. For the exact criterion and a four-case
+comparison, see the [teacher explanation](docs/python-checker-api.qmd#symmetric-positive-definite-matrices).
 
 ```{.stack-question #spd-separate-example}
 #| file: questions/symmetric-positive-definite-prt.xml
-#| question: Symmetry and positive definiteness separately
+#| question: Hermitian symmetry and positive definiteness separately
 #| python-checkers: questions/spd-checker.py
 #| review: true
 ```
@@ -332,9 +334,10 @@ See the [author API](docs/python-checker-api.qmd#pythonchecker-api-and-a-scalar-
 
 Use the [authoring guide](docs/authoring.qmd) for imports, question options,
 tests and AI Feedback policies. The [Python answer-test guide](docs/python-checker-api.qmd)
-explains the basis and property choices and gives the complete SPD checker
-walkthrough. The questions above link to their XML; the SPD example also links
-to its Python file. The rational activity chooses the `two-step-practice`
+explains the basis and property choices and gives the complete
+positive-definiteness checker walkthrough. The questions above link to their
+XML; the positive-definiteness question also links to its Python file. The
+rational activity chooses the `two-step-practice`
 policy, while other feedback activities inherit a four-step sequence; see
 [policy setup](docs/authoring.qmd#choose-a-teaching-policy). Run authored tests
 and inspect alternate correct answers before publishing.

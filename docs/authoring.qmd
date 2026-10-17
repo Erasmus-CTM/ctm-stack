@@ -7,7 +7,7 @@ toc-depth: 3
 Start with the teaching choices below. The [developer reference](#for-developers)
 collects all question-block options, supported notation and integration details.
 For matrix questions, see [matrix input](matrix-input.qmd); for a basis, a
-matrix condition or SPD, see [Python answer tests](python-checker-api.qmd).
+matrix condition or positive definiteness, see [Python answer tests](python-checker-api.qmd).
 
 ## For teachers
 
@@ -63,7 +63,7 @@ and question XML for inspection and copying.
 | Boolean expressions and polynomial equations | `AlgEquiv` | [Boolean equivalence](../examples.qmd#boolean-equivalence) and [zero-product equations](../examples.qmd#zero-product-equations). |
 | A particular matrix | Matrix input with `AlgEquiv`, `SameType` or `EqualComAss` | [Matrix input and grading](matrix-input.qmd). |
 | Any basis of a matrix's null, column or row space | `IsBasis` | [Basis questions](python-checker-api.qmd#basis-questions-use-the-matrix-in-the-question). Supply the original matrix and choose the space. |
-| A matrix with stated properties | `MatrixProperty` or a filename-selected `PythonChecker` | [Matrix conditions](python-checker-api.qmd#matrix-conditions-and-partial-credit), including the [SPD walkthrough](python-checker-api.qmd#author-the-spd-checker). |
+| A matrix with stated properties | `MatrixProperty` or a filename-selected `PythonChecker` | [Matrix conditions](python-checker-api.qmd#matrix-conditions-and-partial-credit), including the [positive-definiteness walkthrough](python-checker-api.qmd#author-the-spd-checker). |
 | Another mathematical rule | `PythonChecker` | [Custom checker API](python-checker-api.qmd#for-developers). |
 | Partial credit and targeted feedback | Weighted response trees (PRTs) | [Three numerical checks](../examples.qmd#three-numerical-checks) and [determinant-one conditions](../examples.qmd#find-a-nonidentity-matrix-with-determinant-one). |
 | Guided hints | Optional AI Feedback | [Choose a teaching policy](#choose-a-teaching-policy). |
@@ -146,7 +146,8 @@ An input model is one valid response, not a list of everything a learner may
 submit. Use `IsBasis` for any basis, `MatrixProperty` for its three built-in
 conditions, or `PythonChecker` for a custom condition. The normal response-tree
 branches still decide the credit. The [Python answer-test guide](python-checker-api.qmd)
-contains the teacher workflow and a complete developer walkthrough for SPD.
+contains the teacher workflow and a complete developer walkthrough for
+positive definiteness.
 
 ## For developers
 

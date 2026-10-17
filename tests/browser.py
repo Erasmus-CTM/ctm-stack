@@ -91,7 +91,9 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             cells = spd.locator('input[data-matrix-row]')
             for values, state in (([2, 1, 1, 2], 'correct'),
                                   ([-1, 0, 0, -1], 'retry'),
-                                  ([2, 1, 0, 2], 'retry')):
+                                  ([2, 1, 0, 2], 'retry'),
+                                  ([2, '%i', '-%i', 2], 'correct'),
+                                  ([1, '%i', '%i', 1], 'retry')):
                 for cell, value in zip(cells.all(), values):
                     cell.fill(str(value))
                 spd.locator('.stack-validate').click()
@@ -106,7 +108,9 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             for values, state in (([2, 1, 1, 2], 'correct'),
                                   ([1, 2, 2, 1], 'retry'),
                                   ([2, 1, 0, 2], 'retry'),
-                                  ([0, 1, 0, 0], 'retry')):
+                                  ([0, 1, 0, 0], 'retry'),
+                                  ([2, '%i', '-%i', 2], 'correct'),
+                                  ([1, '%i', '%i', 1], 'retry')):
                 for cell, value in zip(cells.all(), values):
                     cell.fill(str(value))
                 separate.locator('.stack-validate').click()

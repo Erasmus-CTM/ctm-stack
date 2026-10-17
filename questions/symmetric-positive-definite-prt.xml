@@ -3,17 +3,17 @@
 <quiz>
   <question type="stack">
     <name>
-      <text>Symmetry and positive definiteness separately</text>
+      <text>Hermitian symmetry and positive definiteness separately</text>
     </name>
     <questionvariables>
       <text />
     </questionvariables>
     <questionsimplify>1</questionsimplify>
     <questiontext format="html">
-      <text>&lt;p&gt;Give a symmetric positive definite \(2\times2\) matrix using integers or exact fractions. Half the marks are for symmetry and half for positive definiteness, meaning \(x^TAx&gt;0\) for every nonzero real \(x\).&lt;/p&gt;&lt;p&gt;[[input:ansm]] [[validation:ansm]]&lt;/p&gt;&lt;p&gt;Symmetry: [[feedback:symmetry]]&lt;/p&gt;&lt;p&gt;Positive definiteness: [[feedback:positivity]]&lt;/p&gt;</text>
+      <text>&lt;p&gt;Give any real symmetric or complex Hermitian positive definite \(2\times2\) matrix. Use integers or exact fractions for real and imaginary parts; enter %i for \(i\).&lt;/p&gt;&lt;p&gt;Half the marks are for Hermitian symmetry and half for positivity: \(\operatorname{Re}(z^*Az)&gt;0\) for every nonzero complex \(z\).&lt;/p&gt;&lt;p&gt;[[input:ansm]] [[validation:ansm]]&lt;/p&gt;&lt;p&gt;Hermitian symmetry: [[feedback:symmetry]]&lt;/p&gt;&lt;p&gt;Positivity: [[feedback:positivity]]&lt;/p&gt;</text>
     </questiontext>
     <generalfeedback format="html">
-      <text>&lt;p&gt;Full marks require both properties. Symmetry means \(A=A^T\). Positive definiteness means \(x^TAx&gt;0\) for every nonzero real \(x\). Check the latter with the leading principal determinants of \((A+A^T)/2\); all must be strictly positive.&lt;/p&gt;</text>
+      <text>&lt;p&gt;Hermitian symmetry means \(A=A^*\), where \(A^*=\overline A^{\,T}\). It reduces to ordinary symmetry for real matrices. A Hermitian matrix is positive definite when all its leading principal determinants are positive. For \(\begin{pmatrix}a&amp;b\\\overline b&amp;c\end{pmatrix}\), this means \(a&gt;0\) and \(ac-|b|^2&gt;0\). To test positivity independently of Hermitian symmetry, apply this criterion to \((A+A^*)/2\).&lt;/p&gt;</text>
     </generalfeedback>
     <defaultgrade>1</defaultgrade>
     <penalty>0.1</penalty>
@@ -34,7 +34,7 @@
       <autosimplify>1</autosimplify>
       <node>
         <truefeedback format="html">
-          <text>&lt;p&gt;The matrix is symmetric.&lt;/p&gt;</text>
+          <text>&lt;p&gt;The matrix is Hermitian.&lt;/p&gt;</text>
         </truefeedback>
         <falsefeedback format="html">
           <text />
@@ -43,7 +43,7 @@
         <answertest>PythonChecker</answertest>
         <sans>ansm</sans>
         <tans>true</tans>
-        <testoptions>is_symmetric</testoptions>
+        <testoptions>is_hermitian</testoptions>
         <truescoremode>=</truescoremode>
         <truescore>1</truescore>
         <truenextnode>-1</truenextnode>
@@ -249,6 +249,101 @@
         <expectedscore>0</expectedscore>
         <expectedpenalty>0.1</expectedpenalty>
         <expectedanswernote>positivity-F</expectedanswernote>
+      </expected>
+    </qtest>
+    <qtest>
+      <testcase>10</testcase>
+      <testinput>
+        <name>ansm</name>
+        <value>matrix([2,%i],[-%i,2])</value>
+      </testinput>
+      <expected>
+        <name>symmetry</name>
+        <expectedscore>1</expectedscore>
+        <expectedpenalty>0</expectedpenalty>
+        <expectedanswernote>symmetry-T</expectedanswernote>
+      </expected>
+      <expected>
+        <name>positivity</name>
+        <expectedscore>1</expectedscore>
+        <expectedpenalty>0</expectedpenalty>
+        <expectedanswernote>positivity-T</expectedanswernote>
+      </expected>
+    </qtest>
+    <qtest>
+      <testcase>11</testcase>
+      <testinput>
+        <name>ansm</name>
+        <value>matrix([1,%i],[%i,1])</value>
+      </testinput>
+      <expected>
+        <name>symmetry</name>
+        <expectedscore>0</expectedscore>
+        <expectedpenalty>0.1</expectedpenalty>
+        <expectedanswernote>symmetry-F</expectedanswernote>
+      </expected>
+      <expected>
+        <name>positivity</name>
+        <expectedscore>1</expectedscore>
+        <expectedpenalty>0</expectedpenalty>
+        <expectedanswernote>positivity-T</expectedanswernote>
+      </expected>
+    </qtest>
+    <qtest>
+      <testcase>12</testcase>
+      <testinput>
+        <name>ansm</name>
+        <value>matrix([1,2*%i],[-2*%i,1])</value>
+      </testinput>
+      <expected>
+        <name>symmetry</name>
+        <expectedscore>1</expectedscore>
+        <expectedpenalty>0</expectedpenalty>
+        <expectedanswernote>symmetry-T</expectedanswernote>
+      </expected>
+      <expected>
+        <name>positivity</name>
+        <expectedscore>0</expectedscore>
+        <expectedpenalty>0.1</expectedpenalty>
+        <expectedanswernote>positivity-F</expectedanswernote>
+      </expected>
+    </qtest>
+    <qtest>
+      <testcase>13</testcase>
+      <testinput>
+        <name>ansm</name>
+        <value>matrix([0,%i],[0,0])</value>
+      </testinput>
+      <expected>
+        <name>symmetry</name>
+        <expectedscore>0</expectedscore>
+        <expectedpenalty>0.1</expectedpenalty>
+        <expectedanswernote>symmetry-F</expectedanswernote>
+      </expected>
+      <expected>
+        <name>positivity</name>
+        <expectedscore>0</expectedscore>
+        <expectedpenalty>0.1</expectedpenalty>
+        <expectedanswernote>positivity-F</expectedanswernote>
+      </expected>
+    </qtest>
+    <qtest>
+      <testcase>14</testcase>
+      <testinput>
+        <name>ansm</name>
+        <value>matrix([1/2,%i/4],[-%i/4,1])</value>
+      </testinput>
+      <expected>
+        <name>symmetry</name>
+        <expectedscore>1</expectedscore>
+        <expectedpenalty>0</expectedpenalty>
+        <expectedanswernote>symmetry-T</expectedanswernote>
+      </expected>
+      <expected>
+        <name>positivity</name>
+        <expectedscore>1</expectedscore>
+        <expectedpenalty>0</expectedpenalty>
+        <expectedanswernote>positivity-T</expectedanswernote>
       </expected>
     </qtest>
   </question>

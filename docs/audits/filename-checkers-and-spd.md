@@ -37,7 +37,7 @@ Validation:
   the actual worker. Local Chromium cannot start in this environment, so that
   interaction check requires CI.
 
-## Independent properties and two scoring choices
+## Earlier real-only revision: independent properties and two scoring choices
 
 The follow-up separates `symmetric(A)` and `positive_definite(A)` in the same
 filename-selected checker file. Positive definiteness means positivity of the
@@ -59,3 +59,23 @@ property combinations, nonsymmetric matrices with positive eigenvalues but
 nonpositive quadratic forms, rectangular matrices, unsupported entries and
 separate PRT feedback and scores. The browser integration test exercises both
 cards and their authored tests; browser execution is delegated to CI.
+
+## One positivity check for real and complex entries
+
+The same positivity predicate now uses `(A + A.H) / 2` for both number domains.
+The common structure predicate is Hermitian symmetry, which reduces to symmetry
+for real entries. The registered functions are `is_hermitian`,
+`is_positive_definite` and the combined `is_hpd`. Each entry must have rational
+real and imaginary parts; `%i` supplies the imaginary unit in learner input.
+This is a checker domain restriction, not a parser-wide restriction. The
+built-in `IsBasis` and `MatrixProperty` tests retain their real-rational domain.
+
+Each live question has fourteen authored cases, including complex Hermitian
+positive definite, non-Hermitian positive, Hermitian indefinite, neither, and
+fractional complex matrices. Direct tests exercise the same combinations and
+both expected boolean values. Browser coverage includes complex responses in
+both scoring variants.
+
+Validation of the shared real/complex revision: 836 tests passed, 1 skipped,
+149 subtests passed, including the rendered-page checks. The runtime bundle
+is unchanged and matches the core Python source.

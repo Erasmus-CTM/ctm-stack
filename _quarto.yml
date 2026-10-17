@@ -29,7 +29,7 @@ website:
           - href: docs/matrix-input.qmd
             text: Matrix input and grading
           - href: docs/python-checker-api.qmd#author-the-spd-checker
-            text: SPD checker walkthrough
+            text: Positive-definiteness checker walkthrough
           - href: docs/authoring.qmd#for-developers
             text: Developer reference
       - href: docs/python-checker-api.qmd
