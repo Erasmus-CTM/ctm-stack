@@ -231,6 +231,11 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                 raise UnsupportedQuestion(name, where + "/tans", "numerical answer requires a number")
             if inp["type"] == "matrix" and not isinstance(teacher, MatrixValue):
                 raise UnsupportedQuestion(name, where + "/tans", "matrix input requires a matrix teacher answer")
+            if inp["type"] == "matrix":
+                try:
+                    _matrix_input_shape(inp, teacher, teacher)
+                except InvalidAnswer as exc:
+                    raise UnsupportedQuestion(name, where + "/tans", "teacher matrix must fit the configured dimensions: " + str(exc)) from exc
             if inp["syntaxhint"]:
                 if not question.get("simplify", True) and _collection_helper(parse(inp["syntaxhint"])):
                     raise UnsupportedQuestion(name, where + "/syntaxhint", "Finite collection helpers require questionsimplify=1")

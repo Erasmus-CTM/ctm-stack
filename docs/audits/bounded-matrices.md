@@ -96,6 +96,13 @@ identify the qtest and input. The fixed-input markup test now removes the
 resizable example's deliberate wrong-shape qtests before changing that example
 to fixed dimensions.
 
+The UI review also identified an authoring feasibility gap: explicit fixed
+dimensions or resizable bounds could exclude the teacher shape when no qtests
+were supplied. Instantiation now applies the same shape helper to the teacher
+itself, requiring a fixed axis to match its initial size and a resizable axis
+to include the teacher size. Four no-qtest controls cover both axes and upper
+and lower exclusions, preventing an input whose correct answer is unreachable.
+
 Self-review also added explicit author-operation and nested-matrix rejection
 (`ev`, `diff`, general calls, and list-of-matrices), plus held CASText and
 transitive unsimplified-alias controls. Before the final review fixes, the

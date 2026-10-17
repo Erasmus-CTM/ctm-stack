@@ -138,6 +138,28 @@ def test_qtest_matrix_shape_is_rejected_during_instantiation(resizable,source):
         instantiate(q,17)
 
 
+@pytest.mark.parametrize('axis,config', [
+    ('rows',dict(auto=False,initial=1,min=1,max=1)),
+    ('cols',dict(auto=False,initial=1,min=1,max=1)),
+    ('rows',dict(auto=True,initial=3,min=3,max=4)),
+    ('cols',dict(auto=True,initial=1,min=1,max=1)),
+])
+def test_matrix_teacher_shape_must_be_reachable_without_qtests(axis,config):
+    q=question();q['variables']='a:1; ta:matrix([1,2],[3,4]);'
+    q['inputs'][0]['matrix']={key:dict(auto=True,initial=2,min=1,max=4) for key in ('rows','cols')}
+    q['inputs'][0]['matrix'][axis]=config
+    assert q['qtests']==[]
+    with pytest.raises(UnsupportedQuestion,match=r'input\[ans\]/tans.*teacher matrix must fit'):
+        instantiate(q,17)
+
+
+def test_resizable_initial_shape_can_differ_from_reachable_teacher():
+    q=question();q['variables']='a:1; ta:matrix([1,2],[3,4]);'
+    q['inputs'][0]['matrix']={axis:dict(auto=True,initial=1,min=1,max=4) for axis in ('rows','cols')}
+    variant=instantiate(q,17)
+    assert grade(q,{'ans':variant['env']['ta']},variant=variant)['score']==1
+
+
 @pytest.mark.parametrize('where',['variable','teacher','qtest','castext','dynamic'])
 def test_matrix_provenance_guards(where):
     q=question()
