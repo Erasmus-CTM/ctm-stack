@@ -1,0 +1,13 @@
+---
+title: Bounded matrix browser checks
+---
+
+```{#bounded-matrices .stack-question}
+#| file: questions/bounded-matrices.xml
+#| question: Bounded matrices
+#| variants: 2
+#| seed: 17
+#| review: true
+#| feedback: true
+#| context: none
+```

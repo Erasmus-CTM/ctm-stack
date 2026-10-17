@@ -58,11 +58,12 @@ local function setup()
   installed = true
   quarto.doc.add_html_dependency({
     name = 'stack-sympy', version = '0.1.10',
-    scripts = {{path = 'stack-sympy.js', afterBody = true}},
-    stylesheets = {'stack-sympy.css'},
+    scripts = {{path = 'vendor/matrix-input.js', afterBody = true}, {path = 'stack-sympy.js', afterBody = true}},
+    stylesheets = {'vendor/matrix-input.css', 'stack-sympy.css'},
     resources = {
       {name = 'worker.js', path = 'worker.js'},
       {name = 'runtime-sources.js', path = 'runtime-sources.js'},
+      {name = 'vendor/matrix-input-provenance.json', path = 'vendor/matrix-input-provenance.json'},
       {name = 'vendor/pyodide-runtime.js', path = 'vendor/pyodide-runtime.js'}
     }
   })

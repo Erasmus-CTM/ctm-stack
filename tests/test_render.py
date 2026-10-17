@@ -52,10 +52,36 @@ def test_project_renders_cards_and_deployable_assets():
         assert len(scripts) == 1, qmd
         asset = page.parent / scripts[0]
         assert asset.is_file(), asset
-        for sibling in ("worker.js", "runtime-sources.js", "vendor/pyodide-runtime.js"):
+        for sibling in ("worker.js", "runtime-sources.js", "vendor/pyodide-runtime.js",
+                        "vendor/matrix-input-provenance.json"):
             assert (asset.parent / sibling).is_file(), sibling
+        # Quarto may flatten registered scripts/stylesheets. Follow the HTML
+        # references rather than assuming dependency-resource paths for them.
+        page_scripts = [node.attrs['src'].split('?', 1)[0] for node in doc.find('script')
+                        if node.attrs.get('src')]
+        editor_scripts = [src for src in page_scripts if Path(src).name == 'matrix-input.js']
+        editor_styles = [node.attrs['href'].split('?', 1)[0] for node in doc.find('link')
+                         if Path(node.attrs.get('href', '').split('?', 1)[0]).name == 'matrix-input.css']
+        assert len(editor_scripts) == len(editor_styles) == 1
+        assert page_scripts.index(editor_scripts[0]) < page_scripts.index(scripts[0])
+        for reference in editor_scripts + editor_styles:
+            deployed = page.parent / reference
+            pinned = ROOT / '_extensions/stack-sympy/vendor' / Path(reference).name
+            assert deployed.is_file(), deployed
+            assert deployed.read_bytes() == pinned.read_bytes(), deployed
         assert "STACK_SYMPY_SOURCES" in (asset.parent / "runtime-sources.js").read_text()
     assert total > 0, "the published site should demonstrate at least one question"
+
+
+def test_vendored_matrix_editor_matches_audited_source_manifest():
+    import hashlib
+    vendor = ROOT / '_extensions/stack-sympy/vendor'
+    manifest = json.loads((vendor / 'matrix-input-provenance.json').read_text())
+    assert manifest['commit'] == 'f238da6d9a43d58d1fdf9ad592ac6223225268e0'
+    assert manifest['license'] == 'AGPL-3.0-or-later'
+    for record in manifest['files']:
+        assert hashlib.sha256((vendor / record['file']).read_bytes()).hexdigest() == record['sha256']
+        assert '/' + manifest['commit'] + '/' in record['source']
 
 
 def question_blocks(qmd):

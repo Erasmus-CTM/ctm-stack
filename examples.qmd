@@ -152,3 +152,17 @@ This unmodified STACK sample has multiple answer fields and checks decimal-place
 #| seed: 17
 #| review: true
 ```
+
+## Bounded matrix input
+
+```{#bounded-matrices .stack-question}
+#| file: questions/bounded-matrices.xml
+#| question: Bounded matrices
+#| variants: 2
+#| seed: 17
+#| review: true
+```
+
+The editor preserves raw cell expressions. Validation interprets them through STACK
+SymPy; checking compares dimensions and every corresponding entry. Resizing requires
+validation again. No cell-level partial credit is inferred.

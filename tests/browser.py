@@ -19,6 +19,97 @@ from test_render import ROOT, question_pages, render_site
 CORPUS = Path(__file__).resolve().parents[1] / "questions/corpus"
 
 
+def test_browser_bounded_matrix_editor_worker_and_stale_evidence(browser_site):
+    """The vendored editor feeds raw cells to the real Worker/Pyodide grader."""
+    with serve(browser_site) as url, sync_playwright() as pw:
+        options = {"headless": True}
+        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+            options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
+        browser = pw.chromium.launch(**options)
+        try:
+            page = browser.new_page()
+            errors = []
+            page.on('pageerror', lambda error: errors.append(str(error)))
+            page.goto(url + '/matrices.html', wait_until='domcontentloaded')
+            card = page.locator('[data-stack-id="bounded-matrices"]')
+            host = card.locator('.stack-matrix')
+            cells = host.locator('input[data-matrix-row]')
+            assert cells.count() == 4
+            control = host.locator('[data-dynamic-action="add-row"]')
+            assert control.evaluate('(el) => parseFloat(getComputedStyle(el).paddingTop)') < 3
+            assert host.evaluate('(el) => getComputedStyle(el).borderTopStyle') == 'none'
+            payload = json.loads(card.locator('.stack-sympy-data').text_content())
+            a = payload['variants'][0]['env']['a']
+
+            def fill_correct():
+                for cell, raw in zip(cells.all(), [str(a), 'x+x', '1/2', '1']):
+                    cell.fill(raw)
+
+            def validate():
+                card.locator('.stack-validate').click()
+                card.locator('.stack-result[data-state="valid"] .stack-verdict').wait_for(timeout=180000)
+
+            def prompt():
+                card.locator('.stack-feedback-button').click()
+                text = card.locator('.ai-feedback-prompt').inner_text()
+                return json.loads(text.split('\n\nUSER\n', 1)[1])
+
+            fill_correct()
+            assert cells.nth(1).input_value() == 'x+x'
+            cells.first.fill('1),(2')
+            card.locator('.stack-validate').click()
+            card.locator('.stack-result[data-state="invalid"] .stack-verdict').wait_for(timeout=180000)
+            assert cells.count() == 4
+            fill_correct()
+            validate()
+            card.locator('.stack-check').click()
+            card.locator('.stack-result[data-state="correct"] .stack-verdict').wait_for(timeout=180000)
+            evidence = prompt()
+            assert evidence['evidence']
+            assert 'x+x' in evidence['responses'][0]['value']
+            host.locator('[data-dynamic-action="add-row"]').click()
+            assert cells.count() == 6
+            assert cells.nth(1).input_value() == 'x+x'
+            assert card.locator('.stack-check').is_disabled()
+            assert card.locator('.stack-result').inner_text() == ''
+            assert card.locator('.ai-feedback-output').inner_text() == ''
+            assert prompt()['evidence'] == []
+            card.locator('.stack-validate').click()
+            card.locator('.stack-result[data-state="invalid"] .stack-verdict').wait_for(timeout=180000)
+            assert card.locator('.stack-check').is_disabled()
+            host.locator('[data-dynamic-action="remove-row"]').click()
+            validate()
+            card.locator('.stack-check').click()
+            # An edit during grading must invalidate its eventual result.
+            cells.first.fill('0.1')
+            assert cells.first.input_value() == '0.1'
+            assert card.locator('.stack-check').is_disabled()
+            page.wait_for_timeout(1000)
+            assert card.locator('.stack-result').inner_text() == ''
+            assert prompt()['evidence'] == []
+
+            card.locator('.stack-reset').click()
+            assert cells.count() == 4
+            assert cells.evaluate_all('(items) => items.map(item => item.value)') == ['', '', '', '']
+            assert card.locator('.stack-result').inner_text() == ''
+            assert card.locator('.stack-check').is_disabled()
+            fill_correct()
+            host.locator('[data-dynamic-action="add-col"]').click()
+            assert cells.count() == 6
+            page.evaluate("() => { window.savedMatrixInput = window.MatrixInput; window.MatrixInput = {create() { throw new Error('another extension editor'); }}; }")
+            card.locator('.stack-variant').select_option(index=1)
+            page.evaluate('() => { window.MatrixInput = window.savedMatrixInput; delete window.savedMatrixInput; }')
+            assert cells.count() == 4
+            assert cells.evaluate_all('(items) => items.map(item => item.value)') == ['', '', '', '']
+            assert card.locator('.ai-feedback-output').inner_text() == ''
+            card.locator('.stack-tests').click()
+            card.locator('.stack-result .stack-verdict').wait_for(timeout=180000)
+            assert 'All authored tests passed' in card.locator('.stack-result').inner_text()
+            assert not errors, errors
+        finally:
+            browser.close()
+
+
 @contextmanager
 def serve(directory: Path):
     class QuietHandler(SimpleHTTPRequestHandler):
