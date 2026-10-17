@@ -21,7 +21,14 @@ title: "Custom Python checker integration"
 
 ```{.stack-question #custom-spd}
 #| file: questions/symmetric-positive-definite.xml
-#| question: A symmetric positive definite matrix
+#| question: A positive definite matrix
+#| python-checkers: questions/spd-checker.py
+#| review: true
+```
+
+```{.stack-question #custom-spd-prt}
+#| file: questions/symmetric-positive-definite-prt.xml
+#| question: Hermitian symmetry and positive definiteness separately
 #| python-checkers: questions/spd-checker.py
 #| review: true
 ```

@@ -178,6 +178,8 @@ def test_checker_filename_is_read_at_build_and_updates_on_the_next_build(tmp_pat
     ('matrix([1,0],[0,1])', True),
     ('matrix([2,1],[1,2])', True),
     ('matrix([1/2,1/4],[1/4,1])', True),
+    ('matrix([2,%i],[-%i,2])', True),
+    ('matrix([1,%i],[%i,1])', False),
     ('matrix([-1,0],[0,-1])', False),  # positive determinant is insufficient
     ('matrix([1,1],[1,1])', False),  # positive semidefinite is insufficient
     ('matrix([2,1],[0,2])', False),  # nonsymmetric, even with positive quadratic form
@@ -188,32 +190,86 @@ def test_checker_filename_is_read_at_build_and_updates_on_the_next_build(tmp_pat
 ])
 def test_spd_example_checks_symmetry_and_all_leading_principal_minors(answer, correct):
     source = source_descriptor(ROOT / 'questions/spd-checker.py')
-    result = answer_test('PythonChecker', answer, 'true', 'is_spd', python_checkers=source)
+    result = answer_test('PythonChecker', answer, 'true', 'is_hpd', python_checkers=source)
     assert result['valid'] and result['correct'] is correct
-    opposite = answer_test('PythonChecker', answer, 'false', 'is_spd', python_checkers=source)
+    opposite = answer_test('PythonChecker', answer, 'false', 'is_hpd', python_checkers=source)
     assert opposite['valid'] and opposite['correct'] is not correct
 
 
+@pytest.mark.parametrize('checker', ['is_hermitian', 'is_positive_definite', 'is_hpd'])
 @pytest.mark.parametrize('answer', [
     'matrix([x,0],[0,1])', 'matrix([sqrt(2),0],[0,1])',
-    'matrix([%i,0],[0,1])',
+    'matrix([sqrt(2)*%i,0],[0,1])',
 ])
-def test_spd_example_explains_its_exact_rational_domain(answer):
-    result = answer_test('PythonChecker', answer, 'true', 'is_spd',
+def test_spd_example_explains_its_exact_rational_domain(answer, checker):
+    result = answer_test('PythonChecker', answer, 'true', checker,
                          python_checkers=source_descriptor(ROOT / 'questions/spd-checker.py'))
     assert not result['valid'] and not result['correct']
     assert 'integers or exact fractions' in result['feedback']
 
 
-def test_spd_xml_and_filename_work_through_build_tests_and_grading():
-    q = import_xml(ROOT / 'questions/symmetric-positive-definite.xml',
+@pytest.mark.parametrize('filename', ['symmetric-positive-definite.xml',
+                                     'symmetric-positive-definite-prt.xml'])
+def test_spd_xml_and_filename_work_through_build_tests_and_grading(filename):
+    q = import_xml(ROOT / 'questions' / filename,
                    python_checkers=ROOT / 'questions/spd-checker.py')[0]
     preflight(q, [instantiate(q)])
     assert run_question_tests(q, seeds=(1,17,47))['passed']
     assert grade(q, {'ansm':'matrix([2,1],[1,2])'})['score'] == 1
-    assert grade(q, {'ansm':'matrix([-1,0],[0,-1])'})['score'] == 0
+    expected = 0.5 if filename.endswith('-prt.xml') else 0
+    assert grade(q, {'ansm':'matrix([-1,0],[0,-1])'})['score'] == expected
     assert grade(q, {'ansm':'matrix([x,0],[0,1])'})['status'] == 'invalid'
     assert grade(q, {'ansm':'matrix([0.5,0],[0,1])'})['status'] == 'invalid'
+
+
+@pytest.mark.parametrize('answer,symmetric,positive', [
+    ('matrix([2,1],[1,2])', True, True),
+    ('matrix([1,2],[2,1])', True, False),
+    ('matrix([2,1],[0,2])', False, True),
+    ('matrix([0,1],[0,0])', False, False),
+    ('matrix([2,%i],[-%i,2])', True, True),
+    ('matrix([1,%i],[%i,1])', False, True),
+    ('matrix([1,2*%i],[-2*%i,1])', True, False),
+    ('matrix([0,%i],[0,0])', False, False),
+    ('matrix([1/2,%i/4],[-%i/4,1])', True, True),
+    # Positive eigenvalues of a nonsymmetric matrix do not suffice.
+    ('matrix([1,4],[0,1])', False, False),
+    ('matrix([1,0,0],[0,-1,0],[0,0,-1])', True, False),
+    ('matrix([2,1,0],[1,2,1],[0,1,2])', True, True),
+    ('matrix([1,0,0],[0,1,0])', False, False),
+])
+def test_independent_matrix_properties_and_python_conjunction(answer, symmetric, positive):
+    source = source_descriptor(ROOT / 'questions/spd-checker.py')
+    for checker, property_value in [('is_hermitian', symmetric),
+                                     ('is_positive_definite', positive),
+                                     ('is_hpd', symmetric and positive)]:
+        for expected in (True, False):
+            result = answer_test('PythonChecker', answer, str(expected).lower(), checker,
+                                 python_checkers=source)
+            assert result['valid']
+            assert result['correct'] is (property_value == expected)
+
+
+@pytest.mark.parametrize('answer,symmetric,positive', [
+    ('matrix([2,1],[1,2])', True, True),
+    ('matrix([1,2],[2,1])', True, False),
+    ('matrix([2,1],[0,2])', False, True),
+    ('matrix([0,1],[0,0])', False, False),
+    ('matrix([2,%i],[-%i,2])', True, True),
+    ('matrix([1,%i],[%i,1])', False, True),
+    ('matrix([1,2*%i],[-2*%i,1])', True, False),
+    ('matrix([0,%i],[0,0])', False, False),
+    ('matrix([1/2,%i/4],[-%i/4,1])', True, True),
+])
+def test_prt_composition_awards_separate_marks_and_feedback(answer, symmetric, positive):
+    q = import_xml(ROOT / 'questions/symmetric-positive-definite-prt.xml',
+                   python_checkers=ROOT / 'questions/spd-checker.py')[0]
+    result = grade(q, {'ansm': answer})
+    assert result['score'] == (int(symmetric) + int(positive)) / 2
+    assert result['prts']['symmetry']['score'] == int(symmetric)
+    assert result['prts']['positivity']['score'] == int(positive)
+    assert result['prts']['symmetry']['feedback']
+    assert result['prts']['positivity']['feedback']
 
 
 def test_import_rejects_expressions_and_paths_as_checker_identifiers():

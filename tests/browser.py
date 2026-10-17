@@ -91,7 +91,9 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             cells = spd.locator('input[data-matrix-row]')
             for values, state in (([2, 1, 1, 2], 'correct'),
                                   ([-1, 0, 0, -1], 'retry'),
-                                  ([2, 1, 0, 2], 'retry')):
+                                  ([2, 1, 0, 2], 'retry'),
+                                  ([2, '%i', '-%i', 2], 'correct'),
+                                  ([1, '%i', '%i', 1], 'retry')):
                 for cell, value in zip(cells.all(), values):
                     cell.fill(str(value))
                 spd.locator('.stack-validate').click()
@@ -101,6 +103,25 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             spd.locator('.stack-tests').click()
             spd.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
             assert 'All question tests passed' in spd.inner_text()
+            separate = page.locator('[data-stack-id="custom-spd-prt"]')
+            cells = separate.locator('input[data-matrix-row]')
+            for values, state in (([2, 1, 1, 2], 'correct'),
+                                  ([1, 2, 2, 1], 'retry'),
+                                  ([2, 1, 0, 2], 'retry'),
+                                  ([0, 1, 0, 0], 'retry'),
+                                  ([2, '%i', '-%i', 2], 'correct'),
+                                  ([1, '%i', '%i', 1], 'retry')):
+                for cell, value in zip(cells.all(), values):
+                    cell.fill(str(value))
+                separate.locator('.stack-validate').click()
+                separate.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
+                separate.locator('.stack-check').click()
+                separate.locator(f'.stack-result[data-state="{state}"]').wait_for(timeout=180000)
+                assert 'symmetr' in separate.inner_text().lower()
+                assert 'positive' in separate.inner_text().lower()
+            separate.locator('.stack-tests').click()
+            separate.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
+            assert 'All question tests passed' in separate.inner_text()
             assert not errors, errors
         finally:
             browser.close()

@@ -43,7 +43,7 @@ question's own tests.
 | Polynomial equations or Boolean propositions | [Equations and logic](examples.qmd#equations-and-logic) |
 | Ordered lists, sets and nested finite collections | [Collection questions](examples.qmd#collections) |
 | A particular matrix, any basis, or a matrix meeting conditions | [Matrix examples](examples.qmd#matrix-conditions) and [choosing an answer test](docs/python-checker-api.qmd#choose-the-mathematical-test) |
-| Another authored condition, such as positive definiteness | [Live SPD question](examples.qmd#symmetric-positive-definite-matrix) and its [authoring walkthrough](docs/python-checker-api.qmd#author-the-spd-checker) |
+| Another authored condition, such as positive definiteness | [Live positive-definiteness question](examples.qmd#symmetric-positive-definite-matrix) and its [authoring walkthrough](docs/python-checker-api.qmd#author-the-spd-checker) |
 
 These activities cover a defined part of STACK. The [authoring guide](docs/authoring.qmd#what-the-adapter-checks) maps teaching tasks to supported tests; its [developer reference](docs/authoring.qmd#for-developers) records precise input, expression and grading limits.
 The [question corpus](corpus.qmd) shows which unchanged imports currently run
@@ -74,7 +74,7 @@ alternate bases and matrix conditions without changing those native test
 names. Ordinary response trees still control scores and feedback.
 
 - [Python answer-test guide](docs/python-checker-api.qmd): matrix choices,
-  teacher values, callback contract and complete SPD example.
+  teacher values, callback contract and complete positive-definiteness example.
 - [STACK compliance](compliance/): comparisons with upstream answer-test cases.
 - [Port regressions](compliance/port-regressions.html): focused checks for
   mathematical behavior discovered during the port.
