@@ -31,6 +31,9 @@ MAX_DIGITS = 100
 MAX_COLLECTION_ITEMS = 32
 MAX_COLLECTION_DEPTH = 6
 MAX_COLLECTION_NODES = 128
+MAX_MATRIX_ROWS = 16
+MAX_MATRIX_COLS = 16
+MAX_MATRIX_ENTRIES = 64
 _LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(?P<name>%?[A-Za-z_][A-Za-z_0-9]*)|(?P<op>\*\*|\+\-|[=+*/^(),{}\[\]-]))", re.ASCII)
 _NAMES = {"pi": sp.pi, "%pi": sp.pi, "Pi": sp.pi, "PI": sp.pi,
           "e": sp.E, "E": sp.E, "%e": sp.E,
@@ -43,7 +46,7 @@ SCALAR_FUNCTIONS = {
     "exp": sp.exp, "log": sp.log, "abs": sp.Abs,
 }
 FUNCTION_ALIASES = {"cosec": "csc", "cosech": "csch", "ln": "log"}
-_STUDENT_FUNCTIONS = frozenset(SCALAR_FUNCTIONS) | FUNCTION_ALIASES.keys() | {"gcd", "mod"}
+_STUDENT_FUNCTIONS = frozenset(SCALAR_FUNCTIONS) | FUNCTION_ALIASES.keys() | {"gcd", "mod", "matrix"}
 LOGIC_OPERATORS = {"and": "and", "or": "or", "not": "not",
                    "implies": "implies", "xor": "xor", "xnor": "xnor",
                    "nounand": "and", "nounor": "or", "nounnot": "not"}
@@ -95,16 +98,54 @@ class HeldSet(sp.Basic):
         return r"\left\{" + ", ".join(printer.doprint(x) for x in self.args) + r"\right\}"
 
 
+class MatrixValue(sp.Basic):
+    """A bounded rectangular matrix, deliberately distinct from nested lists.
+
+    This is a value container, not SymPy's matrix arithmetic API. Each leaf is
+    parsed and compared through the same scalar machinery as list entries.
+    """
+    def __new__(cls, *rows):
+        if not rows or len(rows) > MAX_MATRIX_ROWS:
+            raise InvalidAnswer(f"Matrices require 1-{MAX_MATRIX_ROWS} rows")
+        if any(not isinstance(row, (list, HeldList)) for row in rows):
+            raise InvalidAnswer("Matrix rows must be lists")
+        rows = [tuple(collection_items(row)) for row in rows]
+        columns = len(rows[0])
+        if not 1 <= columns <= MAX_MATRIX_COLS:
+            raise InvalidAnswer(f"Matrices require 1-{MAX_MATRIX_COLS} columns")
+        if any(len(row) != columns for row in rows):
+            raise InvalidAnswer("Matrix rows must have equal lengths")
+        if len(rows) * columns > MAX_MATRIX_ENTRIES:
+            raise InvalidAnswer(f"Matrices support at most {MAX_MATRIX_ENTRIES} entries")
+        for row in rows:
+            for entry in row:
+                if not isinstance(entry, sp.Expr):
+                    raise InvalidAnswer("Matrix entries must be scalar expressions")
+                _finite(entry)
+        return sp.Basic.__new__(cls, *(HeldList(*row) for row in rows))
+
+    @property
+    def shape(self):
+        return len(self.args), len(self.args[0].args)
+
+    def _sympystr(self, printer):
+        return "matrix(" + ",".join(printer.doprint(row) for row in self.args) + ")"
+
+    def _latex(self, printer):
+        return r"\begin{pmatrix}" + r" \\ ".join(
+            " & ".join(printer.doprint(x) for x in row.args) for row in self.args) + r"\end{pmatrix}"
+
+
 def is_collection(value):
-    return isinstance(value, (list, HeldList, HeldSet))
+    return isinstance(value, (list, HeldList, HeldSet, MatrixValue))
 
 
 def collection_kind(value):
-    return "set" if isinstance(value, HeldSet) else "list" if isinstance(value, (list, HeldList)) else "scalar"
+    return "matrix" if isinstance(value, MatrixValue) else "set" if isinstance(value, HeldSet) else "list" if isinstance(value, (list, HeldList)) else "scalar"
 
 
 def collection_items(value):
-    return value.args if isinstance(value, (HeldList, HeldSet)) else value
+    return value.args if isinstance(value, (HeldList, HeldSet, MatrixValue)) else value
 
 
 def validate_collection(value):
@@ -121,6 +162,8 @@ def validate_collection(value):
         if count > MAX_COLLECTION_NODES:
             raise Unsupported(f"Collection trees support at most {MAX_COLLECTION_NODES} nodes")
         if is_collection(item):
+            if isinstance(item, MatrixValue) and depth != 1:
+                raise Unsupported("Matrices nested in collections are unsupported")
             if depth > MAX_COLLECTION_DEPTH:
                 raise Unsupported(f"Collections support at most {MAX_COLLECTION_DEPTH} levels")
             children = collection_items(item)
@@ -392,6 +435,9 @@ def form_latex(node: Node, env: Mapping[str, Any] | None = None) -> str:
             rendered = show(child)
             return n.value + (wrap(rendered) if precedence(child) <= 25 else rendered)
         if n.kind == "call":
+            if n.value == "matrix":
+                return r"\begin{pmatrix}" + r" \\ ".join(
+                    " & ".join(show(c) for c in row.children) for row in n.children) + r"\end{pmatrix}"
             name = "\\" + n.value if n.value in {"sin", "cos", "tan", "exp", "log", "ln", "gcd"} else r"\operatorname{" + n.value + "}"
             if n.value == "sqrt" and len(n.children) == 1:
                 return r"\sqrt{" + show(n.children[0]) + "}"
@@ -506,13 +552,13 @@ def transformed_decimal_collection(node: Node):
     """Only literal constant arithmetic carries per-leaf binary64 provenance."""
     if not contains_decimal(node):
         return False
-    if node.kind in {"list", "set"}:
+    if node.kind in {"list", "set"} or node.kind == "call" and node.value == "matrix":
         from .equivalence import constant_float_equivalent
-        return any(transformed_decimal_collection(child) if child.kind in {"list", "set"}
+        return any(transformed_decimal_collection(child) if child.kind in {"list", "set"} or child.kind == "call" and child.value == "matrix"
                    else contains_decimal(child) and constant_float_equivalent(child, child) is None
                    for child in node.children)
     def collection(tree):
-        return tree.kind in {"list", "set"} or any(collection(child) for child in tree.children)
+        return tree.kind in {"list", "set"} or tree.kind == "call" and tree.value == "matrix" or any(collection(child) for child in tree.children)
     return collection(node)
 
 
@@ -567,6 +613,8 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
             return sp.Symbol(n.value, **{k: True for k in ("real", "positive") if assumptions.get(k)})
         if n.kind in {"list", "set"}:
             items = [visit(c, depth + 1) for c in n.children]
+            if any(isinstance(item, MatrixValue) for item in items):
+                raise Unsupported("Matrices nested in collections are unsupported")
             if n.kind == "set" or student:
                 validate_collection(items)
             return HeldSet(*items) if n.kind == "set" else items
@@ -608,6 +656,11 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                 raise InvalidAnswer(f"Function {name} is not allowed in student input")
             if symbolic_complex_log(n):
                 raise Unsupported("Symbolic complex logarithms require branch-aware proof")
+            if name == "matrix":
+                try:
+                    return MatrixValue(*(visit(c, depth + 1) for c in n.children))
+                except Unsupported as exc:
+                    raise InvalidAnswer(str(exc)) from exc
             if name in AUTHOR_COLLECTION_FUNCTIONS:
                 if not simplify:
                     raise Unsupported("Finite collection helpers require simplification")
@@ -621,8 +674,13 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                 if len(n.children) not in (1, 2) or (
                         len(n.children) == 2 and n.children[1] != Node("name", "simp")):
                     raise Unsupported("Only ev(expr) and ev(expr,simp) are supported")
-                return visit(n.children[0], depth + 1)
+                value = visit(n.children[0], depth + 1)
+                if isinstance(value, MatrixValue):
+                    raise Unsupported("Matrix transformations are outside the supported subset")
+                return value
             args = [visit(c, depth + 1) for c in n.children]
+            if any(isinstance(value, MatrixValue) for value in args):
+                raise Unsupported("Matrix operations are outside the supported subset")
             if name in {"gcd", "mod"}:
                 if len(args) != 2:
                     raise Unsupported(f"{name} requires two arguments")
@@ -812,6 +870,8 @@ def canonical_form(node: Node | str, env: Mapping[str, Any] | None = None,
                     "*": lambda: combine("mul", [a, b]), "/": lambda: combine("mul", [a, reciprocal(b)]),
                     "^": lambda: ("pow", a, b), "**": lambda: ("pow", a, b)}[n.value]()
         if n.kind == "call":
+            if n.value == "matrix":
+                return ("matrix", tuple(visit(row) for row in n.children))
             if n.value not in _STUDENT_FUNCTIONS:
                 return from_sympy(evaluate(n, env, assumptions=assumptions))
             if n.value == "sqrt" and len(n.children) == 1:

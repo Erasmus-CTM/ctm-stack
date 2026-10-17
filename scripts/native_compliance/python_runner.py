@@ -72,7 +72,7 @@ def _preflight_expression(source: str, role: str, *, collections=False, helpers=
         def collection_result(child):
             return child.kind in {"list", "set"} or child.kind == "call" and child.value in {
                 "set", "setify", "listify", "union", "intersection", "setdifference"}
-        if (tree.kind in {"binary", "unary"} or tree.kind == "call" and tree.value in _STUDENT_FUNCTIONS) and any(collection_result(c) for c in tree.children):
+        if (tree.kind in {"binary", "unary"} or tree.kind == "call" and tree.value in _STUDENT_FUNCTIONS - {"matrix"}) and any(collection_result(c) for c in tree.children):
             return "Collection arithmetic and scalar function mapping are outside the supported subset"
         for child in tree.children:
             issue = collection_shape(child, depth + int(current), inside or current)
@@ -123,6 +123,20 @@ def classify_case(case: dict) -> dict:
         if issue:
             return {"kind": issue[0], "reason": issue[1]}
         parsed[role] = node
+        matrices = [item for item in _walk(node) if item.kind == "call" and item.value == "matrix"]
+        if matrices:
+            if len(matrices) != 1 or node is not matrices[0]:
+                return {"kind": "unsupported", "reason": "Nested matrices and matrix operations are outside the bounded matrix subset"}
+            if name not in {"AlgEquiv", "SameType", "EqualComAss"}:
+                return {"kind": "unsupported", "reason": "Matrices require AlgEquiv, SameType or EqualComAss in this port"}
+            from stack_sympy.expressions import MAX_MATRIX_ROWS, MAX_MATRIX_COLS, MAX_MATRIX_ENTRIES
+            for matrix in matrices:
+                rows = matrix.children
+                if (not rows or len(rows) > MAX_MATRIX_ROWS or any(row.kind != "list" for row in rows)
+                        or not 1 <= len(rows[0].children) <= MAX_MATRIX_COLS
+                        or any(len(row.children) != len(rows[0].children) for row in rows)
+                        or len(rows) * len(rows[0].children) > MAX_MATRIX_ENTRIES):
+                    return {"kind": "unsupported", "reason": "Matrix shape outside bounded positive rectangular subset"}
         for item in _walk(node):
             if item.kind == "name" and item.value in _NONSCALAR_NAMES:
                 return {"kind": "unsupported", "reason": f"{role} Boolean, infinity, or logic outside scalar subset"}

@@ -86,8 +86,8 @@ def _algebraic(student, teacher, student_ast=None, teacher_ast=None, *, collecti
     if any(is_collection(x) for x in (student, teacher)):
         from .collections import collection_test
         def compare(a, b, index):
-            sa = student_ast.children[index] if student_ast is not None and student_ast.kind == "list" else None
-            ta = teacher_ast.children[index] if teacher_ast is not None and teacher_ast.kind == "list" else None
+            sa = student_ast.children[index] if student_ast is not None and (student_ast.kind == "list" or student_ast.kind == "call" and student_ast.value == "matrix") else None
+            ta = teacher_ast.children[index] if teacher_ast is not None and (teacher_ast.kind == "list" or teacher_ast.kind == "call" and teacher_ast.value == "matrix") else None
             return _algebraic(a, b, sa, ta, collection_leaf=True)
         return collection_test("AlgEquiv", student, teacher, compare)
     from .logic import _has_equation
@@ -324,7 +324,7 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
     NumAbsolute, NumRelative, NumDecPlaces
     (one to fifty decimal places).
     Nested scalar collections support AlgEquiv, Sets, SameType and EqualComAss.
-    Units, general relations, matrices, and feedback-tree CAS
+    Matrices support AlgEquiv, SameType and EqualComAss. Units, general relations and feedback-tree CAS
     features are outside this intentionally limited implementation.
     """
     if name not in {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
@@ -346,6 +346,9 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
 
     for value in (student_value, teacher_value):
         validate_collection(value)
+    from .expressions import MatrixValue
+    if any(isinstance(value, MatrixValue) for value in (student_value, teacher_value)) and name not in {"AlgEquiv", "SameType", "EqualComAss"}:
+        raise Unsupported("Matrices require AlgEquiv, SameType or EqualComAss")
     if name == "SameType":
         if any(is_logical(x) for x in (student_value, teacher_value)):
             raise Unsupported("SameType supports scalar expressions and collections")
