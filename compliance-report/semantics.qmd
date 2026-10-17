@@ -280,6 +280,60 @@ this pair, or should bounded set-member preparation establish the identity?
 A stronger matching mode in the port would be an explicit behavior change, rather
 than evidence that the existing native set test already performs that matching.
 
+### Proposed stronger set-member matching {#stronger-set-matching}
+
+**Status and scope.** This is a design proposal, not current port behavior or a
+claim about native STACK. For bounded flat sets of the scalar expressions already
+supported, a stronger checker would be a small-to-medium feature rather than a
+rewrite. The matching algorithm is straightforward; specifying reliable grading
+and feedback takes more care. Supporting nested collections and predictable
+computation limits broadens that work. Any stronger mode would need an explicit
+contract because accepting additional identities changes compatibility with the
+native set tests described above.
+
+Once duplicate semantics are resolved, the comparison could proceed as follows:
+
+1. Recognize structurally identical members cheaply and cache those successful
+   comparisons.
+2. Compare remaining candidate pairs using the existing scalar `AlgEquiv` proof
+   path, under the same domain assumptions. Record proved equal, proved unequal
+   where available, and inconclusive separately. Failure to find a proof is not
+   itself proof of inequality.
+3. Build a bipartite graph whose edges are certified equal pairs, then find a
+   complete matching with a standard polynomial-time algorithm. This does not
+   require factorial permutation search. Structural matches provide the fast
+   path; the final matcher must be able to reassign tentative pairings rather
+   than commit greedily to the first available candidate.
+
+For two flat sets with 32 members each, there are at most **1,024 cross-set
+candidate pairs**. This bounds that comparison phase, not total work: comparing
+members within each set to resolve algebraic duplicates adds comparisons, and
+nested comparisons recurse. A single symbolic proof can also be expensive.
+Symbolic proof work, rather than graph matching, is therefore the principal
+runtime concern. Cached results and limits on proof work, expression growth and
+total recursive comparisons would be part of the design; the pair count alone
+does not guarantee a response time.
+
+The grading contract needs four further decisions:
+
+| Issue | Required behavior or decision |
+|---|---|
+| Algebraic duplicates | `{sin(x)^2+cos(x)^2,1}` denotes the same mathematical set as `{1}`. A bijection over the raw submitted entries would wrongly reject it. Decide how certified equal members form duplicate classes before testing cardinality or matching, while retaining original entries for `Sets` duplicate feedback. Incomplete proofs can leave those classes unresolved. |
+| Nested collections | Lists remain ordered and compare corresponding entries; sets use the stronger unordered comparison recursively. Preserve list/set type and nesting boundaries. Existing size/depth bounds still apply, with a shared budget across the whole comparison tree. |
+| Inconclusive results | Budget exhaustion or an unproved candidate must remain distinguishable from established inequality. Accept only when the necessary equality certificates exist. An unresolved comparison must not be presented as a mathematical counterexample or definitive extra/missing-member explanation. |
+| Written form | `EqualComAss` keeps its separate contract: written arithmetic and repeated set entries still matter. A stronger algebraic check could satisfy its equivalence prerequisite, but must not replace its held-form comparison or erase submitted form. |
+
+For `Sets`, deterministic matching and retained submission provenance would also
+be needed for useful feedback when several pairings are possible. Missing/extra
+diagnostics should explain the checker outcome without overstating what an
+incomplete proof established. A first implementation could target flat exact
+scalar sets, followed by recursive collections and richer feedback under the
+same explicitly stated semantics.
+
+Adding `ratsimp` to preparation would address the traced trig example, but that
+is a narrower normalization improvement. It would neither implement general
+scalar-proof matching nor settle duplicates, recursive behavior or proof limits.
+
 ### Exact constants: mathematical equality versus compatibility
 
 | Case | Mathematically equal? | Fixture expects | Pinned native | Port |
