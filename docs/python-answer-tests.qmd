@@ -113,9 +113,10 @@ needed for this extraction.
 
 `stack_sympy/python_tests.py` supplies the bounded adapter and registers the
 names `IsBasis` and `MatrixProperty`. XML selects that reviewed function by name. It cannot supply
-Python source, choose imports or name arbitrary modules. Adding another Python
-test means adding reviewed code and tests to the registry; this is not a
-general-purpose Python execution field in XML.
+Python source, choose imports or name arbitrary modules. These built-in names keep their reviewed registry. For a new author-supplied
+predicate, use the [PythonChecker API](python-checker-api.qmd): select a trusted
+module explicitly in Quarto or the CLI, and name one of its `CHECKERS` entries
+in XML. XML itself contains neither Python source nor an import path.
 
 The same Python modules are bundled into the browser worker and used by local
 CPython. The UI does not contain a second mathematical checker. Validation
@@ -144,7 +145,7 @@ award cell, row or column credit on their own.
 
 ## Present limits and evidence
 
-The first version supports exact rational entries, written as integers or
+The first version of the built-in `IsBasis` and `MatrixProperty` supports exact rational entries, written as integers or
 fractions with bounded arithmetic. Decimals, symbolic parameters, irrational and complex entries are
 rejected. Each rational numerator and denominator is limited to 256 bits.
 Every arithmetic step is bounded before the general evaluator runs; nested

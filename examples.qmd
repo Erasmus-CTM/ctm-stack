@@ -230,7 +230,7 @@ correct answers, so this question uses a basis test instead.
 [Download XML](questions/course-c-nullspace.xml)
 
 For both basis questions, **green** means that the submitted nonzero columns
-are in the target space and form an independent family. A green family can
+are in the target space and form an independent family among the valid columns; red columns are excluded from that diagnostic independence check. A green family can
 still be incomplete. **Yellow** marks every column of a dependent valid family;
 column order never decides which vector gets the blame. **Red** marks a zero
 vector or one outside the target space. The complete answer receives credit
@@ -241,3 +241,21 @@ The basis questions extend vanilla STACK: they keep the familiar XML inputs and
 PRTs but introduce a Python-only answer test. The resizable matrix input is
 also a port extension. Read [how the Python extension works, and what the XML
 means in native STACK](docs/python-answer-tests.qmd).
+
+
+## Custom Python checker {#custom-python-checker}
+
+An author module can define a new predicate without editing this extension.
+This example accepts any positive integer multiple of the displayed number.
+The XML chooses `PythonChecker`, the authored block selects its module, and
+the usual response tree awards credit. See the [version 1 API](docs/python-checker-api.qmd)
+for the callable contract, immutable values, tests and portability.
+
+```{.stack-question #python-multiple}
+#| file: questions/python-checker.xml
+#| question: A positive integer multiple (PythonChecker)
+#| python-checkers: questions/checkers.py
+#| variants: 3
+#| seed: 17
+#| review: true
+```

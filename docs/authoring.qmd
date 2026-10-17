@@ -19,7 +19,7 @@ filters:
   - stack-sympy
 ```
 
-Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<question type="stack">`. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a `stack-question` block at its XML path and exact `<name><text>…</text></name>`. The filter embeds a selected question and precomputes the requested variants when Quarto renders. The original XML remains the source of truth and can be imported back into Moodle.
+Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<question type="stack">`. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a `stack-question` block at its XML path and exact `<name><text>…</text></name>`. The filter embeds a selected question and precomputes the requested variants when Quarto renders. Unchanged native XML remains the source of truth and can be imported back into Moodle. Port-only Python tests and resizable matrix settings require adaptation for Moodle; see [Python portability](python-answer-tests.qmd#how-this-extends-vanilla-stack) and the [PythonChecker API](python-checker-api.qmd).
 
 ```{.stack-question}
 #| file: ../questions/polynomial-expansion.xml

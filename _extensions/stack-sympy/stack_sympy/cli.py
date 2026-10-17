@@ -18,17 +18,20 @@ def _json_script(value):
 
 
 def render(path: str, question_name: str, identifier: str, count: int = 3,
-           seed: int = 1, review: bool = False, diagnostics: bool = False) -> str:
+           seed: int = 1, review: bool = False, diagnostics: bool = False,
+           python_checkers: str | None = None) -> str:
     if count < 1 or count > 100:
         raise ValueError("Variants must be between 1 and 100")
     safe_id = html.escape(identifier, quote=True)
     try:
-        questions = import_xml(path)
+        questions = import_xml(path, python_checkers=python_checkers)
         matches = [q for q in questions if q["name"] == question_name]
         if len(matches) != 1:
             raise UnsupportedQuestion(question_name, "name", f"expected exactly one question, found {len(matches)}")
         question = matches[0]
         variants = [instantiate(question, seed + offset) for offset in range(count)]
+        from .checkers import preflight
+        preflight(question, variants)
         data = {"version": 1, "id": identifier, "question": question,
                 "variants": variants, "review": review}
         choices = "".join(f'<option value="{index}">Variant {index + 1}</option>' for index in range(count))
@@ -66,11 +69,13 @@ def main(argv=None) -> int:
     test_parser.add_argument("--file", required=True)
     test_parser.add_argument("--question")
     test_parser.add_argument("--seed", type=int, action="append")
+    render_parser.add_argument("--python-checkers", help="Trusted author checker source (embedded in the public card)")
+    test_parser.add_argument("--python-checkers", help="Trusted author checker source")
     args = parser.parse_args(argv)
     if args.command == "render":
         try:
             sys.stdout.write(render(args.file, args.question, args.id, args.variants,
-                                    args.seed, args.review, args.diagnostics))
+                                    args.seed, args.review, args.diagnostics, args.python_checkers))
             return 0
         except Exception as exc:
             print(str(exc), file=sys.stderr)
@@ -79,13 +84,17 @@ def main(argv=None) -> int:
             return 2
     if args.command == "test":
         try:
-            questions = import_xml(args.file)
+            questions = import_xml(args.file, python_checkers=args.python_checkers)
             if args.question:
                 questions = [q for q in questions if q["name"] == args.question]
                 if len(questions) != 1:
                     raise ValueError(f"Expected one question named {args.question!r}")
-            results = [{"question": q["name"], **run_question_tests(q, seeds=args.seed or [1])}
-                       for q in questions]
+            from .checkers import preflight
+            results = []
+            for q in questions:
+                variants = [instantiate(q, seed) for seed in (args.seed or [1])]
+                preflight(q, variants)
+                results.append({"question": q["name"], **run_question_tests(q, variants=variants)})
             sys.stdout.write(json.dumps({"passed": all(r["passed"] for r in results), "questions": results}, indent=2) + "\n")
             return 0 if all(r["passed"] for r in results) else 1
         except Exception as exc:

@@ -18,6 +18,7 @@ from .expressions import (InvalidAnswer, Node, Unsupported, canonical_form, eval
                           AUTHOR_COLLECTION_FUNCTIONS)
 
 from .python_tests import PYTHON_TESTS, preflight_matrix_source
+from .checkers import invoke as invoke_checker
 
 MAX_DECIMAL_PLACES = 50
 
@@ -319,7 +320,8 @@ def _lowest_terms(node: Node, env, assumptions, negative: bool = False) -> bool:
 
 def answer_test(name: str, student: Node | str, teacher: str, options: str = "", *,
                 env: Mapping[str, Any] | None = None, raw: str | None = None,
-                assumptions: Mapping[str, bool] | None = None) -> dict:
+                assumptions: Mapping[str, bool] | None = None,
+                python_checkers: dict | None = None) -> dict:
     """Evaluate one supported STACK test; return valid/correct/note/feedback.
 
     Supported: AlgEquiv, EqualComAss, FacForm, SingleFrac, LowestTerms,
@@ -331,7 +333,7 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
     Units, general relations and feedback-tree CAS
     features are outside this intentionally limited implementation.
     """
-    if name not in PYTHON_TESTS and name not in {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
+    if name != "PythonChecker" and name not in PYTHON_TESTS and name not in {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
                     "NumAbsolute", "NumRelative", "NumDecPlaces"}:
         raise Unsupported(f"Answer test {name!r} is unsupported")
     env = {} if env is None else env
@@ -351,6 +353,9 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
         teacher_value = evaluate(teacher_ast, env, assumptions=assumptions)
     except (InvalidAnswer, TypeError, ZeroDivisionError) as exc:
         raise Unsupported(f"Invalid teacher expression: {exc}") from exc
+
+    if name == "PythonChecker":
+        return invoke_checker(python_checkers, options, student_value, teacher_value)
 
     if name in PYTHON_TESTS:
         return PYTHON_TESTS[name](student_value, teacher_value, options, student_ast, teacher_ast)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import html
 import math
 import random
 import re
@@ -273,6 +274,20 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                 if (node["test"] not in {"AlgEquiv", "SameType"}
                         and any(_collection_helper(parse(node[field])) for field in ("student", "teacher"))):
                     raise UnsupportedQuestion(name, where, "Direct finite helper calls require AlgEquiv or SameType; use a frozen evaluated author value")
+                if node["test"] == "PythonChecker":
+                    # A later node may be guarded by an earlier predicate.
+                    # Check syntax, not its potentially unsafe teacher value.
+                    from .checkers import checker_identifier, validate_descriptor
+                    checker_identifier(node["options"])
+                    validate_descriptor(question.get("python_checkers"))
+                    parse(node["student"])
+                    parse(node["teacher"])
+                    for branch in ("true", "false"):
+                        render_castext(node[branch]["feedback"], env, name, where + "/" + branch + "feedback",
+                                       inputs=inputmap, feedback=prtmap, assumptions=assumptions,
+                                       form_expression=(lambda expr: _qtest_answer(question, expr, env, preserve_form=True))
+                                       if not question.get("simplify", True) else None)
+                    continue
                 # Use actual typed teacher placeholders so collection arithmetic
                 # and unsupported tests are rejected while building the question.
                 student_value = evaluate(node["student"], preview_env, assumptions=assumptions)
@@ -566,14 +581,24 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
                 teacher = node["teacher"]
                 if node["test"] == "EqualComAss" and not question.get("simplify", True):
                     teacher = _qtest_answer(question, teacher, env, preserve_form=True)
-                result = answer_test(node["test"], tested_student, teacher, node["options"],
-                                     env=penv, raw=raw_student or (tested_student if isinstance(tested_student, str) else ""), assumptions=assumptions)
+                if node["test"] == "PythonChecker":
+                    from .checkers import invoke
+                    result = invoke(question.get("python_checkers"), node["options"],
+                                    student_values[node["student"]],
+                                    evaluate(teacher, penv, assumptions=assumptions))
+                else:
+                    result = answer_test(node["test"], tested_student, teacher, node["options"],
+                                         env=penv, raw=raw_student or (tested_student if isinstance(tested_student, str) else ""), assumptions=assumptions)
             except (InvalidAnswer, Unsupported, TypeError, ZeroDivisionError) as exc:
                 raise UnsupportedQuestion(question["name"], f"prt[{prt['name']}]/node[{current}]", str(exc)) from exc
             if not result["valid"]:
+                if node["test"] == "PythonChecker":
+                    detail = input_results[node["student"]]
+                    detail.update(valid=False, feedback=result["feedback"] if not node["quiet"] else "Invalid answer")
+                    detail.pop("assessment", None)
                 return {"status": "invalid", "score": 0.0, "inputs": input_results, "prts": prt_results,
                         "feedback": result["feedback"]}
-            if node["test"] in PYTHON_TESTS and "assessment" in result and not node["quiet"]:
+            if node["test"] in {*PYTHON_TESTS, "PythonChecker"} and "assessment" in result and not node["quiet"]:
                 input_results[node["student"]]["assessment"] = result["assessment"]
             branch_name = "true" if result["correct"] else "false"
             branch = node[branch_name]
@@ -589,7 +614,7 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
                 if rendered:
                     feedback.append(rendered)
                 if result["feedback"]:
-                    feedback.append(result["feedback"])
+                    feedback.append(html.escape(result["feedback"]) if node["test"] == "PythonChecker" else result["feedback"])
             branches.append({"node": current, "branch": branch_name, "note": branch["note"]})
             current = str(branch["next"])
         prt_results[prt["name"]] = {"score": round(max(0.0, min(1.0, score)), 10),
@@ -603,6 +628,12 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
             "feedback": " ".join(p["feedback"] for p in prt_results.values() if p["feedback"])}
 
 
+def _input_uses_written_form(question, key):
+    return any(n["test"] in {"EqualComAss", "FacForm", "SingleFrac", "LowestTerms"}
+               and re.search(rf"\b{re.escape(key)}\b", n["student"])
+               for p in question["prts"] for n in p["nodes"])
+
+
 def run_question_tests(question: dict, seeds=(1,), variants=None) -> dict:
     """Run native qtests. Each author input is evaluated in the variant env."""
     variants = list(variants) if variants is not None else [instantiate(question, s) for s in seeds]
@@ -613,8 +644,7 @@ def run_question_tests(question: dict, seeds=(1,), variants=None) -> dict:
             raw = {}
             for key, expression in test["inputs"].items():
                 try:
-                    form = any(n["test"] in {"EqualComAss", "FacForm", "SingleFrac", "LowestTerms"} and re.search(rf"\b{re.escape(key)}\b", n["student"])
-                               for p in question["prts"] for n in p["nodes"])
+                    form = _input_uses_written_form(question, key)
                     raw[key] = _qtest_answer(question, expression, env, preserve_form=form)
                 except (Unsupported, InvalidAnswer, ValueError) as exc:
                     raise UnsupportedQuestion(question["name"], f"qtest[{test['testcase']}]/testinput[{key}]", str(exc)) from exc

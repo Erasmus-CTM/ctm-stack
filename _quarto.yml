@@ -7,6 +7,7 @@ project:
     - corpus.qmd
     - docs/authoring.qmd
     - docs/python-answer-tests.qmd
+    - docs/python-checker-api.qmd
     - docs/matrix-input.qmd
   resources:
     - questions/**

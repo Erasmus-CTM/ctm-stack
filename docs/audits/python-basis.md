@@ -18,12 +18,20 @@ Colors are diagnostic only and are cleared on edits, resizing, resets and varian
 
 ## Independent review
 
-Independent Sol xhigh design audit identified an unreachable-input configuration: the input model could differ from the IsBasis reference and have insufficient columns. Fixed by requiring the model to pass the basis predicate during instantiation; regression included. The audit also requested exact correctness independent of the helper float, which is implemented. Full implementation audit is in progress before PR creation.
+Independent Sol xhigh design audit identified an unreachable-input configuration: the input model could differ from the IsBasis reference and have insufficient columns. Fixed by requiring the model to pass the basis predicate during instantiation; regression included. The audit also requested exact correctness independent of the helper float, which is implemented. That was the initial design review. The follow-up independent Astra xhigh
+design and implementation reviews are now approved; see
+[PythonChecker audit](python-checker-api.md) for corrections, API decisions and
+current validation.
 
-## Computed local results
+## Historical local results before the API follow-up
 
 117 focused tests and 27 subtests passed (basis, matrices, matrix inputs, importer and engine). All three XML questions pass authored qtests. The broader non-render run computed 686 passing tests and 149 passing subtests, 1 skipped; eight existing reference-runner tests failed at Windows symlink privilege checks. The local Quarto/browser attempt was blocked by Windows command resolution and sandbox cache permissions, so no successful browser/render result is claimed locally. JavaScript syntax and runtime-source generation passed.
 
-## Runs needed
+## Original runs needed (superseded by follow-up evidence)
 
 Full Linux Python/render/browser workflow, CPython/Pyodide parity, native compliance and project regressions on the exact PR head; new Worker/Pyodide basis browser test; final independent review of changes and CI evidence. No PR is to be merged automatically.
+
+The follow-up API audit records the exact-head validation and final review
+status. The original branch CI already passed 722 tests and 149 subtests, native
+compliance and project regressions, but stopped at corpus source-fingerprint
+drift before browser tests. Its audit record previously had not been updated.

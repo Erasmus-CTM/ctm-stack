@@ -17,7 +17,7 @@ TESTS = {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac",
          "NumAbsolute", "NumRelative", "NumDecPlaces"}
 from .python_tests import PYTHON_TESTS
 
-TESTS |= PYTHON_TESTS.keys()
+TESTS |= PYTHON_TESTS.keys() | {"PythonChecker"}
 INPUT_TYPES = {"algebraic", "numerical", "matrix"}
 
 
@@ -204,6 +204,15 @@ def _question(element):
     for prt in prts:
         for node in prt["nodes"]:
             _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans", bool(node["student"]), "empty student expression")
+            if node["test"] == "PythonChecker":
+                from .checkers import checker_identifier
+                try:
+                    checker_identifier(node["options"])
+                except ValueError as exc:
+                    raise UnsupportedQuestion(name, f"prt[{prt['name']}]/node[{node['name']}]/testoptions", str(exc)) from exc
+                _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans",
+                       node["student"] in {inp["name"] for inp in inputs},
+                       "PythonChecker requires a direct input name")
             if node["test"] in PYTHON_TESTS:
                 _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans",
                        any(inp["name"] == node["student"] and inp["type"] == "matrix" for inp in inputs),
@@ -236,7 +245,7 @@ def _question(element):
             "deployedseeds": [int(s.text) for s in element.findall("deployedseed") if s.text]}
 
 
-def import_xml(source: str | Path) -> list[dict]:
+def import_xml(source: str | Path, *, python_checkers: str | Path | None = None) -> list[dict]:
     """Read a STACK Moodle XML path or XML string, omitting category entries.
 
     Description questions are omitted as presentational Moodle content. Every
@@ -248,9 +257,14 @@ def import_xml(source: str | Path) -> list[dict]:
         root = ET.fromstring(source)
     if root.tag != "quiz":
         raise ValueError("STACK XML requires a <quiz> root")
+    from .checkers import source_descriptor
+    descriptor = source_descriptor(python_checkers) if python_checkers is not None else None
     result = []
     for q in root.findall("question"):
         if q.get("type") in {"category", "description"}:
             continue
-        result.append(_question(q))
+        question = _question(q)
+        if descriptor is not None:
+            question["python_checkers"] = dict(descriptor)
+        result.append(question)
     return result
