@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from contextlib import contextmanager, redirect_stdout, redirect_stderr
 import inspect
+import json
 from pathlib import Path
 import re
 import sys
@@ -29,8 +30,27 @@ class CheckerError(Unsupported):
 
 def checker_identifier(identifier):
     if not isinstance(identifier, str) or not IDENTIFIER.fullmatch(identifier):
-        raise CheckerError("PythonChecker testoptions must be one ASCII checker identifier")
+        raise CheckerError("PythonChecker requires an ASCII checker identifier")
     return identifier
+
+
+def _invalid_json_constant(value):
+    raise ValueError(f"{value} is not a JSON value")
+
+
+def checker_spec(spec):
+    """Read a named function and JSON options without evaluating XML."""
+    try:
+        config = json.loads(spec, parse_constant=_invalid_json_constant)
+    except (TypeError, ValueError) as exc:
+        raise CheckerError("PythonChecker testoptions must be a JSON object") from exc
+    if (type(config) is not dict or "checker" not in config
+            or set(config) - {"checker", "options"}):
+        raise CheckerError("PythonChecker testoptions requires checker and optional options")
+    options = config.get("options", {})
+    if type(options) is not dict:
+        raise CheckerError("PythonChecker options must be a JSON object")
+    return checker_identifier(config["checker"]), options
 
 
 def source_descriptor(path):
@@ -83,9 +103,9 @@ def _registry(descriptor):
                         or inspect.isasyncgenfunction(call) or inspect.isgeneratorfunction(call) for call in calls)):
                     raise CheckerError(f"Checker {key!r} must be a synchronous callable")
                 try:
-                    inspect.signature(fn).bind(None, None)
+                    inspect.signature(fn).bind(None, None, {})
                 except (ValueError, TypeError) as exc:
-                    raise CheckerError(f"Checker {key!r} must accept two positional arguments") from exc
+                    raise CheckerError(f"Checker {key!r} must accept three positional arguments") from exc
             yield registry
     except CheckerError:
         raise
@@ -101,7 +121,8 @@ def _registry(descriptor):
 def check_references(descriptor, identifiers):
     with _registry(descriptor) as registry:
         for identifier in identifiers:
-            if checker_identifier(identifier) not in registry:
+            identifier, _ = checker_spec(identifier)
+            if identifier not in registry:
                 raise CheckerError(f"Unknown PythonChecker identifier {identifier!r}")
 
 
@@ -154,13 +175,13 @@ def _result(value, student):
 
 
 def invoke(descriptor, identifier, student, teacher):
-    identifier = checker_identifier(identifier)
+    identifier, options = checker_spec(identifier)
     student, teacher = _value(student), _value(teacher)
     try:
         with _registry(descriptor) as registry:
             if identifier not in registry:
                 raise CheckerError(f"Unknown PythonChecker identifier {identifier!r}")
-            value = registry[identifier](student, teacher)
+            value = registry[identifier](student, teacher, options)
             if inspect.isawaitable(value) or inspect.isgenerator(value) or inspect.isasyncgen(value):
                 if inspect.iscoroutine(value) or inspect.isgenerator(value):
                     value.close()

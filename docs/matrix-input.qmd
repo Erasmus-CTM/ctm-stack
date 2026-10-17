@@ -15,30 +15,27 @@ before adapting one.
 | What the prompt asks | Appropriate check | Teacher value in the PRT |
 |---|---|---|
 | A particular matrix | `AlgEquiv` compares dimensions and corresponding entries; `EqualComAss` also checks written form. | The expected matrix. |
-| Any basis of a null, column or row space | `IsBasis` checks membership, independence and completeness. | The original matrix $A$, with `nullspace`, `columnspace` or `rowspace` selected. |
-| Integer entries, a given determinant or nonidentity | Separate `MatrixProperty` nodes can give separate marks. | The expected property result: `true`, an exact determinant such as `1`, or `false`. |
-| Another condition, such as Hermitian symmetry or positive definiteness | A named `PythonChecker` function in an author file. Combine conditions in one PRT or give them separate marks in two PRTs. | The value the function needs, such as `true` for the [positive-definiteness examples](../examples.qmd#symmetric-positive-definite-matrix). |
+| Any basis of a null, column or row space | `PythonChecker` selects `basis` with JSON `space` set to `nullspace`, `columnspace` or `rowspace`. | The original matrix $A$. |
+| Integer entries, a given determinant or nonidentity | Separate `PythonChecker` nodes select `matrix_property` with JSON `property` set to `integer_entries`, `determinant` or `identity`. | The expected property result: `true`, an exact determinant such as `1`, or `false`. |
+| Another condition, such as Hermitian symmetry or positive definiteness | A named `PythonChecker` function. Combine conditions in one PRT or give them separate marks in two PRTs. | The value the function needs, such as `true` for the [positive-definiteness examples](../examples.qmd#symmetric-positive-definite-matrix). |
 
 An entry-by-entry check would reject many correct answers to “give any
 basis” or “give any matrix satisfying these conditions.” See [Python answer
 tests](python-checker-api.qmd) for the choice and the
 [positive-definiteness walkthrough](python-checker-api.qmd#author-the-spd-checker)
-for both combined and separately weighted Hermitian-symmetry/positivity
-rules. The independent
-positivity check asks for $\operatorname{Re}(z^*Az)>0$ for every nonzero
-complex $z$; a non-Hermitian matrix can meet it. Full credit in the
-combined example also requires $A=A^*$, which becomes ordinary symmetry
-for real entries. The example checker accepts exact integer or fractional
-real and imaginary parts, such as `1/2+%i/3`.
-An equivalent native Moodle STACK question needs corresponding Maxima checks;
+for combined and separately weighted Hermitian-symmetry/positivity rules.
+The first question requires both; the second awards half for each. The
+example accepts exact integer or fractional real and imaginary parts,
+such as `1/2+%i/3`. An equivalent native Moodle STACK question needs
+corresponding Maxima checks;
 these Python test names are specific to this port.
 
 If the shape is part of the task, let learners choose a bounded number of
 columns for null or column-space bases, or rows for row-space bases. An empty
 basis cannot currently be entered because the editor needs positive
 dimensions. For a fixed-size task, the model answer determines the editor's
-shape. The built-in `IsBasis` and `MatrixProperty` tests require exact
-rational entries (integers or fractions). An author-supplied `PythonChecker`
+shape. The supplied `basis` and `matrix_property` functions require exact
+rational entries (integers or fractions); a custom `PythonChecker` function
 can choose another domain within the input limits. Set any partial credit in
 the response trees; neither correct cells nor green basis vectors earn marks
 by themselves.
@@ -50,7 +47,7 @@ interpreted matrix, then presses **Check answer**. Empty cells are invalid.
 The editor retains typed forms such as `x+x` or `1/2`; resizing keeps cells
 that still fit and leaves new cells blank. Editing, resizing, resetting or
 switching variants clears an earlier result and requires validation again.
-After an `IsBasis` check, vector colors explain membership and dependence,
+After a basis check, vector colors explain membership and dependence,
 but the response tree still determines the score.
 
 ## For developers

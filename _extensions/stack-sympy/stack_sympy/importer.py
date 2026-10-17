@@ -15,9 +15,7 @@ from xml.etree import ElementTree as ET
 NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
 TESTS = {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
          "NumAbsolute", "NumRelative", "NumDecPlaces"}
-from .python_tests import PYTHON_TESTS
-
-TESTS |= PYTHON_TESTS.keys() | {"PythonChecker"}
+TESTS |= {"PythonChecker"}
 INPUT_TYPES = {"algebraic", "numerical", "matrix"}
 
 
@@ -205,18 +203,14 @@ def _question(element):
         for node in prt["nodes"]:
             _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans", bool(node["student"]), "empty student expression")
             if node["test"] == "PythonChecker":
-                from .checkers import checker_identifier
+                from .checkers import checker_spec
                 try:
-                    checker_identifier(node["options"])
+                    checker_spec(node["options"])
                 except ValueError as exc:
                     raise UnsupportedQuestion(name, f"prt[{prt['name']}]/node[{node['name']}]/testoptions", str(exc)) from exc
                 _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans",
                        node["student"] in {inp["name"] for inp in inputs},
                        "PythonChecker requires a direct input name")
-            if node["test"] in PYTHON_TESTS:
-                _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans",
-                       any(inp["name"] == node["student"] and inp["type"] == "matrix" for inp in inputs),
-                       "Python matrix tests require a direct matrix input name")
             if node["test"] in {"EqualComAss", "FacForm", "SingleFrac", "LowestTerms"}:
                 _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans",
                        node["student"] in {inp["name"] for inp in inputs},

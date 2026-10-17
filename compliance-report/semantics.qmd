@@ -64,10 +64,12 @@ closed rather than acquiring invented provenance.
 Native-compatible matrix grading currently supports AlgEquiv, SameType and
 EqualComAss. Other native matrix answer tests remain an explicit port limitation;
 native STACK supports more, including LowestTerms. Separately, the Python-only
-IsBasis and MatrixProperty extensions support basis and exact constraint tasks.
-They are outside this native inventory and are documented in the
-[Python answer tests](../docs/python-checker-api.html). There is no cell partial-credit policy: PRT scores
-remain author-defined and the default feedback concerns the whole matrix.
+PythonChecker with supplied basis and matrix-property functions supports
+basis and exact constraint tasks. These are outside this native inventory
+and documented in [Python answer tests](../docs/python-checker-api.html).
+There is no automatic cell partial credit: PRT scores remain author-defined.
+The supplied basis checker may color individual vectors as diagnostic
+feedback, without assigning marks to them.
 Fixed dimensions are validated before grading; learner-selected dimensions
 must stay inside the configured bounds.
 
@@ -413,6 +415,21 @@ also notes that more aggressive generic transforms can grow expressions and
 time out.
 
 ## Deliberate port scope and engineering choices {#port-scope}
+
+### One Python checker interface
+
+`PythonChecker` is the single XML extension for Python assessment. The selected
+file provides named functions with the same three-argument contract
+(learner value, teacher value, JSON options object) and optional feedback and
+vector assessments. The supplied `basis` and `matrix_property` functions
+select their mathematical case through that text; other functions may do the
+same without adding answer-test types or grading branches to the adapter.
+
+Input validation uses the common parser and XML settings; mathematical domain
+checks run in the
+selected function during grading. The build's checker preflight verifies valid
+model grading, and authored qtests verify the intended scoring. PRT scores and
+answer notes remain in XML.
 
 ### Decimal precision in collections
 

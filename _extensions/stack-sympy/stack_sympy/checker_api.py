@@ -1,6 +1,7 @@
 """Public immutable value vocabulary for PythonChecker API version 1.
 
-Checkers receive values, not written syntax. Held sets and logic deliberately
+Checkers receive student and teacher values, then a JSON options dictionary,
+not written student syntax. Held sets and logic deliberately
 retain repetitions; they are not simplifying SymPy sets/Boolean constructors.
 """
 from sympy import ImmutableMatrix as Matrix

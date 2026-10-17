@@ -82,7 +82,7 @@ def generate() -> str:
         "",
         f"In this snapshot, **{len(passing)} pass their author tests**, **{len(mismatched)} has a test mismatch**, and **{len(blocked)} cannot be fully checked here**. The [replay record](questions/corpus/baseline.json) gives the tested variants and exact results.",
         "",
-        "The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one) also include a determinant-one task and two basis questions. The [positive-definiteness example](examples.qmd#symmetric-positive-definite-matrix) adds a custom Python checker. These Python tests are separate from these unchanged exports and their baseline counts. See [Python answer tests](docs/python-checker-api.qmd).",
+        "The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one) include determinant, basis and positive-definiteness tasks. They all use named functions in a [supplied Python checker file](questions/matrix-checkers.py). These authored examples are separate from the unchanged exports and their baseline counts. See [Python answer tests](docs/python-checker-api.qmd).",
         "",
         "### Browse all 35",
         "",

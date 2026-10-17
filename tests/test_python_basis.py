@@ -8,6 +8,7 @@ import pytest
 import sympy as sp
 
 from stack_sympy.assessment import answer_test
+from stack_sympy.checkers import preflight, source_descriptor
 from stack_sympy.engine import grade, instantiate, run_question_tests, validate
 from stack_sympy.expressions import Unsupported
 from stack_sympy.expressions import evaluate, InvalidAnswer
@@ -15,7 +16,30 @@ from stack_sympy.importer import import_xml, UnsupportedQuestion
 
 ROOT = Path(__file__).resolve().parents[1]
 REFERENCE = "matrix([-2,-3],[1,0],[0,1])"
+DEFINING = "matrix([1,2,3],[2,4,6])"
 SOURCE = ROOT / "questions/course-c-nullspace.xml"
+MODULE = ROOT / "questions/matrix-checkers.py"
+
+
+def config(name, **options):
+    value = {"checker": name}
+    if options:
+        value["options"] = options
+    return json.dumps(value)
+
+
+def basis_test(student, teacher, space="nullspace"):
+    return answer_test("PythonChecker", student, teacher, config("basis", space=space),
+                       python_checkers=source_descriptor(MODULE))
+
+
+def property_test(student, teacher, name):
+    return answer_test("PythonChecker", student, teacher, config("matrix_property", property=name),
+                       python_checkers=source_descriptor(MODULE))
+
+
+def matrix_questions(source):
+    return import_xml(source, python_checkers=MODULE)
 
 
 @pytest.mark.parametrize("candidate,correct,statuses", [
@@ -30,11 +54,11 @@ SOURCE = ROOT / "questions/course-c-nullspace.xml"
     ("matrix([1,0],[0,1])", False, ["incorrect", "incorrect"]),
 ])
 def test_basis_predicate_and_vector_diagnostics(candidate, correct, statuses):
-    result = answer_test("IsBasis", candidate, REFERENCE)
+    result = basis_test(candidate, DEFINING)
     assert result["valid"]
     assert result["correct"] is correct
     assert result["assessment"]["columns"] == statuses
-    assert result["implementation"] == "python-extension"
+    assert result["implementation"] == "python-checker-v1"
     assert "score" not in result
 
 
@@ -43,43 +67,34 @@ def test_statuses_and_correctness_are_permutation_invariant():
     for permutation in itertools.permutations(range(3)):
         source = "matrix(" + ",".join(
             "[" + ",".join(str(columns[i][r]) for i in permutation) + "]" for r in range(3)) + ")"
-        result = answer_test("IsBasis", source, REFERENCE)
+        result = basis_test(source, DEFINING)
         assert not result["correct"]
         assert result["assessment"]["columns"] == [
             "incorrect" if i == 2 else "dependent" for i in permutation]
 
 
-def test_row_orientation_and_reference_basis_independence():
-    result = answer_test("IsBasis", "matrix([-5,1,1],[-1,-1,1])",
-                         "matrix([-2,1,0],[-3,0,1])", "rows")
-    assert result["correct"]
-    assert result["assessment"] == {"rows": ["correct", "correct"]}
-    assert answer_test("IsBasis", REFERENCE, "matrix([-5,-1],[1,-1],[1,1])")["correct"]
-
-
 @pytest.mark.parametrize("candidate", [
     "matrix([x],[0],[0])", "matrix([%i],[0],[0])", "matrix([sqrt(2)],[0],[0])",
-    "matrix([-2.0],[1],[0])", "matrix([2^100*2^100*2^100],[0],[0])", "[1,2,3]",
+    "matrix([2^100*2^100*2^100],[0],[0])", "[1,2,3]",
 ])
 def test_basis_rejects_values_outside_the_exact_bounded_domain(candidate):
-    result = answer_test("IsBasis", candidate, REFERENCE)
+    result = basis_test(candidate, DEFINING)
     assert not result["valid"]
 
 
 @pytest.mark.parametrize("reference,options", [
-    ("matrix([-2,-4],[1,2],[0,0])", "columns"),
-    ("matrix([0],[0],[0])", "columns"),
-    ("matrix([x],[0],[0])", "columns"),
-    ("matrix([1.0],[0],[0])", "columns"),
-    (REFERENCE, "diagonal"), (REFERENCE, "__import__(os)"),
+    ("matrix([1,0],[0,1])", "nullspace"),
+    ("matrix([x],[0],[0])", "nullspace"),
+    ("[1,2,3]", "nullspace"),
+    (DEFINING, "diagonal"), (DEFINING, "__import__(os)"),
 ])
 def test_author_errors_are_explicit(reference, options):
     with pytest.raises(Unsupported):
-        answer_test("IsBasis", REFERENCE, reference, options)
+        basis_test(REFERENCE, reference, options)
 
 
 def test_regular_passing_failing_and_quiet_prt_branches():
-    question = import_xml(SOURCE)[0]
+    question = matrix_questions(SOURCE)[0]
     prt = question["prts"][0]
     node = prt["nodes"][0]
     node["true"]["score"] = 0.8
@@ -97,30 +112,31 @@ def test_regular_passing_failing_and_quiet_prt_branches():
     assert "assessment" not in quiet["inputs"]["ans"]
 
 
-def test_validation_checks_domain_without_basis_information():
-    question = import_xml(SOURCE)[0]
+def test_validation_checks_syntax_and_checker_reports_domain_during_grading():
+    question = matrix_questions(SOURCE)[0]
     result = validate(question, {"ans": "matrix([1],[0],[0])"})
     assert result["status"] == "valid"  # a wrong vector still parses
     assert "assessment" not in result["inputs"]["ans"]
     assert "score" not in result
-    assert validate(question, {"ans": "matrix([x],[0],[0])"})["status"] == "invalid"
+    assert validate(question, {"ans": "matrix([x],[0],[0])"})["status"] == "valid"
+    assert grade(question, {"ans": "matrix([x],[0],[0])"})["status"] == "invalid"
     assert validate(question, {"ans": "matrix([0.0],[0],[0])"})["status"] == "invalid"
 
 
-def test_unreachable_or_wrong_model_answer_rejected_before_display():
-    question = import_xml(SOURCE)[0]
+def test_common_model_preflight_allows_a_valid_false_branch():
+    question = matrix_questions(SOURCE)[0]
     question["inputs"][0]["teacher"] = "matrix([1],[0],[0])"
     question["inputs"][0]["matrix"]["cols"] = {"auto": False, "initial": 1, "min": 1, "max": 1}
     question["qtests"] = []
-    with pytest.raises(UnsupportedQuestion, match="input teacher must itself satisfy"):
-        instantiate(question)
+    preflight(question, [instantiate(question)])
+    assert grade(question, {"ans": "matrix([1],[0],[0])"})["score"] == 0
 
 
-def test_invalid_reference_rejected_at_build_time():
-    source = SOURCE.read_text().replace("<tans>A</tans><testoptions>nullspace</testoptions>",
-                                      "<tans>matrix([-2,-4],[1,2],[0,0])</tans><testoptions>columns</testoptions>")
-    with pytest.raises(UnsupportedQuestion, match="independent"):
-        instantiate(import_xml(source)[0])
+def test_empty_target_is_rejected_by_checker_preflight():
+    source = SOURCE.read_text().replace("<tans>A</tans>", "<tans>matrix([1,0],[0,1])</tans>")
+    q = matrix_questions(source)[0]
+    with pytest.raises(UnsupportedQuestion, match="empty basis"):
+        preflight(q, [instantiate(q)])
 
 
 @pytest.mark.parametrize("candidate,correct,statuses", [
@@ -136,7 +152,7 @@ def test_nullspace_is_defined_by_original_rectangular_matrix(candidate, correct,
     # No known basis is supplied to the checker. Row scaling and redundant
     # constraints describe the same null space.
     for defining in ("matrix([1,2,3],[2,4,6])", "matrix([-3,-6,-9])"):
-        result = answer_test("IsBasis", candidate, defining, "nullspace")
+        result = basis_test(candidate, defining, "nullspace")
         assert result["valid"] and result["correct"] is correct
         assert result["assessment"] == {"columns": statuses}
 
@@ -156,7 +172,7 @@ def test_nullspace_is_defined_by_original_rectangular_matrix(candidate, correct,
      "matrix([1,0,0])", False, ["incorrect"]),
 ])
 def test_column_and_row_space_membership(defining, option, candidate, correct, statuses):
-    result = answer_test("IsBasis", candidate, defining, option)
+    result = basis_test(candidate, defining, option)
     assert result["valid"] and result["correct"] is correct
     assert result["assessment"] == {"rows" if option == "rowspace" else "columns": statuses}
 
@@ -170,7 +186,7 @@ def test_basis_model_helpers_compute_answers_from_the_matrix_and_are_author_only
     assert matrix.rank() == 2
     for space in ("nullspace", "columnspace", "rowspace"):
         model = evaluate(space + "_basis(" + source + ")")
-        assert answer_test("IsBasis", str(model), source, space)["correct"]
+        assert basis_test(str(model), source, space)["correct"]
         with pytest.raises(InvalidAnswer, match="not allowed in student input"):
             evaluate(space + "_basis(" + source + ")", student=True)
 
@@ -190,7 +206,7 @@ def test_basis_model_helpers_reject_unrepresentable_or_invalid_targets(source):
 
 
 def test_defining_matrix_changes_the_target_and_generated_model():
-    question = import_xml(SOURCE)[0]
+    question = matrix_questions(SOURCE)[0]
     question["variables"] = "A:matrix([1,0,0],[0,1,0]);"
     question["qtests"] = []
     assert grade(question, {"ans": "matrix([0],[0],[3])"})["score"] == 1
@@ -198,20 +214,20 @@ def test_defining_matrix_changes_the_target_and_generated_model():
     assert "nullspace_basis(A)" == question["inputs"][0]["teacher"]
 
 
-def test_python_test_requires_direct_matrix_input_and_rejects_arbitrary_names():
+def test_python_checker_requires_direct_input_and_rejects_arbitrary_names():
     source = SOURCE.read_text()
     for replacement in ("ans+1", "T"):
-        with pytest.raises(UnsupportedQuestion, match="direct matrix input"):
+        with pytest.raises(UnsupportedQuestion, match="direct input"):
             import_xml(source.replace("<sans>ans</sans>", "<sans>" + replacement + "</sans>"))
     with pytest.raises(UnsupportedQuestion, match="unsupported answer test"):
-        import_xml(source.replace("IsBasis", "ImportPythonModule"))
+        import_xml(source.replace("PythonChecker", "ImportPythonModule"))
 
 
 def test_source_provenance_and_independent_nullspace_mathematics():
     manifest = json.loads((ROOT / "questions/course-examples-provenance.json").read_text())
     for record in manifest["questions"]:
         assert hashlib.sha256((ROOT / "questions" / record["file"]).read_bytes()).hexdigest() == record["sha256"]
-        question = import_xml(ROOT / "questions" / record["file"])[0]
+        question = matrix_questions(ROOT / "questions" / record["file"])[0]
         assert run_question_tests(question, seeds=(1, 17, 47))["passed"]
     assert hashlib.sha256((ROOT / "questions" / manifest["excerpts"]).read_bytes()).hexdigest() == manifest["excerpts_sha256"]
     B = sp.Matrix([[1, 0, 1], [0, 1, 1], [1, 1, 2]])
@@ -230,12 +246,8 @@ def test_source_provenance_and_independent_nullspace_mathematics():
     assert hashlib.sha256(function).hexdigest() == record["function_sha256"]
 
 
-def test_nested_power_is_rejected_before_generic_evaluation(monkeypatch):
-    import stack_sympy.assessment as assessment
-    def forbidden(*args, **kwargs):
-        raise AssertionError("generic evaluation must not be reached")
-    monkeypatch.setattr(assessment, "evaluate", forbidden)
-    result = assessment.answer_test("IsBasis", "matrix([((2^100)^100)^100],[0],[0])", REFERENCE)
+def test_large_matrix_entries_fail_the_supplied_checker_domain():
+    result = basis_test("matrix([((2^100)^100)^100],[0],[0])", DEFINING)
     assert not result["valid"]
     assert "256-bit" in result["feedback"]
 
@@ -250,22 +262,22 @@ def test_nested_power_is_rejected_before_generic_evaluation(monkeypatch):
     ("matrix([1,1],[0,1])", "false", "identity", True),
 ])
 def test_exact_matrix_properties(candidate, teacher, property_name, correct):
-    result = answer_test("MatrixProperty", candidate, teacher, property_name)
+    result = property_test(candidate, teacher, property_name)
     assert result["valid"] and result["correct"] is correct
     assert "assessment" not in result  # no inferred cell grading
 
 
 @pytest.mark.parametrize("teacher,option", [
-    ("true", "determinant"), ("1.0", "determinant"),
+    ("true", "determinant"),
     ("1", "integer_entries"), ("0", "identity"), ("1", "exec"),
 ])
 def test_matrix_property_author_errors(teacher, option):
     with pytest.raises(Unsupported):
-        answer_test("MatrixProperty", "matrix([1,1],[0,1])", teacher, option)
+        property_test("matrix([1,1],[0,1])", teacher, option)
 
 
 def test_determinant_example_retains_the_original_three_condition_grading():
-    question = import_xml(ROOT / "questions/determinant-one.xml")[0]
+    question = matrix_questions(ROOT / "questions/determinant-one.xml")[0]
     assert run_question_tests(question, seeds=(1, 17, 47))["passed"]
     assert grade(question, {"ans": "matrix([2,1],[1,1])"})["score"] == 1
     for answer in ("matrix([1,0],[0,1])", "matrix([1/2,1],[0,2])", "matrix([2,0],[0,2])"):

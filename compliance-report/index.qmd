@@ -22,7 +22,7 @@ case does not establish that every question using that test behaves identically.
 State the mathematical domain, distinguish written form from value, and use
 numerical tests for approximate answers. The [semantics discussions for STACK authors](semantics.qmd#author-attention) record the detailed conventions and unresolved questions. Start with the
 [authoring guide](../docs/authoring.html) when preparing a question, and run its
-own tests as well as inspecting the examples. [Python answer tests and SPD](../docs/python-checker-api.html)
+own tests as well as inspecting the examples. [Python answer tests for matrix tasks](../docs/python-checker-api.html)
 are documented separately from this native comparison.
 
 <div class="status-legend" aria-label="How to read the colors">
@@ -79,9 +79,10 @@ Only reviewed cases receive the “Known STACK issue” label. Ordinary notes ar
 retained but not generally compared; asserted controlled-error notes are
 checked separately.
 
-The Python-only `IsBasis`, `MatrixProperty` and `PythonChecker` tests do not
-increase the native inventory or its coverage counts. Their authored, unit
-and browser checks establish separate Python behavior. See the
+The Python-only `PythonChecker` test, including its supplied basis and matrix
+property functions, does not increase the native inventory or its coverage
+counts. Its authored, unit and browser checks establish separate Python
+behavior. See the
 [developer reference](../docs/python-checker-api.html#for-developers).
 
 ### Saved evidence and reproduction

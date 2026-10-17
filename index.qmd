@@ -68,10 +68,10 @@ Python-only question needs equivalent Maxima checks.
 
 The existing STACK answer-test families implemented here are `AlgEquiv`,
 `Sets`, `SameType`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`,
-`NumAbsolute`, `NumRelative` and `NumDecPlaces`. The Python-only `IsBasis`,
-`MatrixProperty` and author-supplied `PythonChecker` tests add tasks such as
-alternate bases and matrix conditions without changing those native test
-names. Ordinary response trees still control scores and feedback.
+`NumAbsolute`, `NumRelative` and `NumDecPlaces`. The Python-only
+`PythonChecker` test uses [supplied matrix functions](questions/matrix-checkers.py)
+or an author-written function for tasks such as alternate bases and matrix
+conditions. Ordinary response trees still control scores and feedback.
 
 - [Python answer-test guide](docs/python-checker-api.qmd): matrix choices,
   teacher values, callback contract and complete positive-definiteness example.

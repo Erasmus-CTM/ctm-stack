@@ -18,14 +18,14 @@
     {
       "file": "course-b-nullspace.xml",
       "source_label": "week3-paper-b-null-basis",
-      "changes": "English translation; IsBasis checks the defining matrix directly using nullspace membership and rank; the input model answer is computed by nullspace_basis(A); any exact rational basis accepted; binary PRT score replaces diagnostic fractional score; vector colors retained; positive column count only.",
-      "sha256": "5590a3d662e8f12cc7b9f3d44aad2969ace6a09cea592dae33605b9a510fe9e4"
+      "changes": "English translation; The supplied basis PythonChecker function with its nullspace option checks the defining matrix directly using nullspace membership and rank; the input model answer is computed by nullspace_basis(A); any exact rational basis accepted; binary PRT score replaces diagnostic fractional score; vector colors retained; positive column count only.",
+      "sha256": "fd5a98b4ee5a782ef0eb8300d878e2e1f3e44f1b9db2fa2f8aa9488ec6315b79"
     },
     {
       "file": "course-c-nullspace.xml",
       "source_label": "week3-paper-c-null-basis",
-      "changes": "English translation; IsBasis checks the defining matrix directly using nullspace membership and rank; the input model answer is computed by nullspace_basis(A); any exact rational basis accepted; binary PRT score replaces diagnostic fractional score; vector colors retained; positive column count only.",
-      "sha256": "77919c772d3ac89a8c975be0f86fbefe2de02ccfbcbac28b5c6767f48763d4fd"
+      "changes": "English translation; The supplied basis PythonChecker function with its nullspace option checks the defining matrix directly using nullspace membership and rank; the input model answer is computed by nullspace_basis(A); any exact rational basis accepted; binary PRT score replaces diagnostic fractional score; vector colors retained; positive column count only.",
+      "sha256": "42ac2e87fc2c6f5466b46bc75595188a85c2974711d69c54e9d49a4d61754c89"
     }
   ]
 }

@@ -2,7 +2,7 @@
 calls = 0
 
 
-def check(student, teacher):
+def check(student, teacher, options):
     global calls
     calls += 1
     return {"valid": True, "correct": bool(calls == 1 and student == teacher + 1),

@@ -178,8 +178,12 @@ def test_browser_python_basis_and_ordinary_matrix_questions(browser_site):
             assert host.locator("input.math-input-ok").count() == 0
             assert card.locator(".stack-result").inner_text() == ""
             card.locator(".stack-validate").click()
+            card.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
+            # The common parser accepts symbols; the supplied checker reports
+            # its rational-entry domain when grading runs.
+            card.locator(".stack-check").click()
             card.locator('.stack-result[data-state="invalid"]').wait_for(timeout=180000)
-            assert card.locator(".stack-check").is_disabled()
+            assert "real integers or exact fractions" in card.inner_text()
             fill([-5, -1, 1, -1, 1, 1])
             card.locator(".stack-validate").click()
             card.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
