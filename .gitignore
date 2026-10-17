@@ -14,3 +14,4 @@ compliance-report/port-regressions.json
 
 /.quarto/
 **/*.quarto_ipynb
+.native-stack-image/
