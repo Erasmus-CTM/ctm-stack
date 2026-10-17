@@ -1,0 +1,10 @@
+{
+  "repository": "Erasmus-CTM/math-exercise",
+  "commit": "5945f8f56f605e9d051d2c2636411755eabde1db",
+  "source": "https://github.com/Erasmus-CTM/math-exercise/blob/5945f8f56f605e9d051d2c2636411755eabde1db/_extensions/math-exercise/math-exercise.js",
+  "license": "AGPL-3.0-or-later",
+  "source_sha256": "c6f11d90115017efc69df2e90a52c4c8e75cb182bae5b75954fbe6a338ccdbee",
+  "extraction": "Decoded Python lines from def assess_basis through the blank line before def _math_check; added module docstring and Matrix/zeros imports only.",
+  "function_sha256": "761a028366bfc3de7264d24beef0d6dfd85331977e489c8d8a8260120ab72e53",
+  "module_sha256": "5ead6c84637e7c6e94709f20f1eb2c0adca7a2c5e88b62c19d5c422eeb275156"
+}
