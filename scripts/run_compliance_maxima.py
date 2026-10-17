@@ -20,6 +20,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--fixture", type=Path, default=ROOT / "tests/native_compliance/fixtures.json")
     parser.add_argument("--stack-source", type=Path, required=True)
     parser.add_argument("--maxima", default="maxima")
+    parser.add_argument("--image", type=Path, help="validated preloaded GCL image directory")
     parser.add_argument("--output", type=Path, help="JSON output; defaults depend on --probe-only")
     parser.add_argument("--jobs", type=int, default=4, help="concurrent isolated Maxima case processes")
     parser.add_argument("--timeout", type=int, default=300, help="seconds per Maxima case process")
@@ -33,7 +34,7 @@ def main(argv: list[str] | None = None) -> int:
                         "metadata": {"reference_layer": "direct_official_maxima_AT",
                                      "stack_sha": STACK_SHA}, "probe": {}}
         try:
-            report = run_standalone_probe(args.stack_source, args.maxima, timeout=args.timeout)
+            report = run_standalone_probe(args.stack_source, args.maxima, timeout=args.timeout, image=args.image)
         except (OSError, TypeError, ValueError, NativeProcessError, NativeProtocolError) as exc:
             report["error"] = f"{type(exc).__name__}: {exc}"
         args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -52,7 +53,7 @@ def main(argv: list[str] | None = None) -> int:
         if fixture.get("schema_version") != 1 or fixture.get("upstream", {}).get("commit") != STACK_SHA:
             raise ValueError("Fixture is not from the pinned STACK revision")
         report = run_native(fixture["cases"], args.stack_source, args.maxima,
-                            jobs=args.jobs, timeout=args.timeout)
+                            jobs=args.jobs, timeout=args.timeout, image=args.image)
         report["metadata"]["fixture_sha256"] = hashlib.sha256(fixture_bytes).hexdigest()
     except (OSError, KeyError, TypeError, ValueError, NativeProcessError, NativeProtocolError) as exc:
         report["error"] = f"{type(exc).__name__}: {exc}"

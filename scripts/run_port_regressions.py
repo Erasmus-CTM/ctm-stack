@@ -26,7 +26,7 @@ def digest(path):
 from native_compliance.port_contract import load_fixture, matches, python_status, assemble
 
 
-def run(fixture, stack_source, maxima, output, browser):
+def run(fixture, stack_source, maxima, output, browser, image=None):
     cases = load_fixture(fixture)
     from run_compliance_pyodide import validate_bundle
     bundle_hash = validate_bundle()
@@ -49,7 +49,7 @@ def run(fixture, stack_source, maxima, output, browser):
                 native_id = hashlib.sha256(case['id'].encode()).hexdigest()+'-1'
                 converted.append({**case,'id':native_id})
                 id_map[native_id] = case['id']
-        native = run_native(converted,stack_source,maxima,jobs=4,timeout=60)
+        native = run_native(converted,stack_source,maxima,jobs=4,timeout=60,image=image)
         for row in native['observations']:
             row['case_id'] = id_map[row['case_id']]
     except Exception as exc:
@@ -77,10 +77,11 @@ def main():
     parser.add_argument('--fixture',type=Path,default=FIXTURE)
     parser.add_argument('--stack-source',type=Path,required=True)
     parser.add_argument('--maxima',default='maxima')
+    parser.add_argument('--image',type=Path)
     parser.add_argument('--output',type=Path,default=OUTPUT)
     parser.add_argument('--without-browser',action='store_true',help='Local diagnostic only; overall report remains incomplete')
     args = parser.parse_args()
-    report = run(args.fixture,args.stack_source,args.maxima,args.output,not args.without_browser)
+    report = run(args.fixture,args.stack_source,args.maxima,args.output,not args.without_browser,args.image)
     print('Port regressions:',report['summary'],'errors:',report['errors'])
     return 0 if report['passed'] else 1
 

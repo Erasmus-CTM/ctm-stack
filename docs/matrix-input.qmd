@@ -1,0 +1,64 @@
+---
+title: "Bounded matrices"
+---
+
+Matrix values use `matrix([a,b],[c,d])`. They retain their type and rectangular
+shape separately from ordinary lists. Dimensions are positive, each axis is at
+most 16, and the matrix has at most 64 scalar entries. Ragged, empty, partially
+filled and zero-dimensional matrices are rejected. Entries use the existing
+bounded scalar parser; nested collections, equations and logical values are
+outside this contract.
+
+`AlgEquiv` checks dimensions and then corresponding scalar entries with the
+existing algebraic equivalence machinery. `SameType` checks the supported matrix
+type contract. `EqualComAss` preserves written arithmetic in corresponding
+entries. Other matrix answer tests are rejected explicitly. Decimal literals and
+author-value provenance follow the existing scalar rules. No algebraic set
+matching or trig-set normalization policy changes are included.
+
+Use native `<input><type>matrix</type>...` for an editor fixed to the evaluated
+teacher answer's shape. Learner-selected dimensions use this explicit port
+extension inside the input, shown in [the runnable example](../examples.qmd#bounded-matrix-input):
+
+```xml
+<matrix>
+  <rows initial="2" min="1" max="4" resizable="1"/>
+  <cols initial="2" min="1" max="4" resizable="1"/>
+</matrix>
+```
+
+Each axis requires all four attributes; a fixed axis has `resizable="0"` and
+equal `initial`, `min`, and `max`. The product of the two maxima must not exceed
+64. This syntax is a STACK SymPy extension, not an assertion that native STACK
+imports these extra elements.
+
+Raw cells such as `x+x`, `0.1` and `1/2` remain unchanged in the editor. The
+consumer serializes a matrix expression with each cell enclosed in parentheses
+and lets its own parser interpret it. Empty cells remain invalid; resizing never
+inserts numerical zeros. Surviving cells retain their raw values when resized.
+The validation preview exposes the interpreted matrix before checking.
+
+Editing, resizing, programmatic writes, resetting and changing variants invalidate
+prior validation, grading and AI-feedback evidence. Reset returns the dimensions
+and raw cells to their initial blank state. The editor presents input validity;
+it does not infer cell, row, column or partial-credit grading. Authored PRTs remain
+the only source of awarded scores.
+
+The reusable editor is maintained in
+[math-exercise](https://github.com/Erasmus-CTM/math-exercise), with standalone
+`matrix-input.js` and `matrix-input.css`. STACK SymPy vendors audited commit
+`f238da6d9a43d58d1fdf9ad592ac6223225268e0`; exact source links and SHA-256 checksums
+are recorded in `_extensions/stack-sympy/vendor/matrix-input-provenance.json`.
+No math-exercise Python checker or runtime is loaded, so each extension works
+independently. Update by copying both standalone files from one audited upstream
+commit, updating the manifest and rerunning matrix browser tests.
+
+The component API is `MatrixInput.create({idPrefix, zeroDimensions, maxEntries,
+labels, onChange})`, followed by `renderHTML(spec)` and `mount(wrapper)`.
+`spec` contains `name`, `rows` and `cols`; each axis has `auto`, `initial`, `min`
+and `max`. The mounted handle provides `read`, `write`, `resize`, `reset`,
+`destroy` and `setState`. Read/write values are `{type:'matrix',rows,cols,raw}`
+with raw strings in row-major order; notifications distinguish edits, resizes
+and writes. STACK explicitly selects `zeroDimensions:'reject'` and `maxEntries:64`.
+`setState` only displays supplied status and optional cell/row/column states;
+consumers own all parsing and assessment policy.

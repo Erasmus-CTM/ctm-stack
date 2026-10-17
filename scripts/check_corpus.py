@@ -46,7 +46,7 @@ def validate_manifest(manifest_path: Path = MANIFEST, *, verify_upstream: bool =
     assert manifest["source_base_url"].endswith("/" + manifest["commit"] + "/")
     assert manifest["license"]
     entries = manifest["questions"]
-    assert len(entries) == 30, f"expected 30 questions, got {len(entries)}"
+    assert len(entries) == 35, f"expected 35 questions, got {len(entries)}"
     assert len({item["file"] for item in entries}) == len(entries), "duplicate filenames"
     assert len({item["id"] for item in entries}) == len(entries), "duplicate IDs"
     assert len({item["upstream_path"] for item in entries}) == len(entries), "duplicate source paths"

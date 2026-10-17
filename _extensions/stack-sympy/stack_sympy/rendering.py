@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import json
 from html.parser import HTMLParser
 import re
 import secrets
@@ -116,8 +117,20 @@ def render_castext(source: str, env: dict, question: str, location: str, *, inpu
                 raise UnsupportedQuestion(question, location, f"unknown CASText token [[{directive}]]")
             safe_name = html.escape(name, quote=True)
             if kind == "input":
-                size = next((i.get("boxsize", 15) for i in inputs.values() if i["name"] == name), 15) if isinstance(inputs, dict) else 15
-                rendered = f'<input class="stack-answer" data-name="{safe_name}" aria-label="Answer {safe_name}" size="{min(max(size, 1), 60)}" autocomplete="off">'
+                inp = inputs.get(name, {}) if isinstance(inputs, dict) else {}
+                size = inp.get("boxsize", 15)
+                if inp.get("type") == "matrix":
+                    value = evaluate(inp["teacher"], env=env, assumptions=assumptions)
+                    shape = getattr(value, "shape", None)
+                    if shape is None or len(shape) != 2 or min(shape) < 1 or max(shape) > 16 or shape[0] * shape[1] > 64:
+                        raise UnsupportedQuestion(question, location, "matrix teacher requires positive shape bounded by 16 axes and 64 entries")
+                    config = inp.get("matrix") or {
+                        key: {"auto": False, "initial": int(n), "min": int(n), "max": int(n)}
+                        for key, n in zip(("rows", "cols"), shape)}
+                    spec = html.escape(json.dumps({"name": name, **config}), quote=True)
+                    rendered = f'<span class="stack-answer stack-matrix" data-name="{safe_name}" data-matrix-spec="{spec}" role="group" aria-label="Answer {safe_name}"></span>'
+                else:
+                    rendered = f'<input class="stack-answer" data-name="{safe_name}" aria-label="Answer {safe_name}" size="{min(max(size, 1), 60)}" autocomplete="off">'
             elif kind == "validation":
                 rendered = f'<span class="stack-validation" data-name="{safe_name}" aria-live="polite"></span>'
             else:

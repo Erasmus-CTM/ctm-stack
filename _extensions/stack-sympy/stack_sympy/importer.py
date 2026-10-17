@@ -15,7 +15,41 @@ from xml.etree import ElementTree as ET
 NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
 TESTS = {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
          "NumAbsolute", "NumRelative", "NumDecPlaces"}
-INPUT_TYPES = {"algebraic", "numerical"}
+INPUT_TYPES = {"algebraic", "numerical", "matrix"}
+
+
+def _matrix_config(q, element, where):
+    """Explicit port extension: bounded learner dimensions, never native options."""
+    matrix = element.find("matrix")
+    if matrix is None:
+        return None  # Native matrix inputs use the evaluated teacher's shape.
+    _check(q, where + "/matrix", not matrix.attrib and len(matrix) == 2
+           and {axis.tag for axis in matrix} == {"rows", "cols"},
+           "matrix requires exactly rows and cols")
+    result = {}
+    for axis in matrix:
+        _check(q, where + "/matrix/" + axis.tag,
+               set(axis.attrib) == {"initial", "min", "max", "resizable"} and not len(axis),
+               "axis requires initial, min, max and resizable attributes")
+        values = {}
+        for key in ("initial", "min", "max"):
+            raw = axis.get(key, "")
+            _check(q, where + "/matrix/" + axis.tag, bool(re.fullmatch(r"[0-9]+", raw)),
+                   "matrix dimensions must be positive integers")
+            values[key] = int(raw)
+        _check(q, where + "/matrix/" + axis.tag,
+               1 <= values["min"] <= values["initial"] <= values["max"] <= 16,
+               "matrix dimensions require 1 <= min <= initial <= max <= 16")
+        _check(q, where + "/matrix/" + axis.tag, axis.get("resizable") in {"0", "1"},
+               "resizable must be 0 or 1")
+        values["auto"] = axis.get("resizable") == "1"
+        _check(q, where + "/matrix/" + axis.tag,
+               values["auto"] or values["min"] == values["initial"] == values["max"],
+               "fixed dimensions require min = initial = max")
+        result[axis.tag] = values
+    _check(q, where + "/matrix", result["rows"]["max"] * result["cols"]["max"] <= 64,
+           "matrix maximum dimensions exceed 64 entries")
+    return result
 
 
 class UnsupportedQuestion(ValueError):
@@ -138,7 +172,7 @@ def _input(q, element):
            "boxsize must be an integer between 1 and 200")
     show = _text(element, "showvalidation", "1").strip()
     _check(q, where + "/showvalidation", show in {"0", "1", "3"}, f"unsupported validation style {show!r}")
-    return {"name": name, "type": typ, "teacher": _text(element, "tans").strip(),
+    result = {"name": name, "type": typ, "teacher": _text(element, "tans").strip(),
             "boxsize": int(box),
             "strictsyntax": _boolean(q, element, "strictsyntax", "1"),
             "insertstars": int(stars),
@@ -149,6 +183,11 @@ def _input(q, element):
             "mustverify": _boolean(q, element, "mustverify"),
             "showvalidation": show != "0",
             "syntaxhint": _text(element, "syntaxhint")}
+    if element.find("matrix") is not None:
+        _check(q, where, typ == "matrix", "matrix configuration requires matrix input type")
+    if typ == "matrix":
+        result["matrix"] = _matrix_config(q, element, where)
+    return result
 
 
 def _question(element):

@@ -47,22 +47,43 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y maxima maxima-share
           python -m pip install -r requirements.txt
+      - name: Fingerprint native image runtime
+        id: native-image
+        run: echo "key=$(python scripts/prepare_native_image.py --stack-source .stack-upstream-reference --key-only)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: .native-stack-image
+          key: native-stack-gcl-${{ steps.native-image.outputs.key }}
+      - name: Build or validate pristine STACK image
+        run: python scripts/prepare_native_image.py --stack-source .stack-upstream-reference
       - name: Verify imported rows against exact upstream bytes
         run: python scripts/import_stack_fixtures.py --upstream .stack-upstream-reference --check
       - name: Probe standalone official Maxima loader
-        run: python scripts/run_compliance_maxima.py --stack-source .stack-upstream-reference --probe-only
+        run: python scripts/run_compliance_maxima.py --stack-source .stack-upstream-reference --image .native-stack-image --probe-only
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: maxima-loader-probe
           path: test-results/compliance/maxima-loader-probe.json
           if-no-files-found: warn
-      - run: python scripts/run_compliance_maxima.py --stack-source .stack-upstream-reference
+      - name: Check cold/image sentinel observations and timing
+        run: python scripts/benchmark_native_image.py --stack-source .stack-upstream-reference --image .native-stack-image
+      - run: python scripts/run_compliance_maxima.py --stack-source .stack-upstream-reference --image .native-stack-image
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: compliance-maxima
           path: test-results/compliance/maxima.json
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-image-diagnostics
+          include-hidden-files: true
+          path: |
+            test-results/compliance/native-image-benchmark.json
+            .native-stack-image/manifest.json
+            .native-stack-image/build.log
           if-no-files-found: warn
 
   reference:
@@ -138,7 +159,16 @@ jobs:
           sudo apt-get install -y maxima maxima-share
           python -m pip install -r requirements-dev.txt
           python -m playwright install --with-deps chromium
-      - run: python scripts/run_port_regressions.py --stack-source .stack-upstream-reference
+      - name: Fingerprint native image runtime
+        id: native-image
+        run: echo "key=$(python scripts/prepare_native_image.py --stack-source .stack-upstream-reference --key-only)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v4
+        with:
+          path: .native-stack-image
+          key: native-stack-gcl-${{ steps.native-image.outputs.key }}
+      - name: Build or validate pristine STACK image
+        run: python scripts/prepare_native_image.py --stack-source .stack-upstream-reference
+      - run: python scripts/run_port_regressions.py --stack-source .stack-upstream-reference --image .native-stack-image
       - uses: actions/upload-artifact@v4
         if: always()
         with:

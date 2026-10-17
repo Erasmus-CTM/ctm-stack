@@ -737,6 +737,153 @@
       ],
       "qtest_count": 2,
       "deployed_seeds": []
+    },
+    {
+      "id": "linearalgebra-elementary-1",
+      "file": "LinearAlgebra_elementary_1.xml",
+      "upstream_path": "samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_1.xml",
+      "source_url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_1.xml",
+      "sha256": "f4982902aff0c9db440b0e5deb22ca839f63ae483c140cc4ae1b05084d3c6a91",
+      "question_name": "LinearAlgebra_elementary_1",
+      "topic": "Linear algebra / Matrix input",
+      "input_count": 1,
+      "answer_tests": [
+        "AlgEquiv"
+      ],
+      "qtest_count": 2,
+      "deployed_seeds": [
+        948077501,
+        2115177529,
+        1223528597,
+        998169253,
+        266740368
+      ]
+    },
+    {
+      "id": "linearalgebra-elementary-2",
+      "file": "LinearAlgebra_elementary_2.xml",
+      "upstream_path": "samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_2.xml",
+      "source_url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_2.xml",
+      "sha256": "515f940f47f518fa1418407677a7fe68819dacd9dd0d8a3a9a0c8931fb02d650",
+      "question_name": "LinearAlgebra_elementary_2",
+      "topic": "Linear algebra / Matrix input",
+      "input_count": 1,
+      "answer_tests": [
+        "AlgEquiv"
+      ],
+      "qtest_count": 2,
+      "deployed_seeds": [
+        404337827,
+        765269806,
+        1906938980,
+        196774024
+      ]
+    },
+    {
+      "id": "linearalgebra-elementary-3",
+      "file": "LinearAlgebra_elementary_3.xml",
+      "upstream_path": "samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_3.xml",
+      "source_url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_3.xml",
+      "sha256": "ea570061f26b0b9f6fd53acd66e0cc98d18dc80ee56bf337742aa3190cc18303",
+      "question_name": "LinearAlgebra_elementary_3",
+      "topic": "Linear algebra / Matrix input",
+      "input_count": 1,
+      "answer_tests": [
+        "AlgEquiv"
+      ],
+      "qtest_count": 2,
+      "deployed_seeds": [
+        386876637,
+        1073163127,
+        1496670985,
+        194599328
+      ]
+    },
+    {
+      "id": "linearalgebra-elementary-4",
+      "file": "LinearAlgebra_elementary_4.xml",
+      "upstream_path": "samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_4.xml",
+      "source_url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/LinearAlgebra_elementary_4.xml",
+      "sha256": "130c7671bc8b7ac7a5f723eff1d1bc740c4c1d41e510a3ef4dacec88261e7893",
+      "question_name": "LinearAlgebra_elementary_4",
+      "topic": "Linear algebra / Matrix input",
+      "input_count": 1,
+      "answer_tests": [
+        "AlgEquiv"
+      ],
+      "qtest_count": 2,
+      "deployed_seeds": [
+        2043088205,
+        724623537,
+        347081126,
+        233093598
+      ]
+    },
+    {
+      "id": "matrix-system",
+      "file": "7-3-26-(Write-sim-eqns-with-matrices).xml",
+      "upstream_path": "samplequestions/stacklibrary/Introductory-Mathematics/Week-07---Simultaneous-Equations/7-3-26-(Write-sim-eqns-with-matrices).xml",
+      "source_url": "https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Introductory-Mathematics/Week-07---Simultaneous-Equations/7-3-26-(Write-sim-eqns-with-matrices).xml",
+      "sha256": "a8d78faabb49fefbd21eccb554c9a5eb35fa9cae3ebaec4a2b75fccaafd303f5",
+      "question_name": "7.3.26 (Write sim. eqns. with matrices)",
+      "topic": "Introductory Mathematics / Matrix equations",
+      "input_count": 2,
+      "answer_tests": [
+        "AlgEquiv"
+      ],
+      "qtest_count": 1,
+      "deployed_seeds": [
+        1930245414,
+        812684119,
+        1827462946,
+        145180072,
+        36715103,
+        946761244,
+        1804442351,
+        851490863,
+        2007618713,
+        856928557,
+        892429656,
+        1685384646,
+        1559087057,
+        747596696,
+        1509610601,
+        40582546,
+        601565325,
+        1184321902,
+        997386553,
+        2017829241,
+        1670848744,
+        1535580682,
+        3390270,
+        1021119565,
+        2020613490,
+        1564017995,
+        2091565715,
+        233658395,
+        1275737354,
+        799600169,
+        560189780,
+        55938794,
+        286711187,
+        352371464,
+        1026112134,
+        285276538,
+        1460183348,
+        887106706,
+        1846531579,
+        1720650208,
+        484803512,
+        31647423,
+        104418702,
+        229678539,
+        728150600,
+        983236569,
+        1400604020,
+        1177082385,
+        1829849018,
+        771612950
+      ]
     }
   ]
 }

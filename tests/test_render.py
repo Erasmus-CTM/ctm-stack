@@ -52,10 +52,36 @@ def test_project_renders_cards_and_deployable_assets():
         assert len(scripts) == 1, qmd
         asset = page.parent / scripts[0]
         assert asset.is_file(), asset
-        for sibling in ("worker.js", "runtime-sources.js", "vendor/pyodide-runtime.js"):
+        for sibling in ("worker.js", "runtime-sources.js", "vendor/pyodide-runtime.js",
+                        "vendor/matrix-input-provenance.json"):
             assert (asset.parent / sibling).is_file(), sibling
+        # Quarto may flatten registered scripts/stylesheets. Follow the HTML
+        # references rather than assuming dependency-resource paths for them.
+        page_scripts = [node.attrs['src'].split('?', 1)[0] for node in doc.find('script')
+                        if node.attrs.get('src')]
+        editor_scripts = [src for src in page_scripts if Path(src).name == 'matrix-input.js']
+        editor_styles = [node.attrs['href'].split('?', 1)[0] for node in doc.find('link')
+                         if Path(node.attrs.get('href', '').split('?', 1)[0]).name == 'matrix-input.css']
+        assert len(editor_scripts) == len(editor_styles) == 1
+        assert page_scripts.index(editor_scripts[0]) < page_scripts.index(scripts[0])
+        for reference in editor_scripts + editor_styles:
+            deployed = page.parent / reference
+            pinned = ROOT / '_extensions/stack-sympy/vendor' / Path(reference).name
+            assert deployed.is_file(), deployed
+            assert deployed.read_bytes() == pinned.read_bytes(), deployed
         assert "STACK_SYMPY_SOURCES" in (asset.parent / "runtime-sources.js").read_text()
     assert total > 0, "the published site should demonstrate at least one question"
+
+
+def test_vendored_matrix_editor_matches_audited_source_manifest():
+    import hashlib
+    vendor = ROOT / '_extensions/stack-sympy/vendor'
+    manifest = json.loads((vendor / 'matrix-input-provenance.json').read_text())
+    assert manifest['commit'] == 'f238da6d9a43d58d1fdf9ad592ac6223225268e0'
+    assert manifest['license'] == 'AGPL-3.0-or-later'
+    for record in manifest['files']:
+        assert hashlib.sha256((vendor / record['file']).read_bytes()).hexdigest() == record['sha256']
+        assert '/' + manifest['commit'] + '/' in record['source']
 
 
 def question_blocks(qmd):
@@ -89,7 +115,11 @@ def test_rendered_questions_show_authored_block_and_original_xml():
                 re.findall(r'[#.][\w-]+', block.split("\n", 1)[0]))
             path = re.search(r"^#\| file: (.+)$", block, re.M).group(1)
             xml = by_language["language-xml"]
-            assert xml.text == (qmd.parent / path).read_text()
+            # Pandoc code blocks add a terminal newline and may retain an
+            # additional blank line already present in the source export.
+            # Only display-terminal LF is normalized; all other content must
+            # agree. Corpus byte provenance is checked independently by SHA.
+            assert xml.text.rstrip("\n") == (qmd.parent / path).read_text().rstrip("\n"), path
             assert not list(xml.find("quiz")), "XML should be escaped as code"
 
 
@@ -108,15 +138,19 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
                for nav in doc.find("nav") for a in nav.find("a"))
     assert {entry["id"] for entry in entries} == reports.keys()
     passing = [entry for entry in entries if reports[entry["id"]]["status"] == "qtests_pass"]
-    assert len(doc.find("script", "stack-sympy-data")) == len(passing)
+    # One markup-only teaching derivative is deliberately separate from the
+    # unchanged-export baseline, where its original remains unsupported.
+    assert len(doc.find("script", "stack-sympy-data")) == len(passing) + 1
     assert not doc.find(css_class="stack-diagnostic")
     panels = doc.find("details", "stack-source")
-    assert len(panels) == 2 * len(passing)
+    assert len(panels) == 2 * (len(passing) + 1)
     assert all("open" not in panel.attrs for panel in panels)
     rendered_xml = [code.text for panel in panels for code in panel.find("code", "language-xml")]
-    assert len(rendered_xml) == len(passing)
-    for entry, source in zip(passing, rendered_xml):
-        assert source == (ROOT / teaching_source(entry)[0]).read_text()
+    assert len(rendered_xml) == len(passing) + 1
+    matrix_copy = ROOT / "questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml"
+    assert rendered_xml[0].rstrip("\n") == matrix_copy.read_text().rstrip("\n")
+    for entry, source in zip(passing, rendered_xml[1:]):
+        assert source.rstrip("\n") == (ROOT / teaching_source(entry)[0]).read_text().rstrip("\n"), entry["file"]
     for entry in entries:
         assert f'id="{entry["id"]}"' in output
         assert f'questions/corpus/{entry["file"]}' in output

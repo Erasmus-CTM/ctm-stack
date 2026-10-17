@@ -13,7 +13,7 @@ import sympy as sp
 from .assessment import answer_test
 from .expressions import InvalidAnswer, Node, Unsupported, assignments, canonical_form, evaluate, form_latex, parse
 from .importer import UnsupportedQuestion
-from .expressions import (is_logical, is_collection, validate_collection, collection_items,
+from .expressions import (MatrixValue, is_logical, is_collection, validate_collection, collection_items,
                           AUTHOR_COLLECTION_FUNCTIONS, SCALAR_FUNCTIONS, FUNCTION_ALIASES,
                           decimal_set, contains_decimal, transformed_decimal_collection)
 from .collections import normalized_value, same_type
@@ -90,6 +90,20 @@ def _render(question, field, env, inputs, prts):
                            assumptions=_assumptions(question),
                            form_expression=(lambda expr: _qtest_answer(question, expr, env, preserve_form=True))
                            if not question.get("simplify", True) else None)
+
+
+def _matrix_input_shape(inp, value, teacher):
+    """Apply the same configured shape boundary to learners and author qtests."""
+    if not isinstance(value, MatrixValue):
+        raise InvalidAnswer("Enter a matrix")
+    if not isinstance(teacher, MatrixValue):
+        raise InvalidAnswer("Matrix input requires a matrix teacher answer")
+    spec = inp.get("matrix")
+    for index, axis in enumerate(("rows", "cols")):
+        config = spec[axis] if spec else {"auto": False, "initial": teacher.shape[index], "min": teacher.shape[index], "max": teacher.shape[index]}
+        size = value.shape[index]
+        if not config["min"] <= size <= config["max"] or not config["auto"] and size != config["initial"]:
+            raise InvalidAnswer(f"Matrix {axis} are outside the configured dimensions")
 
 
 def instantiate(question: dict, seed: int = 1) -> dict:
@@ -215,10 +229,27 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                 validate_logic(teacher)
             if inp["type"] == "numerical" and getattr(teacher, "is_number", None) is not True:
                 raise UnsupportedQuestion(name, where + "/tans", "numerical answer requires a number")
+            if inp["type"] == "matrix" and not isinstance(teacher, MatrixValue):
+                raise UnsupportedQuestion(name, where + "/tans", "matrix input requires a matrix teacher answer")
+            if inp["type"] == "matrix":
+                try:
+                    _matrix_input_shape(inp, teacher, teacher)
+                except InvalidAnswer as exc:
+                    raise UnsupportedQuestion(name, where + "/tans", "teacher matrix must fit the configured dimensions: " + str(exc)) from exc
             if inp["syntaxhint"]:
                 if not question.get("simplify", True) and _collection_helper(parse(inp["syntaxhint"])):
                     raise UnsupportedQuestion(name, where + "/syntaxhint", "Finite collection helpers require questionsimplify=1")
                 evaluate(inp["syntaxhint"], env, assumptions=assumptions)
+        for test in question.get("qtests", []):
+            for key, source in test["inputs"].items():
+                inp = inputmap.get(key)
+                if inp is None or inp["type"] != "matrix":
+                    continue
+                try:
+                    value = evaluate(_qtest_answer(question, source, env, preserve_form=True), env, assumptions=assumptions, student=True)
+                    _matrix_input_shape(inp, value, evaluate(inp["teacher"], env, assumptions=assumptions))
+                except (InvalidAnswer, Unsupported, ValueError, TypeError) as exc:
+                    raise UnsupportedQuestion(name, f"qtest[{test['testcase']}]/testinput[{key}]", str(exc)) from exc
         if not question.get("simplify", True):
             for test in question.get("qtests", []):
                 if any(_collection_helper(parse(source)) for source in test["inputs"].values()):
@@ -251,6 +282,8 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                         raise UnsupportedQuestion(name, where, "Collection checks require a direct learner input name to preserve literal precision; teacher collections must use frozen author values")
                 for value in (student_value, teacher_value):
                     validate_collection(value)
+                if any(isinstance(value, MatrixValue) for value in (student_value, teacher_value)) and node["test"] not in {"AlgEquiv", "SameType", "EqualComAss"}:
+                    raise UnsupportedQuestion(name, where, "Matrices require AlgEquiv, SameType or EqualComAss")
                 if (any(is_collection(x) for x in (student_value, teacher_value))
                         and node["test"] not in {"AlgEquiv", "Sets", "SameType", "EqualComAss"}):
                     raise UnsupportedQuestion(name, where, "Collections require AlgEquiv, Sets, SameType or EqualComAss")
@@ -318,6 +351,9 @@ def _input_validation(inp, raw, env, assumptions, question=None):
         evaluate(tree, env, assumptions=assumptions, student=True, simplify=False)
         value = evaluate(tree, env, assumptions=assumptions, student=True)
         validate_collection(value)
+        if inp["type"] == "matrix":
+            teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
+            _matrix_input_shape(inp, value, teacher)
         if question is not None and is_collection(value):
             definitions = _definitions(question)
             if any(n.kind == "name" and n.value in definitions and _decimal_source(definitions[n.value], definitions)
@@ -387,7 +423,7 @@ def _qtest_answer(question, expression, env, *, preserve_form=False):
     if re.fullmatch(r"[+-]?(?:\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?", source.strip()):
         return source.strip()
     tree = parse(source)
-    if tree.kind == "list" and contains_decimal(tree):
+    if (tree.kind == "list" or tree.kind == "call" and tree.value == "matrix") and contains_decimal(tree):
         return _author_form(source, env, _assumptions(question))
     if preserve_form:
         if expression in env:
@@ -416,7 +452,7 @@ def _author_form(source, env, assumptions):
         if n.kind == "binary":
             return f"({render(n.children[0])}{'^' if n.value == '**' else n.value}{render(n.children[1])})"
         if n.kind == "call":
-            if n.value in SCALAR_FUNCTIONS or n.value in FUNCTION_ALIASES:
+            if n.value in SCALAR_FUNCTIONS or n.value in FUNCTION_ALIASES or n.value == "matrix":
                 return n.value + "(" + ",".join(render(c) for c in n.children) + ")"
             if n.value == "factor" and len(n.children) == 1:
                 value = evaluate(n.children[0], env, assumptions=assumptions)

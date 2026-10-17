@@ -32,6 +32,40 @@ Agreement here concerns the stated cases and bounded contracts. It does not
 claim general Maxima normalization, complete CAS parity or identical internal
 representations.
 
+### Bounded matrices
+
+`matrix([a,b],[c,d])` is a distinct rectangular matrix value with finite
+supported scalar entries. The port permits 1–16 rows, 1–16 columns and at most
+64 entries, subject to the existing expression limits. Empty/zero-dimensional,
+ragged and incomplete matrices, nested non-scalar entries and matrix arithmetic
+are outside this contract. The editor's historical empty-matrix convention is
+not inherited.
+
+Following pinned STACK's
+[ATMatrix](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac#L1638-L1666),
+AlgEquiv checks row count, then column count, then ordered entries through the
+existing scalar equivalence machinery. Wrong dimensions are an applicable
+incorrect result. SameType recognizes matrix type independently of dimensions;
+ordinary nested lists remain a different type. EqualComAss additionally checks
+the submitted cell forms, so `matrix([x+x])` and `matrix([2*x])` are algebraically
+equal but have different written forms. Literal decimal cells retain the
+scalar/list binary64 provenance rules; frozen decimal matrix aliases fail
+closed rather than acquiring invented provenance.
+
+Matrix grading currently supports AlgEquiv, SameType and EqualComAss. Other
+matrix answer tests are an explicit port limitation; native STACK supports
+more, including LowestTerms. There is no cell partial-credit policy: PRT scores
+remain author-defined and the default feedback concerns the whole matrix.
+Fixed dimensions are validated before grading; learner-selected dimensions
+must stay inside the configured bounds.
+
+The unchanged 2,303-row inventory gains 13 supported official matrix rows
+(452 to 465 supported rows overall). All 13 match desired outcomes in direct
+CPython execution. Native comparison and browser Pyodide parity are enforced
+by the existing pinned CI harness. The [matrix decision record](../docs/audits/bounded-matrices.md)
+documents the bounds, provenance restrictions and remaining excluded matrix
+cases. The set and trigonometric questions below remain unchanged.
+
 ### Written form and numerical fractions
 
 `EqualComAss` checks written structure in addition to value. STACK's

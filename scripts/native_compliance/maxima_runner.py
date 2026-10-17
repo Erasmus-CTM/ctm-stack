@@ -187,16 +187,28 @@ def _controlled_at_error(valid: bool, correct: bool, note: str | list) -> bool:
             and bool(CONTROLLED_AT_ERROR.fullmatch(note.strip())))
 
 
-def make_batch(source: Path, cases: list[dict], home: Path, batch_number: int) -> str:
+def make_batch(source: Path, cases: list[dict], home: Path, batch_number: int, *, preloaded: bool = False) -> str:
     """Create an isolated Maxima batch with bounded, JSON-encoded records."""
     (home / "moodle-qtype_stack-master").symlink_to(source, target_is_directory=True)
     (home / "tmp").mkdir()
     (home / "plots").mkdir()
+    (home / "obj").mkdir(exist_ok=True)
     loader = home / "moodle-qtype_stack-master/stack/maxima/stacklocallinux.mac"
     lines = [
         "display2d:false$",
         f"maxima_userdir:{_literal(str(home))}$",
-        f"load({_literal(str(loader))})$",
+        *([f"load({_literal(str(loader))})$",] if not preloaded else [
+            ':lisp (ensure-directories-exist (concatenate \'string maxima::*maxima-objdir* "/"))',
+            'file_search_maxima:delete(sconcat(stacktmplocation,"/###.{mac,mc}"),file_search_maxima)$',
+            'file_search_lisp:delete(sconcat(stacktmplocation,"/###.{lisp}"),file_search_lisp)$',
+            'file_search_maxima:delete(sconcat(stacklocation,"/stack/maxima/###.{mac,mc}"),file_search_maxima)$',
+            'file_search_lisp:delete(sconcat(stacklocation,"/stack/maxima/###.{lisp}"),file_search_lisp)$',
+            f"stacklocation:{_literal(str(home / 'moodle-qtype_stack-master'))}$",
+            f"stacktmplocation:{_literal(str(home / 'tmp'))}$",
+            f"file_search_maxima:append([{_literal(str(home / 'tmp/###.{mac,mc}'))},{_literal(str(source / 'stack/maxima/###.{mac,mc}'))}],file_search_maxima)$",
+            f"file_search_lisp:append([{_literal(str(home / 'tmp/###.{lisp}'))},{_literal(str(source / 'stack/maxima/###.{lisp}'))}],file_search_lisp)$",
+            "STACK_SETUP(true)$",
+        ]),
         "display2d:false$",
         "linel:10000$",
         f'print("STACKNATIVE-BEGIN|{batch_number}|{len(cases)}")$',
@@ -249,9 +261,9 @@ def _probe_assigned(test: str, student: str, teacher: str, *, parse: bool = True
             "[first(_probe_result)[1],first(_probe_result)[2],first(_probe_result)[3]])")
 
 
-def make_standalone_probe_batch(source: Path, home: Path) -> str:
+def make_standalone_probe_batch(source: Path, home: Path, *, preloaded: bool = False) -> str:
     """A one-process diagnostic, independent of fixture observations."""
-    batch = make_batch(source, [], home, 0)
+    batch = make_batch(source, [], home, 0, preloaded=preloaded)
     experiments = {
         "i_binding": "string(i)",
         "parse_i": 'string(parse_string("i"))',
@@ -328,9 +340,9 @@ def parse_standalone_probe_output(output: str) -> dict:
     return data
 
 
-def make_warmup_batch(source: Path, home: Path) -> str:
+def make_warmup_batch(source: Path, home: Path, *, preloaded: bool = False) -> str:
     """Prime loader caches and inspect aliases/form handling without fixture marks."""
-    batch = make_batch(source, [], home, 0)
+    batch = make_batch(source, [], home, 0, preloaded=preloaded)
     expressions = [
         "string(i)",
         'string(parse_string("i"))',
@@ -422,9 +434,9 @@ def parse_output(output: str, cases: list[dict], batch_number: int) -> list[dict
     return [observations[c["id"]] for c in cases]
 
 
-def _command(command: list[str], timeout: int) -> str:
+def _command(command: list[str], timeout: int, *, env: dict | None = None) -> str:
     try:
-        proc = subprocess.run(command, capture_output=True, text=True, timeout=timeout, check=False)
+        proc = subprocess.run(command, capture_output=True, text=True, timeout=timeout, check=False, env=env)
     except subprocess.TimeoutExpired as exc:
         captured = exc.stdout or b""
         if isinstance(captured, bytes):
@@ -440,7 +452,7 @@ def _command(command: list[str], timeout: int) -> str:
     return proc.stdout + proc.stderr
 
 
-def run_standalone_probe(source: Path, maxima: str = "maxima", *, timeout: int = 300) -> dict:
+def run_standalone_probe(source: Path, maxima: str = "maxima", *, timeout: int = 300, image: Path | None = None) -> dict:
     """Run loader and argument-evaluation experiments without fixture data."""
     if timeout < 1:
         raise ValueError("timeout must be positive")
@@ -454,21 +466,24 @@ def run_standalone_probe(source: Path, maxima: str = "maxima", *, timeout: int =
     if executable is None:
         raise NativeProcessError(f"Maxima executable unavailable: {maxima!r}")
     version = _command([executable, "--version"], 15).strip()
+    from . import native_image
+    image_manifest = native_image.validate(image, source, executable) if image else None
     with tempfile.TemporaryDirectory(prefix="stack-compliance-probe-") as directory:
         home = Path(directory)
         batch = home / "probe.mac"
-        batch.write_text(make_standalone_probe_batch(source, home), encoding="utf-8")
-        output = _command([executable, "--very-quiet", f"--batch={batch}"], timeout)
+        batch.write_text(make_standalone_probe_batch(source, home, preloaded=bool(image)), encoding="utf-8")
+        output = _command(native_image.command(image, batch) if image else [executable, "--very-quiet", f"--batch={batch}"], timeout, **({"env": native_image.environment(home)} if image else {}))
         parse_output(output, [], 0)
         values = parse_standalone_probe_output(output)
     return {"schema_version": 1, "engine": "maxima_diagnostic",
             "metadata": {"reference_layer": "direct_official_maxima_AT",
-                         "stack_sha": checkout, "maxima_version": version},
+                         "stack_sha": checkout, "maxima_version": version,
+                         "preloaded_image": image_manifest},
             "probe": values}
 
 
 def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs: int = DEFAULT_JOBS,
-               timeout: int = 300) -> dict:
+               timeout: int = 300, image: Path | None = None) -> dict:
     """Return independent native observations and version/provenance metadata."""
     validate_cases(cases)
     if not 1 <= jobs <= 16 or timeout < 1:
@@ -483,6 +498,8 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs:
     if executable is None:
         raise NativeProcessError(f"Maxima executable unavailable: {maxima!r}")
     version = _command([executable, "--version"], 15).strip()
+    from . import native_image
+    image_manifest = native_image.validate(image, source, executable) if image else None
     library = (source / "stack/maxima/stackmaxima.mac").read_text(encoding="utf-8")
     library_match = re.search(r"stackmaximaversion:(\d+)", library)
     if not library_match:
@@ -505,9 +522,9 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs:
         with tempfile.TemporaryDirectory(prefix="stack-compliance-warmup-") as directory:
             home = Path(directory)
             batch = home / "warmup.mac"
-            batch.write_text(make_warmup_batch(source, home), encoding="utf-8")
+            batch.write_text(make_warmup_batch(source, home, preloaded=bool(image)), encoding="utf-8")
             try:
-                output = _command([executable, "--very-quiet", f"--batch={batch}"], timeout)
+                output = _command(native_image.command(image, batch) if image else [executable, "--very-quiet", f"--batch={batch}"], timeout, **({"env": native_image.environment(home)} if image else {}))
                 parse_output(output, [], 0)
                 probe = parse_probe_output(output)
                 print("Native loader probe: " + json.dumps(probe, sort_keys=True), flush=True)
@@ -521,9 +538,9 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs:
         with tempfile.TemporaryDirectory(prefix="stack-compliance-maxima-") as directory:
             home = Path(directory)
             batch = home / "native.mac"
-            batch.write_text(make_batch(source, [case], home, batch_number), encoding="utf-8")
+            batch.write_text(make_batch(source, [case], home, batch_number, preloaded=bool(image)), encoding="utf-8")
             try:
-                output = _command([executable, "--very-quiet", f"--batch={batch}"], timeout)
+                output = _command(native_image.command(image, batch) if image else [executable, "--very-quiet", f"--batch={batch}"], timeout, **({"env": native_image.environment(home)} if image else {}))
                 return parse_output(output, [case], batch_number)[0]
             except (NativeProcessError, NativeProtocolError) as exc:
                 raise type(exc)(f"case process {batch_number} (fixture ordinal "
@@ -557,7 +574,8 @@ def run_native(cases: list[dict], source: Path, maxima: str = "maxima", *, jobs:
                          "stack_library_version": library_match[1], "maxima_version": version,
                          "native_scope_sha256": scope_sha256(cases),
                          "execution_isolation": "fresh_maxima_process_per_case", "jobs": jobs,
-                         "loader_warmup": bool(runnable),
+                         "loader_warmup": bool(runnable), "preloaded_image": image_manifest,
+                         "case_wall_seconds": time.monotonic() - started,
                          "loader_probe": probe if runnable else None},
             "observations": ordered,
             "summary": {"total": len(ordered), "ok": sum(r["status"] == "ok" for r in ordered),

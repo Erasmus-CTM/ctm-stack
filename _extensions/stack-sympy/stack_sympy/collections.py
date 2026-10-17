@@ -5,7 +5,7 @@ they do not search for a bijection using scalar algebraic proofs.
 """
 from __future__ import annotations
 import sympy as sp
-from .expressions import (HeldSet, HeldList, is_collection, collection_items,
+from .expressions import (HeldSet, HeldList, MatrixValue, is_collection, collection_items,
                           collection_kind, validate_collection)
 
 
@@ -19,6 +19,8 @@ def normalized_value(value, *, mathematical_constants=False):
                  for x in collection_items(value)]
         if collection_kind(value) == 'set':
             return HeldSet(*unique(items))
+        if collection_kind(value) == 'matrix':
+            return MatrixValue(*items)
         return HeldList(*items) if isinstance(value, HeldList) else items
     if value.args:
         value = value.func(*(normalized_value(x) for x in value.args))
@@ -79,6 +81,16 @@ def collection_test(name, student, teacher, compare):
             return result(False, 'ATSets_SA_not_set', 'Enter a set using braces {...}.', False)
     elif collection_kind(student) != collection_kind(teacher) or not is_collection(teacher):
         return result(False, feedback='The answer and teacher must have the same collection type.', applicable=False)
+    if collection_kind(teacher) == 'matrix':
+        if student.shape[0] != teacher.shape[0]:
+            return result(False, 'ATMatrix_wrongsz_rows', 'The matrix has the wrong number of rows.')
+        if student.shape[1] != teacher.shape[1]:
+            return result(False, 'ATMatrix_wrongsz_columns', 'The matrix has the wrong number of columns.')
+        entries = [compare(a, b, i) for i, (a, b) in enumerate(zip(student.args, teacher.args))]
+        correct = all(entry['correct'] for entry in entries)
+        return result(correct, '' if correct else 'ATMatrix_wrongentries',
+                      '' if correct else 'Check the entries of the matrix.',
+                      all(entry.get('cas_valid', entry['valid']) for entry in entries))
     if collection_kind(teacher) == 'list':
         sa, ta = collection_items(student), collection_items(teacher)
         if len(sa) != len(ta):

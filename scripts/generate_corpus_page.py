@@ -62,7 +62,7 @@ def generate() -> str:
     baseline = json.loads((CORPUS / "baseline.json").read_text(encoding="utf-8"))
     entries = manifest["questions"]
     reports = {row["id"]: row for row in baseline["questions"]}
-    assert len(entries) == len(reports) == 30
+    assert len(entries) == len(reports) == 35
     assert {entry["id"] for entry in entries} == set(reports)
     assert all(entry["file"] == reports[entry["id"]]["file"] for entry in entries)
     counts = baseline["summary"]["stages"]
@@ -73,15 +73,15 @@ def generate() -> str:
     repository_url = f"https://github.com/{manifest['repository']}"
     commit_url = f"{repository_url}/commit/{manifest['commit']}"
     out = [
-        '---\ntitle: "Question corpus"\nsubtitle: "Thirty unchanged STACK exports, with a measured adapter boundary"\n---',
+        '---\ntitle: "Question corpus"\nsubtitle: "Thirty-five unchanged STACK exports, with a measured adapter boundary"\n---',
         "",
-        f"These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **Only the {len(passing)} questions whose authored tests passed on every replayed seed have interactive cards.** The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.",
+        f"These are 35 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **The {len(passing)} questions whose authored tests passed on every replayed seed have interactive cards.** One additional, clearly labeled presentation teaching copy demonstrates a matrix question whose original HTML remains unsupported. Other originals remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.",
         "",
         f"The [reproducible baseline](questions/corpus/baseline.json) reports **{len(passing)} passed**, **{len(mismatched)} with test mismatches**, and **{len(blocked)} blocked** ({counts.get('unsupported_import', 0)} at import, {counts.get('unsupported_instantiate', 0)} at instantiation). It retained **{sum(e['qtest_count'] for e in entries)} authored test cases** and replayed **{baseline['summary']['replayed_cases']} seed/case combinations** across {baseline['summary']['instantiated_all_seeds']} instantiated questions; {baseline['summary']['failed_cases']} combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.",
         "",
         f"**Attribution and reuse.** Questions are from [STACK / maths/moodle-qtype_stack]({repository_url}), pinned at commit [`{manifest['commit']}`]({commit_url}). The unchanged question exports carry the [CC BY-SA 4.0 license]({source_root}samplequestions/COPYING.txt), also [included locally](questions/corpus/COPYING.txt); see each pinned source link below. The [manifest](questions/corpus/manifest.json) records the exact upstream path and SHA-256 for every XML file.",
         "",
-        "## Browse all 30",
+        "## Browse all 35",
         "",
         "| Question | Topic | Adapter status | Original XML |",
         "|---|---|---|---|",
@@ -93,6 +93,21 @@ def generate() -> str:
         label = "Upstream authoring bug (PRT)" if upstream_authoring_issue(entry, row) else LABELS[row['status']]
         out.append(f"| [{name}](#{entry['id']}) | {topic} | {label} | [Download](questions/corpus/{entry['file']}) |")
     out += [
+        "",
+        "## Five matrix-input problems",
+        "",
+        "The four elementary-row-operation problems below run directly from unchanged official exports: [row 2 plus a multiple of row 3](#linearalgebra-elementary-1), [row 1 plus a multiple of row 3](#linearalgebra-elementary-2), [row 2 plus a multiple of row 1](#linearalgebra-elementary-3), and [row 1 minus a multiple of row 2](#linearalgebra-elementary-4). Together their original tests pass all 24 recorded seed/case combinations. Each uses a fixed 3 by 3 matrix editor and whole-matrix algebraic equivalence; no automatic cell partial credit is added.",
+        "",
+        "The fifth asks learners to write a system of three linear equations as a coefficient matrix and a column vector. Its original XML is [preserved unchanged](questions/corpus/7-3-26-(Write-sim-eqns-with-matrices).xml) and remains blocked by an unsupported inline HTML style. This explicitly attributed presentation teaching copy removes that style and closes its list; variables, answers, PRT and authored qtest are unchanged. Its original qtest passes on the first three deployed seeds. This is a presentation adaptation, not evidence that the original export runs unchanged.",
+        "",
+        "```{.stack-question}",
+        "#| file: questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml",
+        "#| question: 7.3.26 (Write sim. eqns. with matrices) (presentation teaching copy)",
+        "#| seed: 1930245414",
+        "#| review: true",
+        "```",
+        "",
+        "[Download presentation teaching XML](questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml)  -  [Pinned original source](" + next(e["source_url"] for e in entries if e["id"] == "matrix-system") + ")  -  [Adaptation and licensing](questions/corrected/README.md)",
         "",
         "## Ready to try",
         "",

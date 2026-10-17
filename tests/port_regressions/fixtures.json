@@ -2990,6 +2990,351 @@
       },
       "reason": "Native float set members differ from exact rationals; direct list leaves retain scalar binary64 comparison.",
       "native_scope": true
+    },
+    {
+      "id": "port-matrix-algebraic",
+      "group": "bounded matrices",
+      "test": "AlgEquiv",
+      "student": "matrix([x+x,1/2])",
+      "teacher": "matrix([2*x,2/4])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-row-shape",
+      "group": "bounded matrices",
+      "test": "AlgEquiv",
+      "student": "matrix([1],[2])",
+      "teacher": "matrix([1,2])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-column-shape",
+      "group": "bounded matrices",
+      "test": "AlgEquiv",
+      "student": "matrix([1,2])",
+      "teacher": "matrix([1])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-ordered-cells",
+      "group": "bounded matrices",
+      "test": "AlgEquiv",
+      "student": "matrix([1,2])",
+      "teacher": "matrix([2,1])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-distinct-list",
+      "group": "bounded matrices",
+      "test": "AlgEquiv",
+      "student": "matrix([1])",
+      "teacher": "[[1]]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-sametype-shape",
+      "group": "bounded matrices",
+      "test": "SameType",
+      "student": "matrix([1])",
+      "teacher": "matrix([1,2],[3,4])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-sametype-list",
+      "group": "bounded matrices",
+      "test": "SameType",
+      "student": "matrix([1])",
+      "teacher": "[[1]]",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-written-sum",
+      "group": "bounded matrices",
+      "test": "EqualComAss",
+      "student": "matrix([x+x])",
+      "teacher": "matrix([2*x])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-written-arithmetic",
+      "group": "bounded matrices",
+      "test": "EqualComAss",
+      "student": "matrix([1+2])",
+      "teacher": "matrix([3])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-commutative-cell",
+      "group": "bounded matrices",
+      "test": "EqualComAss",
+      "student": "matrix([x+1])",
+      "teacher": "matrix([1+x])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": true,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-unequal-value-form",
+      "group": "bounded matrices",
+      "test": "EqualComAss",
+      "student": "matrix([1])",
+      "teacher": "matrix([2])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-unequal-shape-form",
+      "group": "bounded matrices",
+      "test": "EqualComAss",
+      "student": "matrix([1])",
+      "teacher": "matrix([1,2])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": false
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-decimal-arithmetic",
+      "group": "bounded matrices",
+      "test": "AlgEquiv",
+      "student": "matrix([100.4-80.0])",
+      "teacher": "matrix([20.4])",
+      "options": "",
+      "expected": {
+        "kind": "result",
+        "valid": true,
+        "correct": false,
+        "cas_valid": true
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Ordered matrix dimensions, scalar cell equivalence and written-form applicability from pinned STACK ATMatrix/noun arithmetic.",
+      "native_scope": true
+    },
+    {
+      "id": "port-matrix-empty",
+      "group": "bounded matrices boundaries",
+      "test": "AlgEquiv",
+      "student": "matrix()",
+      "teacher": "matrix([1])",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Positive bounded rectangular scalar matrices only; zero dimensions, nested matrices and matrix arithmetic are explicitly outside this port.",
+      "native_scope": false
+    },
+    {
+      "id": "port-matrix-zero-columns",
+      "group": "bounded matrices boundaries",
+      "test": "AlgEquiv",
+      "student": "matrix([])",
+      "teacher": "matrix([1])",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Positive bounded rectangular scalar matrices only; zero dimensions, nested matrices and matrix arithmetic are explicitly outside this port.",
+      "native_scope": false
+    },
+    {
+      "id": "port-matrix-ragged",
+      "group": "bounded matrices boundaries",
+      "test": "AlgEquiv",
+      "student": "matrix([1],[1,2])",
+      "teacher": "matrix([1])",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Positive bounded rectangular scalar matrices only; zero dimensions, nested matrices and matrix arithmetic are explicitly outside this port.",
+      "native_scope": false
+    },
+    {
+      "id": "port-matrix-nested",
+      "group": "bounded matrices boundaries",
+      "test": "AlgEquiv",
+      "student": "[matrix([1])]",
+      "teacher": "matrix([1])",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Positive bounded rectangular scalar matrices only; zero dimensions, nested matrices and matrix arithmetic are explicitly outside this port.",
+      "native_scope": false
+    },
+    {
+      "id": "port-matrix-arithmetic",
+      "group": "bounded matrices boundaries",
+      "test": "AlgEquiv",
+      "student": "matrix([1])+matrix([2])",
+      "teacher": "matrix([1])",
+      "options": "",
+      "expected": {
+        "kind": "unsupported"
+      },
+      "origin": {
+        "kind": "project_regression",
+        "upstream_ordinal": null
+      },
+      "reason": "Positive bounded rectangular scalar matrices only; zero dimensions, nested matrices and matrix arithmetic are explicitly outside this port.",
+      "native_scope": false
     }
   ]
 }
