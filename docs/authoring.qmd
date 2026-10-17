@@ -131,3 +131,7 @@ accepts any exact rational basis for a reference space, while keeping the
 existing XML inputs and true/false PRT branches. See [Python answer tests](python-answer-tests.qmd)
 for the contract, the source helper, worked examples, and the difference from
 vanilla STACK XML portability.
+
+For author-supplied predicates without editing the extension registry, use the
+[PythonChecker v1 API](python-checker-api.qmd). Select a trusted module in the
+Quarto block or CLI; XML chooses a named predicate, and PRTs retain scoring.

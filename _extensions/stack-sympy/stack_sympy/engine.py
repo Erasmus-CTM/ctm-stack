@@ -597,7 +597,7 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
                     detail.update(valid=False, feedback=result["feedback"] if not node["quiet"] else "Invalid answer")
                     detail.pop("assessment", None)
                 return {"status": "invalid", "score": 0.0, "inputs": input_results, "prts": prt_results,
-                        "feedback": result["feedback"]}
+                        "feedback": input_results[node["student"]]["feedback"] if node["test"] == "PythonChecker" else result["feedback"]}
             if node["test"] in {*PYTHON_TESTS, "PythonChecker"} and "assessment" in result and not node["quiet"]:
                 input_results[node["student"]]["assessment"] = result["assessment"]
             branch_name = "true" if result["correct"] else "false"

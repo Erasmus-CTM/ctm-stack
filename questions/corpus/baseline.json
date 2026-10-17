@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "engine_revision": "1490f17910f0498d225c1079e6a02864f6869da0 + PythonChecker working tree (identified by adapter_source_sha256)",
-  "adapter_source_sha256": "3b61b53baff9439fbce70b41f64cc77adcc71852fb44748a31c9516b08a5925e",
+  "engine_revision": "b65d548a32ddf18693e9e7af7ea52c50e02f546f + quiet-result fix (identified by adapter_source_sha256)",
+  "adapter_source_sha256": "0e0df206f54952e5b317be83d041410a6cdbc703a75b9ccbf71e95a59a0fc5b4",
   "python_version": "3.12.10",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",
@@ -500,12 +500,12 @@
               "actual": {
                 "note": "1-0-F | 1-1-F",
                 "penalty": 0.1,
-                "score": 0
+                "score": 0.0
               },
               "expected": {
                 "note": "1-0-T",
-                "penalty": 0,
-                "score": 1
+                "penalty": 0.0,
+                "score": 1.0
               },
               "passed": false,
               "prt": "prt1"
@@ -523,12 +523,12 @@
               "actual": {
                 "note": "1-0-F | 1-1-F",
                 "penalty": 0.1,
-                "score": 0
+                "score": 0.0
               },
               "expected": {
                 "note": "1-0-T",
-                "penalty": 0,
-                "score": 1
+                "penalty": 0.0,
+                "score": 1.0
               },
               "passed": false,
               "prt": "prt1"

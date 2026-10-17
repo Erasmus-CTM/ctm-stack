@@ -125,6 +125,8 @@ def test_descriptor_version_integrity_and_bounds(mutation):
 @pytest.mark.parametrize("body", ["CHECKERS={'check':lambda a: True}",
     "async def check(a,b): return True\nCHECKERS={'check':check}",
     "def check(a,b): yield True\nCHECKERS={'check':check}",
+    "from functools import partial\nasync def check(a,b): return True\nCHECKERS={'check':partial(check)}",
+    "from functools import partial\ndef check(a,b): yield True\nCHECKERS={'check':partial(check)}",
     "CHECKERS={'check': 3}", "CHECKERS={'a.b': lambda a,b: True}",
     "def check(a,b): raise ValueError('author failure')\nCHECKERS={'check':check}"])
 def test_bad_registry_signature_async_generator_and_callback_exception(body):
@@ -229,3 +231,12 @@ def test_model_preflight_matches_qtest_lowest_terms_conversion():
     q["inputs"][0]["teacher"] = "2/4"
     q["inputs"][0]["requirelowestterms"] = True
     preflight(q, [instantiate(q)])
+
+
+def test_quiet_invalid_result_suppresses_diagnostic_in_python_result():
+    q = question(module("{'valid':False,'correct':False,'feedback':'hidden diagnostic'}"))
+    q["prts"][0]["nodes"][0]["quiet"] = True
+    result = grade(q, {"ans":"3"})
+    assert result["status"] == "invalid"
+    assert result["feedback"] == result["inputs"]["ans"]["feedback"] == "Invalid answer"
+    assert "hidden diagnostic" not in json.dumps(result)

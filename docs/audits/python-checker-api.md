@@ -92,15 +92,20 @@ imports, 8 unsupported instantiations, 162 replayed cases and 2 failed checks.
 Only revision/runtime/source fingerprint fields changed. The fingerprint now
 includes every runtime Python module rather than a manually incomplete list.
 
-Local focused API/builtin/importer/engine run: 112 tests and 27 subtests passed
+Local focused API/builtin/importer/engine run: 115 tests and 27 subtests passed
 under Python 3.12.10, SymPy 1.13.3, pytest 9.1.1. Astra xhigh approved the final core implementation, tests and API documentation
 with no remaining blocking findings; exact-head Linux/browser CI is still
 pending. A broader Windows run passed 739 tests and 149 subtests with one skip;
 six native-runner tests hit missing symlink privileges, one native-image mock
 hit a zero-resolution timer, and one parity check saw a runtime bundle made
 stale by a subsequent signature fix. The bundle was regenerated and the
-focused API/parity run then passed 49 tests. Final exact-head CI evidence is
-appended after validation. Local Quarto attempts with
+focused API/parity run then passed 49 tests. The first Linux run on `b65d548` passed 765 tests and 149 subtests (1 skip);
+its only failure was corpus-page copy drift caused by JSON serialization
+changing 1.0 to 1. The Python generator output was restored and checked
+against the generated corpus page. A final independent documentation review
+also found a quiet invalid-result diagnostic retained in the Python return
+value; that field now matches the generic input feedback, with a regression
+test and renewed Astra xhigh approval. Final rerun evidence follows below. Local Quarto attempts with
 both installed 1.9.35 and pinned 1.8.27 were blocked by Windows Deno cache/CMD
 environment errors; no local render/browser success is claimed.
 
