@@ -33,16 +33,19 @@ def environment(home):
 def runtime_identity(executable):
     from .maxima_runner import _command, NativeProcessError
     output = _command([executable, "--very-quiet",
-                       '--batch-string=display2d:false$linel:10000$print(sconcat("NATIVE-IMAGE-BUILD|",build_info()))$quit()$'], 30)
-    records = [line.removeprefix('NATIVE-IMAGE-BUILD|').strip() for line in output.splitlines()
-               if line.startswith('NATIVE-IMAGE-BUILD|')]
-    if len(records) != 1:
-        raise NativeProcessError("Missing or duplicate actual Maxima build-info record")
-    info = records[0]
-    match = re.search(r'lisp_name\s*=\s*"([^"]+)"', info, re.I)
-    if not match or not re.search(r'\bGCL\b', match[1]):
-        raise NativeProcessError("Preloaded images currently require the installed GCL Maxima backend")
-    return info
+                       '--batch-string=display2d:false$linel:10000$print(sconcat("NATIVE-IMAGE-BUILD|",build_info()))$'
+                       'print(sconcat("NATIVE-IMAGE-LISP|",build_info()@lisp_name))$'
+                       'print(sconcat("NATIVE-IMAGE-LISP-VERSION|",build_info()@lisp_version))$quit()$'], 30)
+    values = {}
+    for key in ('BUILD', 'LISP', 'LISP-VERSION'):
+        marker = 'NATIVE-IMAGE-'+key+'|'
+        records = [line.removeprefix(marker).strip() for line in output.splitlines() if line.startswith(marker)]
+        if len(records) != 1 or not records[0]:
+            raise NativeProcessError(f"Missing or duplicate actual Maxima {key} record; output={output[-3000:]!r}")
+        values[key] = records[0]
+    if values['LISP'] not in {'GCL', 'GNU Common Lisp (GCL)'}:
+        raise NativeProcessError(f"Preloaded images require the installed GCL Maxima backend; runtime={values!r}")
+    return values
 
 
 def identity(source, executable):

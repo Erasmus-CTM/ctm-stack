@@ -46,8 +46,8 @@ def test_direct_image_preserves_wrapper_options_and_private_environment():
 
 def test_actual_runtime_detection_requires_printed_build_record_not_available_backend():
     info = 'build_info(lisp_name = "GNU Common Lisp (GCL)", lisp_version = "GCL 2.6.14")'
-    with patch.object(native, '_command', return_value='echoed input\nNATIVE-IMAGE-BUILD|'+info+'\n') as call:
-        assert image.runtime_identity('maxima') == info
+    with patch.object(native, '_command', return_value='echoed input\nNATIVE-IMAGE-BUILD|'+info+'\nNATIVE-IMAGE-LISP|GNU Common Lisp (GCL)\nNATIVE-IMAGE-LISP-VERSION|GCL 2.6.14\n') as call:
+        assert image.runtime_identity('maxima')['BUILD'] == info
         assert 'print(sconcat(' in call.call_args[0][0][-1]
     for output in ('available: gcl sbcl', 'NATIVE-IMAGE-BUILD|build_info(lisp_name="SBCL")',
                    'NATIVE-IMAGE-BUILD|'+info+'\nNATIVE-IMAGE-BUILD|'+info):
@@ -113,9 +113,9 @@ def test_benchmark_fails_on_answer_note_and_probe_difference():
         return {'metadata': {'loader_probe': {'i': '%i'}, 'native_scope_sha256': 'same'},
                 'summary': {'total': 1}, 'observations': [{'answer_note': note, 'correct': True}]}
     clean = {'observations': [{'correct': True}, {'correct': False}]}
-    with patch('benchmark_native_image.run_native', side_effect=[report('a'), report('b'), clean, clean]), patch(
+    with patch('benchmark_native_image.image_digest', return_value='same'), patch('benchmark_native_image.verify_sample_order', return_value={'passed': True}), patch('benchmark_native_image.verify_state_isolation', return_value={'passed': True}), patch('benchmark_native_image.run_native', side_effect=[report('a'), report('b'), clean, clean]), patch(
             'benchmark_native_image.run_standalone_probe', return_value={'probe': {}}):
         assert compare([case], ROOT, ROOT)['passed'] is False
-    with patch('benchmark_native_image.run_native', side_effect=[report('a'), report('a'), clean, clean]), patch(
+    with patch('benchmark_native_image.image_digest', return_value='same'), patch('benchmark_native_image.verify_sample_order', return_value={'passed': True}), patch('benchmark_native_image.verify_state_isolation', return_value={'passed': True}), patch('benchmark_native_image.run_native', side_effect=[report('a'), report('a'), clean, clean]), patch(
             'benchmark_native_image.run_standalone_probe', side_effect=[{'probe': {'x': 1}}, {'probe': {'x': 2}}]):
         assert compare([case], ROOT, ROOT)['passed'] is False
