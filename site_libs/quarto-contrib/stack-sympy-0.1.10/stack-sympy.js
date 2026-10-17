@@ -204,7 +204,7 @@
     output.replaceChildren();
     output.dataset.state = result.status === 'valid' ? 'valid' : 'invalid';
     output.appendChild(node('p', 'stack-verdict', result.status === 'valid' ?
-      'Inputs parsed. Review them, then check your answer.' : 'Please correct the marked input and validate again.'));
+      'Your answer is ready to check. Review the preview first.' : 'Please correct the marked input and validate again.'));
     Object.keys(result.inputs || {}).forEach(function (name) {
       var detail = result.inputs[name];
       var input = card.querySelector('.stack-answer[data-name="' + CSS.escape(name) + '"]');
@@ -228,7 +228,7 @@
     clearMath(output);
     output.replaceChildren();
     output.dataset.state = result.passed ? 'correct' : 'retry';
-    output.appendChild(node('p', 'stack-verdict', result.passed ? 'All authored tests passed.' : 'Some authored tests failed.'));
+    output.appendChild(node('p', 'stack-verdict', result.passed ? 'All question tests passed.' : 'Some question tests failed.'));
     var list = node('ul', 'stack-test-list');
     (result.results || []).forEach(function (test) {
       list.appendChild(node('li', '', (test.passed ? 'Pass' : 'Fail') +
@@ -252,7 +252,7 @@
   function safeCheckEvidence(result) {
     var summary = { status: result.status === 'graded' ? 'graded' : 'invalid' };
     if (typeof result.score === 'number' && Number.isFinite(result.score)) summary.score = result.score;
-    return [{ label: 'Previous check assessment', text: JSON.stringify(summary) }];
+    return [{ label: 'Previous answer check', text: JSON.stringify(summary) }];
   }
 
   function initialize(card) {

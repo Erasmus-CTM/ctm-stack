@@ -136,15 +136,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../examples.html"> 
-<span class="menu-text">More examples</span></a>
+<span class="menu-text">Worked questions</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../corpus.html"> 
 <span class="menu-text">Question corpus</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-authoring" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Authoring</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-authoring">    
+        <li>
+    <a class="dropdown-item" href="../docs/authoring.html">
+ <span class="dropdown-text">Teacher guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../docs/matrix-input.html">
+ <span class="dropdown-text">Matrix input and grading</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../docs/python-checker-api.html#author-the-spd-checker">
+ <span class="dropdown-text">SPD checker walkthrough</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../docs/authoring.html#for-developers">
+ <span class="dropdown-text">Developer reference</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
-    <a class="nav-link active" href="../docs/authoring.html" aria-current="page"> 
-<span class="menu-text">Authoring guide</span></a>
+    <a class="nav-link" href="../docs/python-checker-api.html"> 
+<span class="menu-text">Python answer tests</span></a>
   </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-compatibility" role="link" data-bs-toggle="dropdown" aria-expanded="false">
@@ -158,6 +181,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li>
     <a class="dropdown-item" href="../compliance/port-regressions.html">
  <span class="dropdown-text">Port regressions</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../compliance/semantics.html">
+ <span class="dropdown-text">Semantics for STACK authors</span></a>
   </li>  
     </ul>
   </li>
@@ -184,11 +211,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#start-with-a-native-export" id="toc-start-with-a-native-export" class="nav-link active" data-scroll-target="#start-with-a-native-export">Start with a native export</a></li>
+  <li><a href="#for-teachers" id="toc-for-teachers" class="nav-link active" data-scroll-target="#for-teachers">For teachers</a>
+  <ul class="collapse">
+  <li><a href="#start-with-a-native-export" id="toc-start-with-a-native-export" class="nav-link" data-scroll-target="#start-with-a-native-export">Start with a native export</a></li>
+  <li><a href="#what-the-adapter-checks" id="toc-what-the-adapter-checks" class="nav-link" data-scroll-target="#what-the-adapter-checks">Choose what counts as correct</a></li>
   <li><a href="#choose-a-teaching-policy" id="toc-choose-a-teaching-policy" class="nav-link" data-scroll-target="#choose-a-teaching-policy">Choose a teaching policy</a></li>
-  <li><a href="#what-the-adapter-checks" id="toc-what-the-adapter-checks" class="nav-link" data-scroll-target="#what-the-adapter-checks">What the adapter checks</a></li>
   <li><a href="#validate-and-publish" id="toc-validate-and-publish" class="nav-link" data-scroll-target="#validate-and-publish">Validate and publish</a></li>
-  <li><a href="#extend-the-python-port" id="toc-extend-the-python-port" class="nav-link" data-scroll-target="#extend-the-python-port">Extend the Python port</a></li>
+  <li><a href="#extend-the-python-port" id="toc-extend-the-python-port" class="nav-link" data-scroll-target="#extend-the-python-port">Questions with many correct answers</a></li>
+  </ul></li>
+  <li><a href="#for-developers" id="toc-for-developers" class="nav-link" data-scroll-target="#for-developers">For developers</a>
+  <ul class="collapse">
+  <li><a href="#question-block-options" id="toc-question-block-options" class="nav-link" data-scroll-target="#question-block-options">Question-block options</a></li>
+  <li><a href="#input-and-xml-reference" id="toc-input-and-xml-reference" class="nav-link" data-scroll-target="#input-and-xml-reference">Input and XML reference</a></li>
+  <li><a href="#answer-entry-and-form" id="toc-answer-entry-and-form" class="nav-link" data-scroll-target="#answer-entry-and-form">Answer entry and form</a></li>
+  <li><a href="#lists-sets-and-equations" id="toc-lists-sets-and-equations" class="nav-link" data-scroll-target="#lists-sets-and-equations">Lists, sets and equations</a></li>
+  <li><a href="#author-variables-and-helpers" id="toc-author-variables-and-helpers" class="nav-link" data-scroll-target="#author-variables-and-helpers">Author variables and helpers</a></li>
+  <li><a href="#policy-configuration" id="toc-policy-configuration" class="nav-link" data-scroll-target="#policy-configuration">Policy configuration</a></li>
+  <li><a href="#tests-and-evidence" id="toc-tests-and-evidence" class="nav-link" data-scroll-target="#tests-and-evidence">Tests, runtime and contribution</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -200,6 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Authoring and support</h1>
+<p class="subtitle lead">A teaching workflow, followed by the complete authoring reference</p>
 </div>
 
 
@@ -216,20 +257,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="start-with-a-native-export" class="level2">
-<h2 class="anchored" data-anchor-id="start-with-a-native-export">Start with a native export</h2>
-<p>Install STACK SymPy and AI Feedback in your Quarto project, and install SymPy in the Python environment Quarto uses:</p>
+<p>Start with the teaching choices below. The <a href="#for-developers">developer reference</a> collects all question-block options, supported notation and integration details. For matrix questions, see <a href="../docs/matrix-input.html">matrix input</a>; for a basis, a matrix condition or SPD, see <a href="../docs/python-checker-api.html">Python answer tests</a>.</p>
+<section id="for-teachers" class="level2">
+<h2 class="anchored" data-anchor-id="for-teachers">For teachers</h2>
+<section id="start-with-a-native-export" class="level3">
+<h3 class="anchored" data-anchor-id="start-with-a-native-export">Start with a native export</h3>
+<p>Install STACK SymPy in your Quarto project and SymPy in the Python environment that Quarto uses. Add AI Feedback if you want guided hints:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-ai-feedback-context="Start with a native export
-Install STACK SymPy and AI Feedback in your Quarto project, and install SymPy in the Python environment Quarto uses:"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> add Erasmus-CTM/stack-sympy</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> add Erasmus-CTM/ai-feedback</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="st">'sympy==1.13.3'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+Install STACK SymPy in your Quarto project and SymPy in the Python environment that Quarto uses. Add AI Feedback if you want guided hints:"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> add Erasmus-CTM/stack-sympy</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> pip install <span class="st">'sympy==1.13.3'</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> add Erasmus-CTM/ai-feedback</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Add the question filter to <code>_quarto.yml</code>:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-ai-feedback-context="Start with a native export
-Install STACK SymPy and AI Feedback in your Quarto project, and install SymPy in the Python environment Quarto uses:
+Install STACK SymPy in your Quarto project and SymPy in the Python environment that Quarto uses. Add AI Feedback if you want guided hints:
 Add the question filter to _quarto.yml:"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">filters</span><span class="kw">:</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="kw">-</span><span class="at"> stack-sympy</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Use a Moodle STACK export whose root is <code>&lt;quiz&gt;</code> and whose questions use <code>&lt;question type="stack"&gt;</code>. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a <code>stack-question</code> block at its XML path and exact <code>&lt;name&gt;&lt;text&gt;…&lt;/text&gt;&lt;/name&gt;</code>. The filter embeds a selected question and precomputes the requested variants when Quarto renders. Unchanged native XML remains the source of truth and can be imported back into Moodle. Port-only Python tests and resizable matrix settings require adaptation for Moodle; see <a href="../docs/python-answer-tests.html#how-this-extends-vanilla-stack">Python portability</a> and the <a href="../docs/python-checker-api.html">PythonChecker API</a>.</p>
-<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-1" data-stack-feedback="{&quot;context&quot;:{&quot;mode&quot;:&quot;auto&quot;,&quot;refs&quot;:&quot;auto&quot;,&quot;text&quot;:&quot;Start with a native export\nInstall STACK SymPy and AI Feedback in your Quarto project, and install SymPy in the Python environment Quarto uses:\nAdd the question filter to _quarto.yml:\nUse a Moodle STACK export whose root is <quiz> and whose questions use <question type=\&quot;stack\&quot;>. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a stack-question block at its XML path and exact <name><text>…</text></name>. The filter embeds a selected question and precomputes the requested variants when Quarto renders. Unchanged native XML remains the source of truth and can be imported back into Moodle. Port-only Python tests and resizable matrix settings require adaptation for Moodle; see Python portability and the PythonChecker API.&quot;},&quot;language&quot;:&quot;en&quot;,&quot;policySelection&quot;:{&quot;exercise&quot;:&quot;stack-sympy-1&quot;,&quot;name&quot;:&quot;&quot;},&quot;uiLanguage&quot;:&quot;en&quot;}"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option><option value="1">Variant 2</option><option value="2">Variant 3</option></select></label></div><div class="stack-prompt stack-question"><p>Expand and collect like terms: \((x+{5})(x+{3})\).</p><p>Give your answer as a polynomial in \(x\). <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="18" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span> <span class="stack-feedback" data-name="prt1"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run author tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-1","question":{"name":"Expand a product (form-sensitive)","questiontext":"\u003cp\u003eExpand and collect like terms: \\((x+{@a@})(x+{@b@})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). [[input:ans]] [[validation:ans]] [[feedback:prt1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eMultiply each term and collect: \\(x^2+({@a@}+{@b@})x+{@a@}\\cdot{@b@}={@ta@}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"Expansion: (x+a)(x+b) = ta","variables":"a:rand(4)+2;\nb:rand(3)+2;\nta:x^2+(a+b)*x+a*b;","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":18,"strictsyntax":true,"insertstars":1,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"prt1-0-T","feedback":"\u003cp\u003eCorrect: the expression is expanded and collected.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":1,"note":"prt1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.5,"next":-1,"note":"prt1-1-T","feedback":"\u003cp\u003eThis is equivalent, but expand the product and collect like terms for full credit.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"prt1-1-F","feedback":"\u003cp\u003eCheck the middle term and constant term when you multiply the binomials.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"Expanded polynomial","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"2","description":"Equivalent but still factored","inputs":{"ans":"(x+a)*(x+b)"},"expected":{"prt1":{"score":0.5,"penalty":0.1,"note":"prt1-0-F | prt1-1-T"}}},{"testcase":"3","description":"Incorrect middle coefficient","inputs":{"ans":"x^2+(a+b+1)*x+a*b"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F | prt1-1-F"}}}],"deployedseeds":[17,29,47]},"variants":[{"seed":17,"env":{"a":"5","b":"3","ta":"x**2 + 8*x + 15"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{5})(x+{3})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({5}+{3})x+{5}\\cdot{3}={x^{2} + 8 x + 15}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":18,"env":{"a":"3","b":"2","ta":"x**2 + 5*x + 6"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{3})(x+{2})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({3}+{2})x+{3}\\cdot{2}={x^{2} + 5 x + 6}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":19,"env":{"a":"2","b":"4","ta":"x**2 + 6*x + 8"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{2})(x+{4})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({2}+{4})x+{2}\\cdot{4}={x^{2} + 6 x + 8}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
+<p>Export a supported Moodle STACK question as XML and keep it in your project. Use its filename and exact question name in a Quarto block:</p>
+<div class="stack-question-group ai-feedback-ignore"><section class="stack-sympy" data-stack-id="stack-sympy-1" data-stack-feedback="{&quot;context&quot;:{&quot;mode&quot;:&quot;auto&quot;,&quot;refs&quot;:&quot;auto&quot;,&quot;text&quot;:&quot;Start with a native export\nInstall STACK SymPy in your Quarto project and SymPy in the Python environment that Quarto uses. Add AI Feedback if you want guided hints:\nAdd the question filter to _quarto.yml:\nExport a supported Moodle STACK question as XML and keep it in your project. Use its filename and exact question name in a Quarto block:&quot;},&quot;language&quot;:&quot;en&quot;,&quot;policySelection&quot;:{&quot;exercise&quot;:&quot;stack-sympy-1&quot;,&quot;name&quot;:&quot;&quot;},&quot;uiLanguage&quot;:&quot;en&quot;}"><div class="stack-toolbar"><label>Variant <select class="stack-variant" aria-label="Question variant"><option value="0">Variant 1</option><option value="1">Variant 2</option><option value="2">Variant 3</option></select></label></div><div class="stack-prompt stack-question"><p>Expand and collect like terms: \((x+{5})(x+{3})\).</p><p>Give your answer as a polynomial in \(x\). <input class="stack-answer" data-name="ans" aria-label="Answer ans" size="18" autocomplete="off"> <span class="stack-validation" data-name="ans" aria-live="polite"></span> <span class="stack-feedback" data-name="prt1"></span></p></div><div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button><button type="button" class="stack-check" disabled="">Check answer</button><button type="button" class="stack-tests">Run question tests</button></div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden=""></div><script type="application/json" class="stack-sympy-data">{"version":1,"id":"stack-sympy-1","question":{"name":"Expand a product (form-sensitive)","questiontext":"\u003cp\u003eExpand and collect like terms: \\((x+{@a@})(x+{@b@})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). [[input:ans]] [[validation:ans]] [[feedback:prt1]]\u003c/p\u003e","generalfeedback":"\u003cp\u003eMultiply each term and collect: \\(x^2+({@a@}+{@b@})x+{@a@}\\cdot{@b@}={@ta@}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback":"\u003cp\u003e[[feedback:prt1]]\u003c/p\u003e","questionnote":"Expansion: (x+a)(x+b) = ta","variables":"a:rand(4)+2;\nb:rand(3)+2;\nta:x^2+(a+b)*x+a*b;","defaultgrade":1.0,"penalty":0.1,"simplify":true,"assumepositive":false,"assumereal":false,"inputs":[{"name":"ans","type":"algebraic","teacher":"ta","boxsize":18,"strictsyntax":true,"insertstars":1,"forbidwords":[],"forbidfloat":true,"requirelowestterms":false,"checkanswertype":true,"mustverify":true,"showvalidation":true,"syntaxhint":""}],"prts":[{"name":"prt1","value":1.0,"autosimplify":false,"feedbackvariables":"","nodes":[{"name":"0","test":"EqualComAss","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":1.0,"next":-1,"note":"prt1-0-T","feedback":"\u003cp\u003eCorrect: the expression is expanded and collected.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":1,"note":"prt1-0-F","feedback":""}},{"name":"1","test":"AlgEquiv","student":"ans","teacher":"ta","options":"","quiet":false,"true":{"mode":"=","score":0.5,"next":-1,"note":"prt1-1-T","feedback":"\u003cp\u003eThis is equivalent, but expand the product and collect like terms for full credit.\u003c/p\u003e"},"false":{"mode":"=","score":0.0,"next":-1,"note":"prt1-1-F","feedback":"\u003cp\u003eCheck the middle term and constant term when you multiply the binomials.\u003c/p\u003e"}}]}],"qtests":[{"testcase":"1","description":"Expanded polynomial","inputs":{"ans":"ta"},"expected":{"prt1":{"score":1.0,"penalty":0.0,"note":"prt1-0-T"}}},{"testcase":"2","description":"Equivalent but still factored","inputs":{"ans":"(x+a)*(x+b)"},"expected":{"prt1":{"score":0.5,"penalty":0.1,"note":"prt1-0-F | prt1-1-T"}}},{"testcase":"3","description":"Incorrect middle coefficient","inputs":{"ans":"x^2+(a+b+1)*x+a*b"},"expected":{"prt1":{"score":0.0,"penalty":0.1,"note":"prt1-0-F | prt1-1-F"}}}],"deployedseeds":[17,29,47]},"variants":[{"seed":17,"env":{"a":"5","b":"3","ta":"x**2 + 8*x + 15"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{5})(x+{3})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({5}+{3})x+{5}\\cdot{3}={x^{2} + 8 x + 15}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":18,"env":{"a":"3","b":"2","ta":"x**2 + 5*x + 6"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{3})(x+{2})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({3}+{2})x+{3}\\cdot{2}={x^{2} + 5 x + 6}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"},{"seed":19,"env":{"a":"2","b":"4","ta":"x**2 + 6*x + 8"},"question_html":"\u003cp\u003eExpand and collect like terms: \\((x+{2})(x+{4})\\).\u003c/p\u003e\u003cp\u003eGive your answer as a polynomial in \\(x\\). \u003cinput class=\"stack-answer\" data-name=\"ans\" aria-label=\"Answer ans\" size=\"18\" autocomplete=\"off\"\u003e \u003cspan class=\"stack-validation\" data-name=\"ans\" aria-live=\"polite\"\u003e\u003c/span\u003e \u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","generalfeedback_html":"\u003cp\u003eMultiply each term and collect: \\(x^2+({2}+{4})x+{2}\\cdot{4}={x^{2} + 6 x + 8}\\).\u003c/p\u003e\u003cp\u003eA factored expression has the same value, but this task asks for expanded form.\u003c/p\u003e","specificfeedback_html":"\u003cp\u003e\u003cspan class=\"stack-feedback\" data-name=\"prt1\"\u003e\u003c/span\u003e\u003c/p\u003e","questionnote_html":"Expansion: (x+a)(x+b) = ta"}],"review":true}</script></section><div class="stack-source-panels"><details class="stack-source"><summary>Show source</summary><pre><code class="language-markdown">```{.stack-question}
 #| file: ../questions/polynomial-expansion.xml
 #| question: Expand a product (form-sensitive)
 #| seed: 17
@@ -407,43 +451,83 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
   &lt;/question&gt;
 &lt;/quiz&gt;
 </code></pre></details></div></div>
-<p>Run <code>quarto render</code>, then serve the generated site over HTTP. The <a href="https://github.com/Erasmus-CTM/stack-sympy#install-in-a-quarto-project">README</a> also covers local development setup.</p>
-<p>The learner submits in two steps: <strong>Validate answers</strong> parses the current fields and displays the expression form (for example, <code>x+x</code> rather than a simplified <code>2*x</code>), then <strong>Check answer</strong> grades that validated response. Editing any field invalidates the preview, so the learner must validate again. This explicit check mirrors the question input verification setting and helps learners catch syntax errors before grading. The polynomial example sets <code>&lt;insertstars&gt;1&lt;/insertstars&gt;</code>, so <code>x**2+8x+15</code> previews as one sum and receives full credit in its first variant.</p>
-<p>Below a rendered question, <strong>Show source</strong> reveals its authored Quarto fenced block and <strong>Show STACK source</strong> reveals the original XML file contents. Both panels start closed; they are available for inspecting and copying a working example.</p>
-<p>The options are <code>file</code> and <code>question</code> (required), <code>seed</code> (signed integer, default 1), <code>variants</code> (1–20, default 1), <code>review</code> (<code>true</code> or <code>false</code>, default false), and <code>diagnostics</code> (<code>true</code> or <code>false</code>, default false). <code>feedback: true</code> opts a card into the <a href="https://github.com/Erasmus-CTM/ai-feedback">shared AI Feedback extension</a>; cards without it need no AI dependency. Install both extensions in the same project; feedback requires AI Feedback 0.8.0+ and Quarto 1.8.27+. <code>context: auto</code> (default) uses nearby visible prose; <code>context: none</code> omits it; <code>context: id1,id2</code> includes tagged blocks such as <code>::: {#id1 .ai-context}</code> (<code>.ai-feedback-context</code> and <code>.math-exercise-context</code> are shared aliases). <code>feedback-language</code> sets the explanation language (default document <code>lang</code>). <code>feedback-policy</code> selects an existing named policy from <code>ai-feedback.policy-files</code> or page policy files. A stable <code>label</code> targets exercise-specific policy settings; otherwise the card ID is used. The shared mathematics policy (<code>math-exercise</code>) supplies the default hints and is also the YAML integration namespace for STACK cards. A fixed seed reproduces a variant within this implementation. It does not promise the same pseudo-random sequence as Moodle’s Maxima backend.</p>
-<p>Feedback uses a learner’s current answer, visible question text and selected context. A preceding matching <strong>Check answer</strong> can contribute minimal result status, finite score; XML, source panels, teacher answers, qtests, grader configuration, grader feedback messages and answer notes are excluded. It never grades a response or replaces <strong>Validate answers</strong> and <strong>Check answer</strong>. The shared settings panel lets a learner choose copy-prompt mode or configure their own compatible provider; no API key is placed in the page. The same <a href="https://github.com/Erasmus-CTM/ai-feedback/blob/main/docs/feedback-policies.md">explicit teaching policies</a> are inherited across integrations, using <code>math-exercise</code> for STACK’s mathematics policy namespace.</p>
+<p>This page sits in <code>docs/</code>, so its filename starts with <code>../questions/</code>. A page at the project root would use <code>questions/</code>. The three variants provide fresh coefficients; a fixed seed reproduces this port’s choices. It does not reproduce Moodle’s random sequence. Omit <code>feedback: true</code> if you do not need AI hints.</p>
+<p>A learner first presses <strong>Validate answers</strong> to review the interpreted answer, then <strong>Check answer</strong> to receive a mark. Editing an answer requires validation again. <strong>Run question tests</strong> appears when <code>review: true</code> is selected. Below each card, <strong>Show source</strong> and <strong>Show STACK source</strong> provide the Quarto block and question XML for inspection and copying.</p>
 </section>
-<section id="choose-a-teaching-policy" class="level2">
-<h2 class="anchored" data-anchor-id="choose-a-teaching-policy">Choose a teaching policy</h2>
-<p>The shared <code>math-exercise</code> defaults offer four steps, ending with a worked solution. Loading policy definitions does not select them. The example site loads <a href="../feedback/course.yml">feedback/course.yml</a> and explicitly selects its course policy in <code>_quarto.yml</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-ai-feedback-context="Choose a teaching policy
-The shared math-exercise defaults offer four steps, ending with a worked solution. Loading policy definitions does not select them. The example site loads feedback/course.yml and explicitly selects its course policy in _quarto.yml:"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ai-feedback</span><span class="kw">:</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">policy-files</span><span class="kw">:</span><span class="at"> feedback/course.yml</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">project-policy</span><span class="kw">:</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">math-exercise</span><span class="kw">:</span><span class="at"> course-mathematics</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>A policy can inherit those defaults and specialize them by name:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-ai-feedback-context="Choose a teaching policy
-The shared math-exercise defaults offer four steps, ending with a worked solution. Loading policy definitions does not select them. The example site loads feedback/course.yml and explicitly selects its course policy in _quarto.yml:
-A policy can inherit those defaults and specialize them by name:"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># feedback/course.yml</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ai-feedback</span><span class="kw">:</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">policies</span><span class="kw">:</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">course-mathematics</span><span class="kw">:</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">max-words</span><span class="kw">:</span><span class="at"> </span><span class="dv">120</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">reset-on-run</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">brief-mathematics</span><span class="kw">:</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">extends</span><span class="kw">:</span><span class="at"> course-mathematics</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">max-words</span><span class="kw">:</span><span class="at"> </span><span class="dv">90</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">two-step-practice</span><span class="kw">:</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">extends</span><span class="kw">:</span><span class="at"> brief-mathematics</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">steps</span><span class="kw">:</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">step-prompt</span><span class="kw">:</span><span class="at"> Ask one guiding question without giving a formula or answer.</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">step-prompt</span><span class="kw">:</span><span class="at"> Give a concise worked explanation of this task.</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">allow-full-solution</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Select the specialization with <code>#| feedback-policy: two-step-practice</code> on a feedback-enabled STACK block. <code>#| label: rational-practice</code> gives it a stable key for YAML <code>exercises.math-exercise</code> overrides. <code>examples.qmd</code> also selects <code>page-policy: {math-exercise: brief-mathematics}</code> in its front matter. Its other cards inherit four steps; only the selected card replaces the sequence with two. Omitted fields inherit, while a supplied <code>steps</code> list replaces every step and its permissions. <code>base-prompt</code> changes the continuing teaching instructions; <code>step-prompt</code> describes one step. Use neither the retired <code>prompt</code> field nor an authored <code>integrations</code>/<code>defaults</code> section.</p>
-<p>Edits clear stale feedback and Check evidence while preserving hint progress. Check resets progress by default; a selected policy can set <code>reset-on-run: false</code> to preserve it. Selecting a different variant always restarts progress. Feedback collects a snapshot without running validation, grading, or authored tests.</p>
+<section id="what-the-adapter-checks" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-adapter-checks">Choose what counts as correct</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Teaching task</th>
+<th>Answer test or feature</th>
+<th>Where to start</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Equivalent expressions</td>
+<td><code>AlgEquiv</code></td>
+<td><a href="../examples.html#equivalent-rational-expression">Rational expressions</a>; state domain restrictions in the prompt.</td>
+</tr>
+<tr class="even">
+<td>Expanded, factorized or fractional form</td>
+<td><code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, <code>LowestTerms</code></td>
+<td><a href="../index.html#try-a-question">Form-sensitive practice</a> and the <a href="#answer-entry-and-form">form reference</a>. <code>LowestTerms</code> checks form only; pair it with a value check when value matters.</td>
+</tr>
+<tr class="odd">
+<td>Approximate measurements or written precision</td>
+<td><code>NumAbsolute</code>, <code>NumRelative</code>, <code>NumDecPlaces</code></td>
+<td><a href="../examples.html#three-numerical-checks">Numerical checks</a>.</td>
+</tr>
+<tr class="even">
+<td>Lists, sets and nested collections</td>
+<td><code>AlgEquiv</code>, <code>Sets</code>, <code>SameType</code>, <code>EqualComAss</code></td>
+<td><a href="../examples.html#finite-lists-and-sets">Collection examples</a>; decide whether order and repetitions matter.</td>
+</tr>
+<tr class="odd">
+<td>Boolean expressions and polynomial equations</td>
+<td><code>AlgEquiv</code></td>
+<td><a href="../examples.html#boolean-equivalence">Boolean equivalence</a> and <a href="../examples.html#zero-product-equations">zero-product equations</a>.</td>
+</tr>
+<tr class="even">
+<td>A particular matrix</td>
+<td>Matrix input with <code>AlgEquiv</code>, <code>SameType</code> or <code>EqualComAss</code></td>
+<td><a href="../docs/matrix-input.html">Matrix input and grading</a>.</td>
+</tr>
+<tr class="odd">
+<td>Any basis of a matrix’s null, column or row space</td>
+<td><code>IsBasis</code></td>
+<td><a href="../docs/python-checker-api.html#basis-questions-use-the-matrix-in-the-question">Basis questions</a>. Supply the original matrix and choose the space.</td>
+</tr>
+<tr class="even">
+<td>A matrix with stated properties</td>
+<td><code>MatrixProperty</code> or a filename-selected <code>PythonChecker</code></td>
+<td><a href="../docs/python-checker-api.html#matrix-conditions-and-partial-credit">Matrix conditions</a>, including the <a href="../docs/python-checker-api.html#author-the-spd-checker">SPD walkthrough</a>.</td>
+</tr>
+<tr class="odd">
+<td>Another mathematical rule</td>
+<td><code>PythonChecker</code></td>
+<td><a href="../docs/python-checker-api.html#for-developers">Custom checker API</a>.</td>
+</tr>
+<tr class="even">
+<td>Partial credit and targeted feedback</td>
+<td>Weighted response trees (PRTs)</td>
+<td><a href="../examples.html#three-numerical-checks">Three numerical checks</a> and <a href="../examples.html#find-a-nonidentity-matrix-with-determinant-one">determinant-one conditions</a>.</td>
+</tr>
+<tr class="odd">
+<td>Guided hints</td>
+<td>Optional AI Feedback</td>
+<td><a href="#choose-a-teaching-policy">Choose a teaching policy</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>The <a href="../corpus.html">question corpus</a> shows unchanged imports and the features that still need adaptation. The <a href="../compliance/semantics.html#author-attention">detailed semantics for STACK authors</a> explain important differences from Moodle. This is a defined subset of STACK; unsupported authoring features stop the build instead of receiving an invented grading rule.</p>
 </section>
-<section id="what-the-adapter-checks" class="level2">
-<h2 class="anchored" data-anchor-id="what-the-adapter-checks">What the adapter checks</h2>
+<section id="choose-a-teaching-policy" class="level3">
+<h3 class="anchored" data-anchor-id="choose-a-teaching-policy">Choose a teaching policy</h3>
+<p>AI Feedback gives guided questions, concepts, procedures and a worked solution. It supports <strong>copy-prompt mode</strong> and a learner-configured provider. Deterministic answer tests still award the marks; AI Feedback does not grade the response.</p>
+<p>Choose the material that should accompany a request for help:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 50%">
@@ -451,60 +535,281 @@ A policy can inherit those defaults and specialize them by name:"><pre class="so
 </colgroup>
 <thead>
 <tr class="header">
-<th>Supported here</th>
-<th>Scope</th>
+<th>Context option</th>
+<th>What the feedback sees</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td>Source</td>
-<td>Moodle STACK XML <code>&lt;quiz&gt;</code> with named STACK questions; category and description entries are skipped.</td>
+<td><code>context: auto</code></td>
+<td>Visible teaching prose in the preceding section; this is the default.</td>
 </tr>
 <tr class="even">
-<td>Inputs</td>
-<td>Scalar algebraic, finite nested list/set and numerical text answers, plus bounded matrix editors, with strict syntax and <code>&lt;insertstars&gt;0&lt;/insertstars&gt;</code> or <code>&lt;insertstars&gt;1&lt;/insertstars&gt;</code>. Mode 0 requires <code>*</code>; mode 1 also accepts adjacent <code>2x</code>, <code>2(x+1)</code>, <code>(x+1)(x-1)</code>, and <code>(x+1)x</code>. Both keep <code>xy</code> as one symbol; whitespace alone never means multiplication. Other insertstars modes fail at import.</td>
+<td><code>context: expansion-hint</code></td>
+<td>The teaching block tagged with that ID. Use comma-separated IDs for several blocks.</td>
 </tr>
 <tr class="odd">
-<td>Variables</td>
-<td>A small, safely parsed Maxima-like assignment and arithmetic subset, including exact matrix values in <code>matrix([a,b],[c,d])</code> syntax, including <code>rand(n)</code> for seeded variants and two-integer <code>lcm(a,b)</code>. <code>ratsimp</code> preserves a common-denominator form for supported scalar expressions.</td>
-</tr>
-<tr class="even">
-<td>Scalar functions</td>
-<td>Elementary functions include <code>ln</code> as an alias for <code>log</code>, bounded rational-polynomial <code>gcd(a,b)</code>, and real scalar <code>mod(a,b)</code>, including Maxima’s <code>mod(x,0)=x</code>. Author expressions also support <code>num</code>, <code>denom</code>, <code>ev(expr)</code>, and <code>ev(expr,simp)</code>. Symbolic complex logarithms requiring branch proofs remain unsupported.</td>
-</tr>
-<tr class="odd">
-<td>Native-compatible tests</td>
-<td><code>AlgEquiv</code>, <code>Sets</code>, <code>SameType</code>, <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, <code>LowestTerms</code>, <code>NumAbsolute</code>, <code>NumRelative</code>, <code>NumDecPlaces</code>. The four form-sensitive tests require <code>sans</code> to name an input directly. <code>FacForm</code> also requires one polynomial variable in <code>&lt;testoptions&gt;</code> (a symbol or an author alias resolving to one); it checks equivalence and factorization of univariate polynomials over the rationals. Blank or syntactically malformed absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist.</td>
-</tr>
-<tr class="even">
-<td>PRTs</td>
-<td>Acyclic node graphs with <code>=</code>, <code>+</code>, and <code>−</code> score operations, weighted response trees, branch feedback and notes.</td>
-</tr>
-<tr class="odd">
-<td>Author tests</td>
-<td>Native <code>&lt;qtest&gt;</code> inputs and expected PRT score, penalty, and answer note.</td>
+<td><code>context: none</code></td>
+<td>The question and current response, without nearby teaching prose.</td>
 </tr>
 </tbody>
 </table>
-<p>This is a deliberately limited evaluator, not a replacement for Moodle STACK or its Maxima CAS. <code>questionsimplify=0</code> (<code>simp:false</code>) is accepted when any <code>EqualComAss</code> teacher form can be preserved after freezing author variables; otherwise the build rejects it. In this mode, supported <code>{@expression@}</code> CASText also preserves authored arithmetic form and groups substitutions inside existing TeX math. <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, and <code>LowestTerms</code> require a direct input name in <code>sans</code> to preserve the student’s written form. <code>FacForm</code> considers the written factors, including common integer content, and rejects expressions outside its bounded polynomial subset or a missing/non-symbol variable option. <code>SingleFrac</code> requires an equivalent single written fraction (or equivalent atomic answer) and excludes divisions nested in its numerator or denominator. <code>LowestTerms</code> checks reducible written integer fractions and supported denominator restrictions; it does not compare the teacher expression or factor symbolic polynomials. Build-time validation rejects unsupported author features rather than silently grading them differently. Symbolic equivalence uses SymPy transformations rather than randomized substitution. Decimal-place grading reads the literal answer so a trailing zero is meaningful. Native qtest answer notes are checked using STACK-style ordered subsequence matching, including anchored beginning/end notes and <code>NULL</code>: a terminal note can pass even if earlier PRT nodes contributed notes. The review interface and qtests help an author inspect the selected seeds, but they do not establish complete parity with all STACK configurations.</p>
-<p>Finite collections use an <code>algebraic</code> input: square brackets for lists, braces for sets, including nested mixtures and empty collections. Leaves must be scalar expressions. Limits are 32 entries per container, six levels and 128 collection-tree nodes. <code>AlgEquiv</code> recurses by list position and compares normalized set members; <code>Sets</code> explains outer duplicate and missing/extra entries. <code>EqualComAss</code> preserves written arithmetic, list order, and set multiplicity without flattening sets. Written previews display the entered structure. Use direct input names for form tests; held teacher/qtest aliases fail the build if freezing loses their written form.</p>
-<p><code>SameType</code> and <code>checkanswertype=1</code> follow STACK applicability: wrong-length lists still have the same type, equal-length lists recursively check member types, and any two sets have the same type. They do not replace an equality test or validate every nested set member’s shape. Frozen collection variables must use exact fractions rather than decimal literals.</p>
-<p>Decimals anywhere inside a set (including a list within a set) are unsupported; use exact fractions. Direct list answers retain literal scalar decimal comparisons. Collection checks require <code>sans</code> to name the learner input directly: feedback aliases and derived learner collections lose literal precision when serialized. Teacher collections and helper operations must use author values, and transitive decimal aliases are rejected in collection/helper expressions, qtests and CASText.</p>
-<p>Decimal list leaves support literal constant arithmetic with integer powers only. Decimal-bearing function calls, symbolic coefficients and transformed collections such as <code>ev([0.1],simp)</code> are rejected; use exact fractions for these expressions. This restriction preserves the decimal spelling and operations needed by native binary64 comparison.</p>
-<p>Author-only finite helpers are <code>set</code>, <code>setify</code>, <code>listify</code>, <code>union</code>, <code>intersection</code>, <code>setdifference</code>, <code>member</code>, <code>subsetp</code> and <code>cardinality</code>. They work in simplified question variables, with bounded input/output. <code>listify(set)</code> supports rational scalar members in numeric order; <code>listify(list)</code> keeps the list’s order and repetitions. Freeze helper results before using <code>Sets</code>/<code>EqualComAss</code>; direct helper calls in those held tests, helper feedback variables and <code>questionsimplify=0</code> helper calls are unsupported. Learners enter collection literals. See the <a href="../examples.html#nested-collections-and-written-form">nested</a> and <a href="../examples.html#finite-author-helpers">author-helper examples</a>, and the <a href="../compliance/semantics.html#finite-sets">normalization differences</a>.</p>
-<p>CASText also renders a scalar equality such as <code>{@p=ta@}</code> as an equation for display. <code>AlgEquiv</code> additionally supports bounded polynomial equation inputs and disjunctions, with root multiplicity retained. For example, <code>a=0 or b=0</code> matches <code>a*b=0</code>, while <code>a^3*b^3=0</code> does not. It also supports pure Boolean expressions and elementary hyperbolic functions such as <code>cosh</code> and <code>tanh</code>. See the <a href="../examples.html#hyperbolic-equivalence">examples</a> and the README for the precise limits.</p>
+<p>For example, tag a short explanation with <code>.ai-context</code> and reference it from the question:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-ai-feedback-context="Choose a teaching policy
+AI Feedback gives guided questions, concepts, procedures and a worked solution. It supports copy-prompt mode and a learner-configured provider. Deterministic answer tests still award the marks; AI Feedback does not grade the response.
+Choose the material that should accompany a request for help:
+Context optionWhat the feedback seescontext: autoVisible teaching prose in the preceding section; this is the default.context: expansion-hintThe teaching block tagged with that ID. Use comma-separated IDs for several blocks.context: noneThe question and current response, without nearby teaching prose.
+For example, tag a short explanation with .ai-context and reference it from the question:"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>::: {#expansion-hint .ai-context}</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>Distributivity gives $a(b+c)=ab+ac$.</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{.stack-question}</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="in">#| file: questions/polynomial-expansion.xml</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="in">#| question: Expand a product (form-sensitive)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="in">#| feedback: true</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="in">#| context: expansion-hint</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>feedback-language</code> chooses the explanation language; otherwise the document’s language is used. A named <code>feedback-policy</code> can change the sequence or word limit. The <a href="../examples.html#equivalent-rational-expression">rational-expression example</a> uses a guiding question followed by a worked explanation. The <a href="#policy-configuration">policy configuration reference</a> explains how to define and select these policies.</p>
+<p>Feedback uses the current answer, visible question and selected context. A matching answer check may supply its status and score. Teacher answers, source panels, question tests, Python code and detailed grader messages are excluded. Provider keys are not embedded in the page. Editing removes stale feedback and check evidence; choosing another variant restarts the hints.</p>
 </section>
-<section id="validate-and-publish" class="level2">
-<h2 class="anchored" data-anchor-id="validate-and-publish">Validate and publish</h2>
-<p>For an extension-only installation, install <code>sympy==1.13.3</code> in the Python environment used by Quarto. Run <code>python -m stack_sympy.cli test --file questions/polynomial-expansion.xml</code> after placing <code>_extensions/stack-sympy</code> on <code>PYTHONPATH</code>, then render with <code>quarto render</code>. Serve the <code>_site</code> directory through an HTTP server, including locally: <code>python -m http.server --directory _site 8000</code>. Browser grading loads Pyodide and SymPy; its first use downloads runtime packages, so it needs network access. Review the generated question and run its qtests before publishing any assessment. If a source uses features outside the supported subset, <code>#| diagnostics: true</code> displays the location of a build error in the page during authoring; remove it for production so unsupported questions fail the render.</p>
-<p>See <a href="../docs/matrix-input.html">bounded matrix inputs</a> for fixed and learner-selected dimensions, raw-cell handling and the pinned standalone editor API.</p>
+<section id="validate-and-publish" class="level3">
+<h3 class="anchored" data-anchor-id="validate-and-publish">Validate and publish</h3>
+<p>Keep tests for alternate correct answers, common mistakes and the intended partial credit. Run the question’s author tests, render the page, and review its variants before publishing:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-ai-feedback-context="Validate and publish
+Keep tests for alternate correct answers, common mistakes and the intended partial credit. Run the question’s author tests, render the page, and review its variants before publishing:"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">PYTHONPATH</span><span class="op">=</span>_extensions/stack-sympy <span class="ex">python</span> <span class="at">-m</span> stack_sympy.cli test <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--file</span> questions/polynomial-expansion.xml</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> http.server <span class="at">--directory</span> _site 8000</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Serve the page over HTTP, including locally. Opening an HTML file directly is not a reliable way to run browser workers. The first answer check downloads Pyodide and SymPy, so learners need network access. Grading then runs in the browser. The page does not provide Moodle’s attempt history or persistence.</p>
+<p>While adapting a question, <code>diagnostics: true</code> displays a build problem in the page. Remove that option before publication so an unsupported question stops the build. Compare representative responses in Moodle when native STACK compatibility matters for your assessment.</p>
 </section>
-<section id="extend-the-python-port" class="level2">
-<h2 class="anchored" data-anchor-id="extend-the-python-port">Extend the Python port</h2>
-<p>The port also supports explicitly named Python-only answer tests. <code>MatrixProperty</code> checks integer entries, a determinant, or identity; three ordinary PRTs preserve the determinant-one example’s requirement-level partial credit. <code>IsBasis</code> accepts any exact rational basis for a reference space, while keeping the existing XML inputs and true/false PRT branches. See <a href="../docs/python-answer-tests.html">Python answer tests</a> for the contract, the source helper, worked examples, and the difference from vanilla STACK XML portability.</p>
-<p>For author-supplied predicates without editing the extension registry, use the <a href="../docs/python-checker-api.html">PythonChecker v1 API</a>. Select a trusted module in the Quarto block or CLI; XML chooses a named predicate, and PRTs retain scoring.</p>
+<section id="extend-the-python-port" class="level3">
+<h3 class="anchored" data-anchor-id="extend-the-python-port">Questions with many correct answers</h3>
+<p>An input model is one valid response, not a list of everything a learner may submit. Use <code>IsBasis</code> for any basis, <code>MatrixProperty</code> for its three built-in conditions, or <code>PythonChecker</code> for a custom condition. The normal response-tree branches still decide the credit. The <a href="../docs/python-checker-api.html">Python answer-test guide</a> contains the teacher workflow and a complete developer walkthrough for SPD.</p>
+</section>
+</section>
+<section id="for-developers" class="level2">
+<h2 class="anchored" data-anchor-id="for-developers">For developers</h2>
+<section id="question-block-options" class="level3">
+<h3 class="anchored" data-anchor-id="question-block-options">Question-block options</h3>
+<p>All options below are written as <code>#| key: value</code> inside a <code>.stack-question</code> block. File paths are relative to the containing <code>.qmd</code> page.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option</th>
+<th>Default or requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>file</code></td>
+<td>Required</td>
+<td>XML filename.</td>
+</tr>
+<tr class="even">
+<td><code>question</code></td>
+<td>Required</td>
+<td>Exact XML question name.</td>
+</tr>
+<tr class="odd">
+<td><code>seed</code></td>
+<td><code>1</code>; signed 32-bit integer</td>
+<td>Starting seed for repeatable variants.</td>
+</tr>
+<tr class="even">
+<td><code>variants</code></td>
+<td><code>1</code>; from 1 to 20</td>
+<td>Number of variants prepared at build time.</td>
+</tr>
+<tr class="odd">
+<td><code>review</code></td>
+<td><code>false</code></td>
+<td>Show <strong>Run question tests</strong> for the selected variant.</td>
+</tr>
+<tr class="even">
+<td><code>diagnostics</code></td>
+<td><code>false</code></td>
+<td>Display build errors while authoring.</td>
+</tr>
+<tr class="odd">
+<td><code>feedback</code></td>
+<td><code>false</code></td>
+<td>Enable the separately installed AI Feedback extension.</td>
+</tr>
+<tr class="even">
+<td><code>context</code></td>
+<td><code>auto</code></td>
+<td>Nearby prose, <code>none</code>, or comma-separated context IDs.</td>
+</tr>
+<tr class="odd">
+<td><code>feedback-language</code></td>
+<td>Document <code>lang</code></td>
+<td>Language for AI explanations.</td>
+</tr>
+<tr class="even">
+<td><code>feedback-policy</code></td>
+<td>Inherited policy</td>
+<td>Name of a policy loaded by the shared feedback extension.</td>
+</tr>
+<tr class="odd">
+<td><code>label</code></td>
+<td>Generated card ID</td>
+<td>Stable exercise key for policy overrides. A Quarto block ID also identifies a card.</td>
+</tr>
+<tr class="even">
+<td><code>python-checkers</code></td>
+<td>Omitted</td>
+<td>Python filename read during the build; register named functions in <code>CHECKERS</code>. No source manifest is required.</td>
+</tr>
+</tbody>
+</table>
+<p>The base extension requires Python 3.11+, SymPy 1.13.3, Quarto 1.4+ and HTML output with JavaScript. AI Feedback requires version 0.8.0+ of that extension and Quarto 1.8.27+. Set <code>STACK_SYMPY_PYTHON</code> to the Python interpreter to use when Quarto’s default interpreter is not the required environment.</p>
+</section>
+<section id="input-and-xml-reference" class="level3">
+<h3 class="anchored" data-anchor-id="input-and-xml-reference">Input and XML reference</h3>
+<p>The source is a Moodle STACK <code>&lt;quiz&gt;</code> containing named <code>&lt;question type="stack"&gt;</code> entries. Category and description entries are skipped. Retain inputs, PRTs, deployed seeds and <code>&lt;qtest&gt;</code> cases. Unsupported fields and HTML/CASText fail with a question-specific location.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>XML input setting</th>
+<th>Handling</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>type</code></td>
+<td><code>algebraic</code>, scalar <code>numerical</code>, or rectangular <code>matrix</code>.</td>
+</tr>
+<tr class="even">
+<td><code>tans</code></td>
+<td>The input’s model answer. A PRT node’s <code>tans</code> is a separate test argument.</td>
+</tr>
+<tr class="odd">
+<td><code>strictsyntax</code>, <code>insertstars</code></td>
+<td>Strict syntax is required. Insertion mode <code>0</code> requires explicit <code>*</code>; mode <code>1</code> also accepts adjacent products.</td>
+</tr>
+<tr class="even">
+<td><code>forbidwords</code>, <code>forbidfloat</code></td>
+<td>Reject configured words or decimal literals.</td>
+</tr>
+<tr class="odd">
+<td><code>requirelowestterms</code></td>
+<td>Reject reducible written integer fractions during validation.</td>
+</tr>
+<tr class="even">
+<td><code>checkanswertype</code></td>
+<td>Check the supported STACK applicability/type rule; this is not a full shape or equality check.</td>
+</tr>
+<tr class="odd">
+<td><code>mustverify</code>, <code>showvalidation</code></td>
+<td>Verification metadata and preview visibility are retained; this UI always requires validation before grading. Supported visibility values are <code>0</code>, <code>1</code>, <code>3</code>.</td>
+</tr>
+<tr class="even">
+<td><code>syntaxhint</code>, <code>boxsize</code></td>
+<td>Parse the authored hint and size text fields within the supported limits.</td>
+</tr>
+<tr class="odd">
+<td><code>matrix</code></td>
+<td>Optional fixed/resizable dimension settings; see <a href="../docs/matrix-input.html#for-developers">matrix input</a>.</td>
+</tr>
+</tbody>
+</table>
+<p><code>allowwords</code> and input <code>options</code> must be empty; nondefault syntax attributes and other insertion modes are unsupported. Question-level <code>assumereal</code> and <code>assumepositive</code> affect symbolic assumptions. <code>questionsimplify=0</code> preserves supported written forms when they survive variant preparation; unsupported held expressions fail clearly.</p>
+<p>CASText supports <code>{@expression@}</code> for scalars, collections and matrices, and <code>{@left=right@}</code> for a displayed scalar equality. The placeholders <code>[[input:name]]</code>, <code>[[validation:name]]</code> and <code>[[feedback:name]]</code> connect the question text to inputs and response trees. HTML is sanitized. This does not provide arbitrary Maxima evaluation or all STACK text directives.</p>
+</section>
+<section id="answer-entry-and-form" class="level3">
+<h3 class="anchored" data-anchor-id="answer-entry-and-form">Answer entry and form</h3>
+<p>Supported scalar notation includes arithmetic <code>+ - * / ^</code> (also <code>**</code>), parentheses, symbols and the constants <code>%pi</code>, <code>%e</code>, <code>%i</code>. Functions are <code>sqrt</code>, <code>sin</code>, <code>cos</code>, <code>tan</code>, <code>sec</code>, <code>csc</code>, <code>cot</code>, <code>sinh</code>, <code>cosh</code>, <code>tanh</code>, <code>sech</code>, <code>csch</code>, <code>coth</code>, <code>exp</code>, <code>log</code>, <code>abs</code>, rational-polynomial <code>gcd</code> and real scalar <code>mod</code>. Aliases are <code>ln</code>, <code>cosec</code>, <code>cosech</code>. <code>mod(x,0)=x</code> follows Maxima’s convention. With insertion mode <code>1</code>, <code>2x</code>, <code>2(x+1)</code> and <code>(x+1)(x-1)</code> are products; <code>xy</code> remains one symbol and spaces alone never imply multiplication.</p>
+<p>Form tests <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, <code>LowestTerms</code> require a direct input name in <code>sans</code>. <code>EqualComAss</code> preserves structure up to commutative and associative reordering. <code>FacForm</code> requires one polynomial variable in <code>testoptions</code> and handles univariate rational polynomials. <code>SingleFrac</code> checks an equivalent single written fraction or atomic answer. <code>LowestTerms</code> checks written integer fractions and supported denominator restrictions, without comparing the teacher value or cancelling symbolic polynomial factors.</p>
+<p><code>NumAbsolute</code> and <code>NumRelative</code> use the configured tolerance; omitted or syntactically malformed options default to <code>0.05</code>. <code>NumDecPlaces</code> requires an explicit count from 1 to 50 and checks trailing zeros as written precision. Use a numerical answer test for an approximate measurement rather than treating algebraic equivalence as a tolerance test.</p>
+</section>
+<section id="lists-sets-and-equations" class="level3">
+<h3 class="anchored" data-anchor-id="lists-sets-and-equations">Lists, sets and equations</h3>
+<p>Lists use <code>[...]</code>; sets use <code>{...}</code>. Both may nest and be empty. Limits are 32 entries per container, six collection levels and 128 total collection nodes, with scalar expression leaves. List comparison is ordered. Set comparison normalizes members without a general proof of every possible scalar identity; see <a href="../compliance/semantics.html#finite-sets">set conventions</a>. <code>Sets</code> explains outer duplicates and missing/extra members. <code>EqualComAss</code> retains list order, nested boundaries and repeated set entries. <code>SameType</code> follows applicability: two sets have the same type, and different-length lists can have the same type. It does not establish equality.</p>
+<p>Use exact fractions in sets and prepared author collections. Direct decimal list entries have narrower support: literal constant arithmetic with integer powers works; decimal-bearing functions, symbolic terms, transformed collections and transitive author aliases do not. Collection tests require a direct learner input, preserving the literal arithmetic used by the comparison.</p>
+<p><code>AlgEquiv</code> also supports Boolean constants and <code>and</code>, <code>or</code>, <code>not</code>, <code>implies</code>, <code>xor</code>, <code>xnor</code>, with <code>nounand</code>, <code>nounor</code>, <code>nounnot</code> aliases and at most eight Boolean variables. Supported polynomial equations and their disjunctions use a product-of-residuals rule: <code>a=0 or b=0</code> matches <code>a*b=0</code>. Root multiplicity is retained. Conjunctions/negations of equations, variable denominators and mixtures of equations with Boolean propositions are unsupported. Principal complex roots and logarithms require attention to their domains; the <a href="../compliance/semantics.html">conventions reference</a> records the known differences and proof limits.</p>
+</section>
+<section id="author-variables-and-helpers" class="level3">
+<h3 class="anchored" data-anchor-id="author-variables-and-helpers">Author variables and helpers</h3>
+<p>Write assignments as <code>name:expression;</code>; list indexing is 1-based. In addition to the scalar functions above, authors can use:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Purpose</th>
+<th>Supported helpers</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Variants</td>
+<td><code>rand</code>, <code>rand_with_step</code>.</td>
+</tr>
+<tr class="even">
+<td>Scalar algebra/calculus</td>
+<td><code>diff</code>, <code>expand</code>, <code>factor</code>, <code>ratsimp</code>, <code>cancel</code>, <code>ev(expr)</code>, <code>ev(expr,simp)</code>, <code>num</code>, <code>denom</code>, integer <code>lcm</code>.</td>
+</tr>
+<tr class="odd">
+<td>Decimal/significant-figure display</td>
+<td><code>decimalplaces</code>, <code>dispdp</code>, <code>displaydp</code>, <code>significantfigures</code>, <code>dispsf</code>.</td>
+</tr>
+<tr class="even">
+<td>Finite collections</td>
+<td><code>set</code>, <code>setify</code>, <code>listify</code>, <code>union</code>, <code>intersection</code>, <code>setdifference</code>, <code>member</code>, <code>subsetp</code>, <code>cardinality</code>.</td>
+</tr>
+<tr class="odd">
+<td>Model basis generation</td>
+<td><code>nullspace_basis</code>, <code>columnspace_basis</code>, <code>rowspace_basis</code>. The basis checker still receives the original matrix.</td>
+</tr>
+</tbody>
+</table>
+<p><code>ratsimp</code> preserves a supported common-denominator form. <code>listify(list)</code> keeps order; sorting a set with <code>listify</code> supports rational scalar members only. Finite helpers require normal simplification and exact fractions. Prepare their results in question variables before using form-sensitive collection tests; helper feedback variables and held helper execution are unsupported. <code>float</code> is recognized, but floating-point author values cannot be stored in prepared variants and are rejected. Learners cannot call author-only helpers.</p>
+</section>
+<section id="policy-configuration" class="level3">
+<h3 class="anchored" data-anchor-id="policy-configuration">Policy configuration</h3>
+<p>Loading definitions with <code>policy-files</code> or <code>page-policy-files</code> does not select a policy. Select <code>project-policy</code> or <code>page-policy</code> explicitly; STACK uses the shared <code>math-exercise</code> policy namespace. This site’s configuration is:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-ai-feedback-context="Policy configuration
+Loading definitions with policy-files or page-policy-files does not select a policy. Select project-policy or page-policy explicitly; STACK uses the shared math-exercise policy namespace. This site’s configuration is:"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ai-feedback</span><span class="kw">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">policy-files</span><span class="kw">:</span><span class="at"> feedback/course.yml</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">project-policy</span><span class="kw">:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">math-exercise</span><span class="kw">:</span><span class="at"> course-mathematics</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A named policy can inherit settings and replace its hint sequence:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-ai-feedback-context="Policy configuration
+Loading definitions with policy-files or page-policy-files does not select a policy. Select project-policy or page-policy explicitly; STACK uses the shared math-exercise policy namespace. This site’s configuration is:
+A named policy can inherit settings and replace its hint sequence:"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ai-feedback</span><span class="kw">:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">policies</span><span class="kw">:</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">course-mathematics</span><span class="kw">:</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">max-words</span><span class="kw">:</span><span class="at"> </span><span class="dv">120</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">reset-on-run</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">brief-mathematics</span><span class="kw">:</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">extends</span><span class="kw">:</span><span class="at"> course-mathematics</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">max-words</span><span class="kw">:</span><span class="at"> </span><span class="dv">90</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">two-step-practice</span><span class="kw">:</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">extends</span><span class="kw">:</span><span class="at"> brief-mathematics</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">steps</span><span class="kw">:</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">step-prompt</span><span class="kw">:</span><span class="at"> Ask one guiding question without giving a formula or answer.</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="kw">-</span><span class="at"> </span><span class="fu">step-prompt</span><span class="kw">:</span><span class="at"> Give a concise worked explanation of this task.</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="at">          </span><span class="fu">allow-full-solution</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Place this definition in a policy YAML file and select <code>feedback-policy: two-step-practice</code> on a card. A stable <code>label</code> targets <code>exercises.math-exercise</code> overrides. The policy resolver applies defaults, project/page selections, exercise overrides, the selected policy and its ancestry, then the current step. <code>steps</code> replaces the inherited list; <code>base-prompt</code> supplies ongoing instructions and <code>step-prompt</code> one step. The retired <code>prompt</code>, inline <code>integrations</code> and inline <code>defaults</code> settings are rejected. See the <a href="https://github.com/Erasmus-CTM/ai-feedback/blob/main/docs/feedback-policies.md">shared policy reference</a>.</p>
+<p>Edits cancel stale responses and clear grading evidence while retaining hint progress. Check resets hints by default; <code>reset-on-run: false</code> preserves progress. Changing variants always resets hints. Only a displayed reply or a generated copy prompt advances the step. <code>.ai-feedback-context</code> and <code>.math-exercise-context</code> are aliases of <code>.ai-context</code>. Explicit <code>jsxgraph:diagram-id</code> references can include visual context through the shared extension; diagrams are not collected implicitly.</p>
+</section>
+<section id="tests-and-evidence" class="level3">
+<h3 class="anchored" data-anchor-id="tests-and-evidence">Tests, runtime and contribution</h3>
+<p>PRTs are acyclic response-tree graphs with <code>=</code>, <code>+</code>, <code>-</code> branch score operations, feedback, notes and weighted aggregation. Branch-specific penalties are not supported. Native <code>&lt;qtest&gt;</code> cases check scores, initial-attempt penalty and ordered answer notes, including anchored notes and <code>NULL</code>. The browser has no Moodle attempt state. For custom predicates, also select the checker filename on CLI tests; see the <a href="../docs/python-checker-api.html#for-developers">Python guide</a>.</p>
+<p>The same Python core runs locally and in a Pyodide worker. Quarto prepares variants at build time; the worker validates, grades and replays tests. A worker timeout can stop runaway grading. The <a href="../compliance/">native comparison</a> and <a href="../compliance/port-regressions.html">project regression report</a> provide separate evidence, not a blanket compatibility claim. These reports are generated by CI; a normal <code>quarto render</code> does not rerun their mathematical comparisons.</p>
+<p>For a source checkout, install <code>requirements-dev.txt</code>, run <code>PYTHONPATH=_extensions/stack-sympy python -m pytest -q tests</code>, check the runtime bundle with <code>python scripts/bundle_runtime.py --check</code>, and consult the <a href="https://github.com/Erasmus-CTM/stack-sympy#design-and-contribution">development guide</a> for browser/native checks. Include a minimal XML question and its qtests when reporting a grading issue. General matrix arithmetic, inequalities, units, arbitrary Maxima scripts and Moodle’s full attempt workflow remain unsupported.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -912,7 +1217,7 @@ A policy can inherit those defaults and specialize them by name:"><pre class="so
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>STACK SymPy · a bounded, inspectable STACK subset for static Quarto pages</p>
+<p>STACK SymPy · interactive practice for Quarto teaching pages</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

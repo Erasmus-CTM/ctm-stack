@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Bounded matrices – STACK SymPy</title>
+<title>Matrix input and grading – STACK SymPy</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,6 +104,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -130,15 +159,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../examples.html"> 
-<span class="menu-text">More examples</span></a>
+<span class="menu-text">Worked questions</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../corpus.html"> 
 <span class="menu-text">Question corpus</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-authoring" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Authoring</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-authoring">    
+        <li>
+    <a class="dropdown-item" href="../docs/authoring.html">
+ <span class="dropdown-text">Teacher guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../docs/matrix-input.html">
+ <span class="dropdown-text">Matrix input and grading</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../docs/python-checker-api.html#author-the-spd-checker">
+ <span class="dropdown-text">SPD checker walkthrough</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../docs/authoring.html#for-developers">
+ <span class="dropdown-text">Developer reference</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
-    <a class="nav-link" href="../docs/authoring.html"> 
-<span class="menu-text">Authoring guide</span></a>
+    <a class="nav-link" href="../docs/python-checker-api.html"> 
+<span class="menu-text">Python answer tests</span></a>
   </li>  
   <li class="nav-item dropdown ">
     <a class="nav-link dropdown-toggle" href="#" id="nav-menu-compatibility" role="link" data-bs-toggle="dropdown" aria-expanded="false">
@@ -152,6 +204,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li>
     <a class="dropdown-item" href="../compliance/port-regressions.html">
  <span class="dropdown-text">Port regressions</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../compliance/semantics.html">
+ <span class="dropdown-text">Semantics for STACK authors</span></a>
   </li>  
     </ul>
   </li>
@@ -178,7 +234,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#decisions-for-a-question-author" id="toc-decisions-for-a-question-author" class="nav-link active" data-scroll-target="#decisions-for-a-question-author">Decisions for a question author</a></li>
+  <li><a href="#for-teachers" id="toc-for-teachers" class="nav-link active" data-scroll-target="#for-teachers">For teachers</a>
+  <ul class="collapse">
+  <li><a href="#decisions-for-a-question-author" id="toc-decisions-for-a-question-author" class="nav-link" data-scroll-target="#decisions-for-a-question-author">Decisions for a question author</a></li>
+  <li><a href="#what-learners-see" id="toc-what-learners-see" class="nav-link" data-scroll-target="#what-learners-see">What learners see</a></li>
+  </ul></li>
+  <li><a href="#for-developers" id="toc-for-developers" class="nav-link" data-scroll-target="#for-developers">For developers</a>
+  <ul class="collapse">
+  <li><a href="#xml-input-and-learner-selected-dimensions" id="toc-xml-input-and-learner-selected-dimensions" class="nav-link" data-scroll-target="#xml-input-and-learner-selected-dimensions">XML input and learner-selected dimensions</a></li>
+  <li><a href="#supported-values-and-tests" id="toc-supported-values-and-tests" class="nav-link" data-scroll-target="#supported-values-and-tests">Supported values and tests</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -187,7 +252,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Bounded matrices</h1>
+<h1 class="title">Matrix input and grading</h1>
 </div>
 
 
@@ -204,25 +269,68 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>Matrix values use <code>matrix([a,b],[c,d])</code>. They retain their type and rectangular shape separately from ordinary lists. Dimensions are positive, each axis is at most 16, and the matrix has at most 64 scalar entries. Ragged, empty, partially filled and zero-dimensional matrices are rejected. Entries use the existing bounded scalar parser; nested collections, equations and logical values are outside this contract.</p>
-<p><code>AlgEquiv</code> checks dimensions and then corresponding scalar entries with the existing algebraic equivalence machinery. <code>SameType</code> checks the supported matrix type contract. <code>EqualComAss</code> preserves written arithmetic in corresponding entries. Other native matrix answer tests are rejected explicitly. The separate Python-only <code>IsBasis</code> and <code>MatrixProperty</code> tests add basis and exact constraint checks; see <a href="../docs/python-answer-tests.html">Python answer tests</a> for their distinct contract. Decimal literals and author-value provenance follow the existing scalar rules. No algebraic set matching or trig-set normalization policy changes are included.</p>
-<p>Use native <code>&lt;input&gt;&lt;type&gt;matrix&lt;/type&gt;...</code> for an editor fixed to the evaluated teacher answer’s shape. Learner-selected dimensions use this explicit port extension inside the input, shown in <a href="../examples.html#a-basis-for-the-null-space-of-b">the basis examples</a>:</p>
+<p>A matrix question can ask for one particular matrix, any basis of a space, or any matrix with a stated property. Choose the mathematical test first; the editor collects entries, while the answer test and response tree decide correctness and marks. Try the <a href="../examples.html#find-a-nonidentity-matrix-with-determinant-one">matrix questions</a> before adapting one.</p>
+<section id="for-teachers" class="level2">
+<h2 class="anchored" data-anchor-id="for-teachers">For teachers</h2>
+<section id="decisions-for-a-question-author" class="level3">
+<h3 class="anchored" data-anchor-id="decisions-for-a-question-author">Decisions for a question author</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>What the prompt asks</th>
+<th>Appropriate check</th>
+<th>Teacher value in the PRT</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>A particular matrix</td>
+<td><code>AlgEquiv</code> compares dimensions and corresponding entries; <code>EqualComAss</code> also checks written form.</td>
+<td>The expected matrix.</td>
+</tr>
+<tr class="even">
+<td>Any basis of a null, column or row space</td>
+<td><code>IsBasis</code> checks membership, independence and completeness.</td>
+<td>The original matrix <span class="math inline">\(A\)</span>, with <code>nullspace</code>, <code>columnspace</code> or <code>rowspace</code> selected.</td>
+</tr>
+<tr class="odd">
+<td>Integer entries, a given determinant or nonidentity</td>
+<td>Separate <code>MatrixProperty</code> nodes can give separate marks.</td>
+<td>The expected property result: <code>true</code>, an exact determinant such as <code>1</code>, or <code>false</code>.</td>
+</tr>
+<tr class="even">
+<td>Another condition, such as symmetric positive definiteness</td>
+<td>A named <code>PythonChecker</code> function in an author file.</td>
+<td>The value the function needs, such as <code>true</code> for the <a href="../examples.html#symmetric-positive-definite-matrix">SPD example</a>.</td>
+</tr>
+</tbody>
+</table>
+<p>An entry-by-entry check would reject many correct answers to “give any basis” or “give any matrix satisfying these conditions.” See <a href="../docs/python-checker-api.html">Python answer tests</a> for the choice and the <a href="../docs/python-checker-api.html#author-the-spd-checker">complete SPD authoring walkthrough</a> for a custom rule. An equivalent native Moodle STACK question needs corresponding Maxima checks; these Python test names are specific to this port.</p>
+<p>If the shape is part of the task, let learners choose a bounded number of columns for null or column-space bases, or rows for row-space bases. An empty basis cannot currently be entered because the editor needs positive dimensions. For a fixed-size task, the model answer determines the editor’s shape. The built-in <code>IsBasis</code> and <code>MatrixProperty</code> tests require exact rational entries (integers or fractions). An author-supplied <code>PythonChecker</code> can choose another domain within the input limits. Set any partial credit in the response trees; neither correct cells nor green basis vectors earn marks by themselves.</p>
+</section>
+<section id="what-learners-see" class="level3">
+<h3 class="anchored" data-anchor-id="what-learners-see">What learners see</h3>
+<p>A learner fills matrix cells, presses <strong>Validate answers</strong> to inspect the interpreted matrix, then presses <strong>Check answer</strong>. Empty cells are invalid. The editor retains typed forms such as <code>x+x</code> or <code>1/2</code>; resizing keeps cells that still fit and leaves new cells blank. Editing, resizing, resetting or switching variants clears an earlier result and requires validation again. After an <code>IsBasis</code> check, vector colors explain membership and dependence, but the response tree still determines the score.</p>
+</section>
+</section>
+<section id="for-developers" class="level2">
+<h2 class="anchored" data-anchor-id="for-developers">For developers</h2>
+<section id="xml-input-and-learner-selected-dimensions" class="level3">
+<h3 class="anchored" data-anchor-id="xml-input-and-learner-selected-dimensions">XML input and learner-selected dimensions</h3>
+<p>Use <code>&lt;input&gt;&lt;type&gt;matrix&lt;/type&gt;...</code> for a fixed-size matrix; the input model answer supplies its dimensions. For learner-selected columns, as in the <a href="../examples.html#a-basis-for-the-null-space-of-b">basis examples</a>, add:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">matrix</span>&gt;</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">rows</span><span class="ot"> initial=</span><span class="st">"2"</span><span class="ot"> min=</span><span class="st">"1"</span><span class="ot"> max=</span><span class="st">"4"</span><span class="ot"> resizable=</span><span class="st">"1"</span>/&gt;</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">cols</span><span class="ot"> initial=</span><span class="st">"2"</span><span class="ot"> min=</span><span class="st">"1"</span><span class="ot"> max=</span><span class="st">"4"</span><span class="ot"> resizable=</span><span class="st">"1"</span>/&gt;</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">rows</span><span class="ot"> initial=</span><span class="st">"3"</span><span class="ot"> min=</span><span class="st">"3"</span><span class="ot"> max=</span><span class="st">"3"</span><span class="ot"> resizable=</span><span class="st">"0"</span>/&gt;</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">cols</span><span class="ot"> initial=</span><span class="st">"1"</span><span class="ot"> min=</span><span class="st">"1"</span><span class="ot"> max=</span><span class="st">"3"</span><span class="ot"> resizable=</span><span class="st">"1"</span>/&gt;</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">matrix</span>&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Each axis requires all four attributes; a fixed axis has <code>resizable="0"</code> and equal <code>initial</code>, <code>min</code>, and <code>max</code>. The product of the two maxima must not exceed 64. This syntax is a STACK SymPy extension, not an assertion that native STACK imports these extra elements.</p>
-<p>Raw cells such as <code>x+x</code>, <code>0.1</code> and <code>1/2</code> remain unchanged in the editor. The consumer serializes a matrix expression with each cell enclosed in parentheses and lets its own parser interpret it. Empty cells remain invalid; resizing never inserts numerical zeros. Surviving cells retain their raw values when resized. The validation preview exposes the interpreted matrix before checking.</p>
-<p>Editing, resizing, programmatic writes, resetting and changing variants invalidate prior validation, grading and AI-feedback evidence. Reset returns the dimensions and raw cells to their initial blank state. The editor presents input validity and, after an explicit <code>IsBasis</code> check, supplied vector diagnostics. It does not infer cell, row, column or partial-credit grading. Authored PRTs remain the only source of awarded scores.</p>
-<p>The reusable editor is maintained in <a href="https://github.com/Erasmus-CTM/math-exercise">math-exercise</a>, with standalone <code>matrix-input.js</code> and <code>matrix-input.css</code>. STACK SymPy vendors audited commit <code>f238da6d9a43d58d1fdf9ad592ac6223225268e0</code>; exact source links and SHA-256 checksums are recorded in <code>_extensions/stack-sympy/vendor/matrix-input-provenance.json</code>. The editor itself loads no math-exercise checker or runtime, so the extensions work independently. The Python basis helper is separately extracted, pinned and reviewed; it runs inside this port’s own grader, not a math-exercise runtime. Update by copying both standalone files from one audited upstream commit, updating the manifest and rerunning matrix browser tests.</p>
-<p>The component API is <code>MatrixInput.create({idPrefix, zeroDimensions, maxEntries, labels, onChange})</code>, followed by <code>renderHTML(spec)</code> and <code>mount(wrapper)</code>. <code>spec</code> contains <code>name</code>, <code>rows</code> and <code>cols</code>; each axis has <code>auto</code>, <code>initial</code>, <code>min</code> and <code>max</code>. The mounted handle provides <code>read</code>, <code>write</code>, <code>resize</code>, <code>reset</code>, <code>destroy</code> and <code>setState</code>. Read/write values are <code>{type:'matrix',rows,cols,raw}</code> with raw strings in row-major order; notifications distinguish edits, resizes and writes. STACK explicitly selects <code>zeroDimensions:'reject'</code> and <code>maxEntries:64</code>. <code>setState</code> only displays supplied status and optional cell/row/column states; consumers own all parsing and assessment policy.</p>
-<section id="decisions-for-a-question-author" class="level2">
-<h2 class="anchored" data-anchor-id="decisions-for-a-question-author">Decisions for a question author</h2>
-<p>Choose the mathematical task before choosing a matrix answer test. <code>AlgEquiv</code> compares a particular matrix entry by entry; it is unsuitable for “give any basis” or “give any matrix satisfying these conditions.” Use the documented Python-only IsBasis or MatrixProperty tests for those tasks, or supply an equivalent custom checker in native STACK. Do not replace a family of valid answers by equality with one convenient model answer.</p>
-<p>Choose fixed dimensions when the shape is given. If the number of basis vectors or pivot indices is part of the answer, use bounded learner-selected columns. Blank cells are invalid, and this port cannot represent an empty basis with a zero-column matrix. Make sure every model answer and authored qtest fits the configured dimensions; the build checks this.</p>
-<p>Specify the allowed number domain: the native-compatible matrix tests inherit the supported scalar rules, while Python matrix tests currently require bounded exact rational arithmetic. Decide partial credit explicitly in the PRTs. Native matrix comparison does not automatically award credit for correct cells, and green basis vectors do not by themselves earn part marks. Review wrong shapes, dependent and incomplete families, alternative correct answers, and written-form or decimal-sensitive cases before publishing.</p>
+<p>Each axis requires <code>initial</code>, <code>min</code>, <code>max</code> and <code>resizable</code>. A fixed axis uses <code>resizable="0"</code> with equal initial, minimum and maximum. The product of the two maxima may not exceed 64. This sizing element is a STACK SymPy extension and needs adaptation for native Moodle STACK. The input model and authored tests must fit the configured dimensions. For a matrix-defined space, the input model can use <code>nullspace_basis(A)</code>, <code>columnspace_basis(A)</code> or <code>rowspace_basis(A)</code> while the PRT uses the original <code>A</code>.</p>
+</section>
+<section id="supported-values-and-tests" class="level3">
+<h3 class="anchored" data-anchor-id="supported-values-and-tests">Supported values and tests</h3>
+<p>Author expressions write a matrix as <code>matrix([a,b],[c,d])</code>, distinct from a nested list. Matrices must be rectangular and complete, with 1–16 rows and columns and at most 64 scalar entries. Cells cannot contain collections, equations or logical values. The supported native STACK matrix tests here are <code>AlgEquiv</code>, <code>SameType</code> and <code>EqualComAss</code>; other native matrix tests and general matrix arithmetic are outside this port’s current support.</p>
+<p>Raw cells remain unchanged until validation interprets them. The editor does not create zeros for blank cells or compute marks. The reusable component and its provenance are recorded in the project source tree; question authors configure it through XML.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -630,7 +738,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>STACK SymPy · a bounded, inspectable STACK subset for static Quarto pages</p>
+<p>STACK SymPy · interactive practice for Quarto teaching pages</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;

@@ -73,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="report.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -100,8 +100,27 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./semantics.html"> 
-<span class="menu-text">Semantics and open questions</span></a>
+<span class="menu-text">Semantics for STACK authors</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-teacher-guides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Teacher guides</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-teacher-guides">    
+        <li>
+    <a class="dropdown-item" href="./../docs/authoring.html">
+ <span class="dropdown-text">Authoring</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./../docs/matrix-input.html">
+ <span class="dropdown-text">Matrix input</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./../docs/python-checker-api.html">
+ <span class="dropdown-text">Python answer tests and SPD</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
@@ -120,14 +139,30 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#for-teachers" id="toc-for-teachers" class="nav-link active" data-scroll-target="#for-teachers">For teachers</a>
+  <ul class="collapse">
+  <li><a href="#how-to-read-the-results" id="toc-how-to-read-the-results" class="nav-link" data-scroll-target="#how-to-read-the-results">How to read the results</a></li>
+  </ul></li>
+  <li><a href="#for-developers" id="toc-for-developers" class="nav-link" data-scroll-target="#for-developers">For developers</a>
+  <ul class="collapse">
+  <li><a href="#scope-and-interpretation" id="toc-scope-and-interpretation" class="nav-link" data-scroll-target="#scope-and-interpretation">Scope and interpretation</a></li>
+  <li><a href="#saved-evidence-and-reproduction" id="toc-saved-evidence-and-reproduction" class="nav-link" data-scroll-target="#saved-evidence-and-reproduction">Saved evidence and reproduction</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">STACK compliance</h1>
-<p class="subtitle lead">Expected behavior, engine agreement, and known limitations</p>
+<p class="subtitle lead">Teaching implications first, followed by comparison details</p>
 </div>
 
 
@@ -144,9 +179,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Each source case compares a submitted answer with a reference using a named STACK answer test. The SymPy port implements a subset of STACK; this page shows its coverage gaps, expected behavior, and agreement with STACK and the browser.</p>
-<p><strong>Port</strong> is this SymPy implementation. <strong>STACK</strong> is the reference Maxima implementation. <strong>Expected</strong> is the source fixture’s intended accept, reject, or error result. Only STACK tests with a fully supported equivalent in the Python port were run.</p>
-<p><a href="./semantics.html">Semantics and open questions</a> explains the implemented conventions and the remaining case-specific questions for discussion with STACK. Recorded domain differences and unproved identities remain visible and individually pinned; browser agreement does not resolve them.</p>
+<p>STACK authors and maintainers reviewing conventions can go directly to <a href="./semantics.html#author-attention">semantics questions and evidence</a>.</p>
+<section id="for-teachers" class="level2">
+<h2 class="anchored" data-anchor-id="for-teachers">For teachers</h2>
+<p>Each case asks whether a particular STACK answer test accepts a submitted answer. This report shows which cases STACK SymPy can check, where its result agrees with STACK, and where a teacher should expect a difference.</p>
+<section id="how-to-read-the-results" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-read-the-results">How to read the results</h3>
+<p><strong>Port</strong> means STACK SymPy. <strong>STACK</strong> means the reference Moodle/Maxima answer test. <strong>Expected</strong> is the outcome recorded in the original case. Green can mean that a wrong answer was correctly rejected. A matching result for one case does not establish that every question using that test behaves identically.</p>
+<p>State the mathematical domain, distinguish written form from value, and use numerical tests for approximate answers. The <a href="./semantics.html#author-attention">semantics discussions for STACK authors</a> record the detailed conventions and unresolved questions. Start with the <a href="../docs/authoring.html">authoring guide</a> when preparing a question, and run its own tests as well as inspecting the examples. <a href="../docs/python-checker-api.html">Python answer tests and SPD</a> are documented separately from this native comparison.</p>
 <div class="status-legend" aria-label="How to read the colors">
 <p><span class="tone-good">Green: expected behavior or agreement</span> <span class="tone-notice">Amber: known issue or explained difference</span> <span class="tone-bad">Red: unexpected result</span> <span class="tone-neutral">Gray: not graded, outside scope, or unavailable</span></p>
 </div>
@@ -171,8 +211,8 @@ More comparisons: final marks, test applicability, and STACK expectations
 
 </div>
 </details>
-<section id="case-results" class="level2">
-<h2 class="anchored" data-anchor-id="case-results">Cases</h2>
+<section id="case-results" class="level3">
+<h3 class="anchored" data-anchor-id="case-results">Cases</h3>
 <p>Select a count above or use the filters. Open a case to see the expected and actual results.</p>
 <div class="report-controls">
 <p><label>Search cases <input id="case-search" type="search" placeholder="Case number, expression, test, or ID"></label> <label>Answer test <select id="test-filter"><option value="">All answer tests</option></select></label></p>
@@ -191,31 +231,37 @@ Clear filters
 <button type="button" id="show-more" hidden="">
 Show more cases
 </button>
-<details class="methodology">
-<summary>
-Scope and technical details
-</summary>
-<p>This compares CAS answer-test functions rather than complete Moodle grading sessions. The port currently provides ten native-compatible answer-test families, including bounded nested scalar lists/sets with <code>AlgEquiv</code>, <code>Sets</code>, <code>SameType</code> and <code>EqualComAss</code>, and bounded matrices with <code>AlgEquiv</code>, <code>SameType</code> and <code>EqualComAss</code>. Cases outside port coverage stay in the inventory and are labeled by the missing answer test or unsupported input/feature. Some direct reference calls are also omitted because they need parser or controller preparation.</p>
-<p>“Test applicability” asks whether an answer test can compare the supplied values. It is separate from input syntax validity and from the final accept/reject mark. Form tests such as <code>EqualComAss</code> can reject mathematically equivalent expressions.</p>
-<p>Source codes <code>0</code> and <code>1</code> mean expected rejection and acceptance; <code>-1</code> expects a controlled error. Codes <code>-2</code> and <code>-3</code> flag source-authored native deviations. Only specifically reviewed cases are labeled “Known STACK issue.” Ordinary feedback notes are retained but not generally compared; asserted controlled-error notes are checked separately.</p>
-<p>The Python-only <code>IsBasis</code> and <code>MatrixProperty</code> tests are documented in the <a href="../docs/python-answer-tests.html">Python extension guide</a>. Their example, unit and browser checks are separate from this native report; they do not enlarge the 2,303-row inventory or its native coverage counts.</p>
-<p>Browser agreement includes input/scope classifications as well as graded results. The summary separates these. STACK coverage counts available observations, not compatibility passes.</p>
+</section>
+</div>
+</section>
+</section>
+<section id="for-developers" class="level2">
+<h2 class="anchored" data-anchor-id="for-developers">For developers</h2>
+<section id="scope-and-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="scope-and-interpretation">Scope and interpretation</h3>
+<p>The inventory contains 2,303 imported answer-test cases. It compares CAS functions, not complete Moodle grading sessions. The port currently provides ten native-compatible answer-test families. Unsupported cases remain visible by missing test or input feature; some direct STACK calls require parser or controller preparation and are not compared.</p>
+<p>“Test applicability” asks whether a test can compare the supplied values. It is separate from syntax validity and the accept/reject mark. Form tests may reject equivalent expressions. Browser agreement includes invalid/unsupported classifications as well as graded results; the summary distinguishes them.</p>
+<p>Source codes <code>0</code> and <code>1</code> request rejection and acceptance; <code>-1</code> requests a controlled error. Codes <code>-2</code> and <code>-3</code> flag source-authored native deviations. Only reviewed cases receive the “Known STACK issue” label. Ordinary notes are retained but not generally compared; asserted controlled-error notes are checked separately.</p>
+<p>The Python-only <code>IsBasis</code>, <code>MatrixProperty</code> and <code>PythonChecker</code> tests do not increase the native inventory or its coverage counts. Their authored, unit and browser checks establish separate Python behavior. See the <a href="../docs/python-checker-api.html#for-developers">developer reference</a>.</p>
+</section>
+<section id="saved-evidence-and-reproduction" class="level3">
+<h3 class="anchored" data-anchor-id="saved-evidence-and-reproduction">Saved evidence and reproduction</h3>
+<p>The detailed <a href="./semantics.html">conventions reference</a> records case-specific reasoning, sources and open questions. The <a href="https://github.com/Erasmus-CTM/stack-sympy#supported-subset-and-grading-behavior">development guide</a> explains how to reproduce the reports. A normal website render reads the saved results; it does not rerun STACK comparisons.</p>
 <div id="report-provenance">
 
 </div>
 <div id="report-runners">
 
 </div>
-</details>
 <p class="report-downloads">
-<a href="report.json" download="">Download saved results</a> · <span id="fixture-link"></span> · <a href="./port-regressions.html">Project regression cases</a>
+<a href="report.json" download="">Download saved results</a> · <span id="fixture-link"></span> · <a href="port-regressions.html">Project regression cases</a>
 </p>
-</section>
-</div>
 <script src="report-ui.js" defer=""></script>
 <script src="report.js" defer=""></script>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

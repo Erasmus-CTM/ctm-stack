@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Semantics: behavior, questions, and future work – STACK SymPy</title>
+<title>Semantics for STACK authors – STACK SymPy</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -164,8 +164,27 @@ window.Quarto = {
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="./semantics.html" aria-current="page"> 
-<span class="menu-text">Semantics and open questions</span></a>
+<span class="menu-text">Semantics for STACK authors</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-teacher-guides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Teacher guides</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-teacher-guides">    
+        <li>
+    <a class="dropdown-item" href="./../docs/authoring.html">
+ <span class="dropdown-text">Authoring</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./../docs/matrix-input.html">
+ <span class="dropdown-text">Matrix input</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./../docs/python-checker-api.html">
+ <span class="dropdown-text">Python answer tests and SPD</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
@@ -203,8 +222,8 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Semantics: behavior, questions, and future work</h1>
-<p class="subtitle lead">Native agreement, author decisions, and bounded port choices</p>
+<h1 class="title">Semantics for STACK authors</h1>
+<p class="subtitle lead">Questions, evidence and compatibility conventions</p>
 </div>
 
 
@@ -221,6 +240,8 @@ window.Quarto = {
 </header>
 
 
+<p>This page is for <strong>STACK authors and maintainers</strong> reviewing mathematical conventions and compatibility questions. Start with the prioritized questions below, then follow the linked cases, sources and observations.</p>
+<p>Teachers adapting exercises can start with the <a href="../docs/authoring.html">authoring guide</a> and <a href="./index.html#for-teachers">report interpretation</a>. Developers reproducing comparisons can use the <a href="./index.html#for-developers">report’s development reference</a>.</p>
 <p>This page compares a bounded SymPy CAS adapter with pinned STACK behavior. Case numbers refer to the unchanged 2,303-row imported fixture. An expected acceptance in that fixture is evidence of the desired test outcome, not necessarily a universally valid complex identity. Mathematical truth, fixture expectation, native observation, and port behavior are kept separate below.</p>
 <section id="author-attention" class="level2">
 <h2 class="anchored" data-anchor-id="author-attention">For the STACK author</h2>
@@ -264,7 +285,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="bounded-matrices">Bounded matrices</h3>
 <p><code>matrix([a,b],[c,d])</code> is a distinct rectangular matrix value with finite supported scalar entries. The port permits 1–16 rows, 1–16 columns and at most 64 entries, subject to the existing expression limits. Empty/zero-dimensional, ragged and incomplete matrices, nested non-scalar entries and matrix arithmetic are outside this contract. The editor’s historical empty-matrix convention is not inherited.</p>
 <p>Following pinned STACK’s <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac#L1638-L1666">ATMatrix</a>, AlgEquiv checks row count, then column count, then ordered entries through the existing scalar equivalence machinery. Wrong dimensions are an applicable incorrect result. SameType recognizes matrix type independently of dimensions; ordinary nested lists remain a different type. EqualComAss additionally checks the submitted cell forms, so <code>matrix([x+x])</code> and <code>matrix([2*x])</code> are algebraically equal but have different written forms. Literal decimal cells retain the scalar/list binary64 provenance rules; frozen decimal matrix aliases fail closed rather than acquiring invented provenance.</p>
-<p>Native-compatible matrix grading currently supports AlgEquiv, SameType and EqualComAss. Other native matrix answer tests remain an explicit port limitation; native STACK supports more, including LowestTerms. Separately, the Python-only IsBasis and MatrixProperty extensions support basis and exact constraint tasks. They are outside this native inventory and are documented in the <a href="../docs/python-answer-tests.html">Python extension guide</a>. There is no cell partial-credit policy: PRT scores remain author-defined and the default feedback concerns the whole matrix. Fixed dimensions are validated before grading; learner-selected dimensions must stay inside the configured bounds.</p>
+<p>Native-compatible matrix grading currently supports AlgEquiv, SameType and EqualComAss. Other native matrix answer tests remain an explicit port limitation; native STACK supports more, including LowestTerms. Separately, the Python-only IsBasis and MatrixProperty extensions support basis and exact constraint tasks. They are outside this native inventory and are documented in the <a href="../docs/python-checker-api.html">Python answer tests</a>. There is no cell partial-credit policy: PRT scores remain author-defined and the default feedback concerns the whole matrix. Fixed dimensions are validated before grading; learner-selected dimensions must stay inside the configured bounds.</p>
 <p>The unchanged 2,303-row inventory gains 13 supported official matrix rows (452 to 465 supported rows overall). All 13 match desired outcomes in direct CPython execution. Native comparison and browser Pyodide parity are enforced by the existing pinned CI harness. The <a href="https://github.com/Erasmus-CTM/stack-sympy/blob/main/docs/audits/bounded-matrices.md">matrix decision record</a> documents the bounds, provenance restrictions and remaining excluded matrix cases. The set and trigonometric questions below remain unchanged.</p>
 <p>The positive dimension bounds, optional learner resizing and Python-only answer tests are explicit port contracts, rather than unresolved questions requiring a new native STACK semantic decision. Authors should choose the correct test and scoring policy for their task; see the <a href="../docs/matrix-input.html#decisions-for-a-question-author">matrix authoring guidance</a>.</p>
 </section>

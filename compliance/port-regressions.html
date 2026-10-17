@@ -73,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="report.css">
 </head>
 
-<body class="nav-fixed fullcontent quarto-light">
+<body class="nav-fixed quarto-light">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -100,8 +100,27 @@ ul.task-list li input[type="checkbox"] {
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./semantics.html"> 
-<span class="menu-text">Semantics and open questions</span></a>
+<span class="menu-text">Semantics for STACK authors</span></a>
   </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-teacher-guides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Teacher guides</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-teacher-guides">    
+        <li>
+    <a class="dropdown-item" href="./../docs/authoring.html">
+ <span class="dropdown-text">Authoring</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./../docs/matrix-input.html">
+ <span class="dropdown-text">Matrix input</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./../docs/python-checker-api.html">
+ <span class="dropdown-text">Python answer tests and SPD</span></a>
+  </li>  
+    </ul>
+  </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
@@ -120,14 +139,31 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#for-teachers" id="toc-for-teachers" class="nav-link active" data-scroll-target="#for-teachers">For teachers</a>
+  <ul class="collapse">
+  <li><a href="#how-to-use-the-cases" id="toc-how-to-use-the-cases" class="nav-link" data-scroll-target="#how-to-use-the-cases">How to use the cases</a></li>
+  <li><a href="#case-results" id="toc-case-results" class="nav-link" data-scroll-target="#case-results">Cases</a></li>
+  </ul></li>
+  <li><a href="#for-developers" id="toc-for-developers" class="nav-link" data-scroll-target="#for-developers">For developers</a>
+  <ul class="collapse">
+  <li><a href="#scope-and-interpretation" id="toc-scope-and-interpretation" class="nav-link" data-scroll-target="#scope-and-interpretation">Scope and interpretation</a></li>
+  <li><a href="#saved-evidence-and-contribution" id="toc-saved-evidence-and-contribution" class="nav-link" data-scroll-target="#saved-evidence-and-contribution">Saved evidence and contribution</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Port regressions</h1>
-<p class="subtitle lead">Checks for discoveries made while building the port</p>
+<p class="subtitle lead">Teaching implications first, followed by development evidence</p>
 </div>
 
 
@@ -144,8 +180,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>These project-owned cases cover supported behavior, invalid or unsupported inputs, and known differences discovered during development. They are separate from the <a href="./index.html">2,303 source cases in STACK compliance</a>.</p>
-<p><strong>Expected</strong> is the behavior recorded for each case. <strong>Port</strong> is the SymPy implementation, <strong>STACK</strong> is Maxima, and <strong>Browser</strong> runs the port through Pyodide. A browser agreement can confirm the same known defect; it does not make that result correct.</p>
+<p>STACK authors and maintainers can review the <a href="./semantics.html#author-attention">semantics questions and evidence</a>.</p>
+<section id="for-teachers" class="level2">
+<h2 class="anchored" data-anchor-id="for-teachers">For teachers</h2>
+<p>These additional cases record supported behavior, invalid or unsupported inputs, and known differences found while developing STACK SymPy. They are separate from the <a href="./index.html">2,303 imported STACK cases</a>.</p>
+<section id="how-to-use-the-cases" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-use-the-cases">How to use the cases</h3>
+<p><strong>Expected</strong> is the intended result for the case. <strong>Port</strong> is this SymPy implementation, <strong>STACK</strong> is Maxima, and <strong>Browser</strong> runs the port through Pyodide. Amber cases explain what differs and what it means for a question. Browser agreement may reproduce the same known issue; it does not make that result mathematically correct.</p>
+<p>For teaching, state the domain, select the intended written form and use a numerical test for approximate answers. The <a href="./semantics.html#author-attention">semantics reference for STACK authors</a> discusses unresolved conventions in detail. The <a href="../docs/authoring.html">authoring guide</a> explains supported features and how to test your own questions, including <a href="../docs/python-checker-api.html">matrix conditions and SPD</a>.</p>
 <div class="status-legend" aria-label="How to read the colors">
 <p><span class="tone-good">Green: expected behavior or agreement</span> <span class="tone-notice">Amber: known issue or explained difference</span> <span class="tone-bad">Red: unexpected result</span> <span class="tone-neutral">Gray: input handling or no comparison</span></p>
 </div>
@@ -155,9 +197,10 @@ Loading saved results…
 <div id="port-summary" class="report-summary">
 
 </div>
-<section id="case-results" class="level2">
-<h2 class="anchored" data-anchor-id="case-results">Cases</h2>
-<p>Each amber case explains what differs and what to conclude. Select a count above or use the filters.</p>
+</section>
+<section id="case-results" class="level3">
+<h3 class="anchored" data-anchor-id="case-results">Cases</h3>
+<p>Select a count above or use the filters. Open a case to see its explanation.</p>
 <div class="report-controls">
 <p><label>Search cases <input id="port-search" type="search" placeholder="Expression, case ID, or explanation"></label> <label>Group <select id="port-group"><option value="">All groups</option></select></label></p>
 </div>
@@ -172,23 +215,29 @@ Clear filters
 <div id="port-regressions-list" class="case-list">
 
 </div>
-<details class="methodology">
-<summary>
-Scope and technical details
-</summary>
-<p>An expected input-handling check verifies that invalid or unsupported input is correctly refused. It is not a successful mathematical comparison. Known port issues remain defects even when their observations match a recorded exception. Root-convention differences have their own explanation and are not labeled mathematical failures.</p>
-<p>The saved run observes isolated Python, official STACK functions where applicable, and the same port in browser Pyodide. “Test applies” is the answer test’s applicability, separate from input syntax validity. Missing observations remain unavailable.</p>
+</section>
+</section>
+<section id="for-developers" class="level2">
+<h2 class="anchored" data-anchor-id="for-developers">For developers</h2>
+<section id="scope-and-interpretation" class="level3">
+<h3 class="anchored" data-anchor-id="scope-and-interpretation">Scope and interpretation</h3>
+<p>An input-handling check verifies that invalid or unsupported input is refused; it is not a successful mathematical comparison. Known port issues remain issues when their observations match an expected exception. Root-convention differences have their own explanation rather than a mathematical-failure label.</p>
+<p>The saved run observes isolated Python, official STACK functions where applicable, and the same port in browser Pyodide. “Test applies” describes answer-test applicability, separately from syntax validity. Missing observations remain unavailable. These regression counts do not alter the native inventory.</p>
+</section>
+<section id="saved-evidence-and-contribution" class="level3">
+<h3 class="anchored" data-anchor-id="saved-evidence-and-contribution">Saved evidence and contribution</h3>
+<p>The <a href="./semantics.html">conventions reference</a> explains the case-specific mathematics. Add focused project discoveries to the <a href="https://github.com/Erasmus-CTM/stack-sympy/tree/main/tests/port_regressions">regression cases and contribution guide</a>. The <a href="https://github.com/Erasmus-CTM/stack-sympy#supported-subset-and-grading-behavior">development guide</a> provides reproduction commands. Rendering this page reads saved results without rerunning the mathematical checks.</p>
 <div id="port-provenance">
 
 </div>
-</details>
 <p class="report-downloads">
-<a href="port-regressions.json" download="">Download saved results</a> · <a href="https://github.com/Erasmus-CTM/stack-sympy/tree/main/tests/port_regressions">Cases and contribution guide</a> · <a href="./index.html">STACK compliance</a>
+<a href="port-regressions.json" download="">Download saved results</a> · <a href="index.html">STACK compliance</a>
 </p>
 <script src="report-ui.js" defer=""></script>
 <script src="port-regressions.js" defer=""></script>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
