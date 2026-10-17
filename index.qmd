@@ -26,11 +26,11 @@ Expand and collect the polynomial below. An equivalent factored answer earns par
 
 ## What is supported?
 
-This is a bounded port of STACK, with **scalar algebraic and numerical inputs** and eight answer tests:
+This is a bounded port of STACK, with **algebraic inputs, flat finite scalar lists/sets, and numerical inputs** and nine answer tests:
 
-`AlgEquiv`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, and `NumDecPlaces`.
+`AlgEquiv`, `Sets`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, and `NumDecPlaces`.
 
-`AlgEquiv` also handles supported Boolean expressions and polynomial equations. General set, list, matrix and units inputs, arbitrary Maxima code, and the full Moodle assessment workflow are outside the current scope. See the [precise support limits](docs/authoring.qmd#what-the-adapter-checks) before adapting a question.
+`AlgEquiv` also handles supported Boolean expressions and polynomial equations. Flat scalar lists and sets support `AlgEquiv`; `Sets` explains duplicates and missing/extra elements. Nested collections, matrices and units inputs, arbitrary Maxima code, and the full Moodle assessment workflow are outside the current scope. See the [precise support limits](docs/authoring.qmd#what-the-adapter-checks) before adapting a question.
 
 ## Use your own question
 

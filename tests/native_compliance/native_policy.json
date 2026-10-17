@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "native_scope_sha256": "984ba90d138f79eaf4d81bb33da115e82f03b92633940e1bac9756601f0e2bd9",
+  "native_scope_sha256": "9de6aa8586025357a8bcc4b2c867c61db34694db9e233a3d6231fb2a65c179c8",
   "cases": {
     "9ab41a1b2484066b5d333608e28b2d3b45408d40111ae01417fc93a39a829760-1": {
       "category": "known_native_mathematical_failure",
@@ -77,6 +77,30 @@
     "9e61fb3181ee7baf9c8df5479248634808e6a209cf31c1cd0a02d417ba6699d0-1": {
       "category": "known_native_mathematical_failure",
       "reason": "Upstream row 149 is marked -3. The cotangent sum equals 3+sqrt(2)+sqrt(3)+sqrt(5)+sqrt(6); SymPy simplifies the exact radical difference to zero. Python returns true and pinned STACK/Maxima returns false. This newly executable reciprocal-function case retains the authored mathematical expectation.",
+      "python": {
+        "cas_valid": true,
+        "correct": true
+      },
+      "native": {
+        "cas_valid": true,
+        "correct": false
+      }
+    },
+    "1bd3e0f5b8e7d6274f9198aa07adff082153497d6057620af167629c69d43de6-1": {
+      "category": "known_native_mathematical_failure",
+      "reason": "Upstream set row 201 is marked -3. Both constants equal -sqrt(6)/3; SymPy canonicalizes the radical quotient to the same exact scalar member. Pinned direct STACK/Maxima 5.46 returns ATSet_wrongentries; Python returns the authored desired acceptance. This is separate from native compatibility.",
+      "python": {
+        "cas_valid": true,
+        "correct": true
+      },
+      "native": {
+        "cas_valid": true,
+        "correct": false
+      }
+    },
+    "be87b531a873d00af5b2599d90c0cc3b2633ed8ab80607ce8452e6d22d0e2b34-1": {
+      "category": "known_native_mathematical_failure",
+      "reason": "Upstream set row 203 is marked -3. Euler formula gives 5*sqrt(3)/8 + 5*i/8; the port performs the bounded exact rational-angle rectangular conversion. Pinned direct STACK/Maxima 5.46 returns ATSet_wrongentries; Python returns the authored desired acceptance. This is separate from native compatibility.",
       "python": {
         "cas_valid": true,
         "correct": true

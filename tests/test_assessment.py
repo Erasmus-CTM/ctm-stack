@@ -119,7 +119,7 @@ class AssessmentTest(unittest.TestCase):
         self.assertEqual(answer_test("AlgEquiv", "x+2", "x+1")["valid"], True)
         self.assertEqual(answer_test("AlgEquiv", "x+", "x+1")["valid"], False)
         self.assertEqual(answer_test("AlgEquiv", "1/0", "x+1")["valid"], False)
-        self.assertEqual(answer_test("AlgEquiv", "[1,2]", "1")["valid"], False)
+        self.assertEqual(answer_test("AlgEquiv", "[1,2]", "1")["cas_valid"], False)
         with self.assertRaises(Unsupported):
             answer_test("StringMatch", "a", "a")
 

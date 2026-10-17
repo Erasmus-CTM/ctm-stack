@@ -53,3 +53,9 @@ square-root convention, and a principal logarithmic-power proof. These include
 nearby rejection controls and do not change the upstream fixture. See
 `compliance-report/semantics.qmd` for the exact scope, upstream motivations, and
 the remaining questions for the STACK author.
+
+Finite collection controls cover ordered list positions and length, per-element
+binary64 behavior, unordered sets and repetitions, detailed `Sets` feedback,
+structural set normalization, type applicability, and flat/scalar/size boundaries.
+The unchanged legacy rows separately expose the radical normalization difference
+in row 212; it is not counted as a mathematical or native pass.

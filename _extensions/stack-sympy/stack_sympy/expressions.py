@@ -28,7 +28,8 @@ MAX_TOKENS = 350
 MAX_DEPTH = 40
 MAX_POWER = 100
 MAX_DIGITS = 100
-_LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(?P<name>%?[A-Za-z_][A-Za-z_0-9]*)|(?P<op>\*\*|\+\-|[=+*/^(),\[\]-]))", re.ASCII)
+MAX_COLLECTION_ITEMS = 32
+_LEX = re.compile(r"\s*(?:(?P<number>(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?)|(?P<name>%?[A-Za-z_][A-Za-z_0-9]*)|(?P<op>\*\*|\+\-|[=+*/^(),{}\[\]-]))", re.ASCII)
 _NAMES = {"pi": sp.pi, "%pi": sp.pi, "Pi": sp.pi, "PI": sp.pi,
           "e": sp.E, "E": sp.E, "%e": sp.E,
           "i": sp.I, "I": sp.I, "%i": sp.I}
@@ -55,6 +56,43 @@ class Node:
     kind: str
     value: str = ""
     children: tuple["Node", ...] = ()
+
+
+class HeldSet(sp.Basic):
+    """Finite set syntax, retaining repetitions until answer-test dispatch.
+
+    SymPy FiniteSet eagerly removes duplicates. STACK's Sets test needs the
+    original entries to explain repetitions, even when the answer is correct.
+    """
+    def _sympystr(self, printer):
+        return "{" + ",".join(printer.doprint(x) for x in self.args) + "}"
+
+    def _latex(self, printer):
+        return r"\left\{" + ", ".join(printer.doprint(x) for x in self.args) + r"\right\}"
+
+
+def is_collection(value):
+    return isinstance(value, (list, HeldSet))
+
+
+def collection_items(value):
+    return value.args if isinstance(value, HeldSet) else value
+
+
+def validate_collection(value):
+    """The public input/answer boundary: flat, bounded, finite scalars only.
+
+    Author lists used by rand/index remain available outside this boundary.
+    """
+    if not is_collection(value):
+        return
+    items = collection_items(value)
+    if len(items) > MAX_COLLECTION_ITEMS:
+        raise Unsupported(f"Collections support at most {MAX_COLLECTION_ITEMS} entries")
+    if any(not isinstance(x, sp.Expr) for x in items):
+        raise Unsupported("Collections must be flat and contain only scalar expressions")
+    for item in items:
+        _finite(item)
 
 
 def symbolic_complex_log(node: Node) -> bool:
@@ -127,8 +165,6 @@ def _tokens(source: str) -> list[tuple[str, str, int, int]]:
         if match is None:
             position = pos + re.match(r"\s*", source[pos:], re.ASCII).end()
             character = source[position]
-            if character in "{}":
-                raise Unsupported("Set expressions {...} are not yet supported")
             raise InvalidAnswer(f"Unexpected character {character!r} (U+{ord(character):04X}) at position {position}")
         kind = match.lastgroup
         value = match.group(kind)
@@ -193,16 +229,17 @@ class _Parser:
         elif val == "(":
             lhs = self.expression(depth=depth + 1)
             self.take(")")
-        elif val == "[":
+        elif val in {"[", "{"}:
+            closing = "]" if val == "[" else "}"
             items = []
-            if self.current != "]":
+            if self.current != closing:
                 while True:
                     items.append(self.expression(depth=depth + 1))
                     if self.current != ",":
                         break
                     self.take(",")
-            self.take("]")
-            lhs = Node("list", children=tuple(items))
+            self.take(closing)
+            lhs = Node("list" if val == "[" else "set", children=tuple(items))
         else:
             raise InvalidAnswer("Expected an expression")
         while True:
@@ -286,6 +323,10 @@ def form_latex(node: Node, env: Mapping[str, Any] | None = None) -> str:
         return r"\left(" + content + r"\right)"
 
     def show(n):
+        if n.kind in {"list", "set"}:
+            opening, closing = ((r"\left[", r"\right]") if n.kind == "list"
+                                else (r"\left\{", r"\right\}"))
+            return opening + ", ".join(show(c) for c in n.children) + closing
         if n.kind == "boolean":
             return r"\mathrm{" + n.value + "}"
         if n.kind == "equation":
@@ -346,8 +387,8 @@ def form_latex(node: Node, env: Mapping[str, Any] | None = None) -> str:
 
 
 def _finite(value: Any):
-    if isinstance(value, list):
-        for item in value:
+    if is_collection(value):
+        for item in collection_items(value):
             _finite(item)
     elif isinstance(value, sp.Basic) and value.has(sp.nan, sp.zoo, sp.oo, -sp.oo):
         raise InvalidAnswer("Non-finite value")
@@ -415,7 +456,8 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
     """Evaluate a parsed expression with a small explicit function whitelist.
 
     Student calls are limited to elementary scalar functions; random values,
-    CAS transformations, lists, and indexing are author-only.
+    CAS transformations and indexing are author-only. Student collections
+    contain at most 32 scalar expressions, with no nesting.
     """
     node = parse(node_or_string) if isinstance(node_or_string, str) else node_or_string
     if not isinstance(node, Node):
@@ -455,10 +497,11 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
             if n.value in {"simp", "true", "false"}:
                 raise InvalidAnswer("Boolean flags are not scalar expressions")
             return sp.Symbol(n.value, **{k: True for k in ("real", "positive") if assumptions.get(k)})
-        if n.kind == "list":
-            if student:
-                raise InvalidAnswer("Only scalar student answers are supported")
-            return [visit(c, depth + 1) for c in n.children]
+        if n.kind in {"list", "set"}:
+            items = [visit(c, depth + 1) for c in n.children]
+            if n.kind == "set" or student:
+                validate_collection(items)
+            return HeldSet(*items) if n.kind == "set" else items
         if n.kind == "index":
             if student:
                 raise InvalidAnswer("Only scalar student answers are supported")
@@ -558,7 +601,10 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
             return _finite(funcs[name](args[0]))
         raise Unsupported("Unknown expression node")
 
-    return _finite(visit(node))
+    result = _finite(visit(node))
+    if student:
+        validate_collection(result)
+    return result
 
 
 def assignments(source: str, env: Mapping[str, Any] | None = None, *, rng: random.Random | None = None,

@@ -39,6 +39,7 @@ def prepare_logic(source: str) -> str:
 # required raw.  Only families implemented by stack-sympy are in scope.
 TESTS = {
     "AlgEquiv": (False, True, False),
+    "Sets": (False, False, False),
     "EqualComAss": (False, False, False),
     "FacForm": (True, False, False),
     "SingleFrac": (False, False, False),

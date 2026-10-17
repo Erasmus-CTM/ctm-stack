@@ -13,7 +13,8 @@ from typing import Any, Mapping
 
 import sympy as sp
 
-from .expressions import InvalidAnswer, Node, Unsupported, canonical_form, evaluate, parse, is_logical
+from .expressions import (InvalidAnswer, Node, Unsupported, canonical_form, evaluate,
+                          parse, is_logical, is_collection, validate_collection)
 
 MAX_DECIMAL_PLACES = 50
 
@@ -288,24 +289,39 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
     Supported: AlgEquiv, EqualComAss, FacForm, SingleFrac, LowestTerms,
     NumAbsolute, NumRelative, NumDecPlaces
     (one to fifty decimal places).
-    Student lists and sets, units, general relations, matrices, and feedback-tree CAS
+    Flat scalar lists/sets additionally support AlgEquiv; Sets provides set feedback.
+    Units, general relations, matrices, and feedback-tree CAS
     features are outside this intentionally limited implementation.
     """
-    if name not in {"AlgEquiv", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
+    if name not in {"AlgEquiv", "Sets", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
                     "NumAbsolute", "NumRelative", "NumDecPlaces"}:
         raise Unsupported(f"Answer test {name!r} is unsupported")
     env = {} if env is None else env
     try:
         student_ast = parse(student) if isinstance(student, str) else student
         student_value = evaluate(student_ast, env, assumptions=assumptions, student=True)
-        if not isinstance(student_value, sp.Basic):
-            raise InvalidAnswer("Only scalar student answers are supported")
     except (InvalidAnswer, TypeError, ZeroDivisionError) as exc:
         return _result(False, False, "invalid", str(exc))
     try:
-        teacher_value = evaluate(teacher, env, assumptions=assumptions)
+        teacher_ast = parse(teacher)
+        teacher_value = evaluate(teacher_ast, env, assumptions=assumptions)
     except (InvalidAnswer, TypeError, ZeroDivisionError) as exc:
         raise Unsupported(f"Invalid teacher expression: {exc}") from exc
+
+    for value in (student_value, teacher_value):
+        validate_collection(value)
+    if name == "Sets" or any(is_collection(x) for x in (student_value, teacher_value)):
+        if name not in {"AlgEquiv", "Sets"}:
+            raise Unsupported("Collections require AlgEquiv or Sets")
+        from .collections import collection_test
+        def element_equiv(a, b, index):
+            if student_ast.kind == teacher_ast.kind == "list":
+                from .equivalence import constant_float_equivalent
+                floating = constant_float_equivalent(student_ast.children[index], teacher_ast.children[index])
+                if floating is not None:
+                    return floating
+            return _equiv(a, b)
+        return collection_test(name, student_value, teacher_value, element_equiv)
 
     from .logic import validate_logic
     for value in (student_value, teacher_value):
@@ -323,7 +339,7 @@ def answer_test(name: str, student: Node | str, teacher: str, options: str = "",
                 or _has_equation(student_value) and not _has_equation(teacher_value)):
             return {**_result(True, False), "cas_valid": False}
         from .equivalence import constant_float_equivalent
-        floating = constant_float_equivalent(student_ast, parse(teacher))
+        floating = constant_float_equivalent(student_ast, teacher_ast)
         if floating is not None:
             return _result(True, floating)
         return _result(True, _equiv(student_value, teacher_value))
