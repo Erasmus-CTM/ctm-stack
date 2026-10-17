@@ -36,3 +36,26 @@ Validation:
 - The browser test now exercises the SPD card and filename-selected source in
   the actual worker. Local Chromium cannot start in this environment, so that
   interaction check requires CI.
+
+## Independent properties and two scoring choices
+
+The follow-up separates `symmetric(A)` and `positive_definite(A)` in the same
+filename-selected checker file. Positive definiteness means positivity of the
+real quadratic form, including for nonsymmetric matrices. It is checked exactly
+by applying Sylvester's criterion to `(A + A.T) / 2`. The registered callbacks
+are `is_symmetric`, `is_positive_definite` and their conjunction `is_spd`.
+
+The original question keeps a single full-credit decision. A second question,
+`questions/symmetric-positive-definite-prt.xml`, awards half for each independent
+condition in two PRTs. Both have nine authored cases. The guide and worked
+examples show both live questions, all four property combinations, and explain
+that PRT scoring policy can also require both conditions for any credit. The
+guide describes the Hermitian counterpart for complex entries while explicitly
+retaining the live examples' real-rational domain.
+
+Validation: 824 tests passed, 1 skipped, 149 subtests passed, including all
+rendered-page tests. Direct tests cover both expected boolean values, all four
+property combinations, nonsymmetric matrices with positive eigenvalues but
+nonpositive quadratic forms, rectangular matrices, unsupported entries and
+separate PRT feedback and scores. The browser integration test exercises both
+cards and their authored tests; browser execution is delegated to CI.

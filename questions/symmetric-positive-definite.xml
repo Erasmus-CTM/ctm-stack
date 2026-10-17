@@ -19,4 +19,6 @@
 <qtest><testcase>5</testcase><testinput><name>ansm</name><value>matrix([1,1],[1,1])</value></testinput><expected><name>result</name><expectedscore>0</expectedscore><expectedpenalty>0.1</expectedpenalty><expectedanswernote>spd-F</expectedanswernote></expected></qtest>
 <qtest><testcase>6</testcase><testinput><name>ansm</name><value>matrix([1,2],[0,1])</value></testinput><expected><name>result</name><expectedscore>0</expectedscore><expectedpenalty>0.1</expectedpenalty><expectedanswernote>spd-F</expectedanswernote></expected></qtest>
 <qtest><testcase>7</testcase><testinput><name>ansm</name><value>matrix([1,2],[2,1])</value></testinput><expected><name>result</name><expectedscore>0</expectedscore><expectedpenalty>0.1</expectedpenalty><expectedanswernote>spd-F</expectedanswernote></expected></qtest>
+<qtest><testcase>8</testcase><testinput><name>ansm</name><value>matrix([2,1],[0,2])</value></testinput><expected><name>result</name><expectedscore>0</expectedscore><expectedpenalty>0.1</expectedpenalty><expectedanswernote>spd-F</expectedanswernote></expected></qtest>
+<qtest><testcase>9</testcase><testinput><name>ansm</name><value>matrix([0,1],[0,0])</value></testinput><expected><name>result</name><expectedscore>0</expectedscore><expectedpenalty>0.1</expectedpenalty><expectedanswernote>spd-F</expectedanswernote></expected></qtest>
 </question></quiz>

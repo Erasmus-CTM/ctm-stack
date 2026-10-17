@@ -81,18 +81,39 @@ calls for `PythonChecker` or an equivalent native STACK author calculation.
 
 ### Symmetric positive definite matrices {#symmetric-positive-definite-matrices}
 
-Try giving **any symmetric positive definite $2\times2$ matrix** with
-integer or exact-fraction entries. For a real symmetric matrix
-$\begin{pmatrix}a&b\\b&c\end{pmatrix}$, Sylvester's criterion says
-$a>0$ and $ac-b^2>0$. The identity works, as does
-$\begin{pmatrix}2&1\\1&2\end{pmatrix}$. A symmetric matrix with determinant
-zero does not work.
+These are **two distinct conditions**. A matrix is symmetric when $A=A^T$.
+Positive definiteness means $x^T A x>0$ for every nonzero real vector $x$;
+it can hold even when $A$ is not symmetric. To test the latter exactly, use
+the symmetric part $S=(A+A^T)/2$: $x^T A x=x^T Sx$. Sylvester's criterion
+then checks that every leading principal determinant of $S$ is positive.
+For $A=\begin{pmatrix}a&b\\c&d\end{pmatrix}$, this becomes
+$a>0$ and $ad-((b+c)/2)^2>0$. Symmetry is the separate requirement
+$b=c$. All four outcomes occur among rational $2\times2$ matrices:
 
-This uses an author-supplied `PythonChecker`: positive definiteness is not a
-built-in `MatrixProperty` option. The checker receives the parsed matrix and
-the expected result `true`; the PRT awards credit. Explore the live question,
-then follow the [single authoring walkthrough](#author-the-spd-checker) to
-see its complete Python file, XML node, Quarto block and tests.
+| Matrix | Symmetric? | Positive definite? | Combined / separate marks |
+|---|---|---|---|
+| $\begin{pmatrix}2&1\\1&2\end{pmatrix}$ | Yes | Yes | $1$ / $1$ |
+| $\begin{pmatrix}2&1\\0&2\end{pmatrix}$ | No | Yes | $0$ / $1/2$ |
+| $\begin{pmatrix}1&2\\2&1\end{pmatrix}$ | Yes | No | $0$ / $1/2$ |
+| $\begin{pmatrix}0&1\\0&0\end{pmatrix}$ | No | No | $0$ / $0$ |
+
+For complex entries, use **Hermitian symmetry** $A=A^*$, where
+$A^*=\overline A^{\,T}$ is the conjugate transpose. A Hermitian matrix is
+positive definite when $z^*Az>0$ for every nonzero complex $z$; the same
+leading-principal-determinant test applies. For example,
+$\begin{pmatrix}2&i\\-i&2\end{pmatrix}$ has leading determinants $2$ and $3$.
+To keep the two checks independent on arbitrary complex matrices, define
+the positivity condition as $\operatorname{Re}(z^*Az)>0$ and test the Hermitian
+part $(A+A^*)/2$. The live examples here accept **real rational entries only**;
+a complex checker must also extend that input-domain check and use the
+conjugate transpose (`A.H` in SymPy), rather than `A.T`.
+
+Both activities below use the same author Python file and exact rational
+entries. The first asks for **both properties at once**. A combined `is_spd`
+function gives one true/false decision; its single PRT awards full credit only
+when both hold. Try the identity and a different correct answer, then the
+nonsymmetric positive-definite example above. The [authoring walkthrough](#author-the-spd-checker)
+shows the file, XML and Quarto block.
 
 ```{.stack-question #docs-spd-matrix}
 #| file: ../questions/symmetric-positive-definite.xml
@@ -104,6 +125,26 @@ see its complete Python file, XML node, Quarto block and tests.
 [Download the question XML](../questions/symmetric-positive-definite.xml) ·
 [View the checker file](../questions/spd-checker.py) ·
 [Try it with the other matrix examples](../examples.qmd#symmetric-positive-definite-matrix)
+
+The second activity checks **symmetry and positive definiteness separately**.
+It uses `is_symmetric` and `is_positive_definite` in two PRTs, each worth half
+the total. A nonsymmetric positive-definite matrix earns only the positivity
+half; a symmetric indefinite matrix earns only the symmetry half. If your
+teaching goal is a single all-or-nothing decision, keep the combined checker
+or make the PRT branches gate the total instead. Separate PRTs are useful
+when each condition should have its own marks and authored feedback. A binary
+PRT path could instead check symmetry first, visit positive definiteness only
+on the true branch, and award credit only when the second node is true.
+
+```{.stack-question #docs-spd-separate}
+#| file: ../questions/symmetric-positive-definite-prt.xml
+#| question: Symmetry and positive definiteness separately
+#| python-checkers: ../questions/spd-checker.py
+#| review: true
+```
+
+[Download the two-PRT question XML](../questions/symmetric-positive-definite-prt.xml) ·
+[Compare the two authoring patterns](#author-the-spd-checker)
 
 ## For developers
 
@@ -141,38 +182,62 @@ never supplies cell marks.
 ### Author the SPD checker {#author-the-spd-checker}
 
 Save this complete file as [`questions/spd-checker.py`](../questions/spd-checker.py).
-It registers one function, `is_spd`, and checks exact fractions, symmetry and
-positive leading principal determinants:
+It registers three functions. `is_symmetric` and `is_positive_definite`
+are independent tests; `is_spd` combines them. Positive definiteness is
+decided from the leading principal determinants of the symmetric part,
+including for a nonsymmetric submission:
 
 ```python
-"""Check symmetric positive definiteness for exact rational matrices."""
+"""Check symmetry and positive definiteness for exact rational matrices."""
 
 
-def is_spd(ansm, expected):
+def symmetric(A):
+    return A.rows == A.cols and A == A.T
+
+
+def positive_definite(A):
+    if A.rows != A.cols:
+        return False
+    # x.T*A*x equals x.T*S*x, including when A is not symmetric.
+    S = (A + A.T) / 2
+    return all(S[:k, :k].det() > 0 for k in range(1, S.rows + 1))
+
+
+def check_property(ansm, expected, property_test, explanation):
     if any(entry.is_Rational is not True for entry in ansm):
         return {"valid": False, "correct": False,
                 "feedback": "Use integers or exact fractions in every cell."}
-
-    if ansm.rows != ansm.cols or ansm != ansm.T:
-        positive = False
-    else:
-        # Sylvester's criterion for real symmetric matrices.
-        positive = all(ansm[:k, :k].det() > 0 for k in range(1, ansm.rows + 1))
-
-    correct = bool(positive) == bool(expected)
+    correct = bool(property_test(ansm)) == bool(expected)
     return {"valid": True, "correct": correct,
-            "feedback": "" if correct else
-                "The matrix must be symmetric, with every leading principal determinant positive."}
+            "feedback": "" if correct else explanation}
 
 
-CHECKERS = {"is_spd": is_spd}
+def is_symmetric(ansm, expected):
+    return check_property(ansm, expected, symmetric,
+                          "The symmetry condition does not match the expected result.")
+
+
+def is_positive_definite(ansm, expected):
+    return check_property(ansm, expected, positive_definite,
+                          "The positive-definiteness condition does not match the expected result.")
+
+
+def is_spd(ansm, expected):
+    return check_property(ansm, expected,
+                          lambda A: symmetric(A) and positive_definite(A),
+                          "The symmetric-positive-definiteness condition does not match the expected result.")
+
+
+CHECKERS = {"is_symmetric": is_symmetric,
+            "is_positive_definite": is_positive_definite,
+            "is_spd": is_spd}
 ```
 
-The function receives the parsed learner matrix as `ansm` and the PRT's
-expected property result as `expected`. A non-rational entry is invalid; a
-well-formed matrix that fails the property follows the false branch. A plain
-Python `True` or `False` can replace the dictionary when no extra feedback is
-needed.
+Each registered function receives the parsed learner matrix as `ansm` and
+the PRT's expected property result as `expected`. A non-rational entry is
+invalid; a well-formed matrix that fails the selected property follows its
+PRT's false branch. A plain Python `True` or `False` can replace the
+dictionary when no extra feedback is needed.
 
 The [complete XML question](../questions/symmetric-positive-definite.xml)
 sets the matrix input's model answer to `<tans>matrix([1,0],[0,1])</tans>`,
@@ -188,12 +253,30 @@ the identity. Its PRT passes the expected property result and awards marks:
 <falsescoremode>=</falsescoremode><falsescore>0</falsescore>
 ```
 
-The seven authored tests cover another correct integer matrix, a correct
-fractional matrix, and negative definite, semidefinite, nonsymmetric and
-indefinite submissions. The checker decides whether the answer satisfies the
-rule; the PRT branches own credit.
+The nine authored tests cover alternate integer and fractional SPD matrices,
+all four symmetry/positivity combinations, and other negative or singular
+cases. The checker decides whether the answer satisfies the rule; the PRT
+branches own credit.
 
-Add the XML and **only the checker filename** to a root-level Quarto page:
+For separate marks, the [second XML question](../questions/symmetric-positive-definite-prt.xml)
+uses the **same** matrix input and Python file. It has two response trees:
+
+| PRT name | `testoptions` | `tans` | Weight | What it awards |
+|---|---|---|---|---|
+| `symmetry` | `is_symmetric` | `true` | $0.5$ | Half the total when $A=A^T$ |
+| `positivity` | `is_positive_definite` | `true` | $0.5$ | Half the total when $x^T A x>0$ for all nonzero real $x$ |
+
+Each node's true branch has score `1` within its own half-weighted PRT; its
+false branch has score `0`. The positive-definiteness check is **not** gated
+on symmetry, so a nonsymmetric positive-definite matrix earns half credit.
+The question gives separate success messages and checker diagnostics for
+the two conditions. For an all-or-nothing PRT without `is_spd`, route the
+symmetry node's true branch to a positive-definiteness node. Both false
+branches score zero; only the second true branch scores one. That PRT design
+and the Python wrapper enforce the same combined requirement, with different
+places to manage the branch feedback.
+
+Add either XML file and **only the checker filename** to a root-level Quarto page:
 
 ````markdown
 ```{.stack-question}
@@ -204,6 +287,9 @@ Add the XML and **only the checker filename** to a root-level Quarto page:
 ```
 ````
 
+To use the separately weighted question, change `file` to
+`questions/symmetric-positive-definite-prt.xml` and `question` to
+`Symmetry and positive definiteness separately`; keep the same checker file.
 For a `.qmd` in `docs/`, use `../questions/...` instead. Quarto reads that
 Python file at build time and includes its source for browser grading. The
 XML names `is_spd` but contains no Python code or file path. There is no
@@ -215,13 +301,16 @@ From the project root, test the authored cases and render:
 PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
   --file questions/symmetric-positive-definite.xml \
   --python-checkers questions/spd-checker.py
+PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
+  --file questions/symmetric-positive-definite-prt.xml \
+  --python-checkers questions/spd-checker.py
 quarto render
 ```
 
 Inspect the live card and try an alternate correct answer such as
 `matrix([2,1],[1,2])` as well as a symmetric matrix with nonpositive
-determinant. This is the same question as the [teaching card](#symmetric-positive-definite-matrices)
-and [examples-page card](../examples.qmd#symmetric-positive-definite-matrix).
+determinant. Both scoring choices have [teaching cards](#symmetric-positive-definite-matrices)
+and [examples-page cards](../examples.qmd#symmetric-positive-definite-matrix).
 
 ### PythonChecker API and a scalar example
 

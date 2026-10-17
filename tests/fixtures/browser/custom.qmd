@@ -25,3 +25,10 @@ title: "Custom Python checker integration"
 #| python-checkers: questions/spd-checker.py
 #| review: true
 ```
+
+```{.stack-question #custom-spd-prt}
+#| file: questions/symmetric-positive-definite-prt.xml
+#| question: Symmetry and positive definiteness separately
+#| python-checkers: questions/spd-checker.py
+#| review: true
+```
