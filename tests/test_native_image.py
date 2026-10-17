@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 from native_compliance import native_image as image
 from native_compliance import maxima_runner as native
-from benchmark_native_image import compare
+from benchmark_native_image import compare, verify_state_isolation, verify_sample_order
 
 
 def test_image_manifest_rejects_runtime_mismatch_and_corruption():
@@ -70,6 +70,10 @@ def test_preloaded_batch_rebases_paths_without_loading_stack_again():
     assert 'STACK_SETUP(true)' in batch
     assert 'stacklocation:' in batch and 'stacktmplocation:' in batch
     assert 'file_search_maxima:append' in batch and 'file_search_lisp:append' in batch
+    assert 'tmp/###.{mac,mc}' in batch.replace('\\\\', '/')
+    assert 'tmp/###.{lisp}' in batch.replace('\\\\', '/')
+    assert batch.index('file_search_maxima:delete') < batch.index('stacktmplocation:')
+    assert batch.index('file_search_lisp:append') < batch.index('STACK_SETUP(true)')
     assert 'STACKNATIVE-BEGIN|0|0' in batch
 
 
@@ -105,6 +109,32 @@ def test_runner_launches_separate_image_processes_with_private_homes():
     assert len(launches) == len(set(launches)) == 3  # warm-up and two independent case processes
     assert report['summary']['ok'] == 2
     assert report['metadata']['preloaded_image'] == {'key': 'verified'}
+
+
+def test_trusted_state_probe_checks_assumption_declaration_and_binding_in_new_processes():
+    homes = []
+    def command(argv, timeout, **kwargs):
+        batch = Path(argv[-1].removeprefix('--batch='))
+        text = batch.read_text()
+        homes.append(batch.parent)
+        value = ['[z > 0]', 'true', '73'] if 'stack_image_probe_binding:73' in text else ['[]', 'false', 'stack_image_probe_binding']
+        return 'STACKNATIVE-BEGIN|0|0\nSTACKIMAGE-STATE|'+json.dumps(value)+'\nSTACKNATIVE-END|0|0\n'
+    with patch.object(Path, 'symlink_to'), patch('benchmark_native_image._command', side_effect=command):
+        result = verify_state_isolation(ROOT, ROOT)
+    assert result['passed']
+    assert len(set(homes)) == 4
+
+
+def test_order_probe_compares_case_ids_despite_reversed_order_and_parallelism():
+    rows = [{'id': str(n), 'test': test, 'student': 'x', 'teacher': 'x', 'options': ''}
+            for n, test in enumerate(('AlgEquiv', 'SameType'))]
+    calls = []
+    def run(cases, source, **kwargs):
+        calls.append((kwargs['jobs'], [c['id'] for c in cases]))
+        return {'observations': [{'case_id': c['id'], 'correct': True} for c in cases]}
+    with patch('benchmark_native_image.run_native', side_effect=run):
+        assert verify_sample_order(rows, ROOT, ROOT)['passed']
+    assert calls == [(1, ['0', '1']), (4, ['1', '0'])]
 
 
 def test_benchmark_fails_on_answer_note_and_probe_difference():
