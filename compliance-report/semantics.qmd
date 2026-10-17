@@ -1,217 +1,249 @@
 ---
-title: "Semantics and open questions"
-subtitle: "What was implemented, what remains different, and what to ask STACK"
+title: "Semantics: behavior, questions, and future work"
+subtitle: "Native agreement, author decisions, and bounded port choices"
 toc: true
+toc-depth: 2
 ---
 
-The comparison uses STACK revision `10d323311b7f39fb7b092dd10ce75f7d8632f525`.
-Case numbers below refer to the unchanged 2,303-row imported fixture. An expected
-acceptance is a statement in that fixture, not automatically a universally valid
-complex identity. Native agreement and mathematical correctness are separate axes.
+This page compares a bounded SymPy CAS adapter with pinned STACK behavior. Case
+numbers refer to the unchanged 2,303-row imported fixture. An expected acceptance
+in that fixture is evidence of the desired test outcome, not necessarily a
+universally valid complex identity. Mathematical truth, fixture expectation,
+native observation, and port behavior are kept separate below.
 
-## How to read the evidence
+## For the STACK author {#author-attention}
 
-Four questions are kept separate throughout this page:
+| Priority | Cases and question | What we need from the author |
+|---|---|---|
+| Semantic clarification | [50, 76, 92, 99, 101, 127, 155, 167](#domain-questions) | Specify the domain or branch assumptions for these accepted identities. The table gives counterexamples under principal-complex semantics and a question for each row. |
+| Fixture/domain clarification | [471](#case-471) | Confirm whether real `x` is part of the intended fixture contract. Its identity holds for real `x` but fails at `x=-i`; proving the real case in the port is separate engineering work. |
+| Set compatibility clarification | [212](#exact-sets) | Confirm whether rejection of mathematically equal set members is the intended prepared-form behavior, and what normalization authors should expect. The port currently accepts. |
+| Optional development advice | [Trig member in a set](#trig-set-identity), [474](#case-474) | Advise whether stronger bounded set preparation/matching or an exact-real algebraic-number proof would be useful. Neither is presented as a semantic dispute requiring approval for the port's current choices. |
 
-| Axis | What it establishes |
-|---|---|
-| Mathematical claim | Whether the expressions agree under stated domain and branch assumptions. |
-| Fixture expectation | What the imported STACK row asks the test to return; it is evidence of the intended test outcome. |
-| Native observation | What the pinned STACK/Maxima run actually returns. This is not automatically a mathematical proof. |
-| Port behavior | What the bounded SymPy implementation returns or explicitly declines to support. |
+Cases [201–203](#exact-sets) are desired exact acceptances that native STACK
+rejects; they are reported for visibility rather than as a request to change their
+expected outcome. Case [80](#reciprocal-roots) follows an explicit published STACK
+convention and needs no new author decision. The remaining sections document
+implemented behavior, proposed development, and deliberate port limits.
 
-**Documented convention** means that a STACK source explicitly prescribes a
-behavior. **Observed behavior** records an implementation result. **Proof or
-normalization limit** means that a test does not establish an equality.
-**Port boundary** means that this implementation deliberately rejects an input
-or operation it cannot preserve. An engineering explanation is labeled as such;
-it does not turn an observation into an explicit convention.
+## Implemented behavior and observed native agreement {#implemented}
 
-The collection trace below uses Maxima **5.46.0**, the pinned STACK revision
-above, port revision `1e72245874bfea49836e58ba48dcee30af5ee0ba`, and SymPy
-**1.13.3**. The report remains about the bounded CAS adapter, not all Moodle
-controller or question-state behavior.
+Agreement here concerns the stated cases and bounded contracts. It does not
+claim general Maxima normalization, complete CAS parity or identical internal
+representations.
 
-## Implemented scalar and written-form behavior
+### Written form and numerical fractions
 
-### Written form: cases 645, 647, 658, 665 and 2278
-
-**Evidence:** documented written-form contract and observed native fraction handling.
-
-`EqualComAss` checks more than mathematical value. STACK's
+`EqualComAss` checks written structure in addition to value. STACK's
 [rule-based test documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Rule_based.md)
-explains that division is held as a numerator multiplied by an opaque reciprocal.
-The port now preserves that structure:
+describes division as a numerator multiplied by an opaque reciprocal. The port
+now preserves that form:
 
 | Cases | Submitted / reference | Expected result and reason |
 |---|---|---|
-| 645 | `x/(-y)` / `-(x/y)` | Reject: a minus inside the reciprocal differs from an outer minus. |
-| 647 | `1/2*1/x` / `1/(2*x)` | Reject: separately written fractions differ from one reciprocal of a product. |
-| 658 | `(1/2)*(a+b)` / `(a+b)/2` | Reject: a rational coefficient differs from a held division of the whole sum. |
-| 665 | `1/3*i` / `i/3` | Reject for the same written numerator/reciprocal distinction. |
-| 2278 | `x-1/-4` / an ignored reference | Reject: when extracting numerical fractions, the outer subtraction gives a negative numerator over a negative denominator. |
+| 645 | `x/(-y)` / `-(x/y)` | Reject: an inner reciprocal minus differs from an outer minus. |
+| 647 | `1/2*1/x` / `1/(2*x)` | Reject: two written fractions differ from one reciprocal of a product. |
+| 658 | `(1/2)*(a+b)` / `(a+b)/2` | Reject: a rational coefficient differs from held division of the sum. |
+| 665 | `1/3*i` / `i/3` | Reject: the written numerator/reciprocal distinction remains. |
+| 2278 | `x-1/-4` / ignored reference | Reject: numerical-fraction extraction sees a negative numerator over a negative denominator after outer subtraction. |
 
-The final case is **not** a ban on negative denominators. Native `LowestTerms`
-accepts `1/-3` and `x+1/-4`, while rejecting `-1/-3` and `x-1/-4`.
-This follows [list_expression_numbers and lowesttermsp](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L687-L713).
-It continues to ignore the reference value and does not cancel polynomial factors.
+Case 2278 does **not** ban negative denominators. Native `LowestTerms` accepts
+`1/-3` and `x+1/-4` but rejects `-1/-3` and `x-1/-4`, as follows from
+[list_expression_numbers and lowesttermsp](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L687-L713).
+It ignores the reference and does not cancel polynomial factors. Written form
+and algebraic normalization therefore remain distinct contracts.
 
-### Floating-point constants: cases 32, 37 and 43
-
-**Evidence:** observed native arithmetic, documented floating-point context, and bounded port emulation.
+### Literal floating-point arithmetic
 
 STACK's [numerical-rounding documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Numerical_rounding.md)
 describes binary floating-point artifacts and recommends numerical tests for
-approximate answers. The port reproduces the following literal-constant cases
-with finite binary64 arithmetic and exact equality of the resulting machine values:
+approximate answers. For these literal-constant `AlgEquiv` rows, the port
+reproduces native outcomes through finite binary64 arithmetic and exact equality
+of the resulting machine values:
 
 | Case | Submitted / reference | Native-compatible result |
 |---|---|---|
-| 32 | `452` / `4.52*10^2` | Reject: the multiplication produces approximately `451.99999999999994`. |
-| 37 | `0.99999999` / `99999998/99999999` | Accept: both map to the same binary64 value; the exact rational values differ. |
-| 43 | `100.4-80.0` / `20.4` | Reject: the subtraction produces approximately `20.400000000000006`. |
+| 32 | `452` / `4.52*10^2` | Reject: the product is approximately `451.99999999999994`. |
+| 37 | `0.99999999` / `99999998/99999999` | Accept: both yield the same binary64 value although the exact rationals differ. |
+| 43 | `100.4-80.0` / `20.4` | Reject: subtraction yields approximately `20.400000000000006`. |
 
-Case 37 also has a direct explanation from the STACK author in
-[issue 1581](https://github.com/maths/moodle-qtype_stack/issues/1581#issuecomment-3314961866):
-Maxima's rational conversion of a float need not recover its decimal fraction.
-The discussion separates exact mathematical notation, finite machine precision,
-and the difficulty of inferring a student's intention. The port's bounded
-binary64 comparison reproduces these cases; it does not implement Maxima's
-general `rat` algorithm or claim all floating-point behavior agrees.
+For case 37, the STACK author's [issue 1581 comment](https://github.com/maths/moodle-qtype_stack/issues/1581#issuecomment-3314961866)
+explains that Maxima's rational conversion of a float need not recover its
+decimal fraction. It distinguishes exact notation, finite precision, and the
+difficulty of inferring student intent. The port's binary64 path is bounded: it
+applies to `AlgEquiv` literal arithmetic with a decimal/scientific literal and
+integer exponents. Symbols, functions and frozen author values retain the
+symbolic path. The shared parser evaluates decimals as exact rationals, and
+numerical tolerance tests retain their own tolerances. The port neither
+implements Maxima's general `rat` algorithm nor adds epsilon-based algebraic
+acceptance.
 
-This compatibility path applies only to `AlgEquiv` with literal arithmetic,
-at least one decimal/scientific literal, and integer exponents. Symbols,
-functions, and frozen author values retain the symbolic path. The shared parser
-still evaluates decimals as exact rationals; numerical tolerance tests retain
-their own tolerances. There is no epsilon-based algebraic acceptance.
-
-### Reciprocal square roots: case 80
-
-**Evidence:** an explicit STACK convention, reproduced within a stated port boundary.
+### Reciprocal square roots {#reciprocal-roots}
 
 The [installation notes](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Installation/index.md)
-explicitly require `1/sqrt(x)` and `sqrt(1/x)` to count as equivalent, while
-acknowledging the domain debate. The port now implements that symbolic convention
-for a top-level reciprocal square root of a **single symbol**. It does not
-propagate the convention into logarithms, larger products, or ratios. This is a documented STACK
-compatibility rule, not a general principal-complex identity: at a negative real
-value the two principal values have opposite signs. Explicit numeric inputs such
-as `1/sqrt(-1)` and `sqrt(1/(-1))` remain distinct. Ratios, arbitrary root products,
-and nested powers are not forced into the same convention.
+explicitly require `1/sqrt(x)` and `sqrt(1/x)` to be equivalent while noting the
+domain debate. The port implements this convention for a top-level reciprocal
+square root of a **single symbol** (case 80). It does not propagate the rule into
+logarithms, larger products or ratios. At a negative real value the two
+principal-complex values have opposite signs, so this is a documented symbolic
+compatibility convention, not a general principal-complex identity. Explicit
+numeric `1/sqrt(-1)` and `sqrt(1/(-1))` remain distinct; ratios, arbitrary root
+products and nested powers are not forced together.
 
-### Principal logarithmic powers: case 166
+### Principal logarithmic powers
 
-**Evidence:** a mathematical proof implemented in the port; no case-specific published STACK rationale was located.
-
-For nonzero `x,y`, principal powers give
+For nonzero `x,y`, principal powers satisfy
 
 $$x^{\log y}=\exp(\log y\,\log x)=\exp(\log x\,\log y)=y^{\log x}.$$
 
-The port now certifies this through bounded exponential rewriting, a strategy
+The port certifies this case 166 identity by bounded exponential rewriting,
 also used in [STACK's equivalence routine](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180).
-This proof is our mathematical explanation; we did not locate a published
-STACK rationale for this particular row. It does not expand a logarithm of a
-product and does not require positive-real assumptions. The earlier description
-of this case as requiring a different branch convention was too conservative.
+This is our mathematical proof, not a located published STACK rationale for the
+particular row. It does not expand logarithms of products or require positive
+real assumptions. The earlier characterization as a different branch
+convention was too conservative.
 
-## Eight domain/branch differences for discussion
+### Finite lists and sets {#finite-sets}
 
-All eight currently have a desired/native acceptance and a port rejection.
-The counterexamples below concern the port's principal-complex interpretation.
-They do not establish that STACK intended that interpretation. Where the sources
-give only a mechanism or nearby context, we explicitly leave the intended
-contract open rather than claiming the behavior is a deliberate design choice.
+The supported collection tests have different contracts:
 
-| Case | Identity accepted by STACK | What happens under principal-complex semantics | Question for STACK |
+| Test and objects | Pinned native comparison route | Current port contract |
+|---|---|---|
+| `AlgEquiv`, lists | Recursively compare corresponding entries with `AlgEquiv`. | Ordered recursive comparison for supported leaves. |
+| `AlgEquiv`, sets | Prepare members with `ATSets_prepare`, then compare membership. | Structural SymPy members, with bounded exact rectangular conversion for certain numeric complex constants. |
+| `Sets` | Related set preparation, with duplicate, extra and missing feedback. | Structural member comparison and outer duplicate feedback; no general scalar-proof matching. |
+| `EqualComAss` | Written form after applicability/equivalence checks. | Held arithmetic, list order and set multiplicity in the supported subset. |
+| `SameType` | `ATAlgEquivfun` applicability at this pin. | The observed applicability behavior, not a strict nested-shape validator. |
+
+The pinned [set routines](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac#L1667-L1734)
+do not run full scalar `algebraic_equivalence` on every candidate member pair.
+STACK's [equivalence documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md)
+describes canonical representations and the expression-growth cost of stronger
+generic transformations. That explains a general engineering tradeoff; it does
+not prove that any particular rejected equality was intentional. The port uses
+SymPy normalization, not every intermediate Maxima form. For example,
+`{(x+1)^2}` and `{x^2+2*x+1}` remain structurally distinct in its set tests.
+Its bounded rational multiple of `exp(i*pi*q)` may acquire an exact rectangular
+form under `AlgEquiv` but not `Sets`. Matching results alone do not establish
+matching preparation pipelines.
+
+Lists retain order and repetition; nested sets retain their boundaries, so
+`{1,{2}}` is not flattened to `{1,2}`. Lists inside sets retain list order. The
+port preserves submitted repetitions until the relevant test runs. `Sets`
+duplicate feedback applies to the submitted **outer** set:
+
+| Submitted / reference | `Sets` result |
+|---|---|
+| `{{1,1}}` / `{{1}}` | Correct, no outer duplicate warning. |
+| `{{1},{1}}` / `{{1}}` | Correct, with an outer duplicate warning. |
+
+This does not promise a warning for every repeated nested leaf. The explicit
+[`EqualComAss` written-form contract](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Rule_based.md)
+distinguishes `{4,4}` from `{4}`. A set's entries commute, but written
+multiplicity and nested boundaries are retained: `{1,2,2}` / `{2,1,2}` passes,
+whereas `{4,4}` / `{4}` fails the form check despite equal mathematical set
+values. Nested list order matters. The port checks applicability and algebraic
+equality before held form. Frozen teacher/qtest aliases that would lose the
+required form fail at build time; that is a port preservation boundary, not a
+native prohibition.
+
+At this pin, [`ATSameTypefun`](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac)
+uses `ATAlgEquivfun` applicability. The port reproduces these observations:
+
+| Pair | `SameType` and reason |
+|---|---|
+| `[1,[2]]` / `[9]` | True: unequal list length remains applicable. |
+| `[1,[2]]` / `[9,{3}]` | False: equal-length lists recurse to differing member types. |
+| `{[1,2]}` / `{{1,2}}` | True: set/set comparison is applicable regardless of member types. |
+
+These are predicate results, not an intentional mathematical definition of
+nested type or strict shape equality. Collection input `checkanswertype` follows
+the same rule; content still requires an equality test.
+
+## Questions requiring clarification {#questions}
+
+### Eight domain and branch rows {#domain-questions}
+
+All eight have desired/native acceptance and port rejection. The
+counterexamples test principal-complex semantics; they do not establish that
+STACK intends that domain. Please clarify the assumptions rather than infer a
+general rewrite from the observed results.
+
+| Case | Accepted identity | Principal-complex qualification or counterexample | Question for STACK |
 |---|---|---|---|
-| 50 | `i/sqrt(x) = sqrt(-1/x)` | True for nonzero real `x`. At `x=-i`, the sides are `exp(3*pi*i/4)` and `exp(-pi*i/4)`. | Is `x` implicitly real, or is another symbolic-root convention intended? |
-| 76 | `abs(x) = sqrt(x^2)` | True for real `x`; at `x=i`, the sides are `1` and `i`. The port already accepts the identity with its explicit real assumption. | Should the fixture declare real `x`? |
-| 92 | `6*((x-2)^3)^k = 6*(x-2)^(3*k)` | At `x=1,k=1/2`, the sides are `6*i` and `-6*i`. | Is `k` integral, is `x>2`, or is odd-inner-power denesting intentional? |
-| 99 | `sqrt(k/m)*sqrt(m/k) = 1` | True for positive real `k/m`; at `k=-1,m=1`, the product is `-1`. | Should positivity be explicit, or is a broader root-combination rule intended? |
+| 50 | `i/sqrt(x) = sqrt(-1/x)` | True for nonzero real `x`; at `x=-i`, the sides are `exp(3*pi*i/4)` and `exp(-pi*i/4)`. | Is `x` implicitly real, or is another root convention intended? |
+| 76 | `abs(x) = sqrt(x^2)` | True for real `x`; at `x=i`, the sides are `1` and `i`. The port accepts under an explicit real assumption. | Should the fixture declare real `x`? |
+| 92 | `6*((x-2)^3)^k = 6*(x-2)^(3*k)` | At `x=1,k=1/2`, the sides are `6*i` and `-6*i`. | Is `k` integral, `x>2`, or odd-inner-power denesting intended? |
+| 99 | `sqrt(k/m)*sqrt(m/k) = 1` | True for positive real `k/m`; at `k=-1,m=1`, the product is `-1`. | Should positivity be explicit, or is a broader root combination intended? |
 | 101 | `2*pi*sqrt(m/k) = 2*pi/sqrt(k/m)` | At `m=-1,k=1`, the sides are `2*pi*i` and `-2*pi*i`. | Is positivity intended, or does the documented single-symbol convention extend to ratios? |
 | 127 | `(-1)^n*cos(x)^n = (-cos(x))^n` | True for integer `n`; at `n=1/2,x=pi`, the sides are `-1` and `1`. | Is `n` implicitly integral? |
 | 155 | `log(a^2*b) = 2*log(a)+log(b)` | True for positive real `a,b`; at `a=-1,b=1`, the sides are `0` and `2*pi*i`. | Should positivity be required, or are branch constants ignored? |
-| 167 | `log((x+1)/(1-x)) = -log((1-x)/(x+1))` | True on the real interval `-1<x<1`; at `x=2`, the sides differ by `2*pi*i`. | Is that interval intended, or is equality modulo `2*pi*i` intended? |
+| 167 | `log((x+1)/(1-x)) = -log((1-x)/(x+1))` | True for real `-1<x<1`; at `x=2`, the sides differ by `2*pi*i`. | Is the interval intended, or equality modulo `2*pi*i`? |
 
-Evidence and limits:
+[Defining variables](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md)
+documents `assume`/`declare` contexts and the real-style square-root identity
+relevant to 50 and 76, without specifying those bare rows completely.
+[Simplification](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Simplification.md)
+warns against general nested-power denesting without assumptions, making 92 a
+question rather than a license for blanket rewriting. The
+[equivalence implementation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180)
+sets `logexpand:super` and applies transformations including `radcan`; that is
+a mechanism for logarithmic differences, not a per-case justification for
+ignoring branches. For 50, 99, 101, 127, 155 and 167 we found fixture
+expectations and implementation, but no case-specific published rationale. The
+counterexamples and questions are the port team's analysis.
 
-- [Defining variables](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md)
-  documents explicit `assume`/`declare` contexts and the real-style square-root
-  identity relevant to cases 50 and 76. It does not fully specify their bare rows.
-- [Simplification](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Simplification.md)
-  explicitly warns against general nested-power denesting without assumptions.
-  That makes case 92 a question to resolve, not permission for a blanket rewrite.
-- The [implementation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180)
-  sets `logexpand:super`, then applies several transformations including `radcan`.
-  This supplies an implementation mechanism for logarithmic differences, not a
-  per-case mathematical justification for ignoring branches.
-- For 50, 99, 101, 127, 155 and 167, we located fixture expectations and the
-  implementation but no case-specific published rationale. The explanations and
-  counterexamples above are the port team's analysis, offered for discussion.
+### Nested radical: clarify the domain {#case-471}
 
-## Two missing exact proofs
+Case 471 uses expected acceptance (`-3`) but native and port both reject. For
+real `x`, put `u=sqrt(x^2+1)+x`. Then `u>0` and
+`u^2=2*x*sqrt(x^2+1)+2*x^2+1`, so the outer square root is `u` and the submitted
+expression is zero. At complex `x=-i` the expression is instead `2*i`.
+Please confirm whether the fixture assumes real `x`. A bounded, sign-aware proof
+of that real identity is separate port work; native rejection does not settle
+the mathematical claim. STACK's [equivalence documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md)
+acknowledges incomplete radical proofs and the expression-growth/timeout risk of
+aggressive generic transformations.
 
-Both source rows use `-3`: desired acceptance despite a native rejection.
-The port also rejects them. Agreement between engines does not resolve either.
+### Exact constant sets and row 212 {#exact-sets}
 
-**Case 471 — nested radical.** For real `x`, let
-`u=sqrt(x^2+1)+x`. Then `u>0` and
-`u^2=2*x*sqrt(x^2+1)+2*x^2+1`; hence the outer square root is `u` and
-the submitted expression is zero. For complex `x=-i` it is instead `2*i`.
-The missing work is an explicit real-domain contract and a bounded sign-aware
-proof. Ask STACK whether the real assumption should be stated in the fixture.
+| Case | Mathematically equal? | Fixture expects | Pinned native | Port |
+|---|---|---|---|---|
+| 201 | Yes | Accept (`-3`) | Reject | Accept |
+| 202 | Yes | Accept (`-3`) | Reject | Accept |
+| 203 | Yes | Accept (`-3`) | Reject | Accept |
+| 212 | Yes | Reject (`0`) | Reject | Accept |
 
-**Case 474 — `cos(2*pi/17)`.** The reference is its constructible radical
-representation. This is an exact-real constant identity, not a branch-convention
-dispute. The port lacks a certified algebraic-number proof with root selection.
-Numerical agreement would not suffice. Ask whether this exact certification is
-a useful target and whether STACK has a preferred proof method.
+- **201:** `{-sqrt(2)/sqrt(3)}` / `{-2/sqrt(6)}`. SymPy canonicalizes the
+  members together. STACK's [equivalence documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md)
+  describes this pair as a canonicalization limit and recommends author-side
+  `radcan` where appropriate; blanket use can cause expression growth.
+- **202:** `{[-sqrt(2)/sqrt(3),0],[2/sqrt(6),0]}` /
+  `{[2/sqrt(6),0],[-2/sqrt(6),0]}`. This is the same radical equality within
+  list members of a set, not a disputed complex branch identity.
+- **203:** `{5/4*exp(i*pi/6)}` / `{5*sqrt(3)/8+5*i/8}`. Bounded exact
+  rectangular conversion proves the equality in the port.
+- **212:** `{(2-2^(5/2))/2,(2^(5/2)+2)/2}` /
+  `{1-2^(3/2),2^(3/2)+1}`. For these positive constants,
+  `2^(5/2)/2=2^(3/2)` and SymPy canonicalizes corresponding members.
 
-STACK's [equivalence documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md)
-acknowledges incomplete radical proofs and explains why more aggressive generic
-transformations can lead to expression growth and timeouts.
+Cases 201–203 are reported as `known_native_mathematical_failure` on the
+separate compatibility axis: native misses the desired exact equality. Row 212
+is a counted **known port normalization difference**, because its fixture and
+native test require rejection. Is that expected rejection meant to assert
+prepared-form behavior? What normalization should authors expect for
+mathematically equal set members? The port's choice between SymPy-canonical
+members and faithful Maxima prepared-form distinctions is a project
+compatibility policy. Emulating row 212 would require held member provenance
+before SymPy canonicalization; no expression-specific grading exception exists.
 
+## Possible future development {#future-development}
 
-## Reading the report
+### Trigonometric identity inside a set {#trig-set-identity}
 
-The eight domain/branch cases and two exact-proof cases above remain case-pinned
-in the checker policy. Collection normalization differences below are additional
-observations. The report separates **Domain/branch difference** from **Unproved
-identity**, with explanations, evidence, source links, and questions for STACK.
-A changed label does not turn a disagreement into a compatibility pass; a changed
-result invalidates its old exception and must be reviewed.
-
-## Finite lists and sets {#finite-sets}
-
-### Which equality is being tested?
-
-| Test and objects | Native comparison route | Current port contract |
-|---|---|---|
-| `AlgEquiv`, lists | Recursively compare corresponding entries with `AlgEquiv`. | The same ordered recursive contract for supported leaves. |
-| `AlgEquiv`, sets | Prepare members with `ATSets_prepare`, then compare set membership. | Compare structural SymPy members, with bounded exact rectangular conversion for certain numeric complex constants. |
-| `Sets` | Related set preparation, with duplicate, extra- and missing-entry feedback. | Structural member comparison and outer duplicate feedback; no full scalar-proof matching. |
-| `EqualComAss` | A written-form contract, after applicability/equivalence checks. | Preserve written arithmetic, list order and set multiplicity within the supported held-form subset. |
-| `SameType` | Uses `ATAlgEquivfun` applicability at this pin. | Reproduces that applicability behavior; it is not a strict nested-shape validator. |
-
-The pinned [set routines](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac#L1667-L1734)
-do not run the full scalar `algebraic_equivalence` routine on every candidate
-pair. STACK's [equivalence documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md)
-explains the canonical-representation strategy and the risk of expression growth
-from stronger generic transformations. This is a documented engineering tradeoff,
-not a claim that differently represented members must be mathematically unequal.
-
-The port uses its own SymPy normalization, not an emulation of every intermediate
-Maxima form. For example, it keeps `{(x+1)^2}` distinct from `{x^2+2*x+1}` under
-structural set comparison. Its bounded rational multiple of `exp(i*pi*q)` can
-use exact rectangular form under `AlgEquiv`; this conversion is not applied by
-`Sets`. Agreement on selected results does not establish identical normalization.
-
-### A trigonometric identity inside a set {#trig-set-identity}
-
-**Mathematics.** `sin(x)^2+cos(x)^2=1`, so the two singleton sets denote the same
-set. There is no domain/branch counterexample behind the rejection discussed here.
-
-**Observed results.** Direct probes of the pinned native and port versions give:
+Mathematically `sin(x)^2+cos(x)^2=1`; the two singleton sets denote the same
+set with no domain/branch counterexample. Direct pinned probes show a
+normalization/proof limit:
 
 | Comparison | Native STACK | Port |
 |---|---|---|
@@ -220,18 +252,20 @@ set. There is no domain/branch counterexample behind the rejection discussed her
 | Set `AlgEquiv`: `{sin(x)^2+cos(x)^2}` / `{1}` | Reject | Reject |
 | `Sets`: `{sin(x)^2+cos(x)^2}` / `{1}` | Reject | Reject |
 
-These set rejections have CAS applicability `true`; they are not syntax errors.
-The project controls `port-list-equivalence`, `port-set-trig-structural`, and
-`port-sets-trig` separately record the list/set results and Python/Pyodide parity.
-
-**What native preparation actually does.** The source calls:
+Both set rejections have CAS applicability `true`, not a syntax error. Project
+controls `port-list-equivalence`, `port-set-trig-structural` and
+`port-sets-trig` separately record list/set outcomes and Python/Pyodide parity.
+For set `AlgEquiv`, the pinned call chain is `ATAlgEquiv` → `ATAlgEquivfun` →
+`ATSet` → `ATSets_prepare` → mutual `subsetp` membership checks. `Sets` uses
+the same preparation with its duplicate, extra and missing feedback path. The
+native preparation is:
 
 ```maxima
 ATSets_prepare(S) :=
     ev(map(lambda([ex], ineqprepare(trigreduce(ex))), S), simp)$
 ```
 
-For `p:sin(x)^2+cos(x)^2`, the trace is:
+For `p:sin(x)^2+cos(x)^2`, the direct native trace is:
 
 | Stage | Native result |
 |---|---|
@@ -241,255 +275,183 @@ For `p:sin(x)^2+cos(x)^2`, the trace is:
 | `ATSets_prepare({p})` | `{(cos(2*x)+1)/2 + (1-cos(2*x))/2}` |
 | `ATSets_prepare({1})` | `{1}` |
 
-`trigreduce` has performed a trigonometric transformation: it rewrites squared
-sine and cosine using double angles. It has **not** completed the rational
-arithmetic that combines the two fractions. Ordinary simplification in this
-pipeline leaves them separate, and the subsequent membership comparison does
-not invoke the stronger scalar equivalence test to bridge that gap.
-
-Further native probes establish the missing step:
+`trigreduce` has rewritten the squares using double angles, but ordinary
+simplification here has **not** combined the fractions. The membership test
+does not invoke stronger scalar equivalence to bridge the remaining gap. Native
+probes identify the missing rational-arithmetic step:
 
 ```maxima
 ratsimp(trigreduce(p));             /* 1 */
 expand(trigreduce(p));              /* 1 */
-trigsimp(p);                       /* 1 */
+trigsimp(p);                        /* 1 */
 ratsimp(ATSets_prepare({p}));       /* {1} */
 ```
 
-Comparing the prepared member to `1` using scalar `AlgEquiv` accepts. Applying
-`ratsimp` to the prepared set before either set answer test also changes rejection
-to acceptance. These are native-CAS probes, not claims that all those author
-functions are exposed by the port.
+Scalar `AlgEquiv` accepts the prepared member against `1`. Applying `ratsimp`
+to the prepared set before either set answer test also changes rejection to
+acceptance. These are native CAS probes, not claims that all these author
+functions are exposed by the port. The port instead prepares the submitted
+set as `{sin(x)^2+cos(x)^2}` and the reference as `{1}`. It neither makes the
+native double-angle rewrite nor invokes its scalar identity prover for set
+members. Its scalar and list paths do accept the identity.
 
-**How the port differs internally.** The port's prepared submitted set remains
-`{sin(x)^2+cos(x)^2}`; its reference is `{1}`. It does not perform the native
-half-angle rewrite here, and it does not use its scalar identity prover to match
-set members. Thus it reaches the same rejection through a different intermediate
-representation. Scalar and list `AlgEquiv` use its stronger proof path and accept.
-
-**Classification and rationale.** This is a set-normalization/proof limit, not
-an explicit convention that trigonometric identities cease to hold in sets.
-STACK's [`Sets` documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Other.md)
-says that authors should preprocess arguments when stronger trig simplification
-is needed. Its broader documentation explains why automatically applying stronger
-transformations to all set members can be too costly. Neither source establishes
-that this particular simple rejection was intentionally selected as a convention.
-
-**Question for STACK:** is author-side preprocessing the intended contract for
-this pair, or should bounded set-member preparation establish the identity?
-A stronger matching mode in the port would be an explicit behavior change, rather
-than evidence that the existing native set test already performs that matching.
+This shared rejection arises through **different** intermediate forms. It is
+not an explicit convention that trig identities cease to hold in sets. STACK's
+[`Sets` documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Other.md)
+advises author-side preprocessing when stronger trig simplification is needed.
+The broader [equivalence documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md)
+explains the general cost of aggressive transforms; neither establishes that
+this specific simple rejection was deliberately selected. Author advice would
+be useful on whether preprocessing is the desired authoring path or bounded
+preparation should prove this pair. Either stronger port approach below would
+be an explicit compatibility change, not a description of current native
+matching.
 
 ### Proposed stronger set-member matching {#stronger-set-matching}
 
-**Status and scope.** This is a design proposal, not current port behavior or a
-claim about native STACK. For bounded flat sets of the scalar expressions already
-supported, a stronger checker would be a small-to-medium feature rather than a
-rewrite. The matching algorithm is straightforward; specifying reliable grading
-and feedback takes more care. Supporting nested collections and predictable
-computation limits broadens that work. Any stronger mode would need an explicit
-contract because accepting additional identities changes compatibility with the
-native set tests described above.
+This is a **design proposal**, not current native or port behavior. For bounded
+flat sets of already supported scalar expressions, the matching algorithm is
+straightforward and could be a small-to-medium feature. Grading, feedback,
+nested collections and predictable computation limits require a more explicit
+contract. Once algebraic duplicates are handled, the comparison could:
 
-Once duplicate semantics are resolved, the comparison could proceed as follows:
+1. Recognize structurally identical members first and cache those results.
+2. Send remaining candidate pairs through scalar `AlgEquiv` under the same
+   domain assumptions. Record certified equality, proved inequality where
+   available, and inconclusive results separately; failure to prove equality
+   does not establish inequality.
+3. Construct a bipartite graph from equality certificates and find a complete
+   matching with a polynomial-time algorithm. Reassign tentative pairings when
+   needed rather than greedily committing to the first candidate; factorial
+   permutation search is unnecessary.
 
-1. Recognize structurally identical members cheaply and cache those successful
-   comparisons.
-2. Compare remaining candidate pairs using the existing scalar `AlgEquiv` proof
-   path, under the same domain assumptions. Record proved equal, proved unequal
-   where available, and inconclusive separately. Failure to find a proof is not
-   itself proof of inequality.
-3. Build a bipartite graph whose edges are certified equal pairs, then find a
-   complete matching with a standard polynomial-time algorithm. This does not
-   require factorial permutation search. Structural matches provide the fast
-   path; the final matcher must be able to reassign tentative pairings rather
-   than commit greedily to the first available candidate.
+Two flat 32-member sets have at most **1,024 cross-set candidate pairs**. That
+does not bound total work: quotienting algebraic duplicates adds within-set
+comparisons, nested sets recurse, and a single symbolic proof may be costly.
+The proof work is the main runtime concern, not graph matching. Cache proofs and
+limit proof time/work, expression growth and total recursive comparisons with
+a shared budget; the pair count alone guarantees no response time.
 
-For two flat sets with 32 members each, there are at most **1,024 cross-set
-candidate pairs**. This bounds that comparison phase, not total work: comparing
-members within each set to resolve algebraic duplicates adds comparisons, and
-nested comparisons recurse. A single symbolic proof can also be expensive.
-Symbolic proof work, rather than graph matching, is therefore the principal
-runtime concern. Cached results and limits on proof work, expression growth and
-total recursive comparisons would be part of the design; the pair count alone
-does not guarantee a response time.
-
-The grading contract needs four further decisions:
-
-| Issue | Required behavior or decision |
+| Issue | Contract to decide before implementation |
 |---|---|
-| Algebraic duplicates | `{sin(x)^2+cos(x)^2,1}` denotes the same mathematical set as `{1}`. A bijection over the raw submitted entries would wrongly reject it. Decide how certified equal members form duplicate classes before testing cardinality or matching, while retaining original entries for `Sets` duplicate feedback. Incomplete proofs can leave those classes unresolved. |
-| Nested collections | Lists remain ordered and compare corresponding entries; sets use the stronger unordered comparison recursively. Preserve list/set type and nesting boundaries. Existing size/depth bounds still apply, with a shared budget across the whole comparison tree. |
-| Inconclusive results | Budget exhaustion or an unproved candidate must remain distinguishable from established inequality. Accept only when the necessary equality certificates exist. An unresolved comparison must not be presented as a mathematical counterexample or definitive extra/missing-member explanation. |
-| Written form | `EqualComAss` keeps its separate contract: written arithmetic and repeated set entries still matter. A stronger algebraic check could satisfy its equivalence prerequisite, but must not replace its held-form comparison or erase submitted form. |
+| Algebraic duplicates | `{sin(x)^2+cos(x)^2,1}` is the same mathematical set as `{1}`. A raw-entry bijection would wrongly reject it. Form duplicate classes from certified equality before cardinality/matching, while retaining submitted entries for `Sets` duplicate feedback. Incomplete proofs can leave classes unresolved. |
+| Nested collections | Compare list entries in order and sets unordered recursively, retaining list/set types and nesting boundaries. Apply existing depth/size bounds and one shared recursive budget. |
+| Inconclusive results | Distinguish budget exhaustion or an unproved candidate from proved inequality. Accept only with necessary certificates; do not describe uncertainty as a mathematical counterexample or definitive extra/missing member. |
+| Written form | Keep `EqualComAss` held arithmetic and repeated entries. Stronger algebraic equality may satisfy its prerequisite but must not replace form comparison or erase provenance. |
 
-For `Sets`, deterministic matching and retained submission provenance would also
-be needed for useful feedback when several pairings are possible. Missing/extra
-diagnostics should explain the checker outcome without overstating what an
-incomplete proof established. A first implementation could target flat exact
-scalar sets, followed by recursive collections and richer feedback under the
-same explicitly stated semantics.
+For `Sets`, deterministic matching and retained submission provenance would
+support useful feedback where several pairings work. Extra/missing diagnostics
+should describe the checker outcome without claiming that incomplete proof
+established inequality. A first scope could be flat exact scalar sets, then
+recursive collections and richer feedback under the stated contract. Adding
+`ratsimp` to set preparation would fix the traced trig example more narrowly;
+it would not implement generic scalar-proof matching or settle duplicates,
+recursion and resource limits.
 
-Adding `ratsimp` to preparation would address the traced trig example, but that
-is a narrower normalization improvement. It would neither implement general
-scalar-proof matching nor settle duplicates, recursive behavior or proof limits.
+### Exact-real constant certification {#case-474}
 
-### Exact constants: mathematical equality versus compatibility
+Case 474 compares `cos(2*pi/17)` with its constructible radical
+representation. The fixture desires acceptance (`-3`), while native and port
+reject. It is an exact-real identity, not a branch-convention dispute. The port
+would need a certified algebraic-number proof with correct root selection;
+numerical agreement is insufficient. STACK advice on a useful proof method or
+priority would help future work. The
+[equivalence documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Equivalence.md)
+also notes that more aggressive generic transforms can grow expressions and
+time out.
 
-| Case | Mathematically equal? | Fixture expects | Pinned native | Port |
-|---|---|---|---|---|
-| 201 | Yes | Accept (`-3`) | Reject | Accept |
-| 202 | Yes | Accept (`-3`) | Reject | Accept |
-| 203 | Yes | Accept (`-3`) | Reject | Accept |
-| 212 | Yes | Reject (`0`) | Reject | Accept |
+## Deliberate port scope and engineering choices {#port-scope}
 
-- **201:** `{-sqrt(2)/sqrt(3)}` / `{-2/sqrt(6)}`. SymPy gives the members the
-  same canonical value. STACK's documentation explicitly describes this pair
-  as a canonicalization limitation and recommends author-side `radcan` when
-  appropriate; blanket use risks expression growth.
-- **202:** `{[-sqrt(2)/sqrt(3),0],[2/sqrt(6),0]}` /
-  `{[2/sqrt(6),0],[-2/sqrt(6),0]}`. This is the related radical equality inside
-  list members of a set, not a disputed complex branch identity.
-- **203:** `{5/4*exp(i*pi/6)}` / `{5*sqrt(3)/8+5*i/8}`. The port's bounded
-  rectangular conversion establishes the exact equality.
-- **212:** `{(2-2^(5/2))/2,(2^(5/2)+2)/2}` /
-  `{1-2^(3/2),2^(3/2)+1}`. For these positive constants,
-  `2^(5/2)/2=2^(3/2)`, and SymPy canonicalizes the corresponding members.
+### Decimal precision in collections
 
-Cases 201–203 are recorded on the separate compatibility axis as
-`known_native_mathematical_failure`: the native result misses the desired exact
-mathematical equality. Case 212 remains a counted **known port normalization
-difference**, not a native-compatibility pass, because its fixture and native
-comparison require rejection. Mathematical equality and compatibility status are
-separate statements in all four rows.
-
-**Question for STACK:** is row 212's expected rejection intended to assert
-prepared-form behavior, and what normalization should authors expect for
-mathematically equal set members?
-
-**Port design decision:** preserving Maxima's prepared-form distinctions versus
-using SymPy's canonical members is a compatibility policy for this project.
-Faithful emulation for 212 would require held member provenance before SymPy
-canonicalization. There is no expression-specific grading exception for these cases.
-
-### Nested structure and duplicate scope
-
-Lists retain order and repetitions. Nested sets keep their boundaries and use
-structural normalization recursively; `{1,{2}}` is not flattened to `{1,2}`.
-Lists inside sets retain list order. The port preserves submitted repetitions
-until the relevant test runs.
-
-`Sets` duplicate feedback concerns the submitted **outer** set:
-
-| Submitted / reference | Result under `Sets` |
-|---|---|
-| `{{1,1}}` / `{{1}}` | Correct; no outer duplicate warning. |
-| `{{1},{1}}` / `{{1}}` | Correct, with an outer duplicate warning. |
-
-This describes the scope of duplicate feedback, not a general promise to report
-every repeated leaf in a nested collection.
-
-### Written form is an explicit separate contract
-
-[`EqualComAss` documentation](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Rule_based.md)
-explicitly distinguishes `{4,4}` from `{4}` as held written forms. Set arguments
-commute but do not associate, lose multiplicity or flatten nested set boundaries.
-Thus reordered `{1,2,2}` / `{2,1,2}` passes, while `{4,4}` / `{4}` fails the form
-check even though their mathematical set values agree. Nested list order matters.
-
-The port checks applicability and algebraic equality before held form. This is a
-purposeful form-sensitive contract, unlike an unsuccessful proof of ordinary
-set-value equality in the trig example. Frozen teacher/qtest aliases that would
-lose the required written form fail at build time; this is a port preservation
-boundary, not a native prohibition on those aliases.
-
-### Type applicability is observed implementation behavior
-
-At this pin, [`ATSameTypefun`](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/stackmaxima.mac)
-uses the applicability flag from `ATAlgEquivfun`. The port follows that behavior:
-
-| Pair | `SameType` result and implementation reason |
-|---|---|
-| `[1,[2]]` / `[9]` | True: the unequal-list-length path is still applicable. |
-| `[1,[2]]` / `[9,{3}]` | False: equal-length lists recurse to different member types. |
-| `{[1,2]}` / `{{1,2}}` | True: set/set comparison is applicable regardless of member types. |
-
-These results are observations of the pinned predicate, not a mathematical
-definition of nested type or a strict shape-equality guarantee. Collection input
-`checkanswertype` follows the same rule. An equality test is still needed for content.
-
-## Decimal precision: native observations and port boundaries
-
-The native observations below are distinct from the port's decision to reject
-inputs whose precision provenance cannot be preserved.
+These native observations differ from the port's rule to reject collection
+inputs whose precision provenance it cannot preserve:
 
 | Context | Pinned native observation | Port contract |
 |---|---|---|
-| Set `{1/10}` / `{0.1}`, or `{1/2}` / `{0.5}` | Both set tests reject. | Decimal literals anywhere below a set are unsupported; use exact fractions. |
-| Direct list `[1/10]` / `[0.1]` | Scalar/list `AlgEquiv` accepts. | Direct decimal list leaves use the bounded scalar binary64 path. |
-| `[100.4-80.0]` / `[20.4]` | `AlgEquiv` rejects. | Retain literal arithmetic; freezing the first answer to `[102/5]` would change the result. |
-| `[sin(0.1)]` / `[sin(1/10)]`; `[sqrt(0.5)]` / `[sqrt(1/2)]` | `AlgEquiv` rejects. | Decimal-bearing function and symbolic list leaves are unsupported; use exact fractions. |
+| Set `{1/10}` / `{0.1}`, or `{1/2}` / `{0.5}` | Both set tests reject. | Decimal literals anywhere beneath a set are unsupported; use exact fractions. |
+| Direct list `[1/10]` / `[0.1]` | Scalar/list `AlgEquiv` accepts. | Direct decimal list leaves use bounded scalar binary64 behavior. |
+| `[100.4-80.0]` / `[20.4]` | `AlgEquiv` rejects. | Preserve literal arithmetic; freezing the first to `[102/5]` changes the result. |
+| `[sin(0.1)]` / `[sin(1/10)]`; `[sqrt(0.5)]` / `[sqrt(1/2)]` | `AlgEquiv` rejects. | Decimal-bearing function/symbolic list leaves are unsupported; use exact fractions. |
 | `[20.4]` / `ev([100.4-80.0],simp)` | `AlgEquiv` rejects. | Decimal-bearing transformed collections are unsupported. |
 
-The set results are consistent with native float/rational representations
-remaining distinct as prepared members. They do not establish that `{1/2}` and
-`{0.5}` are different mathematical sets: `0.5` is exactly representable in binary.
-The port parses decimal tokens as exact rationals, so it cannot simply reuse its
-structural member keys for all native floating cases and claim parity.
+The set rejections are consistent with distinct prepared native float/rational
+members; these probes do not prove the precise intermediate representation.
+They do not make `{1/2}` and `{0.5}` different mathematical sets: `0.5` is exactly
+binary-representable. Because the port parses decimals as exact rationals, it
+cannot use structural set keys for every native float case and claim parity.
+The deliberate representation boundaries are:
 
-The port therefore imposes these deliberate engineering limits:
-
-- Decimal list leaves support literal constant arithmetic, unary signs, and
-  bounded integer powers; decimal-bearing functions, symbolic leaves and author
-  transforms require exact-fraction alternatives.
-- Frozen collection/helper definitions reject transitive decimal-valued aliases,
-  including their use in qtests and CASText. Learner collection answers referring
-  to decimal-derived author aliases are rejected too.
+- Decimal list leaves permit literal constant arithmetic, unary signs and
+  bounded integer powers; decimal-bearing functions, symbolic leaves and
+  author transformations need exact-fraction alternatives.
+- Frozen collection/helper definitions reject transitive decimal aliases in
+  qtests and CASText too. Learner collection answers referencing
+  decimal-derived author aliases are rejected.
 - Dynamic collection `sans` must directly name the learner input. Collection
-  feedback aliases and learner-dependent collection/helper construction are
-  unsupported because serialization can lose the literal arithmetic.
+  feedback aliases and learner-dependent helper/collection construction are
+  unsupported because serialization can lose literal arithmetic.
 
-These restrictions concern the port's representation and native compatibility;
-they are not claims that native STACK forbids the same author expressions.
+These limits do not assert that native STACK forbids those author expressions.
 
-## Finite author helpers and held execution
+### Finite author helpers and held execution
 
-Finite helpers are author-only in the port, with bounded input/output and normal
-simplification. Their results freeze into question variants:
+The port supports finite helpers for authors, with bounded inputs and outputs
+under normal simplification. Results freeze into question variants:
 
-| Helpers | Supported port inputs/results |
+| Helpers | Supported input/result |
 |---|---|
 | `set`, `setify` | Construct a finite set; `setify` takes a list. |
-| `union`, `intersection`, `setdifference`, `subsetp`, `cardinality` | Supported finite set operations within their arity/resource bounds. |
+| `union`, `intersection`, `setdifference`, `subsetp`, `cardinality` | Finite set operations within their arity/resource bounds. |
 | `member` | Membership in a supported list or set. |
-| `listify` | Preserve an existing list, or numerically sort rational scalar set members. Symbolic/complex/nested set ordering is unsupported. |
+| `listify` | Preserve a list or numerically sort rational scalar set members. Symbolic, complex or nested set ordering is unsupported. |
 
-This supported author path requires exact fractions rather than decimal helper
-arguments. Learners enter collection literals, not helper calls.
-
-The `simp:false` boundary is a port scope decision. Recorded pinned native probes
-show why merely reusing normally simplified operations would change held behavior:
+This author path requires exact-fraction rather than decimal helper arguments;
+learners enter collection literals rather than helper calls. The `simp:false`
+boundary is a port scope decision. Pinned native held probes show what ordinary
+simplification would erase:
 
 | Held native probe | Observation |
 |---|---|
-| `setify([1,1])` | Keeps held repetitions. |
-| `listify({2,1})` | Keeps written order. |
-| Membership involving `[x+x]` and `[2*x]` | Can distinguish their held forms. |
+| `setify([1,1])` | Retains held repetitions. |
+| `listify({2,1})` | Retains written order. |
+| Membership involving `[x+x]` and `[2*x]` | Can distinguish held forms. |
 | Intersection/difference of held sets | Can depend on written ordering. |
 
-The port does not emulate general held CAS execution. Helper feedback variables,
-helper calls with question simplification off, and direct helper calls in
+The port does not emulate general held CAS execution. Helper feedback
+variables, helper calls with question simplification off, and direct helpers in
 `Sets`/`EqualComAss` fail clearly. Simplified helper results frozen in question
-variables remain usable by those checks. Direct normal `AlgEquiv`/`SameType`
-author expressions can use the supported helpers subject to the same bounds.
+variables remain usable there. Direct normal `AlgEquiv`/`SameType` author
+expressions may use supported helpers within the same bounds.
 
-## Feedback and the tested layer
+### Feedback and tested layer
 
-The port's ordinary feedback is abbreviated English. Negative list results do
-not reproduce every native nested index/reason note, and `EqualComAss` does not
-reproduce every internal note. Full localized feedback and exact ordinary notes
-are not claimed compatible.
+Ordinary port feedback is abbreviated English. Negative lists do not reproduce
+every native nested index/reason note; `EqualComAss` also omits some internal
+notes. Full localized feedback and exact ordinary notes are not claimed
+compatible. Authored PRT branch notes and their ordered qtest expectations are
+preserved. These bounded CAS checks and Python/Pyodide agreement do not establish
+Moodle/PHP-controller, input-security or attempt-state parity.
 
-Authored PRT branch notes and their ordered qtest expectations are preserved.
-Neither these bounded CAS checks nor Python/Pyodide agreement establishes full
-Moodle/PHP-controller, input-security, or attempt-state parity.
+## Evidence and report interpretation {#evidence}
+
+The comparison pins STACK revision `10d323311b7f39fb7b092dd10ce75f7d8632f525`.
+The collection trace uses Maxima **5.46.0**, port revision
+`1e72245874bfea49836e58ba48dcee30af5ee0ba`, and SymPy **1.13.3**.
+
+| Evidence category | Interpretation |
+|---|---|
+| Mathematical claim | Equality under stated domain and branch assumptions. |
+| Fixture expectation | The imported desired outcome, not a universal proof. |
+| Native observation | Pinned STACK/Maxima result, not automatically mathematical truth. |
+| Port behavior | What the bounded adapter accepts or explicitly declines. |
+
+An explicit source convention, such as case 80, differs from observed
+implementation behavior such as `SameType`, and both differ from a proof limit
+such as the trig set. A port boundary describes its representation limits, not
+native prohibitions. The eight domain/branch cases and two exact-proof cases
+471 and 474 remain case-pinned in checker policy. Collection normalization
+observations are additional. The report distinguishes **Domain/branch
+difference** from **Unproved identity** with explanations, evidence, links and
+author questions. A changed label does not confer a compatibility pass; any
+changed result invalidates its previous exception and needs review.
