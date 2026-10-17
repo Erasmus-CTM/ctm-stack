@@ -94,10 +94,10 @@ collects a snapshot without running validation, grading, or authored tests.
 | Supported here | Scope |
 |---|---|
 | Source | Moodle STACK XML `<quiz>` with named STACK questions; category and description entries are skipped. |
-| Inputs | Scalar algebraic and numerical text answers, with strict syntax and `<insertstars>0</insertstars>` or `<insertstars>1</insertstars>`. Mode 0 requires `*`; mode 1 also accepts adjacent `2x`, `2(x+1)`, `(x+1)(x-1)`, and `(x+1)x`. Both keep `xy` as one symbol; whitespace alone never means multiplication. Other insertstars modes fail at import. |
-| Variables | A small, safely parsed Maxima-like assignment and arithmetic subset, including `rand(n)` for seeded variants and two-integer `lcm(a,b)`. `ratsimp` preserves a common-denominator form for supported scalar expressions. |
+| Inputs | Scalar algebraic, finite nested list/set and numerical text answers, plus bounded matrix editors, with strict syntax and `<insertstars>0</insertstars>` or `<insertstars>1</insertstars>`. Mode 0 requires `*`; mode 1 also accepts adjacent `2x`, `2(x+1)`, `(x+1)(x-1)`, and `(x+1)x`. Both keep `xy` as one symbol; whitespace alone never means multiplication. Other insertstars modes fail at import. |
+| Variables | A small, safely parsed Maxima-like assignment and arithmetic subset, including exact matrix values in `matrix([a,b],[c,d])` syntax, including `rand(n)` for seeded variants and two-integer `lcm(a,b)`. `ratsimp` preserves a common-denominator form for supported scalar expressions. |
 | Scalar functions | Elementary functions include `ln` as an alias for `log`, bounded rational-polynomial `gcd(a,b)`, and real scalar `mod(a,b)`, including Maxima's `mod(x,0)=x`. Author expressions also support `num`, `denom`, `ev(expr)`, and `ev(expr,simp)`. Symbolic complex logarithms requiring branch proofs remain unsupported. |
-| Tests | `AlgEquiv`, `Sets`, `SameType`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, `NumDecPlaces`. The four form-sensitive tests require `sans` to name an input directly. `FacForm` also requires one polynomial variable in `<testoptions>` (a symbol or an author alias resolving to one); it checks equivalence and factorization of univariate polynomials over the rationals. Blank or syntactically malformed absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist. |
+| Native-compatible tests | `AlgEquiv`, `Sets`, `SameType`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, `NumDecPlaces`. The four form-sensitive tests require `sans` to name an input directly. `FacForm` also requires one polynomial variable in `<testoptions>` (a symbol or an author alias resolving to one); it checks equivalence and factorization of univariate polynomials over the rationals. Blank or syntactically malformed absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist. |
 | PRTs | Acyclic node graphs with `=`, `+`, and `−` score operations, weighted response trees, branch feedback and notes. |
 | Author tests | Native `<qtest>` inputs and expected PRT score, penalty, and answer note. |
 
@@ -111,7 +111,7 @@ Decimals anywhere inside a set (including a list within a set) are unsupported; 
 
 Decimal list leaves support literal constant arithmetic with integer powers only. Decimal-bearing function calls, symbolic coefficients and transformed collections such as `ev([0.1],simp)` are rejected; use exact fractions for these expressions. This restriction preserves the decimal spelling and operations needed by native binary64 comparison.
 
-Author-only finite helpers are `set`, `setify`, `listify`, `union`, `intersection`, `setdifference`, `member`, `subsetp` and `cardinality`. They work in simplified question variables, with bounded input/output. `listify(set)` supports rational scalar members in numeric order; `listify(list)` keeps the list's order and repetitions. Freeze helper results before using `Sets`/`EqualComAss`; direct helper calls in those held tests, helper feedback variables and `questionsimplify=0` helper calls are unsupported. Learners enter collection literals. See the [nested](../examples.qmd#nested-collections-and-written-form) and [author-helper examples](../examples.qmd#finite-author-helpers), and the [normalization differences](../compliance-report/semantics.qmd#finite-sets).
+Author-only finite helpers are `set`, `setify`, `listify`, `union`, `intersection`, `setdifference`, `member`, `subsetp` and `cardinality`. They work in simplified question variables, with bounded input/output. `listify(set)` supports rational scalar members in numeric order; `listify(list)` keeps the list's order and repetitions. Freeze helper results before using `Sets`/`EqualComAss`; direct helper calls in those held tests, helper feedback variables and `questionsimplify=0` helper calls are unsupported. Learners enter collection literals. See the [nested](../examples.qmd#nested-collections-and-written-form) and [author-helper examples](../examples.qmd#finite-author-helpers), and the [normalization differences](../compliance/semantics.html#finite-sets).
 
 CASText also renders a scalar equality such as `{@p=ta@}` as an equation for display. `AlgEquiv` additionally supports bounded polynomial equation inputs and disjunctions, with root multiplicity retained. For example, `a=0 or b=0` matches `a*b=0`, while `a^3*b^3=0` does not. It also supports pure Boolean expressions and elementary hyperbolic functions such as `cosh` and `tanh`. See the [examples](../examples.qmd#hyperbolic-equivalence) and the README for the precise limits.
 
@@ -121,3 +121,13 @@ For an extension-only installation, install `sympy==1.13.3` in the Python enviro
 
 See [bounded matrix inputs](matrix-input.qmd) for fixed and learner-selected dimensions,
 raw-cell handling and the pinned standalone editor API.
+
+## Extend the Python port
+
+The port also supports explicitly named Python-only answer tests. `MatrixProperty`
+checks integer entries, a determinant, or identity; three ordinary PRTs preserve
+the determinant-one example’s requirement-level partial credit. `IsBasis`
+accepts any exact rational basis for a reference space, while keeping the
+existing XML inputs and true/false PRT branches. See [Python answer tests](python-answer-tests.qmd)
+for the contract, the source helper, worked examples, and the difference from
+vanilla STACK XML portability.

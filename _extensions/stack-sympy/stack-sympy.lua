@@ -64,6 +64,7 @@ local function setup()
       {name = 'worker.js', path = 'worker.js'},
       {name = 'runtime-sources.js', path = 'runtime-sources.js'},
       {name = 'vendor/matrix-input-provenance.json', path = 'vendor/matrix-input-provenance.json'},
+      {name = 'vendor/basis-helper-provenance.json', path = 'vendor/basis-helper-provenance.json'},
       {name = 'vendor/pyodide-runtime.js', path = 'vendor/pyodide-runtime.js'}
     }
   })

@@ -1,7 +1,7 @@
 project:
   type: website
   output-dir: _site
-  render: [index.qmd, examples.qmd, matrices.qmd]
+  render: [index.qmd, examples.qmd, matrices.qmd, bases.qmd]
 format:
   html:
     html-math-method: mathjax

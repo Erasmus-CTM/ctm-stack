@@ -12,7 +12,7 @@ not native checker verdicts.
 
 This is the **static array inventory**, not the complete result of the PHP
 `get_raw_test_data()` accessor. That accessor also appends dynamically generated
-rows from `equivfixtures.class.php`. Those rows fall outside the eight native
+rows from `equivfixtures.class.php`. Those rows fall outside the supported native
 checker families under review and are not represented in this inventory. The
 `inventory.by_test` counts include every static family, regardless of whether
 the native adapter implements it. An inventory row should not be read as a

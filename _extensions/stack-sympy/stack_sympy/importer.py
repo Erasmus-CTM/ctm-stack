@@ -15,6 +15,9 @@ from xml.etree import ElementTree as ET
 NAME = re.compile(r"^[A-Za-z][A-Za-z0-9_]*$")
 TESTS = {"AlgEquiv", "Sets", "SameType", "EqualComAss", "FacForm", "SingleFrac", "LowestTerms",
          "NumAbsolute", "NumRelative", "NumDecPlaces"}
+from .python_tests import PYTHON_TESTS
+
+TESTS |= PYTHON_TESTS.keys()
 INPUT_TYPES = {"algebraic", "numerical", "matrix"}
 
 
@@ -201,6 +204,10 @@ def _question(element):
     for prt in prts:
         for node in prt["nodes"]:
             _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans", bool(node["student"]), "empty student expression")
+            if node["test"] in PYTHON_TESTS:
+                _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans",
+                       any(inp["name"] == node["student"] and inp["type"] == "matrix" for inp in inputs),
+                       "Python matrix tests require a direct matrix input name")
             if node["test"] in {"EqualComAss", "FacForm", "SingleFrac", "LowestTerms"}:
                 _check(name, f"prt[{prt['name']}]/node[{node['name']}]/sans",
                        node["student"] in {inp["name"] for inp in inputs},

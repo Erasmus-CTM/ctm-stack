@@ -6,6 +6,8 @@ project:
     - examples.qmd
     - corpus.qmd
     - docs/authoring.qmd
+    - docs/python-answer-tests.qmd
+    - docs/matrix-input.qmd
   resources:
     - questions/**
 

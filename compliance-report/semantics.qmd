@@ -52,9 +52,12 @@ equal but have different written forms. Literal decimal cells retain the
 scalar/list binary64 provenance rules; frozen decimal matrix aliases fail
 closed rather than acquiring invented provenance.
 
-Matrix grading currently supports AlgEquiv, SameType and EqualComAss. Other
-matrix answer tests are an explicit port limitation; native STACK supports
-more, including LowestTerms. There is no cell partial-credit policy: PRT scores
+Native-compatible matrix grading currently supports AlgEquiv, SameType and
+EqualComAss. Other native matrix answer tests remain an explicit port limitation;
+native STACK supports more, including LowestTerms. Separately, the Python-only
+IsBasis and MatrixProperty extensions support basis and exact constraint tasks.
+They are outside this native inventory and are documented in the
+[Python extension guide](../docs/python-answer-tests.html). There is no cell partial-credit policy: PRT scores
 remain author-defined and the default feedback concerns the whole matrix.
 Fixed dimensions are validated before grading; learner-selected dimensions
 must stay inside the configured bounds.
@@ -62,9 +65,15 @@ must stay inside the configured bounds.
 The unchanged 2,303-row inventory gains 13 supported official matrix rows
 (452 to 465 supported rows overall). All 13 match desired outcomes in direct
 CPython execution. Native comparison and browser Pyodide parity are enforced
-by the existing pinned CI harness. The [matrix decision record](../docs/audits/bounded-matrices.md)
+by the existing pinned CI harness. The [matrix decision record](https://github.com/Erasmus-CTM/stack-sympy/blob/main/docs/audits/bounded-matrices.md)
 documents the bounds, provenance restrictions and remaining excluded matrix
 cases. The set and trigonometric questions below remain unchanged.
+
+The positive dimension bounds, optional learner resizing and Python-only
+answer tests are explicit port contracts, rather than unresolved questions
+requiring a new native STACK semantic decision. Authors should choose the
+correct test and scoring policy for their task; see the
+[matrix authoring guidance](../docs/matrix-input.html#decisions-for-a-question-author).
 
 ### Written form and numerical fractions
 

@@ -12,13 +12,15 @@ outside this contract.
 `AlgEquiv` checks dimensions and then corresponding scalar entries with the
 existing algebraic equivalence machinery. `SameType` checks the supported matrix
 type contract. `EqualComAss` preserves written arithmetic in corresponding
-entries. Other matrix answer tests are rejected explicitly. Decimal literals and
+entries. Other native matrix answer tests are rejected explicitly. The separate Python-only
+`IsBasis` and `MatrixProperty` tests add basis and exact constraint checks; see
+[Python answer tests](python-answer-tests.qmd) for their distinct contract. Decimal literals and
 author-value provenance follow the existing scalar rules. No algebraic set
 matching or trig-set normalization policy changes are included.
 
 Use native `<input><type>matrix</type>...` for an editor fixed to the evaluated
 teacher answer's shape. Learner-selected dimensions use this explicit port
-extension inside the input, shown in [the runnable example](../examples.qmd#bounded-matrix-input):
+extension inside the input, shown in [the basis examples](../examples.qmd#a-basis-for-the-null-space-of-b):
 
 ```xml
 <matrix>
@@ -40,8 +42,8 @@ The validation preview exposes the interpreted matrix before checking.
 
 Editing, resizing, programmatic writes, resetting and changing variants invalidate
 prior validation, grading and AI-feedback evidence. Reset returns the dimensions
-and raw cells to their initial blank state. The editor presents input validity;
-it does not infer cell, row, column or partial-credit grading. Authored PRTs remain
+and raw cells to their initial blank state. The editor presents input validity and, after an explicit `IsBasis` check, supplied
+vector diagnostics. It does not infer cell, row, column or partial-credit grading. Authored PRTs remain
 the only source of awarded scores.
 
 The reusable editor is maintained in
@@ -49,8 +51,9 @@ The reusable editor is maintained in
 `matrix-input.js` and `matrix-input.css`. STACK SymPy vendors audited commit
 `f238da6d9a43d58d1fdf9ad592ac6223225268e0`; exact source links and SHA-256 checksums
 are recorded in `_extensions/stack-sympy/vendor/matrix-input-provenance.json`.
-No math-exercise Python checker or runtime is loaded, so each extension works
-independently. Update by copying both standalone files from one audited upstream
+The editor itself loads no math-exercise checker or runtime, so the extensions
+work independently. The Python basis helper is separately extracted, pinned and
+reviewed; it runs inside this port’s own grader, not a math-exercise runtime. Update by copying both standalone files from one audited upstream
 commit, updating the manifest and rerunning matrix browser tests.
 
 The component API is `MatrixInput.create({idPrefix, zeroDimensions, maxEntries,
@@ -62,3 +65,26 @@ with raw strings in row-major order; notifications distinguish edits, resizes
 and writes. STACK explicitly selects `zeroDimensions:'reject'` and `maxEntries:64`.
 `setState` only displays supplied status and optional cell/row/column states;
 consumers own all parsing and assessment policy.
+
+## Decisions for a question author
+
+Choose the mathematical task before choosing a matrix answer test. `AlgEquiv`
+compares a particular matrix entry by entry; it is unsuitable for “give any
+basis” or “give any matrix satisfying these conditions.” Use the documented
+Python-only IsBasis or MatrixProperty tests for those tasks, or supply an
+equivalent custom checker in native STACK. Do not replace a family of valid
+answers by equality with one convenient model answer.
+
+Choose fixed dimensions when the shape is given. If the number of basis
+vectors or pivot indices is part of the answer, use bounded learner-selected
+columns. Blank cells are invalid, and this port cannot represent an empty
+basis with a zero-column matrix. Make sure every model answer and authored
+qtest fits the configured dimensions; the build checks this.
+
+Specify the allowed number domain: the native-compatible matrix tests inherit
+the supported scalar rules, while Python matrix tests currently require
+bounded exact rational arithmetic. Decide partial credit explicitly in the
+PRTs. Native matrix comparison does not automatically award credit for correct
+cells, and green basis vectors do not by themselves earn part marks. Review
+wrong shapes, dependent and incomplete families, alternative correct answers,
+and written-form or decimal-sensitive cases before publishing.
