@@ -3,11 +3,11 @@ title: "STACK compliance"
 subtitle: "Expected behavior, engine agreement, and known limitations"
 ---
 
-Each source case compares a submitted answer with a reference using a named STACK answer test. The SymPy port implements a subset of STACK; this page shows its coverage gaps, expected behavior, and agreement with STACK and the browser.
+Each case asks whether a particular STACK answer test accepts a submitted answer. This report shows which cases STACK SymPy can check, where its result agrees with STACK, and where a teacher should expect a difference.
 
-**Port** is this SymPy implementation. **STACK** is the reference Maxima implementation. **Expected** is the source fixture’s intended accept, reject, or error result. Only STACK tests with a fully supported equivalent in the Python port were run.
+**Port** means STACK SymPy. **STACK** means the reference Moodle/Maxima answer test. **Expected** is the outcome recorded in the original test case. A matching outcome for one case is useful evidence, but it does not prove that every question using that answer test will behave identically.
 
-[Semantics and open questions](semantics.qmd) explains the implemented conventions and the remaining case-specific questions for discussion with STACK. Recorded domain differences and unproved identities remain visible and individually pinned; browser agreement does not resolve them.
+[Semantics and open questions](semantics.qmd) explains the assumptions behind the cases where results differ, including domain restrictions and identities that the port cannot prove.
 
 <div class="status-legend" aria-label="How to read the colors">
   <span class="tone-good">Green: expected behavior or agreement</span>
@@ -50,8 +50,8 @@ This compares CAS answer-test functions rather than complete Moodle grading sess
 
 Source codes `0` and `1` mean expected rejection and acceptance; `-1` expects a controlled error. Codes `-2` and `-3` flag source-authored native deviations. Only specifically reviewed cases are labeled “Known STACK issue.” Ordinary feedback notes are retained but not generally compared; asserted controlled-error notes are checked separately.
 
-The Python-only `IsBasis` and `MatrixProperty` tests are documented in the
-[Python extension guide](../docs/python-answer-tests.html). Their example, unit
+The Python-only `IsBasis`, `MatrixProperty` and `PythonChecker` tests are documented in
+[Python answer tests](../docs/python-checker-api.html). Their example, unit
 and browser checks are separate from this native report; they do not enlarge
 the 2,303-row inventory or its native coverage counts.
 

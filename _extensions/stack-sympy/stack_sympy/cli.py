@@ -42,7 +42,7 @@ def render(path: str, question_name: str, identifier: str, count: int = 3,
                 f'<div class="stack-prompt stack-question">{first["question_html"]}</div>'
                 f'<div class="stack-actions"><button type="button" class="stack-validate">Validate answers</button>'
                 f'<button type="button" class="stack-check" disabled>Check answer</button>'
-                + ('<button type="button" class="stack-tests">Run author tests</button>' if review else '')
+                + ('<button type="button" class="stack-tests">Run question tests</button>' if review else '')
                 + '</div><div class="stack-result" aria-live="polite"></div>'
                 + '<div class="stack-generalfeedback" hidden></div>'
                 + f'<script type="application/json" class="stack-sympy-data">{_json_script(data)}</script></section>')

@@ -57,7 +57,7 @@ EqualComAss. Other native matrix answer tests remain an explicit port limitation
 native STACK supports more, including LowestTerms. Separately, the Python-only
 IsBasis and MatrixProperty extensions support basis and exact constraint tasks.
 They are outside this native inventory and are documented in the
-[Python extension guide](../docs/python-answer-tests.html). There is no cell partial-credit policy: PRT scores
+[Python answer tests](../docs/python-checker-api.html). There is no cell partial-credit policy: PRT scores
 remain author-defined and the default feedback concerns the whole matrix.
 Fixed dimensions are validated before grading; learner-selected dimensions
 must stay inside the configured bounds.

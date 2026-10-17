@@ -3,7 +3,7 @@ title: "STACK questions with AI Feedback"
 subtitle: "Interactive practice on Quarto teaching pages"
 ---
 
-Bring selected Moodle STACK questions to a teaching website, with SymPy answer checking and **AI Feedback for guided hints and explanations**. Supported questions run in the learner's browser without a Moodle session, retaining their XML, response trees and authored question tests.
+Bring selected Moodle STACK questions to a teaching website, with mathematical answer checking and **AI Feedback for guided hints and explanations**. Learners can practise in their browser without a Moodle session. The question's XML, scoring rules and author tests remain available for inspection.
 
 **Quarto** turns plain-text teaching material into web pages. This extension adds interactive STACK question cards to those pages, which you can publish as a static website.
 
@@ -26,15 +26,13 @@ Expand and collect the polynomial below. An equivalent factored answer earns par
 
 ## What is supported?
 
-This is a bounded port of STACK, with **algebraic inputs, finite nested scalar lists/sets, numerical inputs, and bounded matrix inputs**. Ten native-compatible answer-test families are implemented:
+The site supports **algebraic, numerical, finite list/set and matrix answers** within stated limits. It implements these ten existing STACK answer-test families:
 
 `AlgEquiv`, `Sets`, `SameType`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, and `NumDecPlaces`.
 
-`AlgEquiv` also handles supported Boolean expressions and polynomial equations. Nested lists and sets support `AlgEquiv`, `Sets`, `SameType` and written-form `EqualComAss`. Matrices support `AlgEquiv`, `SameType` and `EqualComAss`, with raw-cell editing and optional bounded resizing. General matrix arithmetic, logical collection members, units inputs, arbitrary Maxima code, and the full Moodle assessment workflow remain outside the current scope. See the [precise support limits](docs/authoring.qmd#what-the-adapter-checks) before adapting a question.
+`AlgEquiv` also handles supported Boolean expressions and polynomial equations. For a list or set, an author can check mathematical content or the written form. For a matrix, an author can compare entries or ask for a different valid basis or a matrix meeting conditions. Learners can adjust a matrix's dimensions when the question allows it. See the [authoring guide](docs/authoring.qmd#what-the-adapter-checks) for the precise limits before adapting an assessment.
 
-Author-supplied predicates use the [PythonChecker v1 API](docs/python-checker-api.qmd), with an explicitly selected module and ordinary PRT scoring.
-
-The Python port also adds `IsBasis` (any basis for a reference space) and `MatrixProperty` (selected exact matrix constraints). These are explicitly Python-only tests, separate from native compatibility counts. Try the [matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one), or read [how this extends vanilla STACK](docs/python-answer-tests.qmd).
+For questions with more than one correct matrix, the Python-only `IsBasis` test accepts any basis for a matrix's null, column or row space, and `MatrixProperty` checks selected exact conditions. Authors can also add a named `PythonChecker` predicate. The familiar response trees still determine scores. Try the [matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one), then read [Python answer tests](docs/python-checker-api.qmd) to choose and author a test. These additions are separate from the native STACK compatibility counts.
 
 ## Use your own question
 
@@ -47,6 +45,7 @@ The [authoring guide](docs/authoring.qmd) has the installation steps, embedding 
 ## Explore the port
 
 - [Worked examples](examples.qmd): grading different answer forms and using feedback.
+- [Python answer tests](docs/python-checker-api.qmd): basis tasks, matrix conditions and author checkers, with their Moodle portability limits.
 - [Question corpus](corpus.qmd): imported STACK questions, replay results and known authoring issues.
 - [STACK compliance](compliance/): comparisons with upstream answer-test cases.
 - [Port regressions](compliance/port-regressions.html): focused checks for discoveries made during the port.

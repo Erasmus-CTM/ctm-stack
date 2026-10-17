@@ -1,18 +1,113 @@
 ---
-title: "Author your own Python checker"
-subtitle: "PythonChecker API version 1"
+title: "Python answer tests"
+subtitle: "Basis questions, matrix properties, and your own checker"
 ---
 
-`PythonChecker` lets an author add a Python predicate without modifying the
-extension's registry. It is a Python-port extension: importing its XML into
-Moodle does not install the checker in native STACK. Existing native answer
-tests and the 2,303-row native compatibility inventory keep their meanings.
+STACK SymPy can grade a family of correct answers without comparing each entry
+to one model answer. The built-in `IsBasis` and `MatrixProperty` tests cover
+common matrix tasks; `PythonChecker` lets an author define another predicate.
+All three use the usual STACK response-tree (PRT) branches for scores and
+feedback. The Python predicate decides whether a response meets the condition;
+it does not assign marks by itself. Try the [matrix and custom-checker
+questions](../examples.qmd#find-a-nonidentity-matrix-with-determinant-one).
 
-## A complete example
+## Choose the mathematical test
 
-The [positive-multiple exercise](../examples.qmd#custom-python-checker) accepts
-many correct values. Its trusted author module, `questions/checkers.py`, exports
-a dictionary of names and functions:
+| Task | Test | What it accepts |
+|---|---|---|
+| Give this particular matrix | `AlgEquiv` | Equal dimensions and equivalent corresponding entries. This is a native STACK answer-test name. |
+| Give any basis of a matrix's null, column, or row space | `IsBasis` | Any independent family spanning the requested space. |
+| Give any basis of a space specified by basis vectors | `IsBasis` | Any independent family with the same span as those vectors. |
+| Give a matrix satisfying stated conditions | `MatrixProperty` | Exact integer-entry, determinant, or identity conditions. Separate PRTs can award marks for separate requirements. |
+| Apply another authored mathematical rule | `PythonChecker` | The result of a named function in a selected author module. |
+
+The three Python tests are extensions of this port. A STACK XML file that uses
+them still has familiar inputs and PRTs, but importing it into Moodle does not
+install those tests. A native STACK version needs equivalent Maxima checks and,
+for a resizable input, native input configuration. The existing native answer
+tests keep their meaning; these examples do not count as native compatibility
+results.
+
+## Basis questions: use the matrix in the question
+
+For a null-space question about $A$, place the original matrix in the PRT's
+teacher answer (`tans`) and select `nullspace`. Similarly select `columnspace`
+or `rowspace` for those spaces. The learner enters one proposed vector per
+column for `nullspace` and `columnspace`, or per row for `rowspace`:
+
+```xml
+<answertest>IsBasis</answertest>
+<sans>ans</sans>
+<tans>A</tans>
+<testoptions>nullspace</testoptions>
+```
+
+Here `A` is a question variable holding the **original matrix**, not a
+precomputed null-space basis. Set the input's model answer with
+`<tans>nullspace_basis(A)</tans>`; corresponding helpers are
+`columnspace_basis(A)` and `rowspace_basis(A)`. These author-side helpers
+provide a model response; the test still accepts any valid basis. A nonzero
+rescaling, reordered vectors, or a different independent combination can all
+be correct. For example, if
+$A=\begin{pmatrix}1&2&3\\2&4&6\end{pmatrix}$, both the columns of
+$\begin{pmatrix}-2&-3\\1&0\\0&1\end{pmatrix}$ and the columns of
+$\begin{pmatrix}-5&-1\\1&-1\\1&1\end{pmatrix}$ form bases of $\ker A$.
+
+The older `columns` and `rows` options instead take a known, independent basis
+in the PRT's `tans` and compare the learner's span with that reference span.
+Choose these only when the question defines its target by a reference basis.
+A reference that spans the wrong space would define the wrong answer.
+
+| `IsBasis` option | PRT `tans` means | Submitted vectors |
+|---|---|---|
+| `nullspace` | Original matrix $A$ | Columns spanning $\ker A$ |
+| `columnspace` | Original matrix $A$ | Columns spanning $\operatorname{col}(A)$ |
+| `rowspace` | Original matrix $A$ | Rows spanning $\operatorname{row}(A)$ |
+| `columns` (also the default) | Independent reference columns | Columns with the same span |
+| `rows` | Independent reference rows | Rows with the same span |
+
+The matrix options use exact rational entries (integers and fractions), not
+decimals or symbolic parameters. Inputs have 1–16 rows or columns and at most
+64 entries. The editor cannot represent the empty basis of a zero-dimensional
+space, so avoid a target space with dimension zero. Give the learner enough
+room to choose the required number of vectors; [matrix input](matrix-input.qmd)
+explains bounded resizing. Test an alternative correct basis, an incomplete
+family, a dependent family, and a vector outside the target space with qtests.
+The input's model answer is checked at build time against the PRT; a mismatched
+model or dimensions stop the build.
+
+The response tree awards the marks on its true and false branches. Basis
+questions here award full credit only for a complete basis. After checking,
+green marks a valid vector in an independent submitted family, yellow marks
+members of a dependent valid family, and red marks zero or out-of-space
+vectors. Green can therefore appear on an incomplete answer. The colors are
+diagnostics, not partial marks. Editing or resizing clears them and requires
+validation again.
+
+## Matrix conditions and partial credit
+
+The [determinant-one example](../examples.qmd#find-a-nonidentity-matrix-with-determinant-one)
+asks for an integer $2\times2$ matrix with determinant $1$, other than the
+identity. It uses three equally weighted PRTs, one per condition. A response
+meeting two conditions earns two thirds of the available marks. An entry-by-entry
+comparison with one model matrix would miss other correct answers.
+
+| `MatrixProperty` option | Teacher answer in `tans` | Question checked |
+|---|---|---|
+| `integer_entries` | `true` or `false` | Are all entries integers? |
+| `determinant` | Exact rational value, such as `1` | Does a square matrix have this determinant? |
+| `identity` | `true` or `false` | Is this the identity matrix? |
+
+All submitted entries must be exact rationals. Set true and false branch
+scores and feedback for each PRT explicitly; the editor does not infer
+per-cell marks. The model answer must satisfy the authored nodes. These option
+names choose defined conditions, not Python expressions to execute from XML.
+
+## Write a custom checker
+
+Use `PythonChecker` when the built-in tests do not express the condition. The
+[positive-multiple example](../examples.qmd#custom-python-checker) checks any
+positive integer multiple of a given number. Its author module contains:
 
 ```python
 def positive_multiple(student, teacher):
@@ -24,7 +119,7 @@ def positive_multiple(student, teacher):
 CHECKERS = {"positive_multiple": positive_multiple}
 ```
 
-The XML uses an ordinary response-tree node:
+The XML names the checker and passes the learner input and teacher value:
 
 ```xml
 <answertest>PythonChecker</answertest>
@@ -33,14 +128,7 @@ The XML uses an ordinary response-tree node:
 <testoptions>positive_multiple</testoptions>
 ```
 
-The node's ordinary true/false branches own its scores, feedback, notes and
-next-node choices. The checker cannot supply a score. `sans` must name a learner
-input directly. `tans` supplies a parsed teacher value or a frozen author value;
-it can provide parameters such as the divisor here. `testoptions` is a single,
-case-sensitive ASCII identifier, starting with a letter, followed by letters,
-digits or underscores, at most 64 characters. It is never code or a file path.
-
-Select the module explicitly in the authored Quarto block:
+Select the module on the Quarto question block as well:
 
 ```{.stack-question #docs-custom-multiple}
 #| file: ../questions/python-checker.xml
@@ -51,76 +139,43 @@ Select the module explicitly in the authored Quarto block:
 #| review: true
 ```
 
-Use **Show source** below the card to copy its authored block. Both paths are relative to the `.qmd` file. CLI paths are relative to the working
-directory; the same selection works for rendering and authored tests:
+The paths in this block are relative to this page. `sans` must directly name
+an input. `tans` can be a parsed teacher answer or author value, such as the
+divisor `d`; `testoptions` names one entry in `CHECKERS`. It is a single
+case-sensitive ASCII identifier of at most 64 characters, beginning with a letter
+and followed by letters, digits, or underscores. It is not a file path or a
+Python expression. The selected module is author code packaged with the page;
+use only code you trust and expect learners to be able to see in a published
+site.
 
-```bash
-PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
-  --file questions/python-checker.xml --python-checkers questions/checkers.py
-```
+### Callable and values
 
-For Python callers, use `import_xml(xml_path, python_checkers=module_path)`.
-This attaches the source without executing it. Explicitly call
-`stack_sympy.checkers.preflight(question, variants)` to perform build checks;
-`grade()` and `run_question_tests()` execute the attached checker when visited.
+Each registered function must be callable with the two positional arguments
+`student` and `teacher`, and finish synchronously. They are parsed values, not
+raw answer strings. The API does not pass a context object, question state or
+separate configuration argument. Scalar expressions are SymPy expressions; matrices are
+immutable SymPy matrices. Lists and finite sets are distinct `ListValue` and
+`SetValue` objects with ordered `.args` (a set retains its submitted entries).
+Equations have two `.args`; held logic has `.operator` and `.operands`;
+logical constants use SymPy `true` and `false`. The collection and logic types
+and `collection_items` are available from `stack_sympy.checker_api`.
+These values do not promise to retain the learner's exact written arithmetic
+form. A custom checker decides its own mathematical domain, within the
+existing input and parser limits.
 
-## Callable and value contract
-
-Each `CHECKERS` value must accept two positional arguments, `student` and
-`teacher`. Functions must complete synchronously. Coroutines, generators and
-asynchronous results are rejected. There is no raw answer string, mutable
-environment, context object or separate configuration argument in version 1.
-Use a named wrapper or a frozen structured `tans` value for parameters.
-
-Values have already passed the port's parser and input configuration. Both
-arguments use this immutable vocabulary from `stack_sympy.checker_api`:
-
-| Input value | Callback representation |
-|---|---|
-| Scalar | SymPy `Expr`, including symbolic, irrational and complex values |
-| Matrix | SymPy `ImmutableMatrix`, exported as `Matrix` |
-| List | `ListValue`; ordered members in `.args` |
-| Finite set | `SetValue`; submitted repetitions and order retained in `.args` |
-| Equation | `Equation`; left and right sides in `.args` |
-| Held logic | `Logical`; `.operator` and `.operands` |
-| Logical constants | SymPy `true` and `false` |
-
-`collection_items` is also exported for collection inspection. Mutable author
-lists are converted recursively. Matrices expose normal SymPy methods such as
-`.det()`, `.rank()` and `.shape`. Lists and sets stay distinct from matrices.
-Held equations and logic retain their structure and multiplicity; they are not
-automatically changed into simplifying SymPy Boolean expressions. This is a
-value API, without a promise to preserve the student's written arithmetic form.
-
-Unlike the built-in `IsBasis` and `MatrixProperty`, the general API does not
-impose an exact-rational-only matrix domain. A checker must explicitly decide
-which mathematical domain it accepts. Existing input shape, decimal provenance,
-collection and logical bounds still apply; the API does not expand the parser.
-Nonfinite arguments are rejected before invocation.
-
-## Results and feedback
-
-Return an actual Python `bool` for a valid true/false predicate, or a dictionary:
+Return a Python `bool` for an ordinary true/false decision, or a dictionary:
 
 ```python
 {"valid": True, "correct": False, "feedback": "Try another value."}
 ```
 
-`valid` and `correct` are required Python booleans. Integer truth values, SymPy
-boolean objects, unresolved relations, `None`, unknown keys, `score` and `note`
-are rejected. Use an explicit mathematical decision and convert a known Boolean
-with `bool(...)` where needed; never coerce an unresolved symbolic relation.
-`valid=False, correct=True` is an error.
-
-`valid=False` declares an input outside the checker's domain. Grading marks that
-input invalid and displays its diagnostic; it does not choose the false branch.
-A mathematically wrong answer in the supported domain should return
-`valid=True, correct=False` so the authored false branch runs.
-
-Optional `feedback` is plain text, at most 4,096 characters. HTML-looking text
-is shown literally. Authored branch feedback retains the existing sanitized
-CASText handling. The authored PRT branch notes, rather than a callback note,
-are what qtests compare. Quiet nodes suppress callback diagnostics.
+Both required fields must be Python booleans. Use `valid=False` for a response
+outside this checker's domain: the learner sees an invalid-input diagnostic
+and the PRT's false branch does not run. Use `valid=True, correct=False` for
+a mathematically wrong response within the domain. `feedback` is optional
+plain text of at most 4,096 characters. A checker cannot return a score or an
+answer note; the PRT branches control those. Exceptions and malformed results
+are authoring errors, rather than wrong student answers.
 
 For a matrix, a valid result may also include one diagnostic axis:
 
@@ -129,57 +184,45 @@ For a matrix, a valid result may also include one diagnostic axis:
  "assessment": {"columns": ["correct", "dependent"]}}
 ```
 
-Use exactly one of `rows` or `columns`, with one status per submitted row or
-column. Statuses are `correct`, `incorrect` or `dependent`. Assessment is not
-allowed on invalid results. It controls optional editor diagnostics; it does
-not set `correct` or award credit. If multiple visited, nonquiet nodes supply
-assessment for an input, the last supplied assessment wins. Edits, resizing,
-reset and variant changes clear the displayed assessment.
+Choose exactly `rows` or `columns`, with one status per submitted vector.
+Statuses are `correct`, `incorrect`, or `dependent`. They color the editor but
+do not award marks. A checker may omit the assessment entirely. If several
+visited PRT nodes supply an assessment for one input, the last one displayed
+wins. A quiet PRT node suppresses its checker diagnostic and assessment. The result
+cannot include extra keys, an assessment for an invalid response, or a
+SymPy Boolean in place of a Python `bool`.
 
-## Execution and author errors
+### Test and publish
 
-At build time, the selected file is read once and embedded as exactly
-`api_version`, `source` and `sha256` in the question payload. Version 1 accepts
-1–65,536 UTF-8 source bytes and at most 32 registry entries. Every execution
-verifies the version and digest. The digest records provenance, not trust.
-CPython and the browser worker execute the same embedded source; neither
-discovers a Python path from the XML or fetches a checker from the network.
+Run authored tests with the same module you render:
 
-CLI build preflight checks every referenced identifier and signature, even on
-unreachable nodes. It then grades the model answers through each frozen
-variant's actual PRT paths. It requires valid, well-formed execution, without
-forcing every predicate true or requiring a total score of one. A diagnostic
-predicate can intentionally return false; later nodes may be guarded by earlier
-branches. Author qtests must assert the intended scores, alternate correct
-answers, wrong answers and important branches.
+```bash
+PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
+  --file questions/python-checker.xml --python-checkers questions/checkers.py
+```
 
-`instantiate()` and **Validate answers** never load or execute custom Python,
-including module-level code. Validation checks the existing syntax and input
-rules; checker-specific domain diagnostics appear on **Check answer**.
+The build checks referenced names, function signatures and model-answer
+grading on each rendered variant. Add qtests for alternative correct answers, wrong
+answers, and important PRT branches. **Validate answers** checks syntax and
+input rules; the custom predicate runs on **Check answer**. The page includes
+the selected Python source so the same checker runs in local tests and the
+learner's browser. Keep secrets out of the module, use available Python and
+SymPy features, and avoid local imports or services that the browser cannot
+provide. Make checker functions deterministic; do not rely on module state
+persisting from one check, variant or test to the next. Custom code can perform
+arbitrary computation, so review it before
+publishing. The API does not install packages or add new input types. For code
+that imports questions directly, `import_xml(xml_path, python_checkers=module_path)`
+selects the source; call `stack_sympy.checkers.preflight(question, variants)`
+before publication to run the same author checks. `grade()` and
+`run_question_tests()` execute the selected predicate on visited PRT nodes.
 
-A fresh temporary module namespace is used for each invocation. Registry state
-is not shared between nodes, cards, variants, repeated checks or qtests. Author
-stdout/stderr is discarded so `print()` cannot corrupt CLI HTML/JSON. Checkers
-must be deterministic and must not mutate imported module state: fresh local
-namespaces cannot undo changes to shared imported modules.
+::: {.callout-note collapse="true"}
+## Technical limits
 
-Syntax/import failures, missing identifiers, bad signatures, exceptions and
-malformed results are contextual author errors. They are never silently scored
-as a wrong answer. Use a deliberate invalid result for supported domain checks.
-
-## Portability and publication
-
-Author modules are trusted Python code, executed at build time and in the
-browser worker; this mechanism is not a sandbox. The source is public in the
-static page. Keep secrets and provider keys out of it. Use portable standard
-library code, the pinned SymPy version and documented bundled helpers. The API
-does not install packages, bundle local imports or provide server services.
-
-Existing browser worker timeouts terminate runaway grading. Ordinary CPython
-library calls have no automatic checker time limit, so build/test automation
-should apply its own process timeout. Parser bounds do not bound arbitrary
-author computation.
-
-AI Feedback receives the existing minimal status/score evidence, without the
-Python source, registry, teacher values or custom diagnostic messages. Generated
-question/source groups remain excluded from explicit context extraction.
+A module may register at most 32 named functions in `CHECKERS`. Its source
+must be a nonempty UTF-8 file no larger than 64 KiB. Feedback is plain text
+up to 4,096 characters. Custom execution does not gain a server process or
+additional package installation; apply a process timeout to local test runs
+if authored code could take a long time.
+:::

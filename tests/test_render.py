@@ -154,9 +154,9 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
     for entry in entries:
         assert f'id="{entry["id"]}"' in output
         assert f'questions/corpus/{entry["file"]}' in output
-        assert html.escape(entry["source_url"], quote=True) in output
         assert (render_site() / "questions/corpus" / entry["file"]).is_file()
     assert "CC BY-SA 4.0" in output
+    assert 'id="sources"' in output
     assert (render_site() / "questions/corpus/manifest.json").is_file()
     assert (render_site() / "questions/corpus/baseline.json").is_file()
 

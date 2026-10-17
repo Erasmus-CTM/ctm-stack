@@ -50,9 +50,9 @@ For a measured quantity, absolute tolerance compares $|x-a|$ to a fixed bound. R
 
 [Download the numerical question](questions/numerical-measurement.xml)
 
-## Imported STACK fixture
+## An imported STACK question
 
-This original Moodle export illustrates the form-sensitive `EqualComAss` test in an established STACK question. Its qtests are retained in the unmodified XML. The local adapter reports a build-time error when a question relies on an unsupported feature.
+This unchanged Moodle export asks for a particular written form. Its author tests remain in the XML, so you can inspect how `EqualComAss` grades the response. If an imported question uses an unsupported feature, the site build identifies it for the author.
 
 ```{.stack-question}
 #| file: questions/upstream/algmap-6-1.xml
@@ -68,7 +68,7 @@ This original Moodle export illustrates the form-sensitive `EqualComAss` test in
 
 ## Numeric order of operations from the STACK collection
 
-This unchanged sample tests a numerical answer against a relative tolerance. It is included as a source-import fixture so you can compare our interpreted result to its authored qtest.
+This unchanged question accepts numerical answers within a relative tolerance. Review mode shows its authored test case and the resulting score.
 
 ```{.stack-question}
 #| file: questions/upstream/bodmas.xml
@@ -81,7 +81,7 @@ This unchanged sample tests a numerical answer against a relative tolerance. It 
 
 ## Original rounding question
 
-This unmodified STACK sample has multiple answer fields and checks decimal-place reporting. Its authored test cases are visible in review mode.
+This unchanged question has several answer fields and checks the number of reported decimal places. Its author tests are visible in review mode.
 
 ```{.stack-question}
 #| file: questions/upstream/rounding-three-dp.xml
@@ -156,7 +156,7 @@ This unmodified STACK sample has multiple answer fields and checks decimal-place
 ## Find a nonidentity matrix with determinant one
 
 Enter **any integer $2\times2$ matrix with determinant 1, except the identity**.
-This adapts the [math-exercise matrix-constraint example](https://erasmus-ctm.github.io/math-exercise/custom-assessment.html).
+This adapts a matrix-constraint exercise.
 Each of the three conditions earns one third of the score: integer entries,
 determinant one, and nonidentity. You are finding a matrix that satisfies
 conditions, rather than copying a displayed model answer.
@@ -170,18 +170,17 @@ conditions, rather than copying a displayed model answer.
 #| context: none
 ```
 
-[Download XML](questions/determinant-one.xml) · [Original source and conversion record](questions/determinant-example-provenance.json)
+[Download XML](questions/determinant-one.xml)
 
 **For STACK authors:** this keeps the source exercise’s three conditions and
 partial credit, using three normal response trees. The new Python-only
-`MatrixProperty` test checks each condition; the XML is not a drop-in native
-STACK question. In native STACK, author equivalent Maxima calculations and
-response-tree checks. See [Python answer tests](docs/python-answer-tests.qmd)
-for this distinction and [matrix input](docs/matrix-input.qmd) for input limits.
+`MatrixProperty` test checks each condition; a native STACK version would need
+equivalent Maxima checks. See [Python answer tests](docs/python-checker-api.qmd)
+and [matrix input](docs/matrix-input.qmd) for authoring choices.
 
 ## Matrix problems from INGMat 3A
 
-These three questions adapt Andrey Chesnokov’s [week 3, section 3.8](https://aacchhee.github.io/ingmat3a_ntnu/pages/uke3.html#uke3-stotte-oppgaver), licensed CC BY-SA 4.0. The original math-exercise blocks and exact source revision are in the [source record](questions/course-examples-provenance.json).
+These three questions adapt a linear algebra course's rank and null-space exercises.
 
 ### Rank and pivot columns: ordinary STACK answer tests
 
@@ -200,9 +199,10 @@ usual STACK grading structure; it does not use the basis helper.
 
 ### A basis for the null space of B
 
-**Python extension: `IsBasis`.** Put one proposed basis vector in each column.
-A basis is not a unique matrix: changing a vector’s nonzero scale can still
-give a correct answer. Choose the number of columns before validating.
+Put one proposed basis vector in each column. A basis is not a unique matrix:
+changing a vector’s nonzero scale can still give a correct answer. Choose the
+number of columns before validating. `IsBasis` checks against the original
+matrix $B$; the author-side `nullspace_basis(B)` provides the model answer.
 
 ```{#course-b-nullspace .stack-question}
 #| file: questions/course-b-nullspace.xml
@@ -215,10 +215,10 @@ give a correct answer. Choose the number of columns before validating.
 
 ### A basis for the null space of C
 
-**Python extension: `IsBasis`.** Here you may also reorder or mix the reference
-basis vectors, provided your columns remain independent and span the same
-null space. Entry-by-entry equality with one model matrix would reject many
-correct answers, so this question uses a basis test instead.
+Here you may reorder or combine basis vectors, provided your columns remain
+independent and span the null space of $C$. Entry-by-entry equality with one
+model matrix would reject many correct answers. `IsBasis` uses the original
+matrix $C$ as its reference, while `nullspace_basis(C)` supplies the model.
 
 ```{#course-c-nullspace .stack-question}
 #| file: questions/course-c-nullspace.xml
@@ -237,10 +237,9 @@ vector or one outside the target space. The complete answer receives credit
 only when it is a basis; colors do not award partial credit. Edits and resizing
 clear the colors and require validation again.
 
-The basis questions extend vanilla STACK: they keep the familiar XML inputs and
-PRTs but introduce a Python-only answer test. The resizable matrix input is
-also a port extension. Read [how the Python extension works, and what the XML
-means in native STACK](docs/python-answer-tests.qmd).
+These questions keep STACK-style inputs and PRTs but use a Python-only basis
+test and a resizable matrix input. Read [Python answer tests](docs/python-checker-api.qmd)
+for the authoring pattern and Moodle portability.
 
 
 ## Custom Python checker {#custom-python-checker}
@@ -248,8 +247,8 @@ means in native STACK](docs/python-answer-tests.qmd).
 An author module can define a new predicate without editing this extension.
 This example accepts any positive integer multiple of the displayed number.
 The XML chooses `PythonChecker`, the authored block selects its module, and
-the usual response tree awards credit. See the [version 1 API](docs/python-checker-api.qmd)
-for the callable contract, immutable values, tests and portability.
+the usual response tree awards credit. See [Python answer tests](docs/python-checker-api.qmd)
+for the callable contract and testing guidance.
 
 ```{.stack-question #python-multiple}
 #| file: questions/python-checker.xml
@@ -259,3 +258,13 @@ for the callable contract, immutable values, tests and portability.
 #| seed: 17
 #| review: true
 ```
+
+## Sources
+
+The determinant-one question adapts a [math-exercise custom-assessment example](https://erasmus-ctm.github.io/math-exercise/custom-assessment.html);
+its [provenance record](questions/determinant-example-provenance.json) gives
+the adaptation and license. The rank/pivot and null-space questions adapt
+[INGMat 3A week 3 exercises](https://aacchhee.github.io/ingmat3a_ntnu/pages/uke3.html#uke3-stotte-oppgaver)
+under CC BY-SA 4.0; their [source record](questions/course-examples-provenance.json)
+identifies the exact originals. The unchanged imported questions come from
+the STACK collection, with [individual source and license details](questions/upstream/sources.json).

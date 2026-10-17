@@ -1,7 +1,7 @@
 """Explicit Python-only answer tests, separate from native STACK semantics.
 
 Only reviewed, registered functions run here. XML never supplies Python code,
-module paths or imports. A reference basis describes the target subspace.
+module paths or imports. A defining matrix describes the target subspace.
 """
 from __future__ import annotations
 
@@ -83,30 +83,65 @@ def preflight_matrix_source(tree, env):
     rational_matrix(value, tree)
 
 
+def basis_model(value, space):
+    """Compute a model answer for an input, never a grading reference."""
+    matrix = rational_matrix(value)
+    if space == "nullspace":
+        vectors = matrix.nullspace()
+    elif space == "columnspace":
+        vectors = matrix.columnspace()
+    else:
+        vectors = matrix.rowspace()
+    if not vectors:
+        raise Unsupported("The target space has an empty basis; empty matrix inputs are not yet supported")
+    model = (sp.Matrix.vstack(*vectors) if space == "rowspace"
+             else sp.Matrix.hstack(*vectors))
+    return MatrixValue(*model.tolist())
+
+
 def is_basis(student, teacher, options, student_ast=None, teacher_ast=None):
-    axis = options.strip() or "columns"
-    if axis not in {"columns", "rows"}:
-        raise Unsupported("IsBasis options must be columns or rows")
+    space = options.strip() or "columns"
+    if space not in {"nullspace", "columnspace", "rowspace", "columns", "rows"}:
+        raise Unsupported("IsBasis options must be nullspace, columnspace, rowspace, columns or rows")
     try:
         reference = rational_matrix(teacher, teacher_ast)
     except InvalidAnswer as exc:
         raise Unsupported("Invalid IsBasis reference: " + str(exc)) from exc
-    count = reference.cols if axis == "columns" else reference.rows
-    dimension = reference.rank()
-    if dimension != count:
-        raise Unsupported("IsBasis reference vectors must be an independent, nonempty basis")
+    rank = reference.rank()
+    axis = "rows" if space in {"rows", "rowspace"} else "columns"
+    if space == "nullspace":
+        dimension, ambient = reference.cols - rank, reference.cols
+        belongs = lambda vector: reference * vector == sp.zeros(reference.rows, 1)
+        space_name = "null space"
+    elif space == "columnspace":
+        dimension, ambient = rank, reference.rows
+        belongs = lambda vector: reference.row_join(vector).rank() == rank
+        space_name = "column space"
+    elif space == "rowspace":
+        dimension, ambient = rank, reference.cols
+        belongs = lambda vector: reference.col_join(vector).rank() == rank
+        space_name = "row space"
+    else:
+        # Backwards compatibility for questions which supplied a known basis.
+        dimension = rank
+        count = reference.cols if axis == "columns" else reference.rows
+        if dimension != count:
+            raise Unsupported("IsBasis reference vectors must be an independent, nonempty basis")
+        ambient = reference.rows if axis == "columns" else reference.cols
+        belongs = lambda vector: (reference.row_join(vector).rank() == dimension if axis == "columns"
+                                  else reference.col_join(vector).rank() == dimension)
+        space_name = "target space"
+    if not dimension:
+        raise Unsupported("The target space has an empty basis; empty matrix inputs are not yet supported")
     try:
         submitted = rational_matrix(student, student_ast)
     except InvalidAnswer as exc:
         return {"valid": False, "correct": False, "note": "IsBasis-invalid", "feedback": str(exc)}
-    ambient = reference.rows if axis == "columns" else reference.cols
     submitted_ambient = submitted.rows if axis == "columns" else submitted.cols
     result = assess_basis(
         submitted, axis=axis, target_dimension=int(dimension), name="answer",
-        belongs=lambda vector: submitted_ambient == ambient and (
-            reference.row_join(vector).rank() == dimension if axis == "columns"
-            else reference.col_join(vector).rank() == dimension),
-        space_name="target space",
+        belongs=lambda vector: submitted_ambient == ambient and belongs(vector),
+        space_name=space_name,
     )
     # IsBasis is a predicate. The normal true/false PRT branches award credit.
     # The helper's fractional diagnostic score does not become a PRT score.

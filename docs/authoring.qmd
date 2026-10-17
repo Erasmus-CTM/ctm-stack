@@ -19,7 +19,7 @@ filters:
   - stack-sympy
 ```
 
-Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<question type="stack">`. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a `stack-question` block at its XML path and exact `<name><text>…</text></name>`. The filter embeds a selected question and precomputes the requested variants when Quarto renders. Unchanged native XML remains the source of truth and can be imported back into Moodle. Port-only Python tests and resizable matrix settings require adaptation for Moodle; see [Python portability](python-answer-tests.qmd#how-this-extends-vanilla-stack) and the [PythonChecker API](python-checker-api.qmd).
+Use a Moodle STACK export whose root is `<quiz>` and whose questions use `<question type="stack">`. Keep the normal question, input, PRT, deployed-seed, and qtest elements. Point a `stack-question` block at its XML path and exact `<name><text>…</text></name>`. The filter embeds a selected question and precomputes the requested variants when Quarto renders. Unchanged native XML remains the source of truth and can be imported back into Moodle. Port-only Python tests and resizable matrix settings need adaptation for Moodle; see [Python answer tests](python-checker-api.qmd).
 
 ```{.stack-question}
 #| file: ../questions/polynomial-expansion.xml
@@ -91,47 +91,98 @@ collects a snapshot without running validation, grading, or authored tests.
 
 ## What the adapter checks
 
-| Supported here | Scope |
-|---|---|
-| Source | Moodle STACK XML `<quiz>` with named STACK questions; category and description entries are skipped. |
-| Inputs | Scalar algebraic, finite nested list/set and numerical text answers, plus bounded matrix editors, with strict syntax and `<insertstars>0</insertstars>` or `<insertstars>1</insertstars>`. Mode 0 requires `*`; mode 1 also accepts adjacent `2x`, `2(x+1)`, `(x+1)(x-1)`, and `(x+1)x`. Both keep `xy` as one symbol; whitespace alone never means multiplication. Other insertstars modes fail at import. |
-| Variables | A small, safely parsed Maxima-like assignment and arithmetic subset, including exact matrix values in `matrix([a,b],[c,d])` syntax, including `rand(n)` for seeded variants and two-integer `lcm(a,b)`. `ratsimp` preserves a common-denominator form for supported scalar expressions. |
-| Scalar functions | Elementary functions include `ln` as an alias for `log`, bounded rational-polynomial `gcd(a,b)`, and real scalar `mod(a,b)`, including Maxima's `mod(x,0)=x`. Author expressions also support `num`, `denom`, `ev(expr)`, and `ev(expr,simp)`. Symbolic complex logarithms requiring branch proofs remain unsupported. |
-| Native-compatible tests | `AlgEquiv`, `Sets`, `SameType`, `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms`, `NumAbsolute`, `NumRelative`, `NumDecPlaces`. The four form-sensitive tests require `sans` to name an input directly. `FacForm` also requires one polynomial variable in `<testoptions>` (a symbol or an author alias resolving to one); it checks equivalence and factorization of univariate polynomials over the rationals. Blank or syntactically malformed absolute/relative tolerances default to 0.05, while decimal places require an explicit count from 1 to 50. See the README for the expression whitelist. |
-| PRTs | Acyclic node graphs with `=`, `+`, and `−` score operations, weighted response trees, branch feedback and notes. |
-| Author tests | Native `<qtest>` inputs and expected PRT score, penalty, and answer note. |
+Before moving a graded question from Moodle, decide what a correct answer means
+and check that its input and answer test are supported here. The [worked
+examples](../examples.qmd) show form, value, numerical precision and matrix
+questions. This guide covers the current limits; it does not claim every STACK
+or Maxima feature.
 
-This is a deliberately limited evaluator, not a replacement for Moodle STACK or its Maxima CAS. `questionsimplify=0` (`simp:false`) is accepted when any `EqualComAss` teacher form can be preserved after freezing author variables; otherwise the build rejects it. In this mode, supported `{@expression@}` CASText also preserves authored arithmetic form and groups substitutions inside existing TeX math. `EqualComAss`, `FacForm`, `SingleFrac`, and `LowestTerms` require a direct input name in `sans` to preserve the student’s written form. `FacForm` considers the written factors, including common integer content, and rejects expressions outside its bounded polynomial subset or a missing/non-symbol variable option. `SingleFrac` requires an equivalent single written fraction (or equivalent atomic answer) and excludes divisions nested in its numerator or denominator. `LowestTerms` checks reducible written integer fractions and supported denominator restrictions; it does not compare the teacher expression or factor symbolic polynomials. Build-time validation rejects unsupported author features rather than silently grading them differently. Symbolic equivalence uses SymPy transformations rather than randomized substitution. Decimal-place grading reads the literal answer so a trailing zero is meaningful. Native qtest answer notes are checked using STACK-style ordered subsequence matching, including anchored beginning/end notes and `NULL`: a terminal note can pass even if earlier PRT nodes contributed notes. The review interface and qtests help an author inspect the selected seeds, but they do not establish complete parity with all STACK configurations.
+| Teaching task | Supported choice | Check before publishing |
+|---|---|---|
+| Equivalent algebra | `AlgEquiv` | State any domain restrictions in the prompt. The supported expression grammar is narrower than Maxima's. |
+| A particular written form | `EqualComAss`, `FacForm`, `SingleFrac` or `LowestTerms` | Select the form test that matches the instruction, then test an equivalent answer in the wrong form. `LowestTerms` checks form without comparing the teacher value; pair it with a value check when needed. |
+| A measured number | `NumAbsolute`, `NumRelative` or `NumDecPlaces` | Choose absolute or relative tolerance, or require written precision including trailing zeros. |
+| A finite list or set | `AlgEquiv`, `Sets`, `SameType` or `EqualComAss` | Decide whether order, repetitions and written form matter. Nested members must be scalar expressions. |
+| A matrix | `AlgEquiv`, `SameType` or `EqualComAss` | Choose fixed or learner-selected dimensions. See [matrix input](matrix-input.qmd). For any basis or a matrix meeting conditions, use [Python answer tests](python-checker-api.qmd). |
+| Scoring and feedback | Weighted PRTs with branch scores, notes and feedback | Run the question's `<qtest>` cases and inspect wrong answers and alternate correct answers. |
 
-Finite collections use an `algebraic` input: square brackets for lists, braces for sets, including nested mixtures and empty collections. Leaves must be scalar expressions. Limits are 32 entries per container, six levels and 128 collection-tree nodes. `AlgEquiv` recurses by list position and compares normalized set members; `Sets` explains outer duplicate and missing/extra entries. `EqualComAss` preserves written arithmetic, list order, and set multiplicity without flattening sets. Written previews display the entered structure. Use direct input names for form tests; held teacher/qtest aliases fail the build if freezing loses their written form.
+The imported source must be a Moodle STACK `<quiz>` containing named STACK
+questions. Question variables support a defined Maxima-like assignment and
+arithmetic subset, including seeded `rand(n)`, exact matrices and selected
+functions. Unsupported settings produce a build error. Fixed seeds reproduce
+this port's variants, but do not reproduce Moodle's random sequence.
 
-`SameType` and `checkanswertype=1` follow STACK applicability: wrong-length lists still have the same type, equal-length lists recursively check member types, and any two sets have the same type. They do not replace an equality test or validate every nested set member's shape. Frozen collection variables must use exact fractions rather than decimal literals.
+### Answer entry and form
 
-Decimals anywhere inside a set (including a list within a set) are unsupported; use exact fractions. Direct list answers retain literal scalar decimal comparisons. Collection checks require `sans` to name the learner input directly: feedback aliases and derived learner collections lose literal precision when serialized. Teacher collections and helper operations must use author values, and transitive decimal aliases are rejected in collection/helper expressions, qtests and CASText.
+A learner can enter algebraic or numerical text, finite lists and sets, or a
+matrix. Strict syntax is required. With `<insertstars>0</insertstars>`, write
+`2*x`; with `<insertstars>1</insertstars>`, adjacent forms such as `2x`,
+`2(x+1)` and `(x+1)(x-1)` are also accepted. `xy` remains one variable and
+spaces alone do not imply multiplication. Other insertion modes are not
+supported.
 
-Decimal list leaves support literal constant arithmetic with integer powers only. Decimal-bearing function calls, symbolic coefficients and transformed collections such as `ev([0.1],simp)` are rejected; use exact fractions for these expressions. This restriction preserves the decimal spelling and operations needed by native binary64 comparison.
+`EqualComAss`, `FacForm`, `SingleFrac` and `LowestTerms` examine what the
+learner wrote, so their `sans` must directly name an input. `FacForm` needs one
+polynomial variable in `<testoptions>` and factors univariate rational
+polynomials; `SingleFrac` expects one written fraction or an equivalent atomic
+answer. `LowestTerms` spots reducible written integer fractions and supported
+denominator problems, but does not compare values or cancel symbolic polynomial
+factors. When `questionsimplify=0` is used, the build checks that a teacher
+form can be preserved. Decimal-place grading reads the submitted notation:
+`17.50` has a different reported precision from `17.5`.
 
-Author-only finite helpers are `set`, `setify`, `listify`, `union`, `intersection`, `setdifference`, `member`, `subsetp` and `cardinality`. They work in simplified question variables, with bounded input/output. `listify(set)` supports rational scalar members in numeric order; `listify(list)` keeps the list's order and repetitions. Freeze helper results before using `Sets`/`EqualComAss`; direct helper calls in those held tests, helper feedback variables and `questionsimplify=0` helper calls are unsupported. Learners enter collection literals. See the [nested](../examples.qmd#nested-collections-and-written-form) and [author-helper examples](../examples.qmd#finite-author-helpers), and the [normalization differences](../compliance/semantics.html#finite-sets).
+### Lists, sets and equations
 
-CASText also renders a scalar equality such as `{@p=ta@}` as an equation for display. `AlgEquiv` additionally supports bounded polynomial equation inputs and disjunctions, with root multiplicity retained. For example, `a=0 or b=0` matches `a*b=0`, while `a^3*b^3=0` does not. It also supports pure Boolean expressions and elementary hyperbolic functions such as `cosh` and `tanh`. See the [examples](../examples.qmd#hyperbolic-equivalence) and the README for the precise limits.
+Write lists in brackets and sets in braces; both may nest, and both may be
+empty. Limits are 32 entries per container, six nesting levels and 128 total
+collection nodes. `AlgEquiv` compares a list by position and a set by its
+members. `Sets` reports outer duplicates and missing or extra members.
+`EqualComAss` preserves written arithmetic, list order and repeated set entries.
+`SameType` checks STACK test applicability, not exact shape: two supported sets
+have the same type, and lists of different lengths can still have the same
+type. Use a content test when contents matter.
+
+Use exact fractions inside sets and in frozen author collections. Literal
+decimals in direct lists have narrower support: constant arithmetic with
+integer powers works, while decimal-bearing function calls, symbolic terms
+and transformed author collections do not. Collection tests need a direct
+learner input in `sans`. Author-only finite helpers include `set`, `setify`,
+`listify`, `union`, `intersection`, `setdifference`, `member`, `subsetp` and
+`cardinality`; use them in simplified question variables and freeze their
+results before form-sensitive tests. See the [collection examples](../examples.qmd#nested-collections-and-written-form).
+
+`AlgEquiv` also handles supported Boolean expressions, polynomial equations
+and disjunctions, and elementary hyperbolic functions. For instance,
+`a=0 or b=0` matches `a*b=0`, but a repeated-root equation is a different
+answer. Equation, function and complex branch support is limited; review the
+[precise expression limits](https://github.com/Erasmus-CTM/stack-sympy#supported-subset-and-grading-behavior)
+for a consequential question.
+
+### Tests and evidence
+
+Native `<qtest>` cases check PRT score, penalty and answer notes. Notes follow
+STACK's ordered matching rules, so a terminal note can match after earlier
+nodes have added notes. The test and review controls show results for the
+chosen variants; they cannot establish complete parity with Moodle. For an
+important assessment, also compare representative responses in Moodle.
 
 ## Validate and publish
 
 For an extension-only installation, install `sympy==1.13.3` in the Python environment used by Quarto. Run `python -m stack_sympy.cli test --file questions/polynomial-expansion.xml` after placing `_extensions/stack-sympy` on `PYTHONPATH`, then render with `quarto render`. Serve the `_site` directory through an HTTP server, including locally: `python -m http.server --directory _site 8000`. Browser grading loads Pyodide and SymPy; its first use downloads runtime packages, so it needs network access. Review the generated question and run its qtests before publishing any assessment. If a source uses features outside the supported subset, `#| diagnostics: true` displays the location of a build error in the page during authoring; remove it for production so unsupported questions fail the render.
 
 See [bounded matrix inputs](matrix-input.qmd) for fixed and learner-selected dimensions,
-raw-cell handling and the pinned standalone editor API.
+raw-cell handling and author decisions.
 
 ## Extend the Python port
 
-The port also supports explicitly named Python-only answer tests. `MatrixProperty`
-checks integer entries, a determinant, or identity; three ordinary PRTs preserve
-the determinant-one example’s requirement-level partial credit. `IsBasis`
-accepts any exact rational basis for a reference space, while keeping the
-existing XML inputs and true/false PRT branches. See [Python answer tests](python-answer-tests.qmd)
-for the contract, the source helper, worked examples, and the difference from
-vanilla STACK XML portability.
-
-For author-supplied predicates without editing the extension registry, use the
-[PythonChecker v1 API](python-checker-api.qmd). Select a trusted module in the
-Quarto block or CLI; XML chooses a named predicate, and PRTs retain scoring.
+`IsBasis` accepts any exact rational basis of the null, column or row space of
+an authored matrix. Set the PRT's teacher answer to the original matrix `A`
+and select `nullspace`, `columnspace` or `rowspace`. Set the input model answer
+with `nullspace_basis(A)`, `columnspace_basis(A)` or `rowspace_basis(A)`; the
+author need not enter basis vectors by hand. The older `columns` and `rows`
+options compare spans with a supplied reference basis. `MatrixProperty` checks
+integer entries, a determinant or identity. Authors can define additional
+named predicates with `PythonChecker` and an explicitly selected module.
+All of these use normal PRT branches to award marks. See the single
+[Python answer tests](python-checker-api.qmd) guide for examples, API details
+and the distinction from native STACK.

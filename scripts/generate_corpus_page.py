@@ -14,11 +14,11 @@ PAGE = ROOT / "corpus.qmd"
 LABELS = {
     "qtests_pass": "Passed authored tests",
     "qtests_mismatch": "Authored test mismatch",
-    "unsupported_import": "Unsupported at import",
-    "unsupported_instantiate": "Unsupported at instantiation",
-    "unsupported_qtest": "Unsupported in test replay",
-    "timeout": "Replay timed out",
-    "error": "Replay error",
+    "unsupported_import": "Cannot import this question",
+    "unsupported_instantiate": "Cannot prepare this variant",
+    "unsupported_qtest": "Cannot replay its author tests",
+    "timeout": "Test run timed out",
+    "error": "Test run failed",
 }
 
 # Keep the pinned imports and their compatibility baseline unchanged. Live
@@ -69,19 +69,16 @@ def generate() -> str:
     passing = [e for e in entries if reports[e["id"]]["status"] == "qtests_pass"]
     mismatched = [e for e in entries if reports[e["id"]]["status"] == "qtests_mismatch"]
     blocked = [e for e in entries if reports[e["id"]]["status"] not in {"qtests_pass", "qtests_mismatch"}]
-    source_root = manifest["source_base_url"]
     repository_url = f"https://github.com/{manifest['repository']}"
     commit_url = f"{repository_url}/commit/{manifest['commit']}"
     out = [
-        '---\ntitle: "Question corpus"\nsubtitle: "Thirty-five unchanged STACK exports, with a measured adapter boundary"\n---',
+        '---\ntitle: "Question corpus"\nsubtitle: "Explore imported STACK questions and their current support"\n---',
         "",
-        f"These are 35 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **The {len(passing)} questions whose authored tests passed on every replayed seed have interactive cards.** One additional, clearly labeled presentation teaching copy demonstrates a matrix question whose original HTML remains unsupported. Other originals remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.",
+        f"These are 35 unchanged STACK XML questions from the upstream library. **The {len(passing)} questions whose authored tests passed on every replayed seed have interactive cards.** Each question has a local XML download and an observed result. One additional presentation teaching copy shows a matrix question whose original HTML is unsupported. Other originals remain available with the observed mismatch or unsupported feature shown explicitly.",
         "",
-        f"The [reproducible baseline](questions/corpus/baseline.json) reports **{len(passing)} passed**, **{len(mismatched)} with test mismatches**, and **{len(blocked)} blocked** ({counts.get('unsupported_import', 0)} at import, {counts.get('unsupported_instantiate', 0)} at instantiation). It retained **{sum(e['qtest_count'] for e in entries)} authored test cases** and replayed **{baseline['summary']['replayed_cases']} seed/case combinations** across {baseline['summary']['instantiated_all_seeds']} instantiated questions; {baseline['summary']['failed_cases']} combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.",
+        f"In this snapshot, **{len(passing)} pass their author tests**, **{len(mismatched)} has a test mismatch**, and **{len(blocked)} cannot be fully checked here**. The [replay record](questions/corpus/baseline.json) gives the tested variants and exact results.",
         "",
-        f"**Attribution and reuse.** Questions are from [STACK / maths/moodle-qtype_stack]({repository_url}), pinned at commit [`{manifest['commit']}`]({commit_url}). The unchanged question exports carry the [CC BY-SA 4.0 license]({source_root}samplequestions/COPYING.txt), also [included locally](questions/corpus/COPYING.txt); see each pinned source link below. The [manifest](questions/corpus/manifest.json) records the exact upstream path and SHA-256 for every XML file.",
-        "",
-        "The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one) also include an adapted determinant-one task and two basis problems. Those use explicitly Python-only MatrixProperty/IsBasis tests and are separate from the 35 unchanged native exports and their baseline counts. See [matrix authoring guidance](docs/matrix-input.qmd) and [how the Python tests extend vanilla STACK](docs/python-answer-tests.qmd).",
+        "The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one) also include a determinant-one task and two basis questions. Their Python-only `MatrixProperty` and `IsBasis` tests are separate from these unchanged exports and their baseline counts. See [Python answer tests](docs/python-checker-api.qmd).",
         "",
         "## Browse all 35",
         "",
@@ -92,7 +89,7 @@ def generate() -> str:
         row = reports[entry["id"]]
         name = html.escape(entry["question_name"])
         topic = html.escape(entry["topic"].replace("-", " ").replace("_", " "))
-        label = "Upstream authoring bug (PRT)" if upstream_authoring_issue(entry, row) else LABELS[row['status']]
+        label = "Original scoring-tree issue" if upstream_authoring_issue(entry, row) else LABELS[row['status']]
         out.append(f"| [{name}](#{entry['id']}) | {topic} | {label} | [Download](questions/corpus/{entry['file']}) |")
     out += [
         "",
@@ -109,11 +106,11 @@ def generate() -> str:
         "#| review: true",
         "```",
         "",
-        "[Download presentation teaching XML](questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml)  -  [Pinned original source](" + next(e["source_url"] for e in entries if e["id"] == "matrix-system") + ")  -  [Adaptation and licensing](questions/corrected/README.md)",
+        "[Download presentation teaching XML](questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml) · [Adaptation and licensing](questions/corrected/README.md)",
         "",
         "## Ready to try",
         "",
-        f"These {len(passing)} cards use the first seed from each replay. Press **Validate answers**, then **Check answer**. **Run author tests** replays the card's XML tests on the displayed seed; the [baseline](questions/corpus/baseline.json) describes the unchanged imports. Three cards explicitly use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Their source panels expose the actual XML used by each card, and every original remains separately downloadable.",
+        f"These {len(passing)} cards use a replayed variant of each question. Press **Validate answers**, then **Check answer**. **Run question tests** checks the displayed variant against the question's authored cases. Three cards use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Each original remains downloadable; the [baseline](questions/corpus/baseline.json) records every tested variant.",
         "",
     ]
     for entry in passing:
@@ -121,7 +118,7 @@ def generate() -> str:
         out += [
             f"### {entry['question_name'].replace('*', r'\*')} {{#{entry['id']}}}",
             "",
-            f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · {entry['input_count']} input{'s' if entry['input_count'] != 1 else ''} · {entry['qtest_count']} authored tests · baseline seeds {', '.join(f'`{s}`' for s in row['seeds'])}.",
+            f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · {entry['input_count']} answer field{'s' if entry['input_count'] != 1 else ''} · {entry['qtest_count']} author test{'s' if entry['qtest_count'] != 1 else ''}.",
             "",
         ]
         path, question_name = teaching_source(entry)
@@ -138,7 +135,7 @@ def generate() -> str:
             "#| review: true",
             "```",
             "",
-            f"[Download original XML](questions/corpus/{entry['file']}) · [Pinned upstream source]({entry['source_url']})",
+            f"[Download original XML](questions/corpus/{entry['file']})",
             *([f"[Download the corrected teaching XML]({path})"] if entry["file"] in CORRECTIONS else []),
             "",
         ]
@@ -161,13 +158,13 @@ def generate() -> str:
             *([upstream_authoring_issue(entry, row), ""] if upstream_authoring_issue(entry, row) else []),
             f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · **{row['failed_cases']} failed of {row['replayed_cases']} replayed seed/case combinations.** For seed `{sample['seed']}`, case `{sample['testcase']}`, input `{inputs}`: `{check['prt']}` expected score `{expected['score']}` and answer note `{expected['note']}`, but produced score `{actual['score']}` and answer note `{actual['note']}`.",
             "",
-            f"[Download original XML](questions/corpus/{entry['file']}) · [Pinned upstream source]({entry['source_url']}) · [Full replay](questions/corpus/baseline.json)",
+            f"[Download original XML](questions/corpus/{entry['file']}) · [Full replay](questions/corpus/baseline.json)",
             "",
         ]
     out += [
         "## Unsupported by this adapter",
         "",
-        "These original questions remain inspectable. Each reason is the first recorded failure at the indicated import or instantiation stage; later features have not been assessed.",
+        "You can still download and inspect these original questions. Each explanation gives the first issue found while importing or preparing the question; other features may also need adaptation.",
         "",
     ]
     for entry in blocked:
@@ -181,9 +178,19 @@ def generate() -> str:
             "",
             f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · **{LABELS[row['status']]}{seed}.** `{location}`: {html.escape(reason)}.",
             "",
-            f"[Download original XML](questions/corpus/{entry['file']}) · [Pinned upstream source]({entry['source_url']}) · [Replay record](questions/corpus/baseline.json)",
+            f"[Download original XML](questions/corpus/{entry['file']}) · [Replay record](questions/corpus/baseline.json)",
             "",
         ]
+    out += [
+        "## How this gallery was checked",
+        "",
+        f"The [reproducible baseline](questions/corpus/baseline.json) records **{len(passing)} passed**, **{len(mismatched)} with test mismatches**, and **{len(blocked)} blocked** ({counts.get('unsupported_import', 0)} at import, {counts.get('unsupported_instantiate', 0)} while preparing a variant). It retained **{sum(e['qtest_count'] for e in entries)} authored test cases** and replayed **{baseline['summary']['replayed_cases']} seed/case combinations** across {baseline['summary']['instantiated_all_seeds']} prepared questions; {baseline['summary']['failed_cases']} combinations disagreed. Results for these variants do not establish complete STACK/Maxima agreement.",
+        "",
+        "## Sources",
+        "",
+        f"These unchanged questions come from the [STACK question library]({repository_url}) at its [pinned revision]({commit_url}) and retain [CC BY-SA 4.0](questions/corpus/COPYING.txt). The [source manifest](questions/corpus/manifest.json) links every question to its exact upstream file. The [presentation teaching copy](questions/corrected/README.md) records its limited HTML change and licensing; three other [corrected teaching copies](questions/corrected/README.md) record their mathematical or grading changes.",
+        "",
+    ]
     return "\n".join(out).rstrip() + "\n"
 
 

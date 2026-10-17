@@ -24,6 +24,8 @@ website:
         text: Question corpus
       - href: docs/authoring.qmd
         text: Authoring guide
+      - href: docs/python-checker-api.qmd
+        text: Python answer tests
       - text: Compatibility
         menu:
           - href: compliance/
@@ -35,7 +37,7 @@ website:
         href: https://github.com/Erasmus-CTM/stack-sympy
         aria-label: Source repository
   page-footer:
-    left: "STACK SymPy · a bounded, inspectable STACK subset for static Quarto pages"
+    left: "STACK SymPy · interactive practice for Quarto teaching pages"
 
 format:
   html:
