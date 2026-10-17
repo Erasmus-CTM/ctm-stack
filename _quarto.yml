@@ -19,11 +19,19 @@ website:
       - href: index.qmd
         text: Try it
       - href: examples.qmd
-        text: More examples
+        text: Worked questions
       - href: corpus.qmd
         text: Question corpus
-      - href: docs/authoring.qmd
-        text: Authoring guide
+      - text: Authoring
+        menu:
+          - href: docs/authoring.qmd
+            text: Teacher guide
+          - href: docs/matrix-input.qmd
+            text: Matrix input and grading
+          - href: docs/python-checker-api.qmd#author-the-spd-checker
+            text: SPD checker walkthrough
+          - href: docs/authoring.qmd#for-developers
+            text: Developer reference
       - href: docs/python-checker-api.qmd
         text: Python answer tests
       - text: Compatibility
@@ -32,6 +40,8 @@ website:
             text: STACK compliance
           - href: compliance/port-regressions.html
             text: Port regressions
+          - href: compliance/semantics.html
+            text: Semantics for STACK authors
     right:
       - icon: github
         href: https://github.com/Erasmus-CTM/stack-sympy

@@ -85,7 +85,25 @@ def test_vendored_matrix_editor_matches_audited_source_manifest():
 
 
 def question_blocks(qmd):
-    return re.findall(r'^```\{[^\n}]*\.stack-question[^\n}]*\}\n.*?\n```', qmd.read_text(), re.M | re.S)
+    # A displayed Markdown example may contain a question fence inside a longer
+    # outer fence. Only top-level question fences produce live cards.
+    blocks, current = [], []
+    fence, question = None, False
+    for line in qmd.read_text().splitlines():
+        if fence is None:
+            opening = re.fullmatch(r' {0,3}(`{3,}|~{3,})(.*)', line)
+            if opening:
+                fence = opening[1]
+                question = bool(re.fullmatch(r'\{[^}]*\.stack-question[^}]*\}', opening[2].strip()))
+                current = [line]
+        else:
+            current.append(line)
+            closing = line.strip()
+            if len(closing) >= len(fence) and set(closing) == {fence[0]}:
+                if question:
+                    blocks.append('\n'.join(current))
+                fence = None
+    return blocks
 
 
 def question_pages():

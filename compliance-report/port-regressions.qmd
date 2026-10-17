@@ -1,11 +1,29 @@
 ---
 title: "Port regressions"
-subtitle: "Checks for discoveries made while building the port"
+subtitle: "Teaching implications first, followed by development evidence"
 ---
 
-These project-owned cases cover supported behavior, invalid or unsupported inputs, and known differences discovered during development. They are separate from the [2,303 source cases in STACK compliance](index.qmd).
+STACK authors and maintainers can review the
+[semantics questions and evidence](semantics.qmd#author-attention).
 
-**Expected** is the behavior recorded for each case. **Port** is the SymPy implementation, **STACK** is Maxima, and **Browser** runs the port through Pyodide. A browser agreement can confirm the same known defect; it does not make that result correct.
+## For teachers
+
+These additional cases record supported behavior, invalid or unsupported
+inputs, and known differences found while developing STACK SymPy. They are
+separate from the [2,303 imported STACK cases](index.qmd).
+
+### How to use the cases
+
+**Expected** is the intended result for the case. **Port** is this SymPy
+implementation, **STACK** is Maxima, and **Browser** runs the port through
+Pyodide. Amber cases explain what differs and what it means for a question.
+Browser agreement may reproduce the same known issue; it does not make that
+result mathematically correct.
+
+For teaching, state the domain, select the intended written form and use a
+numerical test for approximate answers. The [semantics reference for STACK authors](semantics.qmd#author-attention) discusses unresolved conventions in detail. The
+[authoring guide](../docs/authoring.html) explains supported features and how
+to test your own questions, including [matrix conditions and SPD](../docs/python-checker-api.html).
 
 <div class="status-legend" aria-label="How to read the colors">
   <span class="tone-good">Green: expected behavior or agreement</span>
@@ -17,9 +35,9 @@ These project-owned cases cover supported behavior, invalid or unsupported input
 <div id="port-regressions-status" role="status">Loading saved results…</div>
 <div id="port-summary" class="report-summary"></div>
 
-## Cases {#case-results}
+### Cases {#case-results}
 
-Each amber case explains what differs and what to conclude. Select a count above or use the filters.
+Select a count above or use the filters. Open a case to see its explanation.
 
 <div class="report-controls">
   <label>Search cases <input id="port-search" type="search" placeholder="Expression, case ID, or explanation"></label>
@@ -30,17 +48,32 @@ Each amber case explains what differs and what to conclude. Select a count above
 <p id="port-case-count" role="status"></p>
 <div id="port-regressions-list" class="case-list"></div>
 
-<details class="methodology">
-<summary>Scope and technical details</summary>
+## For developers
 
-An expected input-handling check verifies that invalid or unsupported input is correctly refused. It is not a successful mathematical comparison. Known port issues remain defects even when their observations match a recorded exception. Root-convention differences have their own explanation and are not labeled mathematical failures.
+### Scope and interpretation
 
-The saved run observes isolated Python, official STACK functions where applicable, and the same port in browser Pyodide. “Test applies” is the answer test’s applicability, separate from input syntax validity. Missing observations remain unavailable.
+An input-handling check verifies that invalid or unsupported input is refused;
+it is not a successful mathematical comparison. Known port issues remain
+issues when their observations match an expected exception. Root-convention
+differences have their own explanation rather than a mathematical-failure label.
+
+The saved run observes isolated Python, official STACK functions where
+applicable, and the same port in browser Pyodide. “Test applies” describes
+answer-test applicability, separately from syntax validity. Missing observations
+remain unavailable. These regression counts do not alter the native inventory.
+
+### Saved evidence and contribution
+
+The [conventions reference](semantics.qmd) explains the case-specific
+mathematics. Add focused project discoveries to the
+[regression cases and contribution guide](https://github.com/Erasmus-CTM/stack-sympy/tree/main/tests/port_regressions).
+The [development guide](https://github.com/Erasmus-CTM/stack-sympy#supported-subset-and-grading-behavior)
+provides reproduction commands. Rendering this page reads saved results without
+rerunning the mathematical checks.
 
 <div id="port-provenance"></div>
-</details>
 
-<p class="report-downloads"><a href="port-regressions.json" download>Download saved results</a> · <a href="https://github.com/Erasmus-CTM/stack-sympy/tree/main/tests/port_regressions">Cases and contribution guide</a> · <a href="index.qmd">STACK compliance</a></p>
+<p class="report-downloads"><a href="port-regressions.json" download>Download saved results</a> · <a href="index.html">STACK compliance</a></p>
 
 <script src="report-ui.js" defer></script>
 <script src="port-regressions.js" defer></script>

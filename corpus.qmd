@@ -3,13 +3,17 @@ title: "Question corpus"
 subtitle: "Explore imported STACK questions and their current support"
 ---
 
+Use the teacher track to choose and try a question. The [developer track](#for-developers) keeps replay details and adaptation issues together.
+
+## For teachers
+
 These are 35 unchanged STACK XML questions from the upstream library. **The 23 questions whose authored tests passed on every replayed seed have interactive cards.** Each question has a local XML download and an observed result. One additional presentation teaching copy shows a matrix question whose original HTML is unsupported. Other originals remain available with the observed mismatch or unsupported feature shown explicitly.
 
 In this snapshot, **23 pass their author tests**, **1 has a test mismatch**, and **11 cannot be fully checked here**. The [replay record](questions/corpus/baseline.json) gives the tested variants and exact results.
 
-The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one) also include a determinant-one task and two basis questions. Their Python-only `MatrixProperty` and `IsBasis` tests are separate from these unchanged exports and their baseline counts. See [Python answer tests](docs/python-checker-api.qmd).
+The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one) also include a determinant-one task and two basis questions. The [SPD example](examples.qmd#symmetric-positive-definite-matrix) adds a custom Python checker. These Python tests are separate from these unchanged exports and their baseline counts. See [Python answer tests](docs/python-checker-api.qmd).
 
-## Browse all 35
+### Browse all 35
 
 | Question | Topic | Adapter status | Original XML |
 |---|---|---|---|
@@ -49,7 +53,7 @@ The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determi
 | [LinearAlgebra_elementary_4](#linearalgebra-elementary-4) | Linear algebra / Matrix input | Passed authored tests | [Download](questions/corpus/LinearAlgebra_elementary_4.xml) |
 | [7.3.26 (Write sim. eqns. with matrices)](#matrix-system) | Introductory Mathematics / Matrix equations | Cannot prepare this variant | [Download](questions/corpus/7-3-26-(Write-sim-eqns-with-matrices).xml) |
 
-## Five matrix-input problems
+### Five matrix-input problems
 
 The four elementary-row-operation problems below run directly from unchanged official exports: [row 2 plus a multiple of row 3](#linearalgebra-elementary-1), [row 1 plus a multiple of row 3](#linearalgebra-elementary-2), [row 2 plus a multiple of row 1](#linearalgebra-elementary-3), and [row 1 minus a multiple of row 2](#linearalgebra-elementary-4). Together their original tests pass all 24 recorded seed/case combinations. Each uses a fixed 3 by 3 matrix editor and whole-matrix algebraic equivalence; no automatic cell partial credit is added.
 
@@ -64,11 +68,11 @@ The fifth asks learners to write a system of three linear equations as a coeffic
 
 [Download presentation teaching XML](questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml) · [Adaptation and licensing](questions/corrected/README.md)
 
-## Ready to try
+### Ready to try
 
 These 23 cards use a replayed variant of each question. Press **Validate answers**, then **Check answer**. **Run question tests** checks the displayed variant against the question's authored cases. Three cards use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Each original remains downloadable; the [baseline](questions/corpus/baseline.json) records every tested variant.
 
-### AlgMap-1.5 {#algmap-1-5}
+#### AlgMap-1.5 {#algmap-1-5}
 
 Algebra Refresher / 01 Combinations of arithmetic operations · 1 answer field · 2 author tests.
 
@@ -84,7 +88,7 @@ Algebra Refresher / 01 Combinations of arithmetic operations · 1 answer field �
 [Download original XML](questions/corpus/AlgMap-1-5.xml)
 [Download the corrected teaching XML](questions/corrected/AlgMap-1-5.xml)
 
-### AlgMap-1.6 {#algmap-1-6}
+#### AlgMap-1.6 {#algmap-1-6}
 
 Algebra Refresher / 01 Combinations of arithmetic operations · 1 answer field · 2 author tests.
 
@@ -97,7 +101,7 @@ Algebra Refresher / 01 Combinations of arithmetic operations · 1 answer field �
 
 [Download original XML](questions/corpus/AlgMap-1-6.xml)
 
-### AlgMap-2.1 {#algmap-2-1}
+#### AlgMap-2.1 {#algmap-2-1}
 
 Algebra Refresher / 02 Factorisation of whole numbers · 1 answer field · 2 author tests.
 
@@ -110,7 +114,7 @@ Algebra Refresher / 02 Factorisation of whole numbers · 1 answer field · 2 aut
 
 [Download original XML](questions/corpus/AlgMap-2-1.xml)
 
-### AlgMap-2.5 {#algmap-2-5}
+#### AlgMap-2.5 {#algmap-2-5}
 
 Algebra Refresher / 02 Factorisation of whole numbers · 1 answer field · 2 author tests.
 
@@ -126,7 +130,7 @@ Algebra Refresher / 02 Factorisation of whole numbers · 1 answer field · 2 aut
 [Download original XML](questions/corpus/AlgMap-2-5.xml)
 [Download the corrected teaching XML](questions/corrected/AlgMap-2-5.xml)
 
-### AlgMap-4.1 {#algmap-4-1}
+#### AlgMap-4.1 {#algmap-4-1}
 
 Algebra Refresher / 04 Multiplication and division of fractions · 1 answer field · 2 author tests.
 
@@ -139,7 +143,7 @@ Algebra Refresher / 04 Multiplication and division of fractions · 1 answer fiel
 
 [Download original XML](questions/corpus/AlgMap-4-1.xml)
 
-### AlgMap-4.13 {#algmap-4-13}
+#### AlgMap-4.13 {#algmap-4-13}
 
 Algebra Refresher / 04 Multiplication and division of fractions · 1 answer field · 4 author tests.
 
@@ -152,7 +156,7 @@ Algebra Refresher / 04 Multiplication and division of fractions · 1 answer fiel
 
 [Download original XML](questions/corpus/AlgMap-4-13.xml)
 
-### AlgMap-6.4 {#algmap-6-4}
+#### AlgMap-6.4 {#algmap-6-4}
 
 Algebra Refresher / 06 Simplifying algebraic expressions · 1 answer field · 3 author tests.
 
@@ -168,7 +172,7 @@ Algebra Refresher / 06 Simplifying algebraic expressions · 1 answer field · 3 
 [Download original XML](questions/corpus/AlgMap-6-4.xml)
 [Download the corrected teaching XML](questions/corrected/AlgMap-6-4.xml)
 
-### AlgMap-6.7 {#algmap-6-7}
+#### AlgMap-6.7 {#algmap-6-7}
 
 Algebra Refresher / 06 Simplifying algebraic expressions · 1 answer field · 2 author tests.
 
@@ -181,7 +185,7 @@ Algebra Refresher / 06 Simplifying algebraic expressions · 1 answer field · 2 
 
 [Download original XML](questions/corpus/AlgMap-6-7.xml)
 
-### AlgMap-7.1 {#algmap-7-1}
+#### AlgMap-7.1 {#algmap-7-1}
 
 Algebra Refresher / 07 Removing brackets · 1 answer field · 2 author tests.
 
@@ -194,7 +198,7 @@ Algebra Refresher / 07 Removing brackets · 1 answer field · 2 author tests.
 
 [Download original XML](questions/corpus/AlgMap-7-1.xml)
 
-### AlgMap-8.5 {#algmap-8-5}
+#### AlgMap-8.5 {#algmap-8-5}
 
 Algebra Refresher / 08 Algebraic fractions · 1 answer field · 4 author tests.
 
@@ -207,7 +211,7 @@ Algebra Refresher / 08 Algebraic fractions · 1 answer field · 4 author tests.
 
 [Download original XML](questions/corpus/AlgMap-8-5.xml)
 
-### AlgMap-9.1 {#algmap-9-1}
+#### AlgMap-9.1 {#algmap-9-1}
 
 Algebra Refresher / 09 Linear equations · 1 answer field · 1 author test.
 
@@ -220,7 +224,7 @@ Algebra Refresher / 09 Linear equations · 1 answer field · 1 author test.
 
 [Download original XML](questions/corpus/AlgMap-9-1.xml)
 
-### AlgMap-9.6 {#algmap-9-6}
+#### AlgMap-9.6 {#algmap-9-6}
 
 Algebra Refresher / 09 Linear equations · 1 answer field · 1 author test.
 
@@ -233,7 +237,7 @@ Algebra Refresher / 09 Linear equations · 1 answer field · 1 author test.
 
 [Download original XML](questions/corpus/AlgMap-9-6.xml)
 
-### AlgMap-10.1 {#algmap-10-1}
+#### AlgMap-10.1 {#algmap-10-1}
 
 Algebra Refresher / 10 Expressions single term common factors · 1 answer field · 2 author tests.
 
@@ -246,7 +250,7 @@ Algebra Refresher / 10 Expressions single term common factors · 1 answer field 
 
 [Download original XML](questions/corpus/AlgMap-10-1.xml)
 
-### AlgMap-11.1 {#algmap-11-1}
+#### AlgMap-11.1 {#algmap-11-1}
 
 Algebra Refresher / 11 Rearranging algebraic formulae · 2 answer fields · 1 author test.
 
@@ -259,7 +263,7 @@ Algebra Refresher / 11 Rearranging algebraic formulae · 2 answer fields · 1 au
 
 [Download original XML](questions/corpus/AlgMap-11-1.xml)
 
-### AlgMap-11.8 {#algmap-11-8}
+#### AlgMap-11.8 {#algmap-11-8}
 
 Algebra Refresher / 11 Rearranging algebraic formulae · 1 answer field · 2 author tests.
 
@@ -272,7 +276,7 @@ Algebra Refresher / 11 Rearranging algebraic formulae · 1 answer field · 2 aut
 
 [Download original XML](questions/corpus/AlgMap-11-8.xml)
 
-### AlgMap-13.1 {#algmap-13-1}
+#### AlgMap-13.1 {#algmap-13-1}
 
 Algebra Refresher / 13 Factorising algebraic expressions · 1 answer field · 2 author tests.
 
@@ -285,7 +289,7 @@ Algebra Refresher / 13 Factorising algebraic expressions · 1 answer field · 2 
 
 [Download original XML](questions/corpus/AlgMap-13-1-.xml)
 
-### AlgMap-14.1 {#algmap-14-1}
+#### AlgMap-14.1 {#algmap-14-1}
 
 Algebra Refresher / 14 Algebraic fractions involving factorising · 1 answer field · 3 author tests.
 
@@ -298,7 +302,7 @@ Algebra Refresher / 14 Algebraic fractions involving factorising · 1 answer fie
 
 [Download original XML](questions/corpus/AlgMap-14-1.xml)
 
-### Complex_Convert_1 {#complex-convert-1}
+#### Complex_Convert_1 {#complex-convert-1}
 
 Topics / Complex Numbers · 1 answer field · 2 author tests.
 
@@ -311,7 +315,7 @@ Topics / Complex Numbers · 1 answer field · 2 author tests.
 
 [Download original XML](questions/corpus/Complex_Convert_1.xml)
 
-### Logs_1 {#logs-1}
+#### Logs_1 {#logs-1}
 
 Topics / Logs and Exponentials · 1 answer field · 3 author tests.
 
@@ -324,7 +328,7 @@ Topics / Logs and Exponentials · 1 answer field · 3 author tests.
 
 [Download original XML](questions/corpus/Logs_1.xml)
 
-### LinearAlgebra_elementary_1 {#linearalgebra-elementary-1}
+#### LinearAlgebra_elementary_1 {#linearalgebra-elementary-1}
 
 Linear algebra / Matrix input · 1 answer field · 2 author tests.
 
@@ -337,7 +341,7 @@ Linear algebra / Matrix input · 1 answer field · 2 author tests.
 
 [Download original XML](questions/corpus/LinearAlgebra_elementary_1.xml)
 
-### LinearAlgebra_elementary_2 {#linearalgebra-elementary-2}
+#### LinearAlgebra_elementary_2 {#linearalgebra-elementary-2}
 
 Linear algebra / Matrix input · 1 answer field · 2 author tests.
 
@@ -350,7 +354,7 @@ Linear algebra / Matrix input · 1 answer field · 2 author tests.
 
 [Download original XML](questions/corpus/LinearAlgebra_elementary_2.xml)
 
-### LinearAlgebra_elementary_3 {#linearalgebra-elementary-3}
+#### LinearAlgebra_elementary_3 {#linearalgebra-elementary-3}
 
 Linear algebra / Matrix input · 1 answer field · 2 author tests.
 
@@ -363,7 +367,7 @@ Linear algebra / Matrix input · 1 answer field · 2 author tests.
 
 [Download original XML](questions/corpus/LinearAlgebra_elementary_3.xml)
 
-### LinearAlgebra_elementary_4 {#linearalgebra-elementary-4}
+#### LinearAlgebra_elementary_4 {#linearalgebra-elementary-4}
 
 Linear algebra / Matrix input · 1 answer field · 2 author tests.
 
@@ -376,11 +380,13 @@ Linear algebra / Matrix input · 1 answer field · 2 author tests.
 
 [Download original XML](questions/corpus/LinearAlgebra_elementary_4.xml)
 
-## Authored test mismatches
+## For developers
+
+### Authored test mismatches
 
 These cases disagree with expectations authored in the XML and are kept out of the interactive gallery. Reviewed causes are named below; an authored-test mismatch alone does not identify whether the cause is the port or the original question. The [baseline JSON](questions/corpus/baseline.json) retains the exact expected and observed results.
 
-### AlgMap-8.10 {#algmap-8-10}
+#### AlgMap-8.10 {#algmap-8-10}
 
 **Upstream authoring bug in the PRT.** At the failing variant, `a=8`, `b=9`, `c=2`, and `d=3`, so the correct answer is `8*(t+y)/2 + 9*(t+y)/3 = 7*(t+y)`. Both authored model answers therefore have no fraction operator. The only full-credit branch requires `SingleFrac`, which rejects this product; every later branch awards zero. Authored tests 1 and 2 nevertheless expect full credit. The pinned native STACK test also rejects `7*(t+y)` under `SingleFrac`. The port's random choices expose a latent assumption in the original question; this diagnosis uses the fixed values above, rather than assuming Maxima generates those values for the same seed.
 
@@ -388,80 +394,80 @@ Algebra Refresher / 08 Algebraic fractions · **2 failed of 12 replayed seed/cas
 
 [Download original XML](questions/corpus/AlgMap-8-10.xml) · [Full replay](questions/corpus/baseline.json)
 
-## Unsupported by this adapter
+### Unsupported by this adapter
 
 You can still download and inspect these original questions. Each explanation gives the first issue found while importing or preparing the question; other features may also need adaptation.
 
-### AlgMap-3.1 {#algmap-3-1}
+#### AlgMap-3.1 {#algmap-3-1}
 
 Algebra Refresher / 03 Addition and subtraction of fractions · **Cannot import this question.** `prt[prt1]/node[0]/answertest`: unsupported answer test &#x27;EqualComAssRules&#x27;.
 
 [Download original XML](questions/corpus/AlgMap-3-1.xml) · [Replay record](questions/corpus/baseline.json)
 
-### AlgMap-3.3 {#algmap-3-3}
+#### AlgMap-3.3 {#algmap-3-3}
 
 Algebra Refresher / 03 Addition and subtraction of fractions · **Cannot prepare this variant at seed `73699510`.** `questionvariables[simp]`: reassigned variable is unsupported.
 
 [Download original XML](questions/corpus/AlgMap-3-3.xml) · [Replay record](questions/corpus/baseline.json)
 
-### AlgMap-5.1 {#algmap-5-1}
+#### AlgMap-5.1 {#algmap-5-1}
 
 Algebra Refresher / 05 Combinations of arithmetic operations on fractions · **Cannot prepare this variant at seed `1965111916`.** `questionvariables[simp]`: reassigned variable is unsupported.
 
 [Download original XML](questions/corpus/AlgMap-5-1.xml) · [Replay record](questions/corpus/baseline.json)
 
-### AlgMap-7.10 {#algmap-7-10}
+#### AlgMap-7.10 {#algmap-7-10}
 
 Algebra Refresher / 07 Removing brackets · **Cannot prepare this variant at seed `1181131383`.** `questionvariables[ta]`: reassigned variable is unsupported.
 
 [Download original XML](questions/corpus/AlgMap-7-10.xml) · [Replay record](questions/corpus/baseline.json)
 
-### AlgMap-12.1 {#algmap-12-1}
+#### AlgMap-12.1 {#algmap-12-1}
 
 Algebra Refresher / 12 Simultaneous linear equations · **Cannot prepare this variant at seed `1841615900`.** `questionvariables[sysl]`: Unexpected character &#x27;.&#x27; (U+002E) at position 1.
 
 [Download original XML](questions/corpus/AlgMap-12-1.xml) · [Replay record](questions/corpus/baseline.json)
 
-### AlgMap-15.1 {#algmap-15-1}
+#### AlgMap-15.1 {#algmap-15-1}
 
 Algebra Refresher / 15 Quadratic equations · **Cannot prepare this variant at seed `2060820372`.** `instantiation`: Unexpected character &#x27;?&#x27; (U+003F) at position 1.
 
 [Download original XML](questions/corpus/AlgMap-15-1.xml) · [Replay record](questions/corpus/baseline.json)
 
-### Limits_1 {#limits-1}
+#### Limits_1 {#limits-1}
 
 Topics / Limits · **Cannot import this question.** `prt[Result]/node[0]/truepenalty`: branch-specific penalties are unsupported.
 
 [Download original XML](questions/corpus/Limits_1.xml) · [Replay record](questions/corpus/baseline.json)
 
-### Matrices_find det 2\*2 {#matrices-find-det-2-2}
+#### Matrices_find det 2\*2 {#matrices-find-det-2-2}
 
 Topics / LinearAlgebra / Matrix Calculations · **Cannot prepare this variant at seed `1113104891`.** `questionvariables[correctanswer]`: Function determinant is not allowed; use determinant*(...) for multiplication.
 
 [Download original XML](questions/corpus/Matrices_find-det-2-2.xml) · [Replay record](questions/corpus/baseline.json)
 
-### Inequality_1 {#inequality-1}
+#### Inequality_1 {#inequality-1}
 
 Topics / Inequalities · **Cannot prepare this variant at seed `1959651692`.** `questionvariables[correctanswer]`: Unexpected character &#x27;&gt;&#x27; (U+003E) at position 1.
 
 [Download original XML](questions/corpus/Inequality_1.xml) · [Replay record](questions/corpus/baseline.json)
 
-### Numerical input (min sf) {#numerical-input-min-sf}
+#### Numerical input (min sf) {#numerical-input-min-sf}
 
 Features / input type sample questions · **Cannot import this question.** `input[ans1]/options`: input-specific options are unsupported.
 
 [Download original XML](questions/corpus/Numerical_input_min_sf.xml) · [Replay record](questions/corpus/baseline.json)
 
-### 7.3.26 (Write sim. eqns. with matrices) {#matrix-system}
+#### 7.3.26 (Write sim. eqns. with matrices) {#matrix-system}
 
 Introductory Mathematics / Matrix equations · **Cannot prepare this variant at seed `1930245414`.** `questiontext`: unsupported HTML attribute &#x27;style&#x27; on &lt;ul&gt;.
 
 [Download original XML](questions/corpus/7-3-26-(Write-sim-eqns-with-matrices).xml) · [Replay record](questions/corpus/baseline.json)
 
-## How this gallery was checked
+### How this gallery was checked
 
 The [reproducible baseline](questions/corpus/baseline.json) records **23 passed**, **1 with test mismatches**, and **11 blocked** (3 at import, 8 while preparing a variant). It retained **82 authored test cases** and replayed **162 seed/case combinations** across 24 prepared questions; 2 combinations disagreed. Results for these variants do not establish complete STACK/Maxima agreement.
 
-## Sources
+### Sources
 
 These unchanged questions come from the [STACK question library](https://github.com/maths/moodle-qtype_stack) at its [pinned revision](https://github.com/maths/moodle-qtype_stack/commit/10d323311b7f39fb7b092dd10ce75f7d8632f525) and retain [CC BY-SA 4.0](questions/corpus/COPYING.txt). The [source manifest](questions/corpus/manifest.json) links every question to its exact upstream file. The [presentation teaching copy](questions/corrected/README.md) records its limited HTML change and licensing; three other [corrected teaching copies](questions/corrected/README.md) record their mathematical or grading changes.

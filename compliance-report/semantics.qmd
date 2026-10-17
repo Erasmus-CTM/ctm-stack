@@ -1,9 +1,18 @@
 ---
-title: "Semantics: behavior, questions, and future work"
-subtitle: "Native agreement, author decisions, and bounded port choices"
+title: "Semantics for STACK authors"
+subtitle: "Questions, evidence and compatibility conventions"
 toc: true
 toc-depth: 2
 ---
+
+This page is for **STACK authors and maintainers** reviewing mathematical
+conventions and compatibility questions. Start with the prioritized questions
+below, then follow the linked cases, sources and observations.
+
+Teachers adapting exercises can start with the [authoring guide](../docs/authoring.html)
+and [report interpretation](index.qmd#for-teachers). Developers reproducing
+comparisons can use the [report's development reference](index.qmd#for-developers).
+
 
 This page compares a bounded SymPy CAS adapter with pinned STACK behavior. Case
 numbers refer to the unchanged 2,303-row imported fixture. An expected acceptance

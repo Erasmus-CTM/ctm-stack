@@ -74,13 +74,17 @@ def generate() -> str:
     out = [
         '---\ntitle: "Question corpus"\nsubtitle: "Explore imported STACK questions and their current support"\n---',
         "",
+        "Use the teacher track to choose and try a question. The [developer track](#for-developers) keeps replay details and adaptation issues together.",
+        "",
+        "## For teachers",
+        "",
         f"These are 35 unchanged STACK XML questions from the upstream library. **The {len(passing)} questions whose authored tests passed on every replayed seed have interactive cards.** Each question has a local XML download and an observed result. One additional presentation teaching copy shows a matrix question whose original HTML is unsupported. Other originals remain available with the observed mismatch or unsupported feature shown explicitly.",
         "",
         f"In this snapshot, **{len(passing)} pass their author tests**, **{len(mismatched)} has a test mismatch**, and **{len(blocked)} cannot be fully checked here**. The [replay record](questions/corpus/baseline.json) gives the tested variants and exact results.",
         "",
-        "The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one) also include a determinant-one task and two basis questions. Their Python-only `MatrixProperty` and `IsBasis` tests are separate from these unchanged exports and their baseline counts. See [Python answer tests](docs/python-checker-api.qmd).",
+        "The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determinant-one) also include a determinant-one task and two basis questions. The [SPD example](examples.qmd#symmetric-positive-definite-matrix) adds a custom Python checker. These Python tests are separate from these unchanged exports and their baseline counts. See [Python answer tests](docs/python-checker-api.qmd).",
         "",
-        "## Browse all 35",
+        "### Browse all 35",
         "",
         "| Question | Topic | Adapter status | Original XML |",
         "|---|---|---|---|",
@@ -93,7 +97,7 @@ def generate() -> str:
         out.append(f"| [{name}](#{entry['id']}) | {topic} | {label} | [Download](questions/corpus/{entry['file']}) |")
     out += [
         "",
-        "## Five matrix-input problems",
+        "### Five matrix-input problems",
         "",
         "The four elementary-row-operation problems below run directly from unchanged official exports: [row 2 plus a multiple of row 3](#linearalgebra-elementary-1), [row 1 plus a multiple of row 3](#linearalgebra-elementary-2), [row 2 plus a multiple of row 1](#linearalgebra-elementary-3), and [row 1 minus a multiple of row 2](#linearalgebra-elementary-4). Together their original tests pass all 24 recorded seed/case combinations. Each uses a fixed 3 by 3 matrix editor and whole-matrix algebraic equivalence; no automatic cell partial credit is added.",
         "",
@@ -108,7 +112,7 @@ def generate() -> str:
         "",
         "[Download presentation teaching XML](questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml) · [Adaptation and licensing](questions/corrected/README.md)",
         "",
-        "## Ready to try",
+        "### Ready to try",
         "",
         f"These {len(passing)} cards use a replayed variant of each question. Press **Validate answers**, then **Check answer**. **Run question tests** checks the displayed variant against the question's authored cases. Three cards use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Each original remains downloadable; the [baseline](questions/corpus/baseline.json) records every tested variant.",
         "",
@@ -116,7 +120,7 @@ def generate() -> str:
     for entry in passing:
         row = reports[entry["id"]]
         out += [
-            f"### {entry['question_name'].replace('*', r'\*')} {{#{entry['id']}}}",
+            f"#### {entry['question_name'].replace('*', r'\*')} {{#{entry['id']}}}",
             "",
             f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · {entry['input_count']} answer field{'s' if entry['input_count'] != 1 else ''} · {entry['qtest_count']} author test{'s' if entry['qtest_count'] != 1 else ''}.",
             "",
@@ -140,7 +144,9 @@ def generate() -> str:
             "",
         ]
     out += [
-        "## Authored test mismatches",
+        "## For developers",
+        "",
+        "### Authored test mismatches",
         "",
         ("These cases disagree with expectations authored in the XML and are kept out of the interactive gallery. Reviewed causes are named below; an authored-test mismatch alone does not identify whether the cause is the port or the original question. The [baseline JSON](questions/corpus/baseline.json) retains the exact expected and observed results."
          if mismatched else "None among the questions replayed on every recorded seed. The [baseline JSON](questions/corpus/baseline.json) retains individual seed and test results; unsupported questions remain listed below."),
@@ -153,7 +159,7 @@ def generate() -> str:
         expected, actual = check["expected"], check["actual"]
         inputs = ", ".join(f"{k} = {v}" for k, v in sample["inputs"].items())
         out += [
-            f"### {entry['question_name'].replace('*', r'\*')} {{#{entry['id']}}}",
+            f"#### {entry['question_name'].replace('*', r'\*')} {{#{entry['id']}}}",
             "",
             *([upstream_authoring_issue(entry, row), ""] if upstream_authoring_issue(entry, row) else []),
             f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · **{row['failed_cases']} failed of {row['replayed_cases']} replayed seed/case combinations.** For seed `{sample['seed']}`, case `{sample['testcase']}`, input `{inputs}`: `{check['prt']}` expected score `{expected['score']}` and answer note `{expected['note']}`, but produced score `{actual['score']}` and answer note `{actual['note']}`.",
@@ -162,7 +168,7 @@ def generate() -> str:
             "",
         ]
     out += [
-        "## Unsupported by this adapter",
+        "### Unsupported by this adapter",
         "",
         "You can still download and inspect these original questions. Each explanation gives the first issue found while importing or preparing the question; other features may also need adaptation.",
         "",
@@ -174,7 +180,7 @@ def generate() -> str:
         reason = diagnostic.get("reason", diagnostic.get("message", "No diagnostic recorded"))
         seed = f" at seed `{diagnostic['seed']}`" if "seed" in diagnostic else ""
         out += [
-            f"### {entry['question_name'].replace('*', r'\*')} {{#{entry['id']}}}",
+            f"#### {entry['question_name'].replace('*', r'\*')} {{#{entry['id']}}}",
             "",
             f"{entry['topic'].replace('-', ' ').replace('_', ' ')} · **{LABELS[row['status']]}{seed}.** `{location}`: {html.escape(reason)}.",
             "",
@@ -182,11 +188,11 @@ def generate() -> str:
             "",
         ]
     out += [
-        "## How this gallery was checked",
+        "### How this gallery was checked",
         "",
         f"The [reproducible baseline](questions/corpus/baseline.json) records **{len(passing)} passed**, **{len(mismatched)} with test mismatches**, and **{len(blocked)} blocked** ({counts.get('unsupported_import', 0)} at import, {counts.get('unsupported_instantiate', 0)} while preparing a variant). It retained **{sum(e['qtest_count'] for e in entries)} authored test cases** and replayed **{baseline['summary']['replayed_cases']} seed/case combinations** across {baseline['summary']['instantiated_all_seeds']} prepared questions; {baseline['summary']['failed_cases']} combinations disagreed. Results for these variants do not establish complete STACK/Maxima agreement.",
         "",
-        "## Sources",
+        "### Sources",
         "",
         f"These unchanged questions come from the [STACK question library]({repository_url}) at its [pinned revision]({commit_url}) and retain [CC BY-SA 4.0](questions/corpus/COPYING.txt). The [source manifest](questions/corpus/manifest.json) links every question to its exact upstream file. The [presentation teaching copy](questions/corrected/README.md) records its limited HTML change and licensing; three other [corrected teaching copies](questions/corrected/README.md) record their mathematical or grading changes.",
         "",

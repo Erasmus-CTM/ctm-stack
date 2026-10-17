@@ -23,8 +23,16 @@ website:
         href: index.qmd
       - text: Port regressions
         href: port-regressions.qmd
-      - text: Semantics and open questions
+      - text: Semantics for STACK authors
         href: semantics.qmd
+      - text: Teacher guides
+        menu:
+          - text: Authoring
+            href: ../docs/authoring.html
+          - text: Matrix input
+            href: ../docs/matrix-input.html
+          - text: Python answer tests and SPD
+            href: ../docs/python-checker-api.html
     right:
       - text: Back to examples
         icon: arrow-left
@@ -33,7 +41,8 @@ website:
 format:
   html:
     theme: cosmo
-    toc: false
+    toc: true
+    toc-depth: 3
     css: report.css
     html-math-method: mathjax
 
