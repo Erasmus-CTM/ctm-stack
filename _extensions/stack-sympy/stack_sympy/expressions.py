@@ -667,7 +667,7 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                     raise Unsupported("Basis model helpers require simplification")
                 if len(n.children) != 1:
                     raise Unsupported(f"{name} requires one defining matrix")
-                from .python_tests import basis_model, preflight_matrix_source
+                from .matrix_models import basis_model, preflight_matrix_source
                 preflight_matrix_source(n.children[0], env)
                 return basis_model(visit(n.children[0], depth + 1), name.removesuffix("_basis"))
             if name in AUTHOR_COLLECTION_FUNCTIONS:

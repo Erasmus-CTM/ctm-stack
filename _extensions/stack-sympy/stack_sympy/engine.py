@@ -12,7 +12,6 @@ from typing import Mapping
 import sympy as sp
 
 from .assessment import answer_test
-from .python_tests import PYTHON_TESTS, rational_matrix, preflight_matrix_source
 from .expressions import InvalidAnswer, Node, Unsupported, assignments, canonical_form, evaluate, form_latex, parse
 from .importer import UnsupportedQuestion
 from .expressions import (MatrixValue, is_logical, is_collection, validate_collection, collection_items,
@@ -277,8 +276,8 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                 if node["test"] == "PythonChecker":
                     # A later node may be guarded by an earlier predicate.
                     # Check syntax, not its potentially unsafe teacher value.
-                    from .checkers import checker_identifier, validate_descriptor
-                    checker_identifier(node["options"])
+                    from .checkers import checker_spec, validate_descriptor
+                    checker_spec(node["options"])
                     validate_descriptor(question.get("python_checkers"))
                     parse(node["student"])
                     parse(node["teacher"])
@@ -298,20 +297,15 @@ def instantiate(question: dict, seed: int = 1) -> dict:
                         raise UnsupportedQuestion(name, where, "Collection checks require a direct learner input name to preserve literal precision; teacher collections must use frozen author values")
                 for value in (student_value, teacher_value):
                     validate_collection(value)
-                if any(isinstance(value, MatrixValue) for value in (student_value, teacher_value)) and node["test"] not in {"AlgEquiv", "SameType", "EqualComAss", *PYTHON_TESTS}:
+                if any(isinstance(value, MatrixValue) for value in (student_value, teacher_value)) and node["test"] not in {"AlgEquiv", "SameType", "EqualComAss"}:
                     raise UnsupportedQuestion(name, where, "Matrices require AlgEquiv, SameType or EqualComAss")
                 if (any(is_collection(x) for x in (student_value, teacher_value))
-                        and node["test"] not in {"AlgEquiv", "Sets", "SameType", "EqualComAss", *PYTHON_TESTS}):
+                        and node["test"] not in {"AlgEquiv", "Sets", "SameType", "EqualComAss"}):
                     raise UnsupportedQuestion(name, where, "Collections require AlgEquiv, Sets, SameType or EqualComAss")
                 if is_logical(teacher_value):
                     validate_logic(teacher_value)
-                    if node["test"] != "AlgEquiv" and node["test"] not in PYTHON_TESTS:
+                    if node["test"] != "AlgEquiv":
                         raise UnsupportedQuestion(name, where, "Logical answers require AlgEquiv")
-                if node["test"] in PYTHON_TESTS:
-                    model_result = answer_test(node["test"], node["student"], node["teacher"], node["options"],
-                                               env=preview_env, assumptions=assumptions)
-                    if not model_result["valid"] or not model_result["correct"]:
-                        raise UnsupportedQuestion(name, where, node["test"] + " input teacher must itself satisfy the test")
                 if node["test"] == "FacForm":
                     if not node["options"]:
                         raise UnsupportedQuestion(name, where + "/testoptions", "FacForm requires a polynomial variable option")
@@ -355,9 +349,6 @@ def _input_validation(inp, raw, env, assumptions, question=None):
         tree = parse(raw, insertstars=inp.get("insertstars", 0))
         if any(n.value.lower() in {w.lower() for w in inp["forbidwords"]} for n in _walk(tree) if n.kind in {"name", "call"}):
             raise InvalidAnswer("Contains a forbidden word")
-        if question is not None and any(n["test"] in PYTHON_TESTS and n["student"] == inp["name"]
-                                        for p in question["prts"] for n in p["nodes"]):
-            preflight_matrix_source(tree, env)
         if inp["forbidfloat"] and any(n.kind == "number" and ("." in n.value or "e" in n.value.lower()) for n in _walk(tree)):
             raise InvalidAnswer("Decimal numbers are forbidden")
         if inp["requirelowestterms"]:
@@ -383,9 +374,6 @@ def _input_validation(inp, raw, env, assumptions, question=None):
             if any(n.kind == "name" and n.value in definitions and _decimal_source(definitions[n.value], definitions)
                    for n in _walk(tree)):
                 raise InvalidAnswer("Decimal author aliases in collection answers lose literal precision; use exact fractions")
-        if question is not None and any(n["test"] in PYTHON_TESTS and n["student"] == inp["name"]
-                                        for p in question["prts"] for n in p["nodes"]):
-            rational_matrix(value, tree)
         if inp.get("checkanswertype"):
             teacher = evaluate(inp["teacher"], env, assumptions=assumptions)
             if (is_collection(value) or is_collection(teacher)) and not same_type(value, teacher):
@@ -598,7 +586,7 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
                     detail.pop("assessment", None)
                 return {"status": "invalid", "score": 0.0, "inputs": input_results, "prts": prt_results,
                         "feedback": input_results[node["student"]]["feedback"] if node["test"] == "PythonChecker" else result["feedback"]}
-            if node["test"] in {*PYTHON_TESTS, "PythonChecker"} and "assessment" in result and not node["quiet"]:
+            if node["test"] == "PythonChecker" and "assessment" in result and not node["quiet"]:
                 input_results[node["student"]]["assessment"] = result["assessment"]
             branch_name = "true" if result["correct"] else "false"
             branch = node[branch_name]

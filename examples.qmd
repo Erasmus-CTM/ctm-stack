@@ -197,6 +197,7 @@ conditions, rather than copying a displayed model answer.
 ```{#determinant-one .stack-question}
 #| file: questions/determinant-one.xml
 #| question: A nonidentity integer matrix with determinant one
+#| python-checkers: questions/matrix-checkers.py
 #| seed: 17
 #| review: true
 #| feedback: true
@@ -205,9 +206,10 @@ conditions, rather than copying a displayed model answer.
 
 [Download XML](questions/determinant-one.xml)
 
-The question uses three normal response trees, one per condition. The
-Python-only `MatrixProperty` checks each condition; see [which matrix test to
-choose](docs/python-checker-api.qmd#choose-the-mathematical-test).
+The question uses three normal response trees, one per condition. Named
+functions in the [matrix checker file](questions/matrix-checkers.py) check
+integer entries, determinant one and nonidentity; see
+[which test to choose](docs/python-checker-api.qmd#choose-the-mathematical-test).
 
 #### A positive definite matrix {#symmetric-positive-definite-matrix}
 
@@ -224,27 +226,24 @@ shows the exact mathematical test.
 ```{.stack-question #spd-example}
 #| file: questions/symmetric-positive-definite.xml
 #| question: A positive definite matrix
-#| python-checkers: questions/spd-checker.py
+#| python-checkers: questions/matrix-checkers.py
 #| review: true
 ```
 
 [Download question XML](questions/symmetric-positive-definite.xml) ·
-[View the complete Python checker](questions/spd-checker.py)
+[View the supplied matrix checkers](questions/matrix-checkers.py)
 
 #### Hermitian symmetry and positive definiteness separately {#symmetry-and-positive-definiteness-separately}
 
-This version has two response trees. One checks $A=A^*$; the other checks
-$\operatorname{Re}(z^*Az)>0$ for every nonzero complex $z$. Each condition
-earns half the marks. Try `matrix([1,%i],[%i,1])`: its Hermitian part is
-the identity, so it earns the positivity half, although it is not
-Hermitian. The real matrix $\begin{pmatrix}1&2\\2&1\end{pmatrix}$ earns
-only the Hermitian-symmetry half. For the exact criterion and a four-case
-comparison, see the [teacher explanation](docs/python-checker-api.qmd#symmetric-positive-definite-matrices).
+This version checks Hermitian symmetry and positivity separately, awarding
+half the marks for each. The checker uses Sylvester's criterion. See the
+[four-case comparison](docs/python-checker-api.qmd#symmetric-positive-definite-matrices)
+to compare the two scoring choices.
 
 ```{.stack-question #spd-separate-example}
 #| file: questions/symmetric-positive-definite-prt.xml
 #| question: Hermitian symmetry and positive definiteness separately
-#| python-checkers: questions/spd-checker.py
+#| python-checkers: questions/matrix-checkers.py
 #| review: true
 ```
 
@@ -273,12 +272,13 @@ and the complete ordered pivot list each earn half the total.
 
 Put one proposed basis vector in each column. A basis is not a unique matrix:
 changing a vector’s nonzero scale can still give a correct answer. Choose the
-number of columns before validating. `IsBasis` checks the space defined by
-the original matrix $B$, not just the entries of one model basis.
+number of columns before validating. The checker uses the original matrix
+$B$ to define the space, so another independent basis is accepted.
 
 ```{#course-b-nullspace .stack-question}
 #| file: questions/course-b-nullspace.xml
 #| question: A basis for the null space of B
+#| python-checkers: questions/matrix-checkers.py
 #| seed: 17
 #| review: true
 ```
@@ -289,12 +289,13 @@ the original matrix $B$, not just the entries of one model basis.
 
 Here you may reorder or combine basis vectors, provided your columns remain
 independent and span the null space of $C$. Entry-by-entry equality with one
-model matrix would reject many correct answers. `IsBasis` uses the original
-matrix $C$ to define the target space.
+model matrix would reject many correct answers. The checker uses the
+original matrix $C$ to define the target space.
 
 ```{#course-c-nullspace .stack-question}
 #| file: questions/course-c-nullspace.xml
 #| question: A basis for the null space of C
+#| python-checkers: questions/matrix-checkers.py
 #| seed: 17
 #| review: true
 ```

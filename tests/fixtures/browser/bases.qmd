@@ -11,6 +11,7 @@ title: Python basis test browser checks
 
 ```{#course-b-nullspace .stack-question}
 #| file: questions/course-b-nullspace.xml
+#| python-checkers: questions/matrix-checkers.py
 #| question: A basis for the null space of B
 #| seed: 17
 #| review: true
@@ -18,6 +19,7 @@ title: Python basis test browser checks
 
 ```{#course-c-nullspace .stack-question}
 #| file: questions/course-c-nullspace.xml
+#| python-checkers: questions/matrix-checkers.py
 #| question: A basis for the null space of C
 #| seed: 17
 #| review: true
@@ -25,6 +27,7 @@ title: Python basis test browser checks
 
 ```{#determinant-one .stack-question}
 #| file: questions/determinant-one.xml
+#| python-checkers: questions/matrix-checkers.py
 #| question: A nonidentity integer matrix with determinant one
 #| review: true
 ```

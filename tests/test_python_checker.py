@@ -17,19 +17,26 @@ XML = ROOT / "questions/python-checker.xml"
 MODULE = ROOT / "questions/checkers.py"
 
 
+def config(name, **options):
+    value = {"checker": name}
+    if options:
+        value["options"] = options
+    return json.dumps(value)
+
+
 def descriptor(body):
     return {"api_version": 1, "source": body}
 
 
 def module(expression):
-    return descriptor("def check(student, teacher):\n    return " + expression + "\nCHECKERS={'check':check}\n")
+    return descriptor("def check(student, teacher, options):\n    return " + expression + "\nCHECKERS={'check':check}\n")
 
 
 def question(source=None):
     q = import_xml(XML, python_checkers=MODULE)[0]
     if source is not None:
         q["python_checkers"] = source
-        q["prts"][0]["nodes"][0]["options"] = "check"
+        q["prts"][0]["nodes"][0]["options"] = config("check")
         q["qtests"] = []
     return q
 
@@ -45,7 +52,7 @@ def question(source=None):
 ])
 def test_immutable_typed_arguments_preserve_held_structure(source, expression):
     body = "import sympy as sp\nfrom stack_sympy.checker_api import *\n" + module(expression)["source"]
-    result = answer_test("PythonChecker", source, source, "check", python_checkers=descriptor(body))
+    result = answer_test("PythonChecker", source, source, config("check"), python_checkers=descriptor(body))
     assert result["valid"] and result["correct"]
 
 
@@ -57,7 +64,7 @@ def test_immutable_typed_arguments_preserve_held_structure(source, expression):
 def test_malformed_results_fail_as_author_errors(result):
     source = descriptor("import sympy as sp\n" + module(result)["source"])
     with pytest.raises(CheckerError):
-        invoke(source, "check", sp.Integer(1), sp.Integer(1))
+        invoke(source, config("check"), sp.Integer(1), sp.Integer(1))
 
 
 def test_validation_and_instantiation_do_not_execute_module_or_callback():
@@ -74,21 +81,21 @@ def test_false_model_branch_and_unreachable_guarded_expression():
     first = q["prts"][0]["nodes"][0]
     first["false"]["score"] = 0.7
     second = deepcopy(first)
-    second.update(name="1", teacher="1/0", options="explode")
+    second.update(name="1", teacher="1/0", options=config("explode"))
     first["true"]["next"] = "1"
     q["prts"][0]["nodes"].append(second)
-    body = module("False")["source"] + "def explode(a,b):\n    raise AssertionError('unreachable')\nCHECKERS['explode']=explode\n"
+    body = module("False")["source"] + "def explode(a,b,options):\n    raise AssertionError('unreachable')\nCHECKERS['explode']=explode\n"
     q["python_checkers"] = descriptor(body)
     frozen = instantiate(q)
     preflight(q, [frozen])
     assert grade(q, {"ans": "3"}, variant=frozen)["score"] == 0.7
-    second["options"] = "missing"
+    second["options"] = config("missing")
     with pytest.raises(UnsupportedQuestion, match="Unknown.*missing"):
         preflight(q, [frozen])
 
 
 def test_registry_state_does_not_leak_between_invocations_or_cards():
-    body = "count=0\ndef check(a,b):\n    global count\n    count+=1\n    return count==1\nCHECKERS={'check':check}\n"
+    body = "count=0\ndef check(a,b,options):\n    global count\n    count+=1\n    return count==1\nCHECKERS={'check':check}\n"
     q = question(descriptor(body))
     other = question(module("False"))
     for seed in (1, 2, 1):
@@ -117,20 +124,47 @@ def test_descriptor_version_and_bounds(mutation):
     d = module("True")
     mutation(d)
     with pytest.raises(CheckerError):
-        invoke(d, "check", sp.Integer(1), sp.Integer(1))
+        invoke(d, config("check"), sp.Integer(1), sp.Integer(1))
 
 
 @pytest.mark.parametrize("body", ["CHECKERS={'check':lambda a: True}",
-    "async def check(a,b): return True\nCHECKERS={'check':check}",
-    "def check(a,b): yield True\nCHECKERS={'check':check}",
-    "from functools import partial\nasync def check(a,b): return True\nCHECKERS={'check':partial(check)}",
-    "from functools import partial\ndef check(a,b): yield True\nCHECKERS={'check':partial(check)}",
-    "CHECKERS={'check': 3}", "CHECKERS={'a.b': lambda a,b: True}",
-    "def check(a,b): raise ValueError('author failure')\nCHECKERS={'check':check}"])
+    "def check(a,b): return True\nCHECKERS={'check':check}",
+    "async def check(a,b,options): return True\nCHECKERS={'check':check}",
+    "def check(a,b,options): yield True\nCHECKERS={'check':check}",
+    "from functools import partial\nasync def check(a,b,options): return True\nCHECKERS={'check':partial(check)}",
+    "from functools import partial\ndef check(a,b,options): yield True\nCHECKERS={'check':partial(check)}",
+    "CHECKERS={'check': 3}", "CHECKERS={'a.b': lambda a,b,options: True}",
+    "def check(a,b,options): raise ValueError('author failure')\nCHECKERS={'check':check}"])
 def test_bad_registry_signature_async_generator_and_callback_exception(body):
     q = question(descriptor(body))
     with pytest.raises(UnsupportedQuestion, match="PythonChecker"):
         grade(q, {"ans": "3"})
+
+
+@pytest.mark.parametrize("spec,option", [
+    (config("check"), {}),
+    (config("check", space="nullspace"), {"space": "nullspace"}),
+    (config("check", space="nullspace", normalized=True),
+     {"space": "nullspace", "normalized": True}),
+    (config("check", bounds={"min": 1, "max": 4}, labels=["a", "b"]),
+     {"bounds": {"min": 1, "max": 4}, "labels": ["a", "b"]}),
+    (config("check", text="__import__('os')"), {"text": "__import__('os')"}),
+])
+def test_options_are_literal_function_arguments(spec, option):
+    source = module("student == teacher and options == " + repr(option))
+    result = answer_test("PythonChecker", "2", "2", spec,
+                         env={"nullspace": sp.Integer(7)}, python_checkers=source)
+    assert result['valid'] and result['correct']
+
+
+@pytest.mark.parametrize("spec", [
+    "{", "[]", "null", "{}", '{"checker":"check","unexpected":1}',
+    '{"checker":"check","options":[]}', '{"checker":"check","options":null}',
+    '{"checker":"check","options":{"tolerance":NaN}}',
+])
+def test_checker_configuration_requires_named_json_options(spec):
+    with pytest.raises(CheckerError):
+        invoke(module("True"), spec, sp.Integer(1), sp.Integer(1))
 
 
 def test_matrix_assessment_contract():
@@ -138,11 +172,11 @@ def test_matrix_assessment_contract():
     student = evaluate("matrix([x,sqrt(2)],[0,1])")
     for statuses in (["correct", "dependent"], ["incorrect", "correct"]):
         d = module(repr({"valid": True, "correct": True, "assessment": {"columns": statuses}}))
-        assert invoke(d, "check", student, student)["assessment"]["columns"] == statuses
+        assert invoke(d, config("check"), student, student)["assessment"]["columns"] == statuses
     for assessment in ({"columns": ["correct"]}, {"rows": ["correct", "bogus"]},
                        {"rows": ["correct", "correct"], "columns": ["correct", "correct"]}):
         with pytest.raises(CheckerError):
-            invoke(module(repr({"valid": True, "correct": False, "assessment": assessment})), "check", student, student)
+            invoke(module(repr({"valid": True, "correct": False, "assessment": assessment})), config("check"), student, student)
 
 
 def test_source_attachment_and_cli_print_isolation(tmp_path, capsys):
@@ -163,9 +197,9 @@ def test_source_attachment_and_cli_print_isolation(tmp_path, capsys):
 
 def test_checker_filename_is_read_at_build_and_updates_on_the_next_build(tmp_path):
     source = tmp_path / 'checker.py'
-    source.write_text("def positive_multiple(a,b): return True\nCHECKERS={'positive_multiple':positive_multiple}\n")
+    source.write_text("def positive_multiple(a,b,options): return True\nCHECKERS={'positive_multiple':positive_multiple}\n")
     first = import_xml(XML, python_checkers=source)[0]
-    source.write_text("def positive_multiple(a,b): return False\nCHECKERS={'positive_multiple':positive_multiple}\n")
+    source.write_text("def positive_multiple(a,b,options): return False\nCHECKERS={'positive_multiple':positive_multiple}\n")
     second = import_xml(XML, python_checkers=source)[0]
     # A built page carries its selected file contents; rendering again reads
     # the current file. Authors provide neither a manifest nor a checksum.
@@ -189,10 +223,10 @@ def test_checker_filename_is_read_at_build_and_updates_on_the_next_build(tmp_pat
     ('matrix([1,0,0],[0,1,0])', False),
 ])
 def test_spd_example_checks_symmetry_and_all_leading_principal_minors(answer, correct):
-    source = source_descriptor(ROOT / 'questions/spd-checker.py')
-    result = answer_test('PythonChecker', answer, 'true', 'is_hpd', python_checkers=source)
+    source = source_descriptor(ROOT / 'questions/matrix-checkers.py')
+    result = answer_test('PythonChecker', answer, 'true', config('is_hpd'), python_checkers=source)
     assert result['valid'] and result['correct'] is correct
-    opposite = answer_test('PythonChecker', answer, 'false', 'is_hpd', python_checkers=source)
+    opposite = answer_test('PythonChecker', answer, 'false', config('is_hpd'), python_checkers=source)
     assert opposite['valid'] and opposite['correct'] is not correct
 
 
@@ -202,8 +236,8 @@ def test_spd_example_checks_symmetry_and_all_leading_principal_minors(answer, co
     'matrix([sqrt(2)*%i,0],[0,1])',
 ])
 def test_spd_example_explains_its_exact_rational_domain(answer, checker):
-    result = answer_test('PythonChecker', answer, 'true', checker,
-                         python_checkers=source_descriptor(ROOT / 'questions/spd-checker.py'))
+    result = answer_test('PythonChecker', answer, 'true', config(checker),
+                         python_checkers=source_descriptor(ROOT / 'questions/matrix-checkers.py'))
     assert not result['valid'] and not result['correct']
     assert 'integers or exact fractions' in result['feedback']
 
@@ -212,7 +246,7 @@ def test_spd_example_explains_its_exact_rational_domain(answer, checker):
                                      'symmetric-positive-definite-prt.xml'])
 def test_spd_xml_and_filename_work_through_build_tests_and_grading(filename):
     q = import_xml(ROOT / 'questions' / filename,
-                   python_checkers=ROOT / 'questions/spd-checker.py')[0]
+                   python_checkers=ROOT / 'questions/matrix-checkers.py')[0]
     preflight(q, [instantiate(q)])
     assert run_question_tests(q, seeds=(1,17,47))['passed']
     assert grade(q, {'ansm':'matrix([2,1],[1,2])'})['score'] == 1
@@ -239,12 +273,12 @@ def test_spd_xml_and_filename_work_through_build_tests_and_grading(filename):
     ('matrix([1,0,0],[0,1,0])', False, False),
 ])
 def test_independent_matrix_properties_and_python_conjunction(answer, symmetric, positive):
-    source = source_descriptor(ROOT / 'questions/spd-checker.py')
+    source = source_descriptor(ROOT / 'questions/matrix-checkers.py')
     for checker, property_value in [('is_hermitian', symmetric),
                                      ('is_positive_definite', positive),
                                      ('is_hpd', symmetric and positive)]:
         for expected in (True, False):
-            result = answer_test('PythonChecker', answer, str(expected).lower(), checker,
+            result = answer_test('PythonChecker', answer, str(expected).lower(), config(checker),
                                  python_checkers=source)
             assert result['valid']
             assert result['correct'] is (property_value == expected)
@@ -263,7 +297,7 @@ def test_independent_matrix_properties_and_python_conjunction(answer, symmetric,
 ])
 def test_prt_composition_awards_separate_marks_and_feedback(answer, symmetric, positive):
     q = import_xml(ROOT / 'questions/symmetric-positive-definite-prt.xml',
-                   python_checkers=ROOT / 'questions/spd-checker.py')[0]
+                   python_checkers=ROOT / 'questions/matrix-checkers.py')[0]
     result = grade(q, {'ansm': answer})
     assert result['score'] == (int(symmetric) + int(positive)) / 2
     assert result['prts']['symmetry']['score'] == int(symmetric)
@@ -275,7 +309,7 @@ def test_prt_composition_awards_separate_marks_and_feedback(answer, symmetric, p
 def test_import_rejects_expressions_and_paths_as_checker_identifiers():
     for value in ('a.b', '../x.py', '__import__(x)', ''):
         with pytest.raises(UnsupportedQuestion, match='identifier'):
-            import_xml(XML.read_text().replace('positive_multiple</testoptions>', value+'</testoptions>'))
+            import_xml(XML.read_text().replace(config('positive_multiple')+'</testoptions>', config(value)+'</testoptions>'))
     with pytest.raises(UnsupportedQuestion, match='direct input'):
         import_xml(XML.read_text().replace('<sans>ans</sans>', '<sans>ans+1</sans>'))
     with pytest.raises(UnsupportedQuestion, match='source descriptor'):
@@ -302,9 +336,9 @@ def test_custom_node_keeps_static_branch_feedback_validation():
 
 @pytest.mark.parametrize('body', [
     "raise SystemExit(0)",
-    "def check(a,b): raise SystemExit(0)\nCHECKERS={'check':check}",
-    "class C:\n    async def __call__(self,a,b): return True\nCHECKERS={'check':C()}",
-    "class C:\n    def __call__(self,a,b): yield True\nCHECKERS={'check':C()}",
+    "def check(a,b,options): raise SystemExit(0)\nCHECKERS={'check':check}",
+    "class C:\n    async def __call__(self,a,b,options): return True\nCHECKERS={'check':C()}",
+    "class C:\n    def __call__(self,a,b,options): yield True\nCHECKERS={'check':C()}",
 ])
 def test_exit_and_async_callable_objects_are_author_errors(body):
     q = question(descriptor(body))
@@ -315,7 +349,7 @@ def test_exit_and_async_callable_objects_are_author_errors(body):
 def test_matrix_assessment_attachment_and_quiet_prt_scoring():
     q = import_xml(ROOT / 'questions/course-c-nullspace.xml')[0]
     node = q['prts'][0]['nodes'][0]
-    node.update(test='PythonChecker', options='check')
+    node.update(test='PythonChecker', options=config('check'))
     q['python_checkers'] = module("{'valid':True,'correct':True,'assessment':{'columns':['correct']*student.cols}}")
     result = grade(q, {'ans':'matrix([-2],[1],[0])'})
     assert result['inputs']['ans']['assessment'] == {'columns':['correct']}
@@ -328,7 +362,7 @@ def test_matrix_assessment_attachment_and_quiet_prt_scoring():
 
 def test_finite_values_and_qtest_order():
     with pytest.raises(CheckerError, match='finite'):
-        invoke(module('True'), 'check', sp.oo, sp.Integer(1))
+        invoke(module('True'), config('check'), sp.oo, sp.Integer(1))
     q = question()
     assert run_question_tests(q, seeds=(47,17,1))['passed']
     q['qtests'].reverse()

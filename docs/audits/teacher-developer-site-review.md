@@ -27,15 +27,15 @@ exercise IDs and referenced section anchors are retained.
 | Lists, sets, nesting, repetitions, applicability and exact/decimal restrictions | Authoring reference and mathematical conventions |
 | XML input settings, assumptions, simplification and CASText placeholders | `docs/authoring.qmd#input-and-xml-reference` |
 | Fixed/resizable matrix input, dimensions, editing, reset and diagnostics | Teacher/developer matrix-input guide |
-| Null/column/row-space choice, legacy span modes and automatic model generation | Combined Python answer-test guide |
-| MatrixProperty expected value, its three conditions and PRT scoring | Combined Python answer-test guide and determinant example |
-| SPD and custom checker filename, arguments/results, domain, feedback and testing | Teacher SPD activity plus one developer walkthrough and API reference |
+| Null/column/row-space choice and automatic model generation | Combined Python answer-test guide |
+| Supplied matrix property functions, expected values and PRT scoring | Combined Python answer-test guide and determinant example |
+| Supplied and custom checker filenames, JSON options, arguments/results, domains, feedback and testing | Teacher SPD activity plus one developer walkthrough and API reference |
 | AI Feedback policies, inheritance, context modes, language, provider settings, privacy and reset | Teacher policy choices and developer configuration reference |
 | Visual context and shared context aliases | Developer policy configuration reference |
 | qtests, penalty/note interpretation, runtime, compatibility and contribution | Developer authoring reference and report pages |
 | Domain/branch conventions, known differences, proof limits and saved evidence | Report interpretation for teachers, reproduction for developers, and a dedicated questions/evidence page for STACK authors |
 
-A source-to-documentation inventory found all 13 answer-test names, 51 callable
+A source-to-documentation inventory found all 11 answer-test names, 51 callable
 names/aliases, nine logical operators/aliases and all 12 block options in the
 public guides. This is a coverage check, not a claim that every option has a
 separate live exercise. Form tests and column/row-space basis choices are
@@ -57,12 +57,11 @@ what the pages actually author.
 
 ## Validation outcome
 
-- 791 Python tests and 14 rendered-page tests passed; 1 skipped, 149 subtests passed.
+- 846 tests passed, including all 14 rendered-page tests; 1 skipped, 149 subtests passed.
 - All ten website/report pages rendered. The final combined-site scan found no
   missing local link targets/fragments or skipped heading levels; teacher/developer
   anchors are present on the eight general content pages, with the semantics
   and legacy-link pages intentionally exempt.
 - Corpus baseline replay and generator round-trip passed. The runtime source
-  bundle remains consistent with the unchanged grader core.
-- Browser interaction and native STACK checks are left to PR CI; local Chromium
-  cannot start in this environment.
+  bundle matches the current grader core.
+- Browser interaction and native STACK checks run in PR CI.
