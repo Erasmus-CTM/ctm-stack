@@ -33,7 +33,7 @@ jobs:
           python scripts/prepare_native_image.py --stack-source .stack-upstream-reference
           mkdir -p test-results/compliance
           cp .native-stack-image/cache-status.json test-results/compliance/native-image-cache-miss.json
-      - name: Validate cache hit and record miss-to-hit proof
+      - name: Validate local manifest reuse after building the image
         run: |
           python scripts/prepare_native_image.py --stack-source .stack-upstream-reference
           python - <<'PY'
@@ -41,7 +41,8 @@ jobs:
           from pathlib import Path
           first = json.loads(Path('test-results/compliance/native-image-cache-miss.json').read_text())
           second = json.loads(Path('.native-stack-image/cache-status.json').read_text())
-          result = {'miss': first, 'hit': second, 'passed': first['status'] == 'built' and second['status'] == 'hit'}
+          result = {'kind': 'local_image_manifest_reuse', 'built': first, 'reused': second,
+                    'passed': first['status'] == 'built' and second['status'] == 'hit'}
           Path('test-results/compliance/native-image-cache-validation.json').write_text(json.dumps(result, indent=2)+'\n')
           assert result['passed'], result
           PY
