@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "engine_revision": "88ba6ee2a753ff79431d06dd9e3c95dba635bbb3",
-  "adapter_source_sha256": "c40e4963a433c7100386936a08a712068af1f471075aeec2543195931741c123",
-  "python_version": "3.12.14",
+  "engine_revision": "b3be2a4fd6a2e4ffc57e652772eb97708283bb09",
+  "adapter_source_sha256": "d2b73549537a5ef26e41d21472132ed6b407d25ea622f5ebb07aa0e64420274d",
+  "python_version": "3.14.3",
   "sympy_version": "1.13.3",
   "seed_policy": "first three deployed seeds, or adapter-local 17,29,47 (not Maxima parity)",
   "timeout_seconds_per_file": 10,
@@ -11,10 +11,10 @@
     "stages": {
       "qtests_mismatch": 1,
       "qtests_pass": 19,
-      "unsupported_import": 4,
-      "unsupported_instantiate": 6
+      "unsupported_import": 3,
+      "unsupported_instantiate": 7
     },
-    "imported": 26,
+    "imported": 27,
     "instantiated_all_seeds": 20,
     "replayed_cases": 138,
     "failed_cases": 2,
@@ -128,16 +128,17 @@
     },
     {
       "diagnostic": {
-        "location": "input[ans]",
-        "message": "AlgMap-12.1: input[ans]: unsupported input name or type 'ans'/'matrix'",
-        "reason": "unsupported input name or type 'ans'/'matrix'",
+        "location": "questionvariables[sysl]",
+        "message": "AlgMap-12.1: questionvariables[sysl]: Unexpected character '.' (U+002E) at position 1",
+        "reason": "Unexpected character '.' (U+002E) at position 1",
+        "seed": 1841615900,
         "type": "UnsupportedQuestion"
       },
       "failed_cases": 0,
       "failed_checks": 0,
       "file": "AlgMap-12-1.xml",
       "id": "algmap-12-1",
-      "imported_questions": 0,
+      "imported_questions": 1,
       "instantiated_seeds": [],
       "mismatches": [],
       "native_qtests": 1,
@@ -147,7 +148,7 @@
         744559019,
         775117297
       ],
-      "status": "unsupported_import"
+      "status": "unsupported_instantiate"
     },
     {
       "failed_cases": 0,
@@ -679,9 +680,9 @@
     },
     {
       "diagnostic": {
-        "location": "questionvariables[amatrix]",
-        "message": "Matrices_find det 2*2: questionvariables[amatrix]: Function matrix is not allowed; use matrix*(...) for multiplication",
-        "reason": "Function matrix is not allowed; use matrix*(...) for multiplication",
+        "location": "questionvariables[correctanswer]",
+        "message": "Matrices_find det 2*2: questionvariables[correctanswer]: Function determinant is not allowed; use determinant*(...) for multiplication",
+        "reason": "Function determinant is not allowed; use determinant*(...) for multiplication",
         "seed": 1113104891,
         "type": "UnsupportedQuestion"
       },

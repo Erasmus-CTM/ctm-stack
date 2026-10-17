@@ -5,7 +5,7 @@ subtitle: "Thirty unchanged STACK exports, with a measured adapter boundary"
 
 These are 30 native STACK XML questions from the upstream library. Each question below has a local XML download, its pinned upstream source, and a result from the current adapter. **Only the 19 questions whose authored tests passed on every replayed seed have interactive cards.** The others remain available for inspection, with the observed mismatch or unsupported feature shown explicitly.
 
-The [reproducible baseline](questions/corpus/baseline.json) reports **19 passed**, **1 with test mismatches**, and **10 blocked** (4 at import, 6 at instantiation). It retained **73 authored test cases** and replayed **138 seed/case combinations** across 20 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.
+The [reproducible baseline](questions/corpus/baseline.json) reports **19 passed**, **1 with test mismatches**, and **10 blocked** (3 at import, 7 at instantiation). It retained **73 authored test cases** and replayed **138 seed/case combinations** across 20 instantiated questions; 2 combinations disagreed. Passing those bounded checks is evidence for the listed seeds, not complete STACK/Maxima parity.
 
 **Attribution and reuse.** Questions are from [STACK / maths/moodle-qtype_stack](https://github.com/maths/moodle-qtype_stack), pinned at commit [`10d323311b7f39fb7b092dd10ce75f7d8632f525`](https://github.com/maths/moodle-qtype_stack/commit/10d323311b7f39fb7b092dd10ce75f7d8632f525). The unchanged question exports carry the [CC BY-SA 4.0 license](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/COPYING.txt), also [included locally](questions/corpus/COPYING.txt); see each pinned source link below. The [manifest](questions/corpus/manifest.json) records the exact upstream path and SHA-256 for every XML file.
 
@@ -33,7 +33,7 @@ The [reproducible baseline](questions/corpus/baseline.json) reports **19 passed*
 | [AlgMap-10.1](#algmap-10-1) | Algebra Refresher / 10 Expressions single term common factors | Passed authored tests | [Download](questions/corpus/AlgMap-10-1.xml) |
 | [AlgMap-11.1](#algmap-11-1) | Algebra Refresher / 11 Rearranging algebraic formulae | Passed authored tests | [Download](questions/corpus/AlgMap-11-1.xml) |
 | [AlgMap-11.8](#algmap-11-8) | Algebra Refresher / 11 Rearranging algebraic formulae | Passed authored tests | [Download](questions/corpus/AlgMap-11-8.xml) |
-| [AlgMap-12.1](#algmap-12-1) | Algebra Refresher / 12 Simultaneous linear equations | Unsupported at import | [Download](questions/corpus/AlgMap-12-1.xml) |
+| [AlgMap-12.1](#algmap-12-1) | Algebra Refresher / 12 Simultaneous linear equations | Unsupported at instantiation | [Download](questions/corpus/AlgMap-12-1.xml) |
 | [AlgMap-13.1](#algmap-13-1) | Algebra Refresher / 13 Factorising algebraic expressions | Passed authored tests | [Download](questions/corpus/AlgMap-13-1-.xml) |
 | [AlgMap-14.1](#algmap-14-1) | Algebra Refresher / 14 Algebraic fractions involving factorising | Passed authored tests | [Download](questions/corpus/AlgMap-14-1.xml) |
 | [AlgMap-15.1](#algmap-15-1) | Algebra Refresher / 15 Quadratic equations | Unsupported at instantiation | [Download](questions/corpus/AlgMap-15-1.xml) |
@@ -346,7 +346,7 @@ Algebra Refresher / 07 Removing brackets · **Unsupported at instantiation at se
 
 ### AlgMap-12.1 {#algmap-12-1}
 
-Algebra Refresher / 12 Simultaneous linear equations · **Unsupported at import.** `input[ans]`: unsupported input name or type &#x27;ans&#x27;/&#x27;matrix&#x27;.
+Algebra Refresher / 12 Simultaneous linear equations · **Unsupported at instantiation at seed `1841615900`.** `questionvariables[sysl]`: Unexpected character &#x27;.&#x27; (U+002E) at position 1.
 
 [Download original XML](questions/corpus/AlgMap-12-1.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Algebra-Refresher/12-Simultaneous-linear-equations/AlgMap-12-1.xml) · [Replay record](questions/corpus/baseline.json)
 
@@ -364,7 +364,7 @@ Topics / Limits · **Unsupported at import.** `prt[Result]/node[0]/truepenalty`:
 
 ### Matrices_find det 2\*2 {#matrices-find-det-2-2}
 
-Topics / LinearAlgebra / Matrix Calculations · **Unsupported at instantiation at seed `1113104891`.** `questionvariables[amatrix]`: Function matrix is not allowed; use matrix*(...) for multiplication.
+Topics / LinearAlgebra / Matrix Calculations · **Unsupported at instantiation at seed `1113104891`.** `questionvariables[correctanswer]`: Function determinant is not allowed; use determinant*(...) for multiplication.
 
 [Download original XML](questions/corpus/Matrices_find-det-2-2.xml) · [Pinned upstream source](https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/samplequestions/stacklibrary/Topics/LinearAlgebra/Matrix-Calculations/Matrices_find-det-2-2.xml) · [Replay record](questions/corpus/baseline.json)
 

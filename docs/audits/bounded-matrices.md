@@ -109,3 +109,7 @@ transitive unsimplified-alias controls. Before the final review fixes, the
 targeted Python suite passed 403 tests and 103 subtests. Final focused rerun
 results and the independent review verdict are recorded with the PR; no native
 or browser run is represented by these local unit counts.
+
+## Corpus baseline refresh
+
+The generated 30-question corpus baseline and page were rerun after adding the matrix parser/input. The 19 passing questions, one qtest mismatch, ten blocked questions, 138 replayed seed/case combinations and two observed mismatches remain unchanged. Imported questions increase from 26 to 27: AlgMap-12.1 now accepts its matrix input but remains blocked on unsupported `sysl` syntax. The determinant question now accepts its matrix variable and remains explicitly blocked on the unsupported determinant operation. No corpus XML or imported 2,303-row fixture was modified. `scripts/check_corpus.py --check` passed against the regenerated artifact.
