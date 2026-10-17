@@ -290,27 +290,27 @@ window.Quarto = {
 </tr>
 <tr class="even">
 <td>Any basis of a null, column or row space</td>
-<td><code>IsBasis</code> checks membership, independence and completeness.</td>
-<td>The original matrix <span class="math inline">\(A\)</span>, with <code>nullspace</code>, <code>columnspace</code> or <code>rowspace</code> selected.</td>
+<td><code>PythonChecker</code> selects <code>basis</code> with JSON <code>space</code> set to <code>nullspace</code>, <code>columnspace</code> or <code>rowspace</code>.</td>
+<td>The original matrix <span class="math inline">\(A\)</span>.</td>
 </tr>
 <tr class="odd">
 <td>Integer entries, a given determinant or nonidentity</td>
-<td>Separate <code>MatrixProperty</code> nodes can give separate marks.</td>
+<td>Separate <code>PythonChecker</code> nodes select <code>matrix_property</code> with JSON <code>property</code> set to <code>integer_entries</code>, <code>determinant</code> or <code>identity</code>.</td>
 <td>The expected property result: <code>true</code>, an exact determinant such as <code>1</code>, or <code>false</code>.</td>
 </tr>
 <tr class="even">
 <td>Another condition, such as Hermitian symmetry or positive definiteness</td>
-<td>A named <code>PythonChecker</code> function in an author file. Combine conditions in one PRT or give them separate marks in two PRTs.</td>
+<td>A named <code>PythonChecker</code> function. Combine conditions in one PRT or give them separate marks in two PRTs.</td>
 <td>The value the function needs, such as <code>true</code> for the <a href="../examples.html#symmetric-positive-definite-matrix">positive-definiteness examples</a>.</td>
 </tr>
 </tbody>
 </table>
-<p>An entry-by-entry check would reject many correct answers to “give any basis” or “give any matrix satisfying these conditions.” See <a href="../docs/python-checker-api.html">Python answer tests</a> for the choice and the <a href="../docs/python-checker-api.html#author-the-spd-checker">positive-definiteness walkthrough</a> for both combined and separately weighted Hermitian-symmetry/positivity rules. The independent positivity check asks for <span class="math inline">\(\operatorname{Re}(z^*Az)&gt;0\)</span> for every nonzero complex <span class="math inline">\(z\)</span>; a non-Hermitian matrix can meet it. Full credit in the combined example also requires <span class="math inline">\(A=A^*\)</span>, which becomes ordinary symmetry for real entries. The example checker accepts exact integer or fractional real and imaginary parts, such as <code>1/2+%i/3</code>. An equivalent native Moodle STACK question needs corresponding Maxima checks; these Python test names are specific to this port.</p>
-<p>If the shape is part of the task, let learners choose a bounded number of columns for null or column-space bases, or rows for row-space bases. An empty basis cannot currently be entered because the editor needs positive dimensions. For a fixed-size task, the model answer determines the editor’s shape. The built-in <code>IsBasis</code> and <code>MatrixProperty</code> tests require exact rational entries (integers or fractions). An author-supplied <code>PythonChecker</code> can choose another domain within the input limits. Set any partial credit in the response trees; neither correct cells nor green basis vectors earn marks by themselves.</p>
+<p>An entry-by-entry check would reject many correct answers to “give any basis” or “give any matrix satisfying these conditions.” See <a href="../docs/python-checker-api.html">Python answer tests</a> for the choice and the <a href="../docs/python-checker-api.html#author-the-spd-checker">positive-definiteness walkthrough</a> for combined and separately weighted Hermitian-symmetry/positivity rules. The first question requires both; the second awards half for each. The example accepts exact integer or fractional real and imaginary parts, such as <code>1/2+%i/3</code>. An equivalent native Moodle STACK question needs corresponding Maxima checks; these Python test names are specific to this port.</p>
+<p>If the shape is part of the task, let learners choose a bounded number of columns for null or column-space bases, or rows for row-space bases. An empty basis cannot currently be entered because the editor needs positive dimensions. For a fixed-size task, the model answer determines the editor’s shape. The supplied <code>basis</code> and <code>matrix_property</code> functions require exact rational entries (integers or fractions); a custom <code>PythonChecker</code> function can choose another domain within the input limits. Set any partial credit in the response trees; neither correct cells nor green basis vectors earn marks by themselves.</p>
 </section>
 <section id="what-learners-see" class="level3">
 <h3 class="anchored" data-anchor-id="what-learners-see">What learners see</h3>
-<p>A learner fills matrix cells, presses <strong>Validate answers</strong> to inspect the interpreted matrix, then presses <strong>Check answer</strong>. Empty cells are invalid. The editor retains typed forms such as <code>x+x</code> or <code>1/2</code>; resizing keeps cells that still fit and leaves new cells blank. Editing, resizing, resetting or switching variants clears an earlier result and requires validation again. After an <code>IsBasis</code> check, vector colors explain membership and dependence, but the response tree still determines the score.</p>
+<p>A learner fills matrix cells, presses <strong>Validate answers</strong> to inspect the interpreted matrix, then presses <strong>Check answer</strong>. Empty cells are invalid. The editor retains typed forms such as <code>x+x</code> or <code>1/2</code>; resizing keeps cells that still fit and leaves new cells blank. Editing, resizing, resetting or switching variants clears an earlier result and requires validation again. After a basis check, vector colors explain membership and dependence, but the response tree still determines the score.</p>
 </section>
 </section>
 <section id="for-developers" class="level2">

@@ -453,7 +453,7 @@ ta:x^2+(a+b)*x+a*b;&lt;/text&gt;
 <h2 class="anchored" data-anchor-id="for-developers">For developers</h2>
 <section id="explore-the-port" class="level3">
 <h3 class="anchored" data-anchor-id="explore-the-port">Explore the port</h3>
-<p>The existing STACK answer-test families implemented here are <code>AlgEquiv</code>, <code>Sets</code>, <code>SameType</code>, <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, <code>LowestTerms</code>, <code>NumAbsolute</code>, <code>NumRelative</code> and <code>NumDecPlaces</code>. The Python-only <code>IsBasis</code>, <code>MatrixProperty</code> and author-supplied <code>PythonChecker</code> tests add tasks such as alternate bases and matrix conditions without changing those native test names. Ordinary response trees still control scores and feedback.</p>
+<p>The existing STACK answer-test families implemented here are <code>AlgEquiv</code>, <code>Sets</code>, <code>SameType</code>, <code>EqualComAss</code>, <code>FacForm</code>, <code>SingleFrac</code>, <code>LowestTerms</code>, <code>NumAbsolute</code>, <code>NumRelative</code> and <code>NumDecPlaces</code>. The Python-only <code>PythonChecker</code> test uses <a href="questions/matrix-checkers.py">supplied matrix functions</a> or an author-written function for tasks such as alternate bases and matrix conditions. Ordinary response trees still control scores and feedback.</p>
 <ul>
 <li><a href="./docs/python-checker-api.html">Python answer-test guide</a>: matrix choices, teacher values, callback contract and complete positive-definiteness example.</li>
 <li><a href="compliance/">STACK compliance</a>: comparisons with upstream answer-test cases.</li>

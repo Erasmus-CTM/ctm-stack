@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Project example, CC BY-SA 4.0. Uses spd-checker.py selected in Quarto. -->
+<!-- Project example, CC BY-SA 4.0. Uses matrix-checkers.py selected in Quarto. -->
 <quiz>
   <question type="stack">
     <name>
@@ -10,10 +10,10 @@
     </questionvariables>
     <questionsimplify>1</questionsimplify>
     <questiontext format="html">
-      <text>&lt;p&gt;Give any real symmetric or complex Hermitian positive definite \(2\times2\) matrix. Use integers or exact fractions for real and imaginary parts; enter %i for \(i\).&lt;/p&gt;&lt;p&gt;Half the marks are for Hermitian symmetry and half for positivity: \(\operatorname{Re}(z^*Az)&gt;0\) for every nonzero complex \(z\).&lt;/p&gt;&lt;p&gt;[[input:ansm]] [[validation:ansm]]&lt;/p&gt;&lt;p&gt;Hermitian symmetry: [[feedback:symmetry]]&lt;/p&gt;&lt;p&gt;Positivity: [[feedback:positivity]]&lt;/p&gt;</text>
+      <text>&lt;p&gt;Give any real symmetric or complex Hermitian positive definite \(2\times2\) matrix. Use integers or exact fractions for real and imaginary parts; enter %i for \(i\).&lt;/p&gt;&lt;p&gt;Half the marks are for Hermitian symmetry and half for positivity of the quadratic form.&lt;/p&gt;&lt;p&gt;[[input:ansm]] [[validation:ansm]]&lt;/p&gt;&lt;p&gt;Hermitian symmetry: [[feedback:symmetry]]&lt;/p&gt;&lt;p&gt;Positivity: [[feedback:positivity]]&lt;/p&gt;</text>
     </questiontext>
     <generalfeedback format="html">
-      <text>&lt;p&gt;Hermitian symmetry means \(A=A^*\), where \(A^*=\overline A^{\,T}\). It reduces to ordinary symmetry for real matrices. A Hermitian matrix is positive definite when all its leading principal determinants are positive. For \(\begin{pmatrix}a&amp;b\\\overline b&amp;c\end{pmatrix}\), this means \(a&gt;0\) and \(ac-|b|^2&gt;0\). To test positivity independently of Hermitian symmetry, apply this criterion to \((A+A^*)/2\).&lt;/p&gt;</text>
+      <text>&lt;p&gt;The checker uses Sylvester’s criterion to test positivity with exact arithmetic. Full credit requires both Hermitian symmetry and positivity. For real entries, Hermitian symmetry means ordinary symmetry.&lt;/p&gt;</text>
     </generalfeedback>
     <defaultgrade>1</defaultgrade>
     <penalty>0.1</penalty>
@@ -43,7 +43,7 @@
         <answertest>PythonChecker</answertest>
         <sans>ansm</sans>
         <tans>true</tans>
-        <testoptions>is_hermitian</testoptions>
+        <testoptions>{"checker": "is_hermitian"}</testoptions>
         <truescoremode>=</truescoremode>
         <truescore>1</truescore>
         <truenextnode>-1</truenextnode>
@@ -69,7 +69,7 @@
         <answertest>PythonChecker</answertest>
         <sans>ansm</sans>
         <tans>true</tans>
-        <testoptions>is_positive_definite</testoptions>
+        <testoptions>{"checker": "is_positive_definite"}</testoptions>
         <truescoremode>=</truescoremode>
         <truescore>1</truescore>
         <truenextnode>-1</truenextnode>

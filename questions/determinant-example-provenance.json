@@ -8,6 +8,6 @@
   "original": "course-sources/determinant-original.qmd",
   "original_sha256": "34f9d0da13c4bd8b133451046e57c2b1a3dd8cbcadf397148b4387f3ebdbc3ec",
   "converted": "determinant-one.xml",
-  "converted_sha256": "fa78bc9b99e441f6df36b94995be8d4a05e5f33e4d58b945110a71c266761b2b",
-  "changes": "Retains the integer-entry, determinant-one and nonidentity conditions and equally weighted partial credit. Converts the trusted Python custom checker into three normal PRTs using registered Python-only MatrixProperty predicates. Uses a fixed 2x2 matrix input, exact rational arithmetic only, and no color projection."
+  "converted_sha256": "e1679eb7b8bd37af2f28f9de0572790394bc89799978ea0a3a2304580de85cb7",
+  "changes": "Retains the integer-entry, determinant-one and nonidentity conditions and equally weighted partial credit. Converts the trusted Python custom checker into three normal PRTs using supplied matrix_property function with integer_entries, determinant and identity options through PythonChecker. Uses a fixed 2x2 matrix input, exact rational arithmetic only, and no color projection."
 }
