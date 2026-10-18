@@ -1,13 +1,49 @@
 import random
 import unittest
+from unittest.mock import patch
 
 import sympy as sp
 
 from stack_sympy import InvalidAnswer, Unsupported, assignments, canonical_form, evaluate, parse
-from stack_sympy.expressions import MAX_TOKENS, form_latex
+from stack_sympy.expressions import MAX_TOKENS, MAX_RATIONAL_BITS, form_latex
 
 
 class ExpressionsTest(unittest.TestCase):
+    def test_exact_power_budget_rejects_before_allocation(self):
+        real_power = sp.Pow
+
+        def bounded_power(base, exponent, **kwargs):
+            coefficient = base.as_coeff_Mul()[0]
+            if isinstance(coefficient, sp.Rational) and isinstance(exponent, sp.Rational):
+                bits = max(abs(int(coefficient.p)).bit_length(), int(coefficient.q).bit_length())
+                self.assertLessEqual(bits * abs(int(exponent.p)), MAX_RATIONAL_BITS)
+            return real_power(base, exponent, **kwargs)
+
+        sources = ('((2^100)^100)^100', '((1/2)^100)^100^2',
+                   '((2^100*x)^100)^100', '((2^100)^100)^(99/2)',
+                   'matrix([((2^100)^100)^100])', 'a^100',
+                   '((2^100)^100)^100=0', '((2^100*x)^100)^100=0',
+                   '((2^(10*10))^(10*10))^(10*10)=0')
+        for source in sources:
+            with self.subTest(source=source), patch.object(sp, 'Pow', bounded_power):
+                with self.assertRaisesRegex(InvalidAnswer, 'computation bound|Exponent too large'):
+                    evaluate(source, {'a': sp.Integer(2)**1000}, student=True)
+
+    def test_rational_budget_covers_products_and_preserves_ordinary_values(self):
+        near_limit = sp.Integer(2)**(MAX_RATIONAL_BITS - 2)
+        with self.assertRaisesRegex(InvalidAnswer, 'computation bound'):
+            evaluate('a*a', {'a': near_limit}, student=True)
+        with self.assertRaisesRegex(InvalidAnswer, 'computation bound'):
+            evaluate('a*a=0', {'a': near_limit}, student=True)
+        with self.assertRaisesRegex(InvalidAnswer, 'computation bound'):
+            evaluate('a', {'a': near_limit**2}, student=True)
+        for source, expected in (('2^100', 2**100), ('(1/2)^(-100)', 2**100),
+                                 ('(16/81)^(1/2)', sp.Rational(4, 9)),
+                                 ('x^100', sp.Symbol('x')**100),
+                                 ('2^100*2^100*2^100', 2**300)):
+            with self.subTest(source=source):
+                self.assertEqual(evaluate(source, student=True), expected)
+
     def test_exact_arithmetic_and_precedence(self):
         self.assertEqual(evaluate(".25+1e-2*2"), sp.Rational(27, 100))
         self.assertEqual(evaluate("-2^2"), -4)

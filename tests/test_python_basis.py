@@ -247,7 +247,7 @@ def test_source_provenance_and_independent_nullspace_mathematics():
 
 
 def test_large_matrix_entries_fail_the_supplied_checker_domain():
-    result = basis_test("matrix([((2^100)^100)^100],[0],[0])", DEFINING)
+    result = basis_test("matrix([2^100*2^100*2^100],[0],[0])", DEFINING)
     assert not result["valid"]
     assert "256-bit" in result["feedback"]
 

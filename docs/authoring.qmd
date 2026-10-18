@@ -263,6 +263,12 @@ known differences and proof limits.
 
 ### Author variables and helpers {#author-variables-and-helpers}
 
+Exact arithmetic has a 16,384-bit computation budget for rational numerators
+and denominators, including intermediate values. Conservative size estimates
+reject oversized powers before constructing their integers, including arithmetic
+held for equation and written-form checks. This applies to scalar answers and matrix
+cells; a custom checker may impose a smaller domain, such as 256-bit rationals.
+
 Write assignments as `name:expression;`; list indexing is 1-based. In addition
 to the scalar functions above, authors can use:
 

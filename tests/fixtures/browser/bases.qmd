@@ -2,6 +2,13 @@
 title: Python basis test browser checks
 ---
 
+```{#matrix-pair .stack-question}
+#| file: matrix-pair.xml
+#| question: Two matrix inputs with a later domain check
+#| python-checkers: pair-checkers.py
+#| review: true
+```
+
 ```{#course-b-rank-pivots .stack-question}
 #| file: questions/course-b-rank-pivots.xml
 #| question: Rank and pivot columns of B

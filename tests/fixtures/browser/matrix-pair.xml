@@ -1,0 +1,18 @@
+<quiz><question type="stack">
+  <name><text>Two matrix inputs with a later domain check</text></name>
+  <questiontext format="html"><text>[[input:first]] [[validation:first]] [[input:second]] [[validation:second]] [[feedback:paint]] [[feedback:domain]]</text></questiontext>
+  <input><name>first</name><type>matrix</type><tans>matrix([1])</tans></input>
+  <input><name>second</name><type>matrix</type><tans>matrix([1])</tans></input>
+  <prt><name>paint</name><value>1</value><node>
+    <name>0</name><answertest>PythonChecker</answertest><sans>first</sans><tans>true</tans>
+    <testoptions>{"checker":"paint"}</testoptions>
+    <truescore>1</truescore><truenextnode>-1</truenextnode>
+    <falsescore>0</falsescore><falsenextnode>-1</falsenextnode>
+  </node></prt>
+  <prt><name>domain</name><value>1</value><node>
+    <name>0</name><answertest>PythonChecker</answertest><sans>second</sans><tans>true</tans>
+    <testoptions>{"checker":"domain"}</testoptions>
+    <truescore>1</truescore><truenextnode>-1</truenextnode>
+    <falsescore>0</falsescore><falsenextnode>-1</falsenextnode>
+  </node></prt>
+</question></quiz>
