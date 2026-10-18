@@ -488,7 +488,8 @@
             var detail = (result.inputs || {})[host.dataset.name];
             // Only an explicit Python answer test supplies vector assessment.
             // These colors explain its result; PRT branches still award credit.
-            editor.setState(type === 'grade' && detail && detail.assessment ? detail.assessment :
+            editor.setState(type === 'grade' && result.status === 'graded' && detail &&
+              detail.valid !== false && detail.assessment ? detail.assessment :
               {status: detail && detail.valid === false ? 'invalid' : 'empty'});
           });
         }

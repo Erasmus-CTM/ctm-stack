@@ -27,6 +27,8 @@ MAX_CHARS = 1200
 MAX_TOKENS = 350
 MAX_DEPTH = 40
 MAX_POWER = 100
+# A computation budget, separate from a checker's narrower mathematical domain.
+MAX_RATIONAL_BITS = 16384
 MAX_DIGITS = 100
 MAX_COLLECTION_ITEMS = 32
 MAX_COLLECTION_DEPTH = 6
@@ -477,9 +479,50 @@ def _finite(value: Any):
     if is_collection(value):
         for item in collection_items(value):
             _finite(item)
-    elif isinstance(value, sp.Basic) and value.has(sp.nan, sp.zoo, sp.oo, -sp.oo):
-        raise InvalidAnswer("Non-finite value")
+    elif isinstance(value, sp.Basic):
+        if value.has(sp.nan, sp.zoo, sp.oo, -sp.oo):
+            raise InvalidAnswer("Non-finite value")
+        if any(max(abs(int(number.p)).bit_length(), int(number.q).bit_length()) > MAX_RATIONAL_BITS
+               for number in value.atoms(sp.Rational)):
+            raise InvalidAnswer(f"Exact arithmetic exceeds the {MAX_RATIONAL_BITS}-bit computation bound")
+        if (value.is_Add or value.is_Mul) and _rational_growth_bits(value) > MAX_RATIONAL_BITS:
+            raise InvalidAnswer(f"Exact arithmetic exceeds the {MAX_RATIONAL_BITS}-bit computation bound")
     return value
+
+
+def _rational_growth_bits(value):
+    """Conservative size estimate, including arithmetic held for form checks.
+
+    Equations release held nodes later; inspecting only already-evaluated
+    Rational atoms would let nested powers bypass the early allocation guard.
+    """
+    if isinstance(value, sp.Rational):
+        return max((abs(int(part)).bit_length() if abs(part) > 1 else 0)
+                   for part in (value.p, value.q))
+    if value.is_Pow:
+        return _power_growth_bits(_rational_growth_bits(value.base), value.exp)
+    sizes = [_rational_growth_bits(arg) for arg in value.args]
+    return sum(sizes) if value.is_Add or value.is_Mul else max(sizes, default=0)
+
+
+def _power_growth_bits(base_bits, exponent):
+    if isinstance(exponent, sp.Rational):
+        # Bound the numerator power before a possible root extraction.
+        return base_bits * abs(int(exponent.p))
+    if exponent.is_number and exponent.is_real:
+        # Held arithmetic such as 10*10 is not a Rational instance yet.
+        return base_bits * int(sp.ceiling(abs(sp.N(exponent, 16))))
+    return base_bits
+
+
+def _bounded_power(base, exponent):
+    """Reject oversized exact powers before SymPy allocates their integers.
+
+    Rational powers may compute the numerator power before extracting a root,
+    so bound that intermediate too. Zero and unit bases never grow.
+    """
+    if _power_growth_bits(_rational_growth_bits(base), exponent) > MAX_RATIONAL_BITS:
+        raise InvalidAnswer(f"Exact power exceeds the {MAX_RATIONAL_BITS}-bit computation bound")
 
 
 def _number(text: str):
@@ -608,7 +651,7 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
                 value = env[n.value]
                 if not isinstance(value, (sp.Basic, list)):
                     raise Unsupported("Environment must hold SymPy values")
-                return value
+                return _finite(value)
             if n.value in {"simp", "true", "false"}:
                 raise InvalidAnswer("Boolean flags are not scalar expressions")
             return sp.Symbol(n.value, **{k: True for k in ("real", "positive") if assumptions.get(k)})
@@ -649,6 +692,7 @@ def evaluate(node_or_string: Node | str, env: Mapping[str, Any] | None = None, *
             else:
                 if b.is_number and b.is_real and abs(float(sp.N(b, 16))) > MAX_POWER:
                     raise InvalidAnswer("Exponent too large")
+                _bounded_power(a, b)
                 result = sp.Pow(a, b, evaluate=simplify)
             return _finite(result)
         if n.kind == "call":

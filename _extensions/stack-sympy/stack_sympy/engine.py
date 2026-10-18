@@ -583,6 +583,9 @@ def grade(question: dict, answers: Mapping[str, str], seed: int = 1, *, variant:
                 if node["test"] == "PythonChecker":
                     detail = input_results[node["student"]]
                     detail.update(valid=False, feedback=result["feedback"] if not node["quiet"] else "Invalid answer")
+                # No vector verdict remains authoritative on an invalid grade,
+                # including assessments from earlier inputs or response trees.
+                for detail in input_results.values():
                     detail.pop("assessment", None)
                 return {"status": "invalid", "score": 0.0, "inputs": input_results, "prts": prt_results,
                         "feedback": input_results[node["student"]]["feedback"] if node["test"] == "PythonChecker" else result["feedback"]}

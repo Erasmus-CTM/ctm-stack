@@ -209,6 +209,19 @@ def test_browser_python_basis_and_ordinary_matrix_questions(browser_site):
                 determinant.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
                 determinant.locator(".stack-check").click()
                 determinant.locator(f'.stack-result[data-state="{state}"]').wait_for(timeout=180000)
+            # A later input's invalid domain clears earlier vector colors too.
+            pair = page.locator('[data-stack-id="matrix-pair"]')
+            pair_cells = pair.locator('input[data-matrix-row]')
+            for second, state in ((1, 'correct'), (-1, 'invalid')):
+                pair_cells.nth(0).fill('1')
+                pair_cells.nth(1).fill(str(second))
+                pair.locator('.stack-validate').click()
+                pair.locator('.stack-result[data-state="valid"]').wait_for(timeout=180000)
+                pair.locator('.stack-check').click()
+                pair.locator(f'.stack-result[data-state="{state}"]').wait_for(timeout=180000)
+                assert pair.locator('input.math-input-ok').count() == (1 if second > 0 else 0)
+            assert 'Enter a positive entry.' in pair.inner_text()
+            assert pair_cells.nth(1).get_attribute('aria-invalid') == 'true'
             assert not errors, errors
         finally:
             browser.close()

@@ -369,6 +369,43 @@ def test_finite_values_and_qtest_order():
     assert run_question_tests(q, seeds=(1,17,47))['passed']
 
 
+@pytest.mark.parametrize('same_input', [False, True])
+@pytest.mark.parametrize('quiet', [False, True])
+def test_invalid_checker_clears_all_earlier_vector_assessments(same_input, quiet):
+    q = import_xml(ROOT / 'questions/course-c-nullspace.xml')[0]
+    first = q['prts'][0]['nodes'][0]
+    first.update(test='PythonChecker', options=config('check'))
+    later = deepcopy(q['prts'][0])
+    later['name'] = 'later'
+    later['nodes'][0].update(options=config('reject'), quiet=quiet)
+    if not same_input:
+        q['inputs'].append({**deepcopy(q['inputs'][0]), 'name': 'other'})
+        later['nodes'][0]['student'] = 'other'
+    q['prts'].append(later)
+    q['python_checkers'] = module("{'valid':True,'correct':True,'assessment':{'columns':['correct']*student.cols}}")
+    q['python_checkers']['source'] += (
+        "\ndef reject(student,teacher,options):\n"
+        "    return {'valid':False,'correct':False,'feedback':'Use <two> columns'}\n"
+        "CHECKERS['reject']=reject\n")
+    result = grade(q, {inp['name']: 'matrix([-2],[1],[0])' for inp in q['inputs']})
+    assert result['status'] == 'invalid'
+    assert result['score'] == 0
+    assert all('assessment' not in detail for detail in result['inputs'].values())
+    rejected = first['student'] if same_input else 'other'
+    assert not result['inputs'][rejected]['valid']
+    assert result['inputs'][rejected]['feedback'] == ('Invalid answer' if quiet else 'Use <two> columns')
+
+
+def test_large_learner_matrix_is_rejected_during_validation_before_checker_execution():
+    q = import_xml(ROOT / 'questions/course-c-nullspace.xml')[0]
+    q['python_checkers'] = descriptor("raise AssertionError('Checker must not execute')")
+    answers = {'ans': 'matrix([((2^100)^100)^100],[0],[0])'}
+    for action in (validate, grade):
+        result = action(q, answers)
+        assert result['status'] == 'invalid'
+        assert 'computation bound' in result['inputs']['ans']['feedback']
+
+
 def test_model_preflight_matches_qtest_lowest_terms_conversion():
     q = question(module("True"))
     q["inputs"][0]["teacher"] = "2/4"
