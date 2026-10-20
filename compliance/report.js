@@ -65,7 +65,7 @@ function initialize(data) {
   $('report-provenance').append(U.details('Saved run and provenance',{generated_at:report.generated_at,...p,scope:report.scope}));
   if(p.run_url)$('report-provenance').append(U.link(p.run_url,'Original run and artifacts'));
   for(const [name,result] of Object.entries(report.results))$('report-runners').append(U.details(`${name}: saved runner details`,result));
-  if(/^[0-9a-f]{40}$/.test(p.code_sha || ''))$('fixture-link').append(U.link(`https://github.com/Erasmus-CTM/stack-sympy/blob/${p.code_sha}/tests/native_compliance/fixtures.json`,'Original test case at this run'));
+  if(/^[0-9a-f]{40}$/.test(p.code_sha || ''))$('fixture-link').append(U.link(`https://github.com/Erasmus-CTM/ctm-checkers/blob/${p.code_sha}/tests/stack/native_compliance/fixtures.json`,'Original test case at this run'));
   update();
 }
 fetch('report.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw Error(`HTTP ${r.status}`);return r.json();}).then(initialize).catch(error=>{

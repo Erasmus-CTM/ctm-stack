@@ -6,7 +6,7 @@ Positivity checks also accept rational real and imaginary parts.
 """
 import sympy as sp
 
-from stack_sympy.basis_helper import assess_basis
+from ctm_checkers.matrix import assess_basis
 
 
 def rational_matrix(value):
