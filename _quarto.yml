@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: _site
+  # The STACK examples of the pinned ctm-checkers (git-ignored questions/).
+  pre-render: scripts/fetch-examples.py
   render:
     - index.qmd
     - examples.qmd

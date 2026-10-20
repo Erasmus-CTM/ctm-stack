@@ -228,10 +228,11 @@ additional source setting.
 Test the authored cases from the project root with the same filename:
 
 ```bash
-PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
+export PYTHONPATH=$(ls _extensions/ctm-checkers/*.whl | paste -sd: -)  # ctm-checkers' two wheels
+python -m ctm_checkers.stack.cli test \
   --file questions/symmetric-positive-definite.xml \
   --python-checkers questions/matrix-checkers.py
-PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
+python -m ctm_checkers.stack.cli test \
   --file questions/symmetric-positive-definite-prt.xml \
   --python-checkers questions/matrix-checkers.py
 quarto render
@@ -319,7 +320,7 @@ immutable SymPy matrices. Lists and finite sets are distinct `ListValue` and
 `SetValue` objects with ordered `.args` (a set retains its submitted entries).
 Equations have two `.args`; held logic has `.operator` and `.operands`;
 logical constants use SymPy `true` and `false`. The collection and logic types
-and `collection_items` are available from `stack_sympy.checker_api`.
+and `collection_items` are available from `ctm_checkers.stack.checker_api`.
 These values do not promise to retain the learner's exact written arithmetic
 form. A custom checker decides its own mathematical domain, within the
 existing input and parser limits.
@@ -358,7 +359,8 @@ SymPy Boolean in place of a Python `bool`.
 Run authored tests with the same module you render:
 
 ```bash
-PYTHONPATH=_extensions/stack-sympy python -m stack_sympy.cli test \
+export PYTHONPATH=$(ls _extensions/ctm-checkers/*.whl | paste -sd: -)  # ctm-checkers' two wheels
+python -m ctm_checkers.stack.cli test \
   --file questions/python-checker.xml --python-checkers questions/checkers.py
 ```
 
@@ -374,7 +376,7 @@ persisting from one check, variant or test to the next. Custom code can perform
 arbitrary computation, so review it before
 publishing. The API does not install packages or add new input types. For code
 that imports questions directly, `import_xml(xml_path, python_checkers=module_path)`
-selects the source; call `stack_sympy.checkers.preflight(question, variants)`
+selects the source; call `ctm_checkers.stack.checkers.preflight(question, variants)`
 before publication to run the same author checks. `grade()` and
 `run_question_tests()` execute the selected predicate on visited PRT nodes.
 

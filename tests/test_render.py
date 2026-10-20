@@ -1,4 +1,11 @@
-"""Exercise the actual Quarto filter, CLI and copied browser assets."""
+"""Exercise the actual Quarto filter, CLI and copied browser assets.
+
+The site builds against CTM Assessment's parts (tests/ctm_parts.py): ctm-libs
+and ctm-checkers installed in this repository (or named by
+CTM_LIBS_EXTENSION / CTM_CHECKERS_EXTENSION), as a component development
+build (CTM_COMPONENT_DEV=1); questions/ is ctm-checkers' examples/stack
+(scripts/fetch-examples.py, Quarto's pre-render).
+"""
 from __future__ import annotations
 
 from functools import cache
@@ -13,6 +20,7 @@ import tempfile
 
 import pytest
 
+import ctm_parts
 from rendered_html import Document
 
 
@@ -23,10 +31,7 @@ QUESTION = ROOT / "questions/polynomial-expansion.xml"
 @cache
 def render_site(project: Path = ROOT) -> Path:
     quarto = os.environ.get("QUARTO", "quarto")
-    env = os.environ.copy()
-    extension = project / "_extensions/stack-sympy"
-    env["PYTHONPATH"] = os.pathsep.join(filter(None, [str(extension), env.get("PYTHONPATH", "")]))
-    result = subprocess.run([quarto, "render"], cwd=project, env=env,
+    result = subprocess.run([quarto, "render"], cwd=project, env=ctm_parts.render_env(),
                             text=True, capture_output=True, timeout=180)
     assert result.returncode == 0, result.stdout + "\n" + result.stderr
     return project / "_site"
@@ -52,9 +57,17 @@ def test_project_renders_cards_and_deployable_assets():
         assert len(scripts) == 1, qmd
         asset = page.parent / scripts[0]
         assert asset.is_file(), asset
-        for sibling in ("worker.js", "runtime-sources.js", "vendor/pyodide-runtime.js",
-                        "vendor/matrix-input-provenance.json", "vendor/basis-helper-provenance.json"):
+        for sibling in ("worker.js",):
             assert (asset.parent / sibling).is_file(), sibling
+        # The grader's Python: ctm-libs' runtime and ctm-checkers' page scripts
+        # with the STACK engine, in the head (the worker loads them by URL),
+        # each with the wheel it installs.
+        head_scripts = [Path(node.attrs["src"].split("?", 1)[0]).name for node in doc.find("script")
+                        if node.attrs.get("src")]
+        for script in ("pyodide-runtime.js", "ctm-checkers.js", "ctm-checkers-stack.js"):
+            assert head_scripts.count(script) == 1, (qmd, script)
+        assert head_scripts.index("ctm-checkers.js") < head_scripts.index("ctm-checkers-stack.js")
+        assert head_scripts.index("ctm-checkers-stack.js") < head_scripts.index("stack-sympy.js")
         # Quarto may flatten registered scripts/stylesheets. Follow the HTML
         # references rather than assuming dependency-resource paths for them.
         page_scripts = [node.attrs['src'].split('?', 1)[0] for node in doc.find('script')
@@ -69,7 +82,6 @@ def test_project_renders_cards_and_deployable_assets():
             pinned = ROOT / '_extensions/stack-sympy/vendor' / Path(reference).name
             assert deployed.is_file(), deployed
             assert deployed.read_bytes() == pinned.read_bytes(), deployed
-        assert "STACK_SYMPY_SOURCES" in (asset.parent / "runtime-sources.js").read_text()
     assert total > 0, "the published site should demonstrate at least one question"
 
 
@@ -183,56 +195,47 @@ def test_unsupported_question_stops_quarto_build():
     # An independent project avoids mutating the built site's website cache.
     with tempfile.TemporaryDirectory(dir=ROOT, prefix="invalid_stack_") as temporary:
         project = Path(temporary)
-        (project / "_extensions").symlink_to(ROOT / "_extensions", target_is_directory=True)
+        shutil.copytree(ROOT / "_extensions/stack-sympy", project / "_extensions/stack-sympy")
+        ctm_parts.install(project)
         (project / "_quarto.yml").write_text("project:\n  type: default\nfilters:\n  - stack-sympy\n")
         (project / "test.qmd").write_text("```{.stack-question}\n#| file: missing.xml\n"
                                            "#| question: Missing\n```\n")
-        env = os.environ.copy()
-        env["PYTHONPATH"] = os.pathsep.join(filter(None, [str(ROOT / "_extensions/stack-sympy"), env.get("PYTHONPATH", "")]))
         result = subprocess.run([os.environ.get("QUARTO", "quarto"), "render"],
-                                cwd=project, env=env, text=True, capture_output=True, timeout=60)
+                                cwd=project, env=ctm_parts.render_env(), text=True, capture_output=True, timeout=60)
         assert result.returncode != 0, "unsupported XML silently rendered"
         assert "could not render missing.xml / Missing" in result.stdout + result.stderr, (
             result.stdout + "\n" + result.stderr)
 
 
-def _fixture_render(source: str, *, shared: str | None = None,
+def _fixture_render(source: str, *, parts: bool = True, checkers: bool = True, owner: str = "",
                     filters: tuple[str, ...] = ("stack-sympy",),
-                    files: dict[str, str] | None = None) -> tuple[subprocess.CompletedProcess, str]:
+                    files: dict[str, str | None] | None = None,
+                    env: dict[str, str] | None = None) -> tuple[subprocess.CompletedProcess, str]:
+    """Renders test.qmd in a project with stack-sympy and (`parts`) ctm-libs and
+    (`checkers`) ctm-checkers, flat or under an `owner` folder as `quarto add` installs them;
+    `files` are written last, so they can replace installed files."""
     with tempfile.TemporaryDirectory(dir=ROOT.parent, prefix="stack_feedback_render_") as temporary:
         project = Path(temporary)
         ext = project / "_extensions"
         ext.mkdir()
-        shutil.copytree(ROOT / "_extensions/stack-sympy", ext / "stack-sympy")
-        if shared:
-            installed = ROOT / "_extensions/ai-feedback"
-            assert installed.exists(), "install the shared AI Feedback extension before testing enabled cards"
-            target = ext / "ai-feedback" if shared == "flat" else ext / "Erasmus-CTM/ai-feedback"
-            target.parent.mkdir(exist_ok=True)
-            shutil.copytree(installed, target)
+        shutil.copytree(ROOT / "_extensions/stack-sympy", ext / owner / "stack-sympy")
+        if parts:
+            ctm_parts.install(project, owner, checkers=checkers)
         (project / "_quarto.yml").write_text(
             "project:\n  type: default\n" + ("filters:\n" + "".join(
                 f"  - {name}\n" for name in filters) if filters else "filters: []\n"))
         (project / "test.qmd").write_text(source)
         for name, content in (files or {}).items():
             destination = project / name
+            if content is None:
+                destination.unlink()
+                continue
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_text(content)
-        env = os.environ.copy()
-        env["PYTHONPATH"] = os.pathsep.join(filter(None, [str(ROOT / "_extensions/stack-sympy"), env.get("PYTHONPATH", "")]))
         result = subprocess.run([os.environ.get("QUARTO", "quarto"), "render"], cwd=project,
-                                env=env, text=True, capture_output=True, timeout=90)
+                                env=env or ctm_parts.render_env(), text=True, capture_output=True, timeout=90)
         output = (project / "test.html").read_text() if (project / "test.html").exists() else ""
         return result, output
-
-
-@cache
-def render_report_shell(name):
-    """Render the actual report page instead of slicing its HTML at a marker."""
-    result, output = _fixture_render(
-        (ROOT / "compliance-report" / f"{name}.qmd").read_text(), filters=())
-    assert result.returncode == 0, result.stdout + result.stderr
-    return output
 
 
 def _card(feedback: str = "", extra: str = "") -> str:
@@ -247,14 +250,47 @@ def _feedback_cards(output: str) -> list[dict]:
             re.findall(r'data-stack-feedback="([^"]+)"', output)]
 
 
-def test_feedback_is_optional_and_missing_dependency_errors_only_when_enabled():
+INSTALL = "quarto add https://erasmus-ctm.github.io/ctm-assessment/ctm-assessment.tar.gz"
+
+
+def test_feedback_is_optional():
     result, output = _fixture_render("# Question\n\n" + _card())
     assert result.returncode == 0, result.stdout + result.stderr
     assert "data-stack-feedback" not in output
     assert "feedback-core.js" not in output
-    result, _ = _fixture_render("# Question\n\n" + _card("#| feedback: true\n"))
+    assert output.count("ctm-checkers-stack.js") == 1
+
+
+def test_missing_ctm_assessment_stops_the_render_with_the_install_command():
+    # stack-sympy is part of CTM Assessment: without the package (and outside a
+    # component development build), or without ctm-libs, the bootstrap stops.
+    production = {key: value for key, value in os.environ.items() if key != "CTM_COMPONENT_DEV"}
+    result, _ = _fixture_render("# Question\n\n" + _card(), env=production)
     assert result.returncode != 0
-    assert "Run: quarto add Erasmus-CTM/ai-feedback" in result.stdout + result.stderr
+    assert "stack-sympy is part of CTM Assessment, which is not installed" in result.stdout + result.stderr
+    assert INSTALL in result.stdout + result.stderr
+    result, _ = _fixture_render("# Question\n\n" + _card(), parts=False)
+    assert result.returncode != 0
+    assert "needs its library ctm-libs, which is not installed" in result.stdout + result.stderr
+    # ctm-libs without ctm-checkers, the STACK engine's home.
+    result, _ = _fixture_render("# Question\n\n" + _card(), checkers=False)
+    assert result.returncode != 0
+    assert "needs ctm-checkers, the checker library of CTM Assessment" in result.stdout + result.stderr
+
+
+def test_an_older_ctm_assessment_stops_the_render_with_the_update_command():
+    # A ctm-libs from before ctm.checkers (consolidation step 2).
+    result, _ = _fixture_render("# Question\n\n" + _card(), files={"_extensions/ctm-libs/lua/checkers.lua": None})
+    assert result.returncode != 0
+    assert "needs ctm-checkers, which the ctm-libs in" in result.stdout + result.stderr
+    assert "Update CTM Assessment: " + INSTALL in result.stdout + result.stderr
+    # A ctm-checkers without the STACK engine (0.1).
+    manifest = json.loads((ctm_parts.CTM_CHECKERS / "checkers.json").read_text())
+    del manifest["parts"]
+    result, _ = _fixture_render("# Question\n\n" + _card(), files={
+        "_extensions/ctm-checkers/checkers.json": json.dumps(manifest)})
+    assert result.returncode != 0
+    assert "has no stack part (it comes with ctm-checkers 0.2)" in result.stdout + result.stderr
 
 
 def test_shared_feedback_context_and_policy_are_emitted_once_per_page():
@@ -265,10 +301,12 @@ def test_shared_feedback_context_and_policy_are_emitted_once_per_page():
               + "\n::: {#explanation .ai-context}\nUse $x^2$ in this explicit context.\n:::\n\n"
               + _card("#| feedback: true\n", "#| context: explanation\n#| label: policy-key\n")
               + "\n" + _card("#| feedback: true\n", "#| context: none\n"))
-    for location, filters in (("flat", ("stack-sympy",)),
-                              ("namespaced", ("stack-sympy", "ai-feedback")),
-                              ("flat", ("ai-feedback", "stack-sympy"))):
-        result, output = _fixture_render(source, shared=location, filters=filters)
+    # Flat or under an owner folder; alone, or after ctm-libs' own filter (as
+    # the CTM Assessment package lists it), whose preparation stack-sympy repeats.
+    for owner, filters in (("", ("stack-sympy",)),
+                           ("Erasmus-CTM", ("stack-sympy",)),
+                           ("", ("ctm-libs", "stack-sympy"))):
+        result, output = _fixture_render(source, owner=owner, filters=filters)
         assert result.returncode == 0, result.stdout + result.stderr
         cards = _feedback_cards(output)
         assert len(cards) == 3
@@ -295,23 +333,15 @@ def test_named_policy_uses_shared_yaml_selection():
               "      max-words: 120\n    short-hints:\n"
               "      extends: course\n      steps:\n"
               "        - step-prompt: Ask for the next step.\n")
-    result, output = _fixture_render(source, shared="flat", files={"feedback/chapter.yml": policy})
+    result, output = _fixture_render(source, files={"feedback/chapter.yml": policy})
     assert result.returncode == 0, result.stdout + result.stderr
     assert _feedback_cards(output)[0]["policySelection"] == {
         "exercise": "expansion-practice", "name": "short-hints"}
     assert "short-hints" in output  # shared policy payload is emitted on the page
-    result, _ = _fixture_render(source.replace("short-hints", "missing"), shared="flat",
+    result, _ = _fixture_render(source.replace("short-hints", "missing"),
                                 files={"feedback/chapter.yml": policy})
     assert result.returncode != 0
     assert "unknown feedback-policy missing" in result.stdout + result.stderr
-
-
-def test_feedback_rejects_an_older_shared_extension():
-    metadata = (ROOT / "_extensions/ai-feedback/_extension.yml").read_text()
-    result, _ = _fixture_render(_card("#| feedback: true\n"), shared="flat", files={
-        "_extensions/ai-feedback/_extension.yml": re.sub(r"(?m)^version:.*$", "version: 0.6.0", metadata)})
-    assert result.returncode != 0
-    assert "requires ai-feedback 0.8.0 or later" in result.stdout + result.stderr
 
 
 @pytest.mark.parametrize("policy, diagnostic", [
@@ -324,6 +354,6 @@ def test_feedback_rejects_an_older_shared_extension():
 def test_invalid_shared_policies_stop_rendering(policy, diagnostic):
     source = ("---\nai-feedback:\n  page-policy-files: invalid.yml\n---\n"
               + _card("#| feedback: true\n"))
-    result, _ = _fixture_render(source, shared="flat", files={"invalid.yml": "ai-feedback:\n  " + policy + "\n"})
+    result, _ = _fixture_render(source, files={"invalid.yml": "ai-feedback:\n  " + policy + "\n"})
     assert result.returncode != 0
     assert diagnostic in result.stdout + result.stderr

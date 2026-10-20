@@ -1,8 +1,0 @@
-{
-  "source": "https://github.com/Erasmus-CTM/math-exercise/blob/6eddf8968d4079ea5e67a7bd68964515914d3fd6/_extensions/math-exercise/shared/pyodide-runtime.js",
-  "pull_request": "https://github.com/Erasmus-CTM/math-exercise/pull/12",
-  "commit": "6eddf8968d4079ea5e67a7bd68964515914d3fd6",
-  "license": "AGPL-3.0-only",
-  "sha256": "c21bbd3e489005be0bc6a5eb76ad07baa5628aa4ef5711a49c3fc9fb975ac220",
-  "pyodide": "0.27.2"
-}

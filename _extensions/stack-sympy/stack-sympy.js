@@ -9,9 +9,12 @@
   var sequence = 0;
   var pipeline = Promise.resolve();
 
+  var starting = null;
+
   function resetWorker(error) {
     if (worker) worker.terminate();
     worker = null;
+    starting = null;
     if (pending) {
       clearTimeout(pending.timer);
       pending.reject(error);
@@ -19,37 +22,69 @@
     }
   }
 
+  // The worker loads CTM Assessment's Python from the scripts on this page:
+  // ctm-libs' runtime and ctm-checkers' page scripts with the STACK engine.
+  function pageScripts() {
+    var runtime = window.MathExerciseRuntime, checkers = window.CTMCheckers, stack = window.CTMCheckersStack;
+    if (!runtime || !runtime.scriptURL || !checkers || !checkers.scriptURL || !stack || !stack.scriptURL) {
+      throw new Error('The grader is missing on this page (ctm-libs\' runtime or ctm-checkers\' scripts).');
+    }
+    return { runtime: runtime.scriptURL, checkers: [checkers.scriptURL, stack.scriptURL], loadTimeout: runtime.loadTimeout };
+  }
+
+  function onMessage(event) {
+    var msg = event.data;
+    if (!pending || pending.id !== msg.id) return;
+    var task = pending;
+    pending = null;
+    clearTimeout(task.timer);
+    if (msg.ok) task.resolve(msg.result);
+    else task.reject(new Error(msg.error || 'The grader failed.'));
+  }
+
+  // A worker that has loaded Python and the STACK engine. Loading is bounded
+  // by the runtime's load limit (the worker reports a failure itself; this
+  // timer only covers a worker that never answers).
   function ensureWorker() {
-    if (worker) return worker;
-    worker = new Worker(workerURL);
-    worker.onmessage = function (event) {
-      var msg = event.data;
-      if (!pending || pending.id !== msg.id) return;
-      var task = pending;
-      pending = null;
-      clearTimeout(task.timer);
-      if (msg.ok) task.resolve(msg.result);
-      else task.reject(new Error(msg.error || 'The grader failed.'));
-    };
-    worker.onerror = function (event) {
-      resetWorker(new Error(event.message || 'The grading worker could not start.'));
-    };
-    return worker;
+    if (starting) return starting;
+    starting = new Promise(function (resolve, reject) {
+      var scripts = pageScripts();
+      worker = new Worker(workerURL);
+      worker.onmessage = onMessage;
+      worker.onerror = function (event) {
+        resetWorker(new Error(event.message || 'The grading worker could not start.'));
+      };
+      var id = ++sequence;
+      var timer = setTimeout(function () {
+        resetWorker(new Error('Python did not finish loading. Try again.'));
+      }, (scripts.loadTimeout || 180000) + 30000);
+      var target = worker;
+      // A worker that failed to load is not reused: the next request starts another.
+      pending = { id: id, resolve: function () { resolve(target); }, timer: timer, reject: function (error) {
+        if (worker === target) { target.terminate(); worker = null; }
+        starting = null;
+        reject(error);
+      } };
+      target.postMessage({ id: id, type: 'init', runtime: scripts.runtime, checkers: scripts.checkers });
+    });
+    starting.catch(function () { starting = null; });
+    return starting;
   }
 
   // Run one Python request at a time: Pyodide's interpreter is not reentrant.
+  // The calculation timer starts when the worker is ready.
   function evaluate(payload) {
     var result = pipeline.catch(function () {}).then(function () {
-      return new Promise(function (resolve, reject) {
-        var id = ++sequence;
-        var target;
-        try { target = ensureWorker(); } catch (error) { reject(error); return; }
-        var timer = setTimeout(function () {
-          resetWorker(new Error('The calculation timed out. Try again.'));
-        }, 120000);
-        pending = { id: id, resolve: resolve, reject: reject, timer: timer };
-        try { target.postMessage(Object.assign({ id: id }, payload)); }
-        catch (error) { resetWorker(error); }
+      return ensureWorker().then(function (target) {
+        return new Promise(function (resolve, reject) {
+          var id = ++sequence;
+          var timer = setTimeout(function () {
+            resetWorker(new Error('The calculation timed out. Try again.'));
+          }, 120000);
+          pending = { id: id, resolve: resolve, reject: reject, timer: timer };
+          try { target.postMessage(Object.assign({ id: id }, payload)); }
+          catch (error) { resetWorker(error); }
+        });
       });
     });
     pipeline = result;

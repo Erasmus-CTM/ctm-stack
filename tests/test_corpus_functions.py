@@ -1,10 +1,10 @@
 """Function semantics needed by the pinned corpus, including native edge cases."""
 import pytest
 import sympy as sp
-from stack_sympy import InvalidAnswer, Unsupported, answer_test, canonical_form, evaluate, parse
-from stack_sympy.expressions import form_latex
-from stack_sympy.engine import grade, instantiate, run_question_tests
-from stack_sympy.importer import UnsupportedQuestion, import_xml
+from ctm_checkers.stack import InvalidAnswer, Unsupported, answer_test, canonical_form, evaluate, parse
+from ctm_checkers.stack.expressions import form_latex
+from ctm_checkers.stack.engine import grade, instantiate, run_question_tests
+from ctm_checkers.stack.importer import UnsupportedQuestion, import_xml
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
