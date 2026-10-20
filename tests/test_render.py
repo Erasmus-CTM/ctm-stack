@@ -261,14 +261,22 @@ def test_feedback_is_optional():
     assert output.count("ctm-checkers-stack.js") == 1
 
 
-def test_feedback_cards_in_a_build_without_ai():
-    # CTM_FEEDBACK=off: no AI feedback on the page; the card works without it
-    # (stack-sympy.js adds no Feedback button when AIFeedback is missing).
-    result, output = _fixture_render("# Question\n\n" + _card("#| feedback: true\n"),
-                                     env={**ctm_parts.render_env(), "CTM_FEEDBACK": "off"})
+@pytest.mark.parametrize("switch", ["CTM_FEEDBACK=off", "ai-feedback: enabled: false"])
+def test_feedback_cards_in_a_build_without_ai(switch):
+    # P22 (S-15): a build without AI feedback gives a feedback card none (no
+    # data-stack-feedback, no feedback assets) and names it in its message.
+    env, front = ctm_parts.render_env(), ""
+    if switch.startswith("CTM_FEEDBACK"):
+        env["CTM_FEEDBACK"] = "off"
+    else:
+        front = "---\nai-feedback:\n  enabled: false\n---\n"
+    result, output = _fixture_render(front + "# Question\n\n" + _card("#| feedback: true\n"), env=env)
     assert result.returncode == 0, result.stdout + result.stderr
     assert "feedback-core.js" not in output
+    assert "data-stack-feedback" not in output
+    assert output.count('class="stack-sympy"') == 1
     assert output.count("ctm-checkers-stack.js") == 1
+    assert "stack-sympy feedback (#| feedback: true)" in result.stdout + result.stderr
 
 
 def test_missing_ctm_assessment_stops_the_render_with_the_install_command():

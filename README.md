@@ -66,7 +66,7 @@ Each rendered question also has closed **Show source** and **Show STACK source**
 
 ## AI feedback and context
 
-`feedback: true` enables optional AI hints for a card (default false). The shared `math-exercise` policy supplies the hint sequence and is the YAML integration namespace for STACK. `context: auto` is the default; `context: id1,id2` references tagged blocks; `context: none` omits context. `feedback-language` chooses the explanation language, defaulting to document `lang`. `feedback-policy` selects an existing named policy. Use `label` for a stable exercise key in policy YAML; otherwise the card ID is used.
+`feedback: true` enables optional AI hints for a card (default false). A build without AI feedback (`ai-feedback: enabled: false` or `CTM_FEEDBACK=off`) gives such cards none: no Feedback button and no feedback data in the page; native checking is unchanged, and the build message names them. The shared `math-exercise` policy supplies the hint sequence and is the YAML integration namespace for STACK. `context: auto` is the default; `context: id1,id2` references tagged blocks; `context: none` omits context. `feedback-language` chooses the explanation language, defaulting to document `lang`. `feedback-policy` selects an existing named policy. Use `label` for a stable exercise key in policy YAML; otherwise the card ID is used.
 
 Automatic context comes from visible prose in the preceding section. To share a specific concept, tag it and reference its ID instead:
 
