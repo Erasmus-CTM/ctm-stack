@@ -1,0 +1,92 @@
+name: Install CTM Assessment's parts
+description: >
+  Installs what stack-sympy builds against in its own repository: ctm-libs,
+  the library of CTM Assessment (the Python runtime and AI feedback, found by
+  the bootstrap), and ctm-checkers, the checker library with the STACK engine
+  (its wheels and page scripts; its checkout `_ctm-checkers-source` also
+  serves the example questions to scripts/fetch-examples.py). The commits:
+  .github/pins.json, and for review a head commit's `CTM-Review-Refs`
+  trailer, read by the umbrella's tools/ci/review-dependencies.py (the one
+  copy, at the pinned umbrella commit). The CTM Assessment package itself is
+  not installed, so later steps run as a component development build
+  (CTM_COMPONENT_DEV=1). Checks that this extension's ctm-bootstrap.lua is
+  ctm-libs' canonical file. Requires Quarto, Python 3 and a checkout with the
+  head commit (fetch-depth 2). With `install: false` it only selects the
+  commits (outputs), for a job that passes them on.
+inputs:
+  install:
+    description: "'false' selects the commits without installing anything"
+    default: 'true'
+outputs:
+  ctm-libs:
+    description: The ctm-libs commit installed
+    value: ${{ steps.refs.outputs.ctm-libs }}
+  ctm-checkers:
+    description: The ctm-checkers commit installed
+    value: ${{ steps.refs.outputs.ctm-checkers }}
+runs:
+  using: composite
+  steps:
+    - name: Pinned commits (.github/pins.json)
+      id: pins
+      shell: bash
+      run: jq -r 'to_entries[] | select(.value | type == "object") | "\(.key)=\(.value.commit)"' .github/pins.json >> "$GITHUB_OUTPUT"
+    - name: The umbrella's review-dependencies script
+      uses: actions/checkout@v4
+      with:
+        repository: Erasmus-CTM/ctm-assessment
+        ref: ${{ steps.pins.outputs['ctm-assessment'] }}
+        path: _ci/ctm-assessment
+        sparse-checkout: tools/ci
+        persist-credentials: false
+    - name: Select explicit review dependencies (main keeps the pins)
+      id: review
+      shell: bash
+      env:
+        REVIEW_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
+      run: python3 _ci/ctm-assessment/tools/ci/review-dependencies.py
+    - name: The commits to install
+      id: refs
+      shell: bash
+      env:
+        LIBS: ${{ steps.review.outputs['ctm-libs'] || steps.pins.outputs['ctm-libs'] }}
+        CHECKERS: ${{ steps.review.outputs['ctm-checkers'] || steps.pins.outputs['ctm-checkers'] }}
+      run: |
+        { echo "ctm-libs=$LIBS"; echo "ctm-checkers=$CHECKERS"; } >> "$GITHUB_OUTPUT"
+        echo "ctm-libs $LIBS, ctm-checkers $CHECKERS"
+    - name: Fetch ctm-libs
+      if: inputs.install != 'false'
+      uses: actions/checkout@v4
+      with:
+        repository: Erasmus-CTM/ctm-libs
+        ref: ${{ steps.refs.outputs.ctm-libs }}
+        path: _ctm-libs-source
+        persist-credentials: false
+    - name: Fetch ctm-checkers
+      if: inputs.install != 'false'
+      uses: actions/checkout@v4
+      with:
+        repository: Erasmus-CTM/ctm-checkers
+        ref: ${{ steps.refs.outputs.ctm-checkers }}
+        path: _ctm-checkers-source
+        persist-credentials: false
+    - name: Install ctm-libs and ctm-checkers
+      if: inputs.install != 'false'
+      shell: bash
+      run: |
+        # Failures become annotations, readable without the raw log.
+        step() { out=$("$@" 2>&1) || { echo "$out"; printf '::error title=%s failed::%s\n' "$*" "$(echo "$out" | tail -25 | sed -e ':a' -e 'N' -e '$!ba' -e 's/%/%25/g' -e 's/\n/%0A/g')"; exit 1; }; echo "$out"; }
+        # The bootstrap is ctm-libs' file, byte for byte (design step 2, §5.2).
+        sha256sum _extensions/stack-sympy/ctm-bootstrap.lua _ctm-libs-source/bootstrap/ctm-bootstrap.lua
+        cmp -s _extensions/stack-sympy/ctm-bootstrap.lua _ctm-libs-source/bootstrap/ctm-bootstrap.lua || {
+          echo "::error file=_extensions/stack-sympy/ctm-bootstrap.lua::ctm-bootstrap.lua differs from ctm-libs' bootstrap/ctm-bootstrap.lua at ${{ steps.refs.outputs.ctm-libs }}: copy it from there"; exit 1; }
+        step quarto add ./_ctm-libs-source --no-prompt
+        test -f _extensions/ctm-libs/lua/checkers.lua || { echo "::error::this ctm-libs has no ctm.checkers (stack-sympy 0.3 needs a ctm-libs from consolidation step 2 on)"; find _extensions -maxdepth 3; exit 1; }
+        step quarto add ./_ctm-checkers-source --no-prompt
+        jq -e '.parts.stack' _extensions/ctm-checkers/checkers.json > /dev/null || { echo "::error::this ctm-checkers has no STACK engine (stack-sympy 0.3 needs ctm-checkers 0.2.0 or later)"; exit 1; }
+        echo "CTM_LIBS_EXTENSION=$GITHUB_WORKSPACE/_extensions/ctm-libs" >> "$GITHUB_ENV"
+        echo "CTM_CHECKERS_EXTENSION=$GITHUB_WORKSPACE/_extensions/ctm-checkers" >> "$GITHUB_ENV"
+        echo "CTM_CHECKERS_SOURCE=$GITHUB_WORKSPACE/_ctm-checkers-source" >> "$GITHUB_ENV"
+        # stack-sympy stops without the CTM Assessment package unless the
+        # build says it is a component development build.
+        echo "CTM_COMPONENT_DEV=1" >> "$GITHUB_ENV"

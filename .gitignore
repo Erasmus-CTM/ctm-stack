@@ -6,11 +6,18 @@ __pycache__/
 .venv/
 playwright-report/
 test-results/
-compliance-report/_site/
-compliance-report/report.json
-compliance-report/port-regressions.json
+# CTM Assessment's parts this site builds against (.github/pins.json) and the
+# STACK examples copied from ctm-checkers (scripts/fetch-examples.py).
 /_extensions/ai-feedback/
 /_extensions/*/ai-feedback/
+/_extensions/ctm-libs/
+/_extensions/*/ctm-libs/
+/_extensions/ctm-checkers/
+/_extensions/*/ctm-checkers/
+/_ctm-libs-source/
+/_ctm-checkers-source/
+/_ci/
+/questions/
 
 /.quarto/
 **/*.quarto_ipynb

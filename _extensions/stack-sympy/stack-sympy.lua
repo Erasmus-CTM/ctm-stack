@@ -1,4 +1,10 @@
 -- Quarto HTML filter for trusted, authored STACK question XML.
+-- stack-sympy is a part of CTM Assessment: its library ctm-libs (the Python
+-- runtime, AI feedback) is found by the canonical bootstrap, which stops the
+-- render with the install command when CTM Assessment is missing. The STACK
+-- engine is ctm-checkers' (ctm_checkers.stack), which ctm-libs finds
+-- (ctm.checkers): its wheels at build time, its page scripts in the browser.
+local ctm = dofile(quarto.utils.resolve_path('ctm-bootstrap.lua'))('stack-sympy')
 local installed = false
 local sequence = 0
 local feedbackRequested = false
@@ -6,19 +12,38 @@ local feedback = nil
 local documentLanguage = 'en'
 
 local function fail(message)
-  -- Quarto logs exceptions from block handlers yet can still return success.
-  -- Stop Pandoc so an unsupported question cannot silently ship as an empty card.
-  io.stderr:write(message .. '\n')
-  io.stderr:flush()
-  os.exit(1)
+  -- Quarto replaces the global error() with a logger that lets the render
+  -- continue; an unsupported question must stop the render rather than ship
+  -- as an empty card, so fail through assert.
+  assert(false, message)
 end
 
 local function escape(s)
   return tostring(s):gsub('&', '&amp;'):gsub('<', '&lt;'):gsub('>', '&gt;'):gsub('"', '&quot;')
 end
 
-local function pathFromFilter()
-  return pandoc.path.directory(quarto.utils.resolve_path('stack-sympy.lua'))
+-- This extension's version (its _extension.yml), for its HTML dependency.
+local function extensionVersion()
+  local f = io.open(quarto.utils.resolve_path('_extension.yml'), 'r')
+  local version = f and f:read('*a'):match('\nversion:%s*[\'"]?([%w%.%-]+)')
+  if f then f:close() end
+  return version or '0'
+end
+
+-- ctm-checkers with its STACK engine, once per page: an older ctm-libs has
+-- no ctm.checkers, and ctm.checkers.require stops the render when
+-- ctm-checkers is missing or has another API level, each with the command
+-- that fixes it.
+local INSTALL = 'quarto add https://erasmus-ctm.github.io/ctm-assessment/ctm-assessment.tar.gz'
+local checkersReady = false
+local function requireCheckers()
+  if checkersReady then return end
+  if not ctm.checkers then
+    fail('stack-sympy ' .. extensionVersion() .. ' needs ctm-checkers, which the ctm-libs in ' .. ctm.dir
+      .. ' does not provide. Update CTM Assessment: ' .. INSTALL)
+  end
+  ctm.checkers.require('stack-sympy', 1)
+  checkersReady = true
 end
 
 local function readFile(path)
@@ -53,19 +78,22 @@ local function sourcePanel(label, language, source)
     '<pre><code class="language-' .. language .. '">' .. escape(source) .. '</code></pre></details>'
 end
 
+-- Scripts and styles as cacheable HTML dependencies, once per page: ctm-libs'
+-- Python runtime (MathExerciseRuntime) and ctm-checkers' page scripts with
+-- the STACK engine in the head (the grading worker loads them by their
+-- URLs), then this extension's styles and scripts.
 local function setup()
   if installed then return end
   installed = true
+  requireCheckers()
+  ctm.runtime.use()
+  ctm.checkers.use('stack')
   quarto.doc.add_html_dependency({
-    name = 'stack-sympy', version = '0.1.10',
+    name = 'stack-sympy', version = extensionVersion(),
     scripts = {{path = 'vendor/matrix-input.js', afterBody = true}, {path = 'stack-sympy.js', afterBody = true}},
     stylesheets = {'vendor/matrix-input.css', 'stack-sympy.css'},
     resources = {
-      {name = 'worker.js', path = 'worker.js'},
-      {name = 'runtime-sources.js', path = 'runtime-sources.js'},
-      {name = 'vendor/matrix-input-provenance.json', path = 'vendor/matrix-input-provenance.json'},
-      {name = 'vendor/basis-helper-provenance.json', path = 'vendor/basis-helper-provenance.json'},
-      {name = 'vendor/pyodide-runtime.js', path = 'vendor/pyodide-runtime.js'}
+      {name = 'worker.js', path = 'worker.js'}
     }
   })
 end
@@ -111,12 +139,12 @@ local function render(block)
   local useFeedback = booleanOption(opts, 'feedback')
   sequence = sequence + 1
   local identifier = block.identifier ~= '' and block.identifier or ('stack-sympy-' .. sequence)
-  local extensionPath = pathFromFilter()
+  requireCheckers()
   -- Author paths are relative to the QMD, unlike extension asset paths.
   local inputPath = pandoc.path.is_absolute(opts.file) and opts.file
     or pandoc.path.normalize(pandoc.path.join({pandoc.path.directory(quarto.doc.input_file), opts.file}))
   local python = os.getenv('STACK_SYMPY_PYTHON') or 'python3'
-  local args = {'-m', 'stack_sympy.cli', 'render', '--errors-to-stdout', '--file', inputPath,
+  local args = {'-m', 'ctm_checkers.stack.cli', 'render', '--errors-to-stdout', '--file', inputPath,
     '--question', opts.question, '--id', identifier,
     '--variants', tostring(variants), '--seed', tostring(seed)}
   if opts['python-checkers'] then
@@ -127,10 +155,8 @@ local function render(block)
   end
   if review then table.insert(args, '--review') end
   if diagnostics then table.insert(args, '--diagnostics') end
-  local environment = pandoc.system.environment()
-  local delimiter = pandoc.system.os == 'mingw32' and ';' or ':'
-  environment.PYTHONPATH = extensionPath ..
-    ((environment.PYTHONPATH and environment.PYTHONPATH ~= '') and (delimiter .. environment.PYTHONPATH) or '')
+  -- ctm-checkers' wheels first on PYTHONPATH: Python imports the engine from them.
+  local environment = ctm.checkers.environment(nil, 'stack')
   local ok, output = pcall(function()
     return pandoc.system.with_environment(environment, function()
       return pandoc.pipe(python, args, '')
@@ -188,15 +214,15 @@ local function detect(doc)
     end
   end})
   if feedbackRequested then
-    feedback = feedback or dofile(quarto.utils.resolve_path('feedback-loader.lua'))()
+    feedback = ctm.feedback
   end
   return doc
 end
 
 local function transform(doc)
   if feedbackRequested then
-    feedback = feedback or dofile(quarto.utils.resolve_path('feedback-loader.lua'))()
-    -- This is idempotent when the explicit ai-feedback filter already ran.
+    feedback = ctm.feedback
+    -- This is idempotent when ctm-libs' filter already ran.
     doc = feedback.prepare(doc)
   end
   documentLanguage = doc.meta.lang and pandoc.utils.stringify(doc.meta.lang) or 'en'

@@ -9,9 +9,12 @@
   var sequence = 0;
   var pipeline = Promise.resolve();
 
+  var starting = null;
+
   function resetWorker(error) {
     if (worker) worker.terminate();
     worker = null;
+    starting = null;
     if (pending) {
       clearTimeout(pending.timer);
       pending.reject(error);
@@ -19,37 +22,69 @@
     }
   }
 
+  // The worker loads CTM Assessment's Python from the scripts on this page:
+  // ctm-libs' runtime and ctm-checkers' page scripts with the STACK engine.
+  function pageScripts() {
+    var runtime = window.MathExerciseRuntime, checkers = window.CTMCheckers, stack = window.CTMCheckersStack;
+    if (!runtime || !runtime.scriptURL || !checkers || !checkers.scriptURL || !stack || !stack.scriptURL) {
+      throw new Error('The grader is missing on this page (ctm-libs\' runtime or ctm-checkers\' scripts).');
+    }
+    return { runtime: runtime.scriptURL, checkers: [checkers.scriptURL, stack.scriptURL], loadTimeout: runtime.loadTimeout };
+  }
+
+  function onMessage(event) {
+    var msg = event.data;
+    if (!pending || pending.id !== msg.id) return;
+    var task = pending;
+    pending = null;
+    clearTimeout(task.timer);
+    if (msg.ok) task.resolve(msg.result);
+    else task.reject(new Error(msg.error || 'The grader failed.'));
+  }
+
+  // A worker that has loaded Python and the STACK engine. Loading is bounded
+  // by the runtime's load limit (the worker reports a failure itself; this
+  // timer only covers a worker that never answers).
   function ensureWorker() {
-    if (worker) return worker;
-    worker = new Worker(workerURL);
-    worker.onmessage = function (event) {
-      var msg = event.data;
-      if (!pending || pending.id !== msg.id) return;
-      var task = pending;
-      pending = null;
-      clearTimeout(task.timer);
-      if (msg.ok) task.resolve(msg.result);
-      else task.reject(new Error(msg.error || 'The grader failed.'));
-    };
-    worker.onerror = function (event) {
-      resetWorker(new Error(event.message || 'The grading worker could not start.'));
-    };
-    return worker;
+    if (starting) return starting;
+    starting = new Promise(function (resolve, reject) {
+      var scripts = pageScripts();
+      worker = new Worker(workerURL);
+      worker.onmessage = onMessage;
+      worker.onerror = function (event) {
+        resetWorker(new Error(event.message || 'The grading worker could not start.'));
+      };
+      var id = ++sequence;
+      var timer = setTimeout(function () {
+        resetWorker(new Error('Python did not finish loading. Try again.'));
+      }, (scripts.loadTimeout || 180000) + 30000);
+      var target = worker;
+      // A worker that failed to load is not reused: the next request starts another.
+      pending = { id: id, resolve: function () { resolve(target); }, timer: timer, reject: function (error) {
+        if (worker === target) { target.terminate(); worker = null; }
+        starting = null;
+        reject(error);
+      } };
+      target.postMessage({ id: id, type: 'init', runtime: scripts.runtime, checkers: scripts.checkers });
+    });
+    starting.catch(function () { starting = null; });
+    return starting;
   }
 
   // Run one Python request at a time: Pyodide's interpreter is not reentrant.
+  // The calculation timer starts when the worker is ready.
   function evaluate(payload) {
     var result = pipeline.catch(function () {}).then(function () {
-      return new Promise(function (resolve, reject) {
-        var id = ++sequence;
-        var target;
-        try { target = ensureWorker(); } catch (error) { reject(error); return; }
-        var timer = setTimeout(function () {
-          resetWorker(new Error('The calculation timed out. Try again.'));
-        }, 120000);
-        pending = { id: id, resolve: resolve, reject: reject, timer: timer };
-        try { target.postMessage(Object.assign({ id: id }, payload)); }
-        catch (error) { resetWorker(error); }
+      return ensureWorker().then(function (target) {
+        return new Promise(function (resolve, reject) {
+          var id = ++sequence;
+          var timer = setTimeout(function () {
+            resetWorker(new Error('The calculation timed out. Try again.'));
+          }, 120000);
+          pending = { id: id, resolve: resolve, reject: reject, timer: timer };
+          try { target.postMessage(Object.assign({ id: id }, payload)); }
+          catch (error) { resetWorker(error); }
+        });
       });
     });
     pipeline = result;
@@ -349,7 +384,12 @@
     function responseIdentity() {
       return JSON.stringify([version, selector ? selector.value : '0', readAnswers()]);
     }
-    if (card.hasAttribute('data-stack-feedback')) {
+    // AI feedback is CTM Assessment's (ctm-libs, AIFeedback). A build without
+    // AI (ai-feedback: enabled: false, CTM_FEEDBACK=off) loads none: the card
+    // then has no Feedback button, and native checking works as always.
+    var F = window.AIFeedback;
+    if (card.hasAttribute('data-stack-feedback') && F && F.attach && F.contextText && F.contextMaterials &&
+        F.settingsButton && F.resolvePolicy && F.applyPolicy) {
       var config;
       try { config = JSON.parse(card.dataset.stackFeedback); }
       catch (error) { config = {}; }
@@ -357,8 +397,7 @@
       var uiCode = String(config.uiLanguage || document.documentElement.lang || 'en').split('-')[0];
       if (uiCode === 'no') uiCode = 'nb';
       var feedbackButton = node('button', 'stack-feedback-button ai-feedback-button',
-        window.AIFeedback && window.AIFeedback.locales && window.AIFeedback.locales[uiCode]
-          ? window.AIFeedback.locales[uiCode].button : 'Feedback');
+        F.locales && F.locales[uiCode] ? F.locales[uiCode].button : 'Feedback');
       feedbackButton.type = 'button';
       var feedbackOutput = node('div', 'ai-feedback-output');
       feedbackOutput.setAttribute('aria-live', 'polite');
@@ -366,52 +405,41 @@
         actions.appendChild(feedbackButton);
         actions.after(feedbackOutput);
       } else card.append(feedbackButton, feedbackOutput);
-      var F = window.AIFeedback;
-      var versionParts = F && String(F.version || '').split('.').map(Number);
-      if (!F || !F.attach || !F.contextText || !F.contextMaterials || !F.settingsButton ||
-          !F.resolvePolicy || !F.applyPolicy || !versionParts ||
-          !Number.isInteger(versionParts[0]) || !Number.isInteger(versionParts[1]) ||
-          versionParts[0] < 0 || versionParts[0] === 0 && versionParts[1] < 8) {
-        feedbackButton.addEventListener('click', function () {
-          feedbackOutput.textContent = 'AI feedback requires ai-feedback 0.8.0 or later. Install or update the shared extension and render this page again. Native checking is still available.';
-        });
-      } else {
-        var gear = F.settingsButton(config.uiLanguage);
-        if (actions) actions.appendChild(gear); else feedbackButton.after(gear);
-        feedbackHandle = F.attach({
-          id: 'stack-' + card.dataset.stackId,
-          integration: 'math-exercise',
-          contextRefs: function () {
-            return config.context && config.context.mode === 'explicit' ? config.context.refs : '';
-          },
-          policySelection: config.policySelection || {},
-          uiLanguage: config.uiLanguage,
-          button: feedbackButton,
-          output: feedbackOutput,
-          getRequest: function () {
-            var answers = readAnswers();
-            var names = Object.keys(answers);
-            if (!Array.from(card.querySelectorAll('.stack-answer[data-name]')).some(function (input) {
-              var editor = matrixEditors.get(input);
-              return editor ? editor.read().raw.some(function (cell) { return cell.trim(); }) : input.value.trim();
-            })) {
-              throw new Error('Enter an answer before requesting feedback.');
-            }
-            var identity = responseIdentity();
-            return {
-              _responseIdentity: identity,
-              profile: 'mathematics',
-              task: feedbackTask(variantAt()),
-              responses: names.map(function (name) {
-                return { id: name, label: name, value: answers[name], format: 'text' };
-              }),
-              materials: F.contextMaterials(config.context || {}),
-              evidence: checkedEvidence && checkedEvidence.identity === identity ? checkedEvidence.summary : [],
-              feedback: { language: config.language || config.uiLanguage || document.documentElement.lang || 'en' }
-            };
+      var gear = F.settingsButton(config.uiLanguage);
+      if (actions) actions.appendChild(gear); else feedbackButton.after(gear);
+      feedbackHandle = F.attach({
+        id: 'stack-' + card.dataset.stackId,
+        integration: 'math-exercise',
+        contextRefs: function () {
+          return config.context && config.context.mode === 'explicit' ? config.context.refs : '';
+        },
+        policySelection: config.policySelection || {},
+        uiLanguage: config.uiLanguage,
+        button: feedbackButton,
+        output: feedbackOutput,
+        getRequest: function () {
+          var answers = readAnswers();
+          var names = Object.keys(answers);
+          if (!Array.from(card.querySelectorAll('.stack-answer[data-name]')).some(function (input) {
+            var editor = matrixEditors.get(input);
+            return editor ? editor.read().raw.some(function (cell) { return cell.trim(); }) : input.value.trim();
+          })) {
+            throw new Error('Enter an answer before requesting feedback.');
           }
-        });
-      }
+          var identity = responseIdentity();
+          return {
+            _responseIdentity: identity,
+            profile: 'mathematics',
+            task: feedbackTask(variantAt()),
+            responses: names.map(function (name) {
+              return { id: name, label: name, value: answers[name], format: 'text' };
+            }),
+            materials: F.contextMaterials(config.context || {}),
+            evidence: checkedEvidence && checkedEvidence.identity === identity ? checkedEvidence.summary : [],
+            feedback: { language: config.language || config.uiLanguage || document.documentElement.lang || 'en' }
+          };
+        }
+      });
     }
     function clear() {
       version++;

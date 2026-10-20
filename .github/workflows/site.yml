@@ -13,53 +13,46 @@ permissions:
   contents: read
 
 jobs:
-  compliance:
-    name: Native compliance checks and report
-    uses: ./.github/workflows/native-compliance.yml
-
-  maxima-reference:
+  # The commits this run builds against: .github/pins.json, or for review the
+  # head commit's CTM-Review-Refs trailer.
+  dependencies:
+    name: CTM Assessment commits (pins, review refs)
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    outputs:
+      ctm-checkers: ${{ steps.refs.outputs.ctm-checkers }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
         with:
-          repository: maths/moodle-qtype_stack
-          ref: 10d323311b7f39fb7b092dd10ce75f7d8632f525
-          path: .stack-upstream-reference
-          persist-credentials: false
-      - uses: actions/setup-python@v5
+          fetch-depth: 2
+      - id: refs
+        uses: ./.github/actions/ctm-dependencies
         with:
-          python-version: '3.12'
-          cache: pip
-      - name: Install Ubuntu Maxima and pinned SymPy
+          install: 'false'
+      - name: The compliance job calls the workflow of that ctm-checkers commit
+        env:
+          CHECKERS: ${{ steps.refs.outputs.ctm-checkers }}
         run: |
-          sudo apt-get update
-          sudo apt-get install -y maxima maxima-share
-          python -m pip install -r requirements.txt
-      - name: Compare against native STACK answer tests
-        run: python scripts/compare_stack_maxima.py --stack-source .stack-upstream-reference
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: maxima-reference-results
-          path: test-results/maxima-reference.json
-          if-no-files-found: error
+          used=$(grep -oE 'ctm-checkers/\.github/workflows/native-stack\.yml@[0-9a-f]{40}' .github/workflows/site.yml | cut -d@ -f2)
+          test "$used" = "$CHECKERS" || {
+            echo "::error file=.github/workflows/site.yml::the compliance job calls native-stack.yml@$used, but this run builds against ctm-checkers $CHECKERS: use that commit in its uses line"; exit 1; }
+
+  # STACK's engine against native STACK and in the browser, and the compliance
+  # report published under /compliance: ctm-checkers' workflow at the commit
+  # this site builds against (it includes the reference cases against native
+  # STACK answer tests that this workflow ran before).
+  compliance:
+    name: Native STACK (ctm-checkers)
+    needs: dependencies
+    uses: Erasmus-CTM/ctm-checkers/.github/workflows/native-stack.yml@8c3db5e670684aeb5e31fcb5b3823e97ca23ae63 # the ctm-checkers commit this run builds against (checked above)
+    with:
+      ctm-checkers-ref: ${{ needs.dependencies.outputs.ctm-checkers }}
 
   site:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
         with:
-          repository: Erasmus-CTM/ai-feedback
-          ref: 68abb6dc1d1e4770c44ad408b4972d689c9f42fc # AI Feedback 0.8.0
-          path: .shared-ai-feedback
-          persist-credentials: false
-      - name: Install shared AI Feedback extension
-        run: |
-          cp -a .shared-ai-feedback/_extensions/ai-feedback _extensions/ai-feedback
-          rm -rf .shared-ai-feedback
+          fetch-depth: 2
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -67,18 +60,13 @@ jobs:
       - uses: quarto-dev/quarto-actions/setup@v2
         with:
           version: 1.8.27
+      - name: Install ctm-libs and ctm-checkers (pins, review refs)
+        uses: ./.github/actions/ctm-dependencies
       - run: pip install -r requirements-dev.txt
-      - run: python scripts/bundle_runtime.py --check
+      - run: python scripts/fetch-examples.py
       - run: python -m pytest -q tests
-        env:
-          PYTHONPATH: _extensions/stack-sympy
-      - run: python scripts/check_corpus.py --check
-        env:
-          PYTHONPATH: _extensions/stack-sympy
       - run: python -m playwright install --with-deps chromium
       - run: python -m pytest -q tests/browser.py tests/feedback_browser.py
-        env:
-          PYTHONPATH: _extensions/stack-sympy
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -93,8 +81,8 @@ jobs:
 
   publish:
     name: Publish tested site and compliance report together
-    needs: [maxima-reference, site, compliance]
-    if: github.event_name == 'push' && needs['maxima-reference'].result == 'success' && needs.site.result == 'success' && needs.compliance.result == 'success'
+    needs: [site, compliance]
+    if: github.event_name == 'push' && needs.site.result == 'success' && needs.compliance.result == 'success'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
