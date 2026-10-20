@@ -136,7 +136,8 @@ local function render(block)
   local seed = integerOption(opts, 'seed', 1, -2147483648, 2147483647)
   local review = booleanOption(opts, 'review')
   local diagnostics = booleanOption(opts, 'diagnostics')
-  local useFeedback = booleanOption(opts, 'feedback')
+  -- AI feedback when the card asks for it and the build has it (S-15).
+  local useFeedback = feedbackRequested and booleanOption(opts, 'feedback')
   sequence = sequence + 1
   local identifier = block.identifier ~= '' and block.identifier or ('stack-sympy-' .. sequence)
   requireCheckers()
@@ -205,14 +206,23 @@ local function render(block)
     '</div></div>')
 end
 
+-- Whether the page gets AI feedback: a card asks for it (#| feedback: true)
+-- and the build has it. A build without AI feedback (ai-feedback: enabled:
+-- false, CTM_FEEDBACK=off; P22) gives the cards none and names them in its
+-- build message (ctm.feedback.request).
 local function detect(doc)
   feedbackRequested = false
+  local wanted = false
   doc:walk({CodeBlock = function(b)
     if b.classes:includes('stack-question') then
       local opts = options(b.text)
-      if booleanOption(opts, 'feedback') then feedbackRequested = true end
+      if booleanOption(opts, 'feedback') then wanted = true end
     end
   end})
+  if wanted and quarto.doc.is_format('html') then
+    ctm.settings.load(doc.meta)
+    feedbackRequested = ctm.feedback.request('stack-sympy', true, '#| feedback: true')
+  end
   if feedbackRequested then
     feedback = ctm.feedback
   end
