@@ -261,6 +261,16 @@ def test_feedback_is_optional():
     assert output.count("ctm-checkers-stack.js") == 1
 
 
+def test_feedback_cards_in_a_build_without_ai():
+    # CTM_FEEDBACK=off: no AI feedback on the page; the card works without it
+    # (stack-sympy.js adds no Feedback button when AIFeedback is missing).
+    result, output = _fixture_render("# Question\n\n" + _card("#| feedback: true\n"),
+                                     env={**ctm_parts.render_env(), "CTM_FEEDBACK": "off"})
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "feedback-core.js" not in output
+    assert output.count("ctm-checkers-stack.js") == 1
+
+
 def test_missing_ctm_assessment_stops_the_render_with_the_install_command():
     # stack-sympy is part of CTM Assessment: without the package (and outside a
     # component development build), or without ctm-libs, the bootstrap stops.

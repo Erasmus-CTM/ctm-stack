@@ -384,7 +384,12 @@
     function responseIdentity() {
       return JSON.stringify([version, selector ? selector.value : '0', readAnswers()]);
     }
-    if (card.hasAttribute('data-stack-feedback')) {
+    // AI feedback is CTM Assessment's (ctm-libs, AIFeedback). A build without
+    // AI (ai-feedback: enabled: false, CTM_FEEDBACK=off) loads none: the card
+    // then has no Feedback button, and native checking works as always.
+    var F = window.AIFeedback;
+    if (card.hasAttribute('data-stack-feedback') && F && F.attach && F.contextText && F.contextMaterials &&
+        F.settingsButton && F.resolvePolicy && F.applyPolicy) {
       var config;
       try { config = JSON.parse(card.dataset.stackFeedback); }
       catch (error) { config = {}; }
@@ -392,8 +397,7 @@
       var uiCode = String(config.uiLanguage || document.documentElement.lang || 'en').split('-')[0];
       if (uiCode === 'no') uiCode = 'nb';
       var feedbackButton = node('button', 'stack-feedback-button ai-feedback-button',
-        window.AIFeedback && window.AIFeedback.locales && window.AIFeedback.locales[uiCode]
-          ? window.AIFeedback.locales[uiCode].button : 'Feedback');
+        F.locales && F.locales[uiCode] ? F.locales[uiCode].button : 'Feedback');
       feedbackButton.type = 'button';
       var feedbackOutput = node('div', 'ai-feedback-output');
       feedbackOutput.setAttribute('aria-live', 'polite');
@@ -401,52 +405,41 @@
         actions.appendChild(feedbackButton);
         actions.after(feedbackOutput);
       } else card.append(feedbackButton, feedbackOutput);
-      var F = window.AIFeedback;
-      var versionParts = F && String(F.version || '').split('.').map(Number);
-      if (!F || !F.attach || !F.contextText || !F.contextMaterials || !F.settingsButton ||
-          !F.resolvePolicy || !F.applyPolicy || !versionParts ||
-          !Number.isInteger(versionParts[0]) || !Number.isInteger(versionParts[1]) ||
-          versionParts[0] < 0 || versionParts[0] === 0 && versionParts[1] < 8) {
-        feedbackButton.addEventListener('click', function () {
-          feedbackOutput.textContent = 'AI feedback requires ai-feedback 0.8.0 or later. Install or update the shared extension and render this page again. Native checking is still available.';
-        });
-      } else {
-        var gear = F.settingsButton(config.uiLanguage);
-        if (actions) actions.appendChild(gear); else feedbackButton.after(gear);
-        feedbackHandle = F.attach({
-          id: 'stack-' + card.dataset.stackId,
-          integration: 'math-exercise',
-          contextRefs: function () {
-            return config.context && config.context.mode === 'explicit' ? config.context.refs : '';
-          },
-          policySelection: config.policySelection || {},
-          uiLanguage: config.uiLanguage,
-          button: feedbackButton,
-          output: feedbackOutput,
-          getRequest: function () {
-            var answers = readAnswers();
-            var names = Object.keys(answers);
-            if (!Array.from(card.querySelectorAll('.stack-answer[data-name]')).some(function (input) {
-              var editor = matrixEditors.get(input);
-              return editor ? editor.read().raw.some(function (cell) { return cell.trim(); }) : input.value.trim();
-            })) {
-              throw new Error('Enter an answer before requesting feedback.');
-            }
-            var identity = responseIdentity();
-            return {
-              _responseIdentity: identity,
-              profile: 'mathematics',
-              task: feedbackTask(variantAt()),
-              responses: names.map(function (name) {
-                return { id: name, label: name, value: answers[name], format: 'text' };
-              }),
-              materials: F.contextMaterials(config.context || {}),
-              evidence: checkedEvidence && checkedEvidence.identity === identity ? checkedEvidence.summary : [],
-              feedback: { language: config.language || config.uiLanguage || document.documentElement.lang || 'en' }
-            };
+      var gear = F.settingsButton(config.uiLanguage);
+      if (actions) actions.appendChild(gear); else feedbackButton.after(gear);
+      feedbackHandle = F.attach({
+        id: 'stack-' + card.dataset.stackId,
+        integration: 'math-exercise',
+        contextRefs: function () {
+          return config.context && config.context.mode === 'explicit' ? config.context.refs : '';
+        },
+        policySelection: config.policySelection || {},
+        uiLanguage: config.uiLanguage,
+        button: feedbackButton,
+        output: feedbackOutput,
+        getRequest: function () {
+          var answers = readAnswers();
+          var names = Object.keys(answers);
+          if (!Array.from(card.querySelectorAll('.stack-answer[data-name]')).some(function (input) {
+            var editor = matrixEditors.get(input);
+            return editor ? editor.read().raw.some(function (cell) { return cell.trim(); }) : input.value.trim();
+          })) {
+            throw new Error('Enter an answer before requesting feedback.');
           }
-        });
-      }
+          var identity = responseIdentity();
+          return {
+            _responseIdentity: identity,
+            profile: 'mathematics',
+            task: feedbackTask(variantAt()),
+            responses: names.map(function (name) {
+              return { id: name, label: name, value: answers[name], format: 'text' };
+            }),
+            materials: F.contextMaterials(config.context || {}),
+            evidence: checkedEvidence && checkedEvidence.identity === identity ? checkedEvidence.summary : [],
+            feedback: { language: config.language || config.uiLanguage || document.documentElement.lang || 'en' }
+          };
+        }
+      });
     }
     function clear() {
       version++;
