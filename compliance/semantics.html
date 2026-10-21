@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-8ee49705768eac3dd3c9fdd9ef0f48b2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-e3515265876d2ff83baf2d30e02c4c0b.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -260,14 +260,34 @@ window.Quarto = {
 <td>Specify the domain or branch assumptions for these accepted identities. The table gives counterexamples under principal-complex semantics and a question for each row.</td>
 </tr>
 <tr class="even">
+<td>Domain/design clarification</td>
+<td><a href="#log-square"><code>log(x^2)</code> against <code>2*log(abs(x))</code></a>, next to <a href="#domain-questions">155</a></td>
+<td>Confirm whether <code>AlgEquiv</code> should reject <code>2*log(abs(x))</code> for a teacher’s <code>log(x^2)</code> while it accepts <code>2*log(x)</code>. Maxima’s default <code>logexpand:true</code> stores that teacher’s answer as <code>2*log(x)</code> before any test runs.</td>
+</tr>
+<tr class="odd">
 <td>Fixture/domain clarification</td>
 <td><a href="#case-471">471</a></td>
 <td>Confirm whether real <code>x</code> is part of the intended fixture contract. Its identity holds for real <code>x</code> but fails at <code>x=-i</code>; proving the real case in the port is separate engineering work.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>Set compatibility clarification</td>
 <td><a href="#exact-sets">212</a></td>
 <td>Confirm whether rejection of mathematically equal set members is the intended prepared-form behavior, and what normalization authors should expect. The port currently accepts.</td>
+</tr>
+<tr class="odd">
+<td>Question, low impact</td>
+<td><a href="#rounding-teacher-tie">Teacher’s <code>1.015</code> at a tie</a></td>
+<td>Say whether <code>NumDecPlaces</code> and <code>NumSigFigs</code> should round the teacher’s decimal as written, so that <code>1.015</code> gives <code>1.02</code>. Both now round it to <code>1.01</code>. STACK’s fixture “Round teacher answer” (line 2636) suggests rounding as written.</td>
+</tr>
+<tr class="even">
+<td>Known limitation: is a fix wanted?</td>
+<td><a href="#abs-product"><code>abs</code> of a product</a>: STACK fixture lines 720 and 1992</td>
+<td>Not a new report: STACK’s fixtures already record it. Say whether a fix in <code>AlgEquiv</code>, and so in <code>Int</code>, is wanted; we could offer one.</td>
+</tr>
+<tr class="odd">
+<td>Documentation clarification</td>
+<td><a href="#tie-rule-docs">Tie rules</a></td>
+<td>Say whether the <code>NumDecPlaces</code> documentation should name its tie rule. <code>NumDecPlaces</code> and <code>NumSigFigs</code> round <code>0.125</code> differently. We could send the sentence.</td>
 </tr>
 <tr class="even">
 <td>Optional development advice</td>
@@ -277,6 +297,7 @@ window.Quarto = {
 </tbody>
 </table>
 <p>Cases <a href="#exact-sets">201–203</a> are desired exact acceptances that native STACK rejects; they are reported for visibility rather than as a request to change their expected outcome. Case <a href="#reciprocal-roots">80</a> follows an explicit published STACK convention and needs no new author decision. The remaining sections document implemented behavior, proposed development, and deliberate port limits.</p>
+<p>The rows on <code>log(x^2)</code>, the teacher’s tie, <code>abs</code> of a product and tie rules concern STACK itself rather than the port. Each has a minimal question file to download, checked on STACK 4.13.1 and 4.14.0; see <a href="#stack-questions">Minimal STACK questions</a>. Their fixture line numbers are lines of STACK’s <code>answertestfixtures.class.php</code>, not case numbers.</p>
 </section>
 <section id="implemented" class="level2">
 <h2 class="anchored" data-anchor-id="implemented">Implemented behavior and observed native agreement</h2>
@@ -379,7 +400,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="principal-logarithmic-powers">Principal logarithmic powers</h3>
 <p>For nonzero <code>x,y</code>, principal powers satisfy</p>
 <p><span class="math display">\[x^{\log y}=\exp(\log y\,\log x)=\exp(\log x\,\log y)=y^{\log x}.\]</span></p>
-<p>The port certifies this case 166 identity by bounded exponential rewriting, also used in <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180">STACK’s equivalence routine</a>. This is our mathematical proof, not a located published STACK rationale for the particular row. It does not expand logarithms of products or require positive real assumptions. The earlier characterization as a different branch convention was too conservative.</p>
+<p>The port certifies this case 166 identity by bounded exponential rewriting, also used in <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1182">STACK’s equivalence routine</a>. This is our mathematical proof, not a located published STACK rationale for the particular row. It does not expand logarithms of products or require positive real assumptions. The earlier characterization as a different branch convention was too conservative.</p>
 </section>
 <section id="finite-sets" class="level3">
 <h3 class="anchored" data-anchor-id="finite-sets">Finite lists and sets</h3>
@@ -547,7 +568,46 @@ window.Quarto = {
 </tr>
 </tbody>
 </table>
-<p><a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md">Defining variables</a> documents <code>assume</code>/<code>declare</code> contexts and the real-style square-root identity relevant to 50 and 76, without specifying those bare rows completely. <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Simplification.md">Simplification</a> warns against general nested-power denesting without assumptions, making 92 a question rather than a license for blanket rewriting. The <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1180">equivalence implementation</a> sets <code>logexpand:super</code> and applies transformations including <code>radcan</code>; that is a mechanism for logarithmic differences, not a per-case justification for ignoring branches. For 50, 99, 101, 127, 155 and 167 we found fixture expectations and implementation, but no case-specific published rationale. The counterexamples and questions are the port team’s analysis.</p>
+<p><a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Variables.md">Defining variables</a> documents <code>assume</code>/<code>declare</code> contexts and the real-style square-root identity relevant to 50 and 76, without specifying those bare rows completely. <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Simplification.md">Simplification</a> warns against general nested-power denesting without assumptions, making 92 a question rather than a license for blanket rewriting. The <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1182">equivalence implementation</a> sets <code>logexpand:super</code> and applies transformations including <code>radcan</code>; that is a mechanism for logarithmic differences, not a per-case justification for ignoring branches. For 50, 99, 101, 127, 155 and 167 we found fixture expectations and implementation, but no case-specific published rationale. The counterexamples and questions are the port team’s analysis.</p>
+</section>
+<section id="log-square" class="level3">
+<h3 class="anchored" data-anchor-id="log-square"><code>log(x^2)</code> against <code>2*log(abs(x))</code></h3>
+<p>This belongs with case 155 (<code>log(a^2*b) = 2*log(a)+log(b)</code>, expected 1; <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/tests/fixtures/answertestfixtures.class.php#L291">fixture line 291</a>), with a twist: the rewrite drops the <code>abs</code>. The identity <span class="math inline">\(\ln(x^2)=2\ln|x|\)</span> holds for every real <span class="math inline">\(x\neq 0\)</span>, but it is rejected, while <code>2*log(x)</code>, equal only for <span class="math inline">\(x&gt;0\)</span>, is accepted.</p>
+<p><a href="questions/log-square.xml" download="log-square.xml">log-square.xml</a>: teacher’s answer <code>ta: log(x^2)</code>, one <code>AlgEquiv</code> node, <code>questionsimplify=1</code>.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Answer</th>
+<th>Mathematically</th>
+<th>STACK 4.13.1 and 4.14.0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>2*log(abs(x))</code></td>
+<td>Equal for every real <span class="math inline">\(x\neq 0\)</span></td>
+<td><strong>Score 0</strong></td>
+</tr>
+<tr class="even">
+<td><code>log(abs(x)^2)</code></td>
+<td>Equal for every real <span class="math inline">\(x\neq 0\)</span></td>
+<td>Score 1</td>
+</tr>
+<tr class="odd">
+<td><code>2*log(x)</code></td>
+<td>Equal only for <span class="math inline">\(x&gt;0\)</span></td>
+<td>Score 1</td>
+</tr>
+<tr class="even">
+<td><code>log(x)</code></td>
+<td>Not equal</td>
+<td>Score 0</td>
+</tr>
+</tbody>
+</table>
+<p>With the teacher’s answer <code>2*log(abs(x))</code> instead, the answers <code>log(x^2)</code>, <code>log(abs(x)^2)</code> and <code>2*log(x)</code> all get 0.</p>
+<p><strong>The cause, as far as we can see</strong>, is Maxima’s default <code>logexpand:true</code>, which STACK keeps. Ordinary simplification rewrites <code>log(x^2)</code> to <code>2*log(x)</code> before any answer test runs. With <code>questionsimplify=1</code> the teacher’s answer is therefore stored as <code>2*log(x)</code>, and that is also the model answer the students see. It is not the block-local <code>logexpand:super</code> in <code>algebraic_equivalence</code> (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1096">assessment.mac line 1096</a>). A change would need a STACK-side rewrite of <code>log(a^(2k))</code> before simplification, or a change in Maxima. We have not tried either.</p>
+<p><strong>Question.</strong> Is rejecting <code>2*log(abs(x))</code> against a teacher’s <code>log(x^2)</code> intended, as part of the design behind case 155? If not, which route would you prefer: a STACK-side rewrite before simplification, or a change in Maxima?</p>
 </section>
 <section id="case-471" class="level3">
 <h3 class="anchored" data-anchor-id="case-471">Nested radical: clarify the domain</h3>
@@ -610,6 +670,171 @@ window.Quarto = {
 <li><strong>212:</strong> <code>{(2-2^(5/2))/2,(2^(5/2)+2)/2}</code> / <code>{1-2^(3/2),2^(3/2)+1}</code>. For these positive constants, <code>2^(5/2)/2=2^(3/2)</code> and SymPy canonicalizes corresponding members.</li>
 </ul>
 <p>Cases 201–203 are reported as <code>known_native_mathematical_failure</code> on the separate compatibility axis: native misses the desired exact equality. Row 212 is a counted <strong>known port normalization difference</strong>, because its fixture and native test require rejection. Is that expected rejection meant to assert prepared-form behavior? What normalization should authors expect for mathematically equal set members? The port’s choice between SymPy-canonical members and faithful Maxima prepared-form distinctions is a project compatibility policy. Emulating row 212 would require held member provenance before SymPy canonicalization; no expression-specific grading exception exists.</p>
+</section>
+<section id="rounding-teacher-tie" class="level3">
+<h3 class="anchored" data-anchor-id="rounding-teacher-tie">The teacher’s <code>1.015</code> at a tie</h3>
+<p>A question rather than a bug report; the impact is low. It matters only when the teacher’s answer is a decimal ending in 5 exactly at the rounding position.</p>
+<p><a href="questions/decimal-tie-binary.xml" download="decimal-tie-binary.xml">decimal-tie-binary.xml</a>: <code>a: 1.015</code>, <code>NumDecPlaces(ans1, a, 2)</code> and <code>NumSigFigs(ans2, a, 3)</code>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Answers (<code>ans1</code>, <code>ans2</code>)</th>
+<th>Expected</th>
+<th>STACK 4.13.1 and 4.14.0 (<code>NumDecPlaces</code>, <code>NumSigFigs</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>1.02</code>, <code>1.02</code></td>
+<td>1, 1</td>
+<td><strong>0, 0</strong></td>
+</tr>
+<tr class="even">
+<td><code>1.01</code>, <code>1.01</code></td>
+<td>0, 0</td>
+<td><strong>1, 1</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>1.015</code> is stored as the binary float 1.01499999999999990230…, and both tests round that value. STACK’s own <code>decimalplaces(1.015,2)</code> and <code>significantfigures(1.015,3)</code> also give <code>1.01</code>, so in this question the inputs’ teacher’s answers, <code>decimalplaces(a,2)</code> and <code>significantfigures(a,3)</code>, show <code>1.01</code> too. For <code>1.02</code>, <code>NumSigFigs</code> says “Either you have not rounded correctly, or you have rounded an intermediate answer which propagates an error.” With the teacher’s answer written as <code>203/200</code>, <code>NumDecPlaces</code> accepts <code>1.02</code>.</p>
+<p>The <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Numerical_rounding.md#L3-L15">rounding notes</a> explain that floats are binary in general, but not this tie case. STACK’s fixture <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/tests/fixtures/answertestfixtures.class.php#L2636">line 2636</a>, <code>['NumSigFigs', '3', '0.0499', '0.04985', 1, '', 'Round teacher answer']</code>, suggests that the teacher’s decimal is meant to be rounded as written. <code>0.04985</code> is also below the tie in binary (0.04984999999999999848…). It rounds up only because <code>0.04985/10^-4</code> comes out as exactly <code>498.5</code> in <code>sigfigsfun</code> (a bigfloat, then <code>float</code>); for <code>1.015</code> the same arithmetic gives <code>101.49999999999999</code>.</p>
+<p>Where in the source: <code>ATNumDecPlaces</code> compares <code>round(sans*10^n)</code> with <code>round(tans*10^n)</code> in floating point (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/numericaltest.mac#L388-L389">numericaltest.mac lines 388–389</a>). <code>decimalplacesfun</code> rounds <code>10^n*float(ex)</code> (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L858">assessment.mac line 858</a>). <code>sigfigsfun</code> tests <code>ex1-floor(ex1) = 0.5</code> on a float (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L909">assessment.mac line 909</a>), and <code>ATNumSigFigs</code> uses it (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/numericaltest.mac#L280">numericaltest.mac line 280</a>). A possible approach, untested: round the decimal that the teacher wrote, for example through the exact rational of the float’s shortest decimal form.</p>
+<p><strong>Question.</strong> Should a teacher’s <code>1.015</code> give <code>1.02</code> in these tests, as it would under either tie rule? If so, we would be glad to help with a patch.</p>
+</section>
+<section id="abs-product" class="level3">
+<h3 class="anchored" data-anchor-id="abs-product"><code>abs</code> of a product, in <code>AlgEquiv</code> and <code>Int</code></h3>
+<p>This is <strong>not a new report</strong>. STACK’s answer-test fixtures, which “document the expected behaviour of answer tests” (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/tests/fixtures/answertestfixtures.class.php#L20-L22">lines 20–22</a>), already record it:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Fixture line (case here)</th>
+<th>Fixture</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/tests/fixtures/answertestfixtures.class.php#L720">720</a> (468)</td>
+<td><code>AlgEquiv</code>, <code>abs(x^2-4)</code> / <code>abs(x-2)*abs(x+2)</code></td>
+<td>−3: “Expected maths failure, where test should return 1” (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/tests/fixtures/answertestfixtures.class.php#L61">line 61</a>). Line 719 (467) is the same case as a quotient.</td>
+</tr>
+<tr class="even">
+<td><a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/tests/fixtures/answertestfixtures.class.php#L1992">1992</a> (1388)</td>
+<td><code>Int</code>, <code>log(abs((x^2-9)))+c</code> / <code>log(abs(x-3))+log(abs(x+3))</code></td>
+<td>0, <code>ATInt_EqFormalDiff</code></td>
+</tr>
+<tr class="odd">
+<td><a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/tests/fixtures/answertestfixtures.class.php#L1991">1991</a> (1387)</td>
+<td><code>Int</code>, <code>log(abs((x-3)*(x+3)))+c</code> / <code>log(abs(x-3))+log(abs(x+3))</code></td>
+<td>1, <code>ATInt_true_equiv</code>: the same teacher’s answer, with the product unexpanded inside <code>abs</code></td>
+</tr>
+</tbody>
+</table>
+<p>The rows are published in <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Results/AlgEquiv.md">Results/AlgEquiv.md</a> (class <code>expectedfail</code>) and <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Results/Int.md">Results/Int.md</a>. The <code>Int</code> documentation says “The test cannot cope with some situations. Please contact the developers when you find some of these.” (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Calculus.md#L40">Calculus.md line 40</a>). In this report, case 468 is a desired acceptance that native STACK rejects, like cases 201–203; the port accepts it.</p>
+<p>We met it in an ordinary exercise. <a href="questions/abs-product.xml" download="abs-product.xml">abs-product.xml</a> has the teacher’s answer <code>abs(x^2-1)</code> and one <code>AlgEquiv</code> node. <a href="questions/int-partial-fractions.xml" download="int-partial-fractions.xml">int-partial-fractions.xml</a> has <code>Int</code> with option <code>x</code> and the teacher’s answer <code>integrate(2*x/(x^2-1),x)+c</code>, which Maxima returns as <code>log(abs(x^2-1))+c</code>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Question</th>
+<th>Answer</th>
+<th>Mathematically</th>
+<th>STACK 4.13.1 and 4.14.0</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>abs-product</td>
+<td><code>abs(x^2-1)</code></td>
+<td>Correct</td>
+<td>Score 1</td>
+</tr>
+<tr class="even">
+<td>abs-product</td>
+<td><code>abs((x-1)*(x+1))</code></td>
+<td>Correct</td>
+<td><strong>Score 0</strong></td>
+</tr>
+<tr class="odd">
+<td>abs-product</td>
+<td><code>abs(x-1)*abs(x+1)</code></td>
+<td>Correct</td>
+<td><strong>Score 0</strong></td>
+</tr>
+<tr class="even">
+<td>abs-product</td>
+<td><code>sqrt((x^2-1)^2)</code></td>
+<td>Correct</td>
+<td>Score 1</td>
+</tr>
+<tr class="odd">
+<td>abs-product</td>
+<td><code>x^2-1</code></td>
+<td>Wrong</td>
+<td>Score 0</td>
+</tr>
+<tr class="even">
+<td>int-partial-fractions</td>
+<td><code>log(abs(x^2-1))+c</code></td>
+<td>Correct</td>
+<td>Score 1, <code>ATInt_true_equiv</code></td>
+</tr>
+<tr class="odd">
+<td>int-partial-fractions</td>
+<td><code>log(abs(x-1))+log(abs(x+1))+c</code></td>
+<td>Correct</td>
+<td><strong>Score 0, <code>ATInt_EqFormalDiff</code></strong></td>
+</tr>
+<tr class="even">
+<td>int-partial-fractions</td>
+<td><code>log(abs(x^2+1))+c</code></td>
+<td>Wrong</td>
+<td>Score 0</td>
+</tr>
+</tbody>
+</table>
+<p><code>ATInt_EqFormalDiff</code> asks the student to see the teacher. With the option <code>[x,FORMAL]</code>, <code>Int</code> gives the partial-fraction answer mark 1 but shows the same feedback.</p>
+<p>A possible approach, untested: in <code>algebraic_equivalence</code> (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/stack/maxima/assessment.mac#L1084-L1182">assessment.mac lines 1084–1182</a>), before comparing, rewrite <code>abs(a)*abs(b)</code> to <code>abs(a*b)</code> and <code>abs(a)^n</code> to <code>abs(a^n)</code> on both sides, and combine <code>log(abs(a))+log(abs(b))</code> in the same way.</p>
+<p><strong>Question.</strong> Is a fix wanted? We could offer one.</p>
+</section>
+<section id="tie-rule-docs" class="level3">
+<h3 class="anchored" data-anchor-id="tie-rule-docs">Tie rules of <code>NumDecPlaces</code> and <code>NumSigFigs</code></h3>
+<p>A documentation question, not a bug. <code>NumDecPlaces</code> (and <code>decimalplaces</code>) round half to even, through Maxima’s <code>round</code>; <code>NumSigFigs</code> (and <code>significantfigures</code>) round half up.</p>
+<p><a href="questions/decimal-tie-rule.xml" download="decimal-tie-rule.xml">decimal-tie-rule.xml</a>: <code>a: 0.125</code>, <code>NumDecPlaces(ans1, a, 2)</code> and <code>NumSigFigs(ans2, a, 2)</code>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Answers (<code>ans1</code>, <code>ans2</code>)</th>
+<th>STACK 4.13.1 and 4.14.0 (<code>NumDecPlaces</code>, <code>NumSigFigs</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0.13</code>, <code>0.13</code></td>
+<td>0, 1</td>
+</tr>
+<tr class="even">
+<td><code>0.12</code>, <code>0.12</code></td>
+<td>1, 0</td>
+</tr>
+</tbody>
+</table>
+<p>This is documented: <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Numerical_rounding.md#L45-L47">Numerical_rounding.md lines 45–47</a> (Maxima’s <code>round</code> rounds half to even; <code>significantfigures</code> rounds up) and <a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/CAS/Numbers.md#L169-L173">Numbers.md lines 169–173</a> (<code>decimalplaces</code> rounds; with <code>n</code> = 0 it uses <code>round</code>). The <code>NumSigFigs</code> paragraph (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Numerical.md#L72">Numerical.md line 72</a>) links to “notes about numerical rounding” (Numbers.md). The <code>NumDecPlaces</code> paragraph (<a href="https://github.com/maths/moodle-qtype_stack/blob/10d323311b7f39fb7b092dd10ce75f7d8632f525/doc/en/Authoring/Answer_Tests/Numerical.md#L76">line 76</a>) says only that the test “rounds the numbers to the specified number of decimal places”.</p>
+<p><strong>Question.</strong> Would a sentence there naming the tie rule, or a link to the rounding notes, like the one in the <code>NumSigFigs</code> paragraph, be welcome? We could send a pull request.</p>
 </section>
 </section>
 <section id="future-development" class="level2">
@@ -904,8 +1129,50 @@ window.Quarto = {
 </tbody>
 </table>
 <p>An explicit source convention, such as case 80, differs from observed implementation behavior such as <code>SameType</code>, and both differ from a proof limit such as the trig set. A port boundary describes its representation limits, not native prohibitions. The eight domain/branch cases and two exact-proof cases 471 and 474 remain case-pinned in checker policy. Collection normalization observations are additional. The report distinguishes <strong>Domain/branch difference</strong> from <strong>Unproved identity</strong> with explanations, evidence, links and author questions. A changed label does not confer a compatibility pass; any changed result invalidates its previous exception and needs review.</p>
+<section id="stack-questions" class="level3">
+<h3 class="anchored" data-anchor-id="stack-questions">Minimal STACK questions</h3>
+<p>The four questions <a href="#log-square"><code>log(x^2)</code></a>, <a href="#rounding-teacher-tie">the teacher’s tie</a>, <a href="#abs-product"><code>abs</code> of a product</a> and <a href="#tie-rule-docs">tie rules</a> were checked with STACK’s own code, not the port, through minimal question files:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Question file</th>
+<th>Section</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="questions/log-square.xml" download="log-square.xml">log-square.xml</a></td>
+<td><a href="#log-square"><code>log(x^2)</code> against <code>2*log(abs(x))</code></a></td>
+</tr>
+<tr class="even">
+<td><a href="questions/decimal-tie-binary.xml" download="decimal-tie-binary.xml">decimal-tie-binary.xml</a></td>
+<td><a href="#rounding-teacher-tie">The teacher’s <code>1.015</code> at a tie</a></td>
+</tr>
+<tr class="odd">
+<td><a href="questions/abs-product.xml" download="abs-product.xml">abs-product.xml</a></td>
+<td><a href="#abs-product"><code>abs</code> of a product</a></td>
+</tr>
+<tr class="even">
+<td><a href="questions/int-partial-fractions.xml" download="int-partial-fractions.xml">int-partial-fractions.xml</a></td>
+<td><a href="#abs-product"><code>abs</code> of a product</a></td>
+</tr>
+<tr class="odd">
+<td><a href="questions/decimal-tie-rule.xml" download="decimal-tie-rule.xml">decimal-tie-rule.xml</a></td>
+<td><a href="#tie-rule-docs">Tie rules</a></td>
+</tr>
+</tbody>
+</table>
+<p>Each file is Moodle XML for the STACK question type, with question tests that state the expected marks; they fail where this page reports a difference. In decimal-tie-rule.xml the tests expect <code>0.13</code> from both, only to show where the two rules differ; under the documented rules <code>NumDecPlaces</code> expects <code>0.12</code>. The files are CC BY-SA 4.0 (Andrey Chesnokov, 2026).</p>
+<p>Versions, with identical results in both:</p>
+<ul>
+<li>STACK 4.13.1 (2026080600): <code>master</code> at <a href="https://github.com/maths/moodle-qtype_stack/commit/10d323311b7f39fb7b092dd10ce75f7d8632f525">10d3233</a>, 12 commits after tag <a href="https://github.com/maths/moodle-qtype_stack/commit/d785ac3ef2e127353963b84e2e25d030304bd32a">v4.13.1</a> (d785ac3) that change only documentation, <code>CHANGES.md</code> and a licence file; the code is identical to the tag. Source links on this page are to this commit.</li>
+<li>STACK 4.14.0 (2026101500): <code>master</code> at <a href="https://github.com/maths/moodle-qtype_stack/commit/33383047af39c204bf4442802a058f8b918b2b1b">3338304</a>, one CI-only commit after tag <a href="https://github.com/maths/moodle-qtype_stack/commit/3946874e35f4f6c495750ef909457af8da11d855">v4.14.0</a> (3946874).</li>
+<li>Maxima 5.46.0.</li>
+</ul>
+<p>We ran STACK’s PHP code through the STACK API’s question loader and grading path (input validation, then <code>grade_response()</code> and the response trees), and the question tests through the API’s test controller. We did not run them in a Moodle site.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

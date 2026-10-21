@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Int: partial fractions against integrate(): a minimal reproduction for the STACK question type (moodle-qtype_stack). -->
+<!-- Andrey Chesnokov, 2026. Licence: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/). -->
+<quiz>
+<question type="stack">
+  <name><text>Int: partial fractions against integrate()</text></name>
+  <questiontext format="html"><text><![CDATA[<p>Find \(\displaystyle\int {@f@}\,\mathrm{d}x\). Use \(c\) for the constant of integration.</p><p>[[input:ans1]] [[validation:ans1]]</p>[[feedback:prt1]]]]></text></questiontext>
+  <generalfeedback format="html"><text></text></generalfeedback>
+  <defaultgrade>1</defaultgrade>
+  <penalty>0.1</penalty>
+  <hidden>0</hidden>
+  <idnumber></idnumber>
+  <stackversion><text>2026080600</text></stackversion>
+  <questionvariables><text>f: 2*x/(x^2-1); ta: integrate(f,x)+c;</text></questionvariables>
+  <specificfeedback format="html"><text></text></specificfeedback>
+  <questionnote format="html"><text></text></questionnote>
+  <questionsimplify>1</questionsimplify>
+  <assumepositive>0</assumepositive>
+  <assumereal>0</assumereal>
+  <input>
+    <name>ans1</name>
+    <type>algebraic</type>
+    <tans>ta</tans>
+    <boxsize>20</boxsize>
+    <strictsyntax>1</strictsyntax>
+    <insertstars>0</insertstars>
+    <syntaxhint></syntaxhint>
+    <syntaxattribute>0</syntaxattribute>
+    <forbidwords></forbidwords>
+    <allowwords></allowwords>
+    <forbidfloat>0</forbidfloat>
+    <requirelowestterms>0</requirelowestterms>
+    <checkanswertype>0</checkanswertype>
+    <mustverify>1</mustverify>
+    <showvalidation>1</showvalidation>
+    <options></options>
+  </input>
+  <prt>
+    <name>prt1</name>
+    <value>1.0000000</value>
+    <autosimplify>1</autosimplify>
+    <feedbackstyle>1</feedbackstyle>
+    <feedbackvariables><text></text></feedbackvariables>
+    <node>
+      <name>0</name>
+      <answertest>Int</answertest>
+      <sans>ans1</sans>
+      <tans>ta</tans>
+      <testoptions>x</testoptions>
+      <quiet>0</quiet>
+      <truescoremode>=</truescoremode>
+      <truescore>1</truescore>
+      <truepenalty></truepenalty>
+      <truenextnode>-1</truenextnode>
+      <trueanswernote>prt1-1-T</trueanswernote>
+      <truefeedback format="html"><text></text></truefeedback>
+      <falsescoremode>=</falsescoremode>
+      <falsescore>0</falsescore>
+      <falsepenalty></falsepenalty>
+      <falsenextnode>-1</falsenextnode>
+      <falseanswernote>prt1-1-F</falseanswernote>
+      <falsefeedback format="html"><text></text></falsefeedback>
+    </node>
+  </prt>
+  <qtest>
+    <testcase>1</testcase>
+    <description></description>
+    <testinput>
+      <name>ans1</name>
+      <value>log(abs(x^2-1))+c</value>
+    </testinput>
+    <expected>
+      <name>prt1</name>
+      <expectedscore>1</expectedscore>
+      <expectedpenalty>0</expectedpenalty>
+      <expectedanswernote>prt1-1-T</expectedanswernote>
+    </expected>
+  </qtest>
+  <qtest>
+    <testcase>2</testcase>
+    <description>Partial fractions, with absolute values in every logarithm.</description>
+    <testinput>
+      <name>ans1</name>
+      <value>log(abs(x-1))+log(abs(x+1))+c</value>
+    </testinput>
+    <expected>
+      <name>prt1</name>
+      <expectedscore>1</expectedscore>
+      <expectedpenalty>0</expectedpenalty>
+      <expectedanswernote>prt1-1-T</expectedanswernote>
+    </expected>
+  </qtest>
+</question>
+</quiz>
