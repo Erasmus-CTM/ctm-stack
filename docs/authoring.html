@@ -81,8 +81,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-contrib/ai-feedback-0.9.0/ai-feedback.js"></script>
 <link href="../site_libs/quarto-contrib/ai-feedback-0.9.0/ai-feedback.css" rel="stylesheet">
 <script src="../site_libs/quarto-contrib/ctm-runtime-0.9.0/pyodide-runtime.js"></script>
-<script src="../site_libs/quarto-contrib/ctm-checkers-0.2.0/ctm-checkers.js"></script>
-<script src="../site_libs/quarto-contrib/ctm-checkers-stack-0.2.0/ctm-checkers-stack.js"></script>
+<script src="../site_libs/quarto-contrib/ctm-checkers-0.3.0/ctm-checkers.js"></script>
+<script src="../site_libs/quarto-contrib/ctm-checkers-stack-0.3.0/ctm-checkers-stack.js"></script>
 <link href="../site_libs/quarto-contrib/stack-sympy-0.3.0/matrix-input.css" rel="stylesheet">
 <link href="../site_libs/quarto-contrib/stack-sympy-0.3.0/stack-sympy.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
@@ -672,7 +672,7 @@ Keep tests for alternate correct answers, common mistakes and the intended parti
 </tr>
 </tbody>
 </table>
-<p>The extension requires CTM Assessment (with ctm-checkers 0.2.0 or later), Python 3.9+, SymPy 1.13.3, Quarto 1.8.27+ and HTML output with JavaScript. Set <code>STACK_SYMPY_PYTHON</code> to the Python interpreter to use when Quarto’s default interpreter is not the required environment.</p>
+<p>The extension requires CTM Assessment (with ctm-checkers 0.2.0 or later; 0.3.0 or later forbids learners the names of question variables, below), Python 3.9+, SymPy 1.13.3, Quarto 1.8.27+ and HTML output with JavaScript. Set <code>STACK_SYMPY_PYTHON</code> to the Python interpreter to use when Quarto’s default interpreter is not the required environment.</p>
 </section>
 <section id="input-and-xml-reference" class="level3">
 <h3 class="anchored" data-anchor-id="input-and-xml-reference">Input and XML reference</h3>
@@ -777,6 +777,7 @@ Keep tests for alternate correct answers, common mistakes and the intended parti
 </tbody>
 </table>
 <p><code>ratsimp</code> preserves a supported common-denominator form. <code>listify(list)</code> keeps order; sorting a set with <code>listify</code> supports rational scalar members only. Finite helpers require normal simplification and exact fractions. Prepare their results in question variables before using form-sensitive collection tests; helper feedback variables and held helper execution are unsupported. <code>float</code> is recognized, but floating-point author values cannot be stored in prepared variants and are rejected. Learners cannot call author-only helpers.</p>
+<p>Learners cannot use the names of question variables or feedback variables either. As in STACK, an answer such as <code>ta</code> is invalid (“Forbidden variable or constant: ta.”) and shows no preview, so a variable never reveals its value; question tests still use those names. Name a variable so that a learner never needs its name as a symbol: a question variable <code>x</code> would forbid <code>x</code> in every answer.</p>
 </section>
 <section id="policy-configuration" class="level3">
 <h3 class="anchored" data-anchor-id="policy-configuration">Policy configuration</h3>
