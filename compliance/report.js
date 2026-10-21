@@ -30,7 +30,7 @@ function caseElement(row) {
     discussion.append(node('p',row.discussion.evidence==='observed_behavior'
       ? 'Evidence: observed fixture/native behavior and implementation; no case-specific upstream rationale located.'
       : 'Evidence: upstream documentation gives relevant context; it does not fully specify this case’s domain.'));
-    discussion.append(node('p',`Question for STACK: ${row.discussion.question}`));
+    if(row.discussion.question)discussion.append(node('p',`Question for STACK: ${row.discussion.question}`));
     const sources=node('ul');for(const source of row.discussion.sources){const li=node('li');li.append(U.link(source.url,source.label));sources.append(li);}discussion.append(sources);body.append(discussion);
   }
   if(row.test==='EqualComAss' && /AlgEquiv-true/.test(row.native?.answer_note || ''))body.append(node('p','STACK proves the values equivalent, but rejects their written forms under EqualComAss.'));
