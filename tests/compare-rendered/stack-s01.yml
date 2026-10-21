@@ -1,0 +1,15 @@
+# Expected differences of S4 (consolidation step 2, the stack-sympy audit's
+# S-01): this site rendered at stack-sympy main 0067141 (ctm-checkers 0.2.0,
+# 8c3db5e) against the site rendered at S4 (ctm-checkers 0.3.0). The cards,
+# their variants and question tests do not change: S-01 changes what the
+# engine does with a learner's answer in the browser (validation), not what
+# the build writes; tests/browser.py checks it. Run with the umbrella's
+# tools/compare-rendered.mjs (ctm-assessment):
+#
+#   node tools/compare-rendered.mjs --before <0067141>/_site --after <S4>/_site \
+#     --expect <stack-sympy>/tests/compare-rendered/stack-s01.yml
+categories:
+  - id: docs-s01
+    title: The authoring guide says that learners cannot use question or feedback variable names (ctm-checkers 0.3.0)
+    match:
+      - {area: dom, page: '^docs/authoring\.html$', ancestors: '^(?!.*stack-question-group)'}

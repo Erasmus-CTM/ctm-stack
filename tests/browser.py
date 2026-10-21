@@ -400,6 +400,18 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         assert card.locator(".stack-result").get_attribute("data-state") == "invalid"
         assert card.locator(".stack-check").is_disabled()
 
+        # S-01 (ctm-checkers 0.3.0): the teacher's answer variable is no answer,
+        # alone or inside an expression; STACK's message, no preview.
+        for answer in ("ta", "ta+0"):
+            card.locator(".stack-answer").first.fill(answer)
+            card.locator(".stack-validate").click()
+            card.locator('.stack-validation[data-state="invalid"]').wait_for(timeout=120000)
+            validation = card.locator(".stack-validation").first
+            assert validation.inner_text() == "Forbidden variable or constant: ta.", answer
+            assert not validation.get_attribute("data-latex"), answer
+            assert card.locator(".stack-result").get_attribute("data-state") == "invalid"
+            assert card.locator(".stack-check").is_disabled()
+
         # The demo opts into STACK's implied-multiplication input setting.
         # Validation must display the same polynomial without artificial
         # parentheses from the parser's left-associated addition tree.
