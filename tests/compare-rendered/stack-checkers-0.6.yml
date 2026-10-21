@@ -1,0 +1,34 @@
+# Expected differences of this site's pin of ctm-checkers 0.6.0 (consolidation
+# step 2, the STACK set of the S-01 review's follow-ups, S-02 and S-13): the
+# site rendered at stack-sympy main fa0c751, or acdc41a after #27, which changed only pins
+# (ctm-checkers 0.3.0, e84bc8c)
+# against the site rendered at this pull request's head (ctm-checkers 0.6.0).
+# The cards, their question tests and the variants do not change, except
+# that a frozen variant writes the imaginary unit %i (S-02: I is a variable):
+# corpus Complex_Convert_1's z1. S-13 changes what the engine does with a
+# learner's answer in the browser (validation; tests/browser.py), not what
+# the build writes. The authoring guide's prose changes, by section and words.
+# Run with the umbrella's tools/compare-rendered.mjs (ctm-assessment):
+#
+#   node tools/compare-rendered.mjs --before <fa0c751>/_site --after <head>/_site \
+#     --expect <stack-sympy>/tests/compare-rendered/stack-checkers-0.6.yml
+categories:
+  - id: s02-imaginary-unit
+    title: A frozen variant writes the imaginary unit as %i (S-02, ctm-checkers 0.5.0)
+    match:
+      - {area: config, page: '^corpus\.html$', object: '^stack-sympy-data$', change: '^changed$', path: '^/\d+/variants/\d+/env/\w+$',
+         lost: '\*I$', gained: '\*%i$'}
+  - id: docs-requirements
+    title: The requirements name ctm-checkers 0.6.0 (STACK's rules for the text of an answer)
+    match:
+      - {area: dom, page: '^docs/authoring\.html$', change: '^text changed$', ancestors: 'section#question-block-options\b',
+         gained: '0\.6\.0 or later applies STACK’s rules for the text of an answer'}
+  - id: docs-answer-entry
+    title: The authoring guide's answer entry names STACK's constants (S-02), the inverse functions and STACK's input rules (S-13)
+    match:
+      - {area: dom, page: '^docs/authoring\.html$', change: '^(added|text changed)$', ancestors: 'section#answer-entry-and-form\b'}
+  - id: docs-variable-names
+    title: The authoring guide states the rule for question and feedback variable names in this engine's terms (the review of S-01)
+    match:
+      - {area: dom, page: '^docs/authoring\.html$', change: '^text changed$', ancestors: 'section#author-variables-and-helpers\b',
+         lost: '^As in STACK, an$', gained: '^An$'}
