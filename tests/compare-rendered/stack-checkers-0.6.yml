@@ -1,6 +1,7 @@
 # Expected differences of this site's pin of ctm-checkers 0.6.0 (consolidation
 # step 2, the STACK set of the S-01 review's follow-ups, S-02 and S-13): the
-# site rendered at stack-sympy main fa0c751 (ctm-checkers 0.3.0, e84bc8c)
+# site rendered at stack-sympy main fa0c751, or acdc41a after #27, which changed only pins
+# (ctm-checkers 0.3.0, e84bc8c)
 # against the site rendered at this pull request's head (ctm-checkers 0.6.0).
 # The cards, their question tests and the variants do not change, except
 # that a frozen variant writes the imaginary unit %i (S-02: I is a variable):
