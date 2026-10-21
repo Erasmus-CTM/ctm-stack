@@ -62,6 +62,16 @@ jobs:
           version: 1.8.27
       - name: Install ctm-libs and ctm-checkers (pins, review refs)
         uses: ./.github/actions/ctm-dependencies
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check rendered-guide expectations and their mutations
+        run: |
+          # Use the comparator at the existing umbrella pin, in its one home.
+          git -C _ci/ctm-assessment sparse-checkout add tools
+          npm ci --prefix _ci/ctm-assessment
+          git fetch --no-tags origin 1b1d50f69fc1e7eb39846b497657d72be325f597
+          node tests/compare-rendered/stack-checkers-0.10.test.cjs _ci/ctm-assessment/tools/compare-rendered.mjs
       - run: pip install -r requirements-dev.txt
       - run: python scripts/fetch-examples.py
       - run: python -m pytest -q tests
@@ -126,3 +136,4 @@ jobs:
           publish_branch: gh-pages
           destination_dir: ${{ github.ref == 'refs/heads/main' && '.' || format('previews/{0}', github.ref_name) }}
           keep_files: true
+
