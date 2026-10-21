@@ -670,11 +670,13 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             quadratic_card.locator(".stack-validate").click()
             quadratic_card.locator('.stack-result[data-state="valid"] .stack-verdict').wait_for(timeout=120000)
             quadratic_card.locator(".stack-check").click()
-            error_result = quadratic_card.locator('.stack-result[data-state="error"]')
-            error_result.locator("p").wait_for(timeout=120000)
-            error_text = error_result.inner_text()
-            assert "FacForm supports only numeric denominators" in error_text
-            assert all(fragment not in error_text for fragment in ("Traceback", 'File "', "PythonError"))
+            # ctm-checkers 0.10.0 (S-11): an answer outside FacForm's domain is not an
+            # error of the question; the test is false and the tree takes its false branch.
+            undecided = quadratic_card.locator('.stack-result[data-state="retry"]')
+            undecided.locator(".stack-prt-feedback").wait_for(timeout=120000)
+            undecided_text = undecided.inner_text()
+            assert "This answer could not be checked automatically." in undecided_text
+            assert all(fragment not in undecided_text for fragment in ("Traceback", 'File "', "PythonError", "FacForm supports"))
 
             # A corrected response recovers on the same card and Worker.
             first_coefficient, first_constant = int(env["cf1"]), int(env["a"])
