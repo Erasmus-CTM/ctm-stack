@@ -20,4 +20,4 @@ categories:
     title: The authoring guide says that learners cannot use question or feedback variable names
     match:
       - {area: dom, page: '^docs/authoring\.html$', change: '^added$', ancestors: 'section#author-variables-and-helpers\b',
-         line: '^(<p>|</p>|<code>|</code>|text: (ta|x|would forbid|in every answer\.|Learners cannot use the names of question variables or feedback variables either\. As in STACK, an answer such as|is invalid \(“Forbidden variable or constant: ta\.”\) and shows no preview, so a variable never reveals its value; question tests still use those names\. Name a variable so that a learner never needs its name as a symbol: a question variable))$'}
+         line: '^(<p>|</p>|<code>|</code>|text: (ta|x|would forbid|in every answer\.|Learners cannot use the names of question variables or feedback variables either\. [^.]{0,20}n answer such as|is invalid \(“Forbidden variable or constant: ta\.”\) and shows no preview, so a variable never reveals its value; question tests still use those names\. Name a variable so that a learner never needs its name as a symbol: a question variable))$'}
