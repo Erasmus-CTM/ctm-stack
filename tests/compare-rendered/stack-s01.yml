@@ -3,13 +3,21 @@
 # 8c3db5e) against the site rendered at S4 (ctm-checkers 0.3.0). The cards,
 # their variants and question tests do not change: S-01 changes what the
 # engine does with a learner's answer in the browser (validation), not what
-# the build writes; tests/browser.py checks it. Run with the umbrella's
-# tools/compare-rendered.mjs (ctm-assessment):
+# the build writes; tests/browser.py checks it. Only the authoring guide's
+# two changes are expected, by their words (the review of S-01: narrowed from
+# any difference of docs/authoring.html outside the cards). Run with the
+# umbrella's tools/compare-rendered.mjs (ctm-assessment):
 #
 #   node tools/compare-rendered.mjs --before <0067141>/_site --after <S4>/_site \
 #     --expect <stack-sympy>/tests/compare-rendered/stack-s01.yml
 categories:
-  - id: docs-s01
-    title: The authoring guide says that learners cannot use question or feedback variable names (ctm-checkers 0.3.0)
+  - id: docs-s01-requirements
+    title: The requirements name ctm-checkers 0.3.0, which forbids learners the names of question variables
     match:
-      - {area: dom, page: '^docs/authoring\.html$', ancestors: '^(?!.*stack-question-group)'}
+      - {area: dom, page: '^docs/authoring\.html$', change: '^text changed$', ancestors: 'section#question-block-options\b',
+         lost: '^later\),$', gained: '^later; 0\.3\.0 or later forbids learners the names of question variables, below\),$'}
+  - id: docs-s01-names
+    title: The authoring guide says that learners cannot use question or feedback variable names
+    match:
+      - {area: dom, page: '^docs/authoring\.html$', change: '^added$', ancestors: 'section#author-variables-and-helpers\b',
+         line: '^(<p>|</p>|<code>|</code>|text: (ta|x|would forbid|in every answer\.|Learners cannot use the names of question variables or feedback variables either\. As in STACK, an answer such as|is invalid \(“Forbidden variable or constant: ta\.”\) and shows no preview, so a variable never reveals its value; question tests still use those names\. Name a variable so that a learner never needs its name as a symbol: a question variable))$'}

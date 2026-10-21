@@ -176,7 +176,8 @@ block. File paths are relative to the containing `.qmd` page.
 | `python-checkers` | Omitted | Python filename read during the build; register named functions in `CHECKERS`. No source manifest is required. |
 
 The extension requires CTM Assessment (with ctm-checkers 0.2.0 or later;
-0.3.0 or later forbids learners the names of question variables, below),
+0.3.0 or later forbids learners the names of question and feedback variables,
+0.6.0 or later applies STACK's rules for the text of an answer, below),
 Python 3.9+, SymPy 1.13.3, Quarto 1.8.27+ and HTML output with JavaScript.
 Set `STACK_SYMPY_PYTHON` to the Python interpreter to use
 when Quarto's default interpreter is not the required environment.
@@ -215,12 +216,27 @@ provide arbitrary Maxima evaluation or all STACK text directives.
 ### Answer entry and form {#answer-entry-and-form}
 
 Supported scalar notation includes arithmetic `+ - * / ^` (also `**`),
-parentheses, symbols and the constants `%pi`, `%e`, `%i`. Functions are `sqrt`,
-`sin`, `cos`, `tan`, `sec`, `csc`, `cot`, `sinh`, `cosh`, `tanh`, `sech`, `csch`,
-`coth`, `exp`, `log`, `abs`, rational-polynomial `gcd` and real scalar `mod`.
-Aliases are `ln`, `cosec`, `cosech`. `mod(x,0)=x` follows Maxima's convention.
-With insertion mode `1`, `2x`, `2(x+1)` and `(x+1)(x-1)` are products; `xy`
-remains one symbol and spaces alone never imply multiplication.
+parentheses, symbols and STACK's constants `e`, `pi` (`Pi`, `PI`), `i` and
+`%e`, `%pi`, `%i`; `E` and `I` are variables (a current, an energy), as in
+STACK. Functions are `sqrt`, `sin`, `cos`, `tan`, `sec`, `csc`, `cot`, `sinh`,
+`cosh`, `tanh`, `sech`, `csch`, `coth`, the inverse functions `asin`, `acos`,
+`atan`, `asec`, `acsc`, `acot` and their hyperbolic forms (`asinh`, …),
+`exp`, `log`, `abs`, rational-polynomial `gcd` and real scalar `mod`. Aliases
+are `ln`, `cosec`, `cosech` and STACK's `arcsin`, `arctan`, `arsinh`, ….
+`mod(x,0)=x` follows Maxima's convention. With insertion mode `1`, `2x`,
+`2(x+1)` and `(x+1)(x-1)` are products; `xy` remains one symbol and spaces
+alone never imply multiplication.
+
+An answer follows STACK's rules for its text, with STACK's messages: a space
+between two terms is an error (`2 x`: "Illegal spaces found in expression
+2_x."), and so is a comma outside a list or set (`3,5`). A name of three
+letters or more is forbidden unless STACK knows it (`alpha`, `theta`, `pi`)
+or it ends in a digit (`sinx`, `sin*x`: "Forbidden variable or constant:
+sinx."); names are case sensitive (`Sin(x)`: "Input is case sensitive: Sin is
+an unknown function. Did you mean sin?"). Unicode letters and symbols that
+STACK replaces are replaced (`π` is `pi`, `α` is `alpha`, `−` is `-`); other
+characters are errors (`x²`). `0^0` is Maxima's error "expt: undefined: 0^0".
+Question tests are the author's: these rules do not apply to their inputs.
 
 Form tests `EqualComAss`, `FacForm`, `SingleFrac`, `LowestTerms` require a direct
 input name in `sans`. `EqualComAss` preserves structure up to commutative and
@@ -292,9 +308,12 @@ is recognized, but floating-point author values cannot be stored in prepared
 variants and are rejected. Learners cannot call author-only helpers.
 
 Learners cannot use the names of question variables or feedback variables
-either. As in STACK, an answer such as `ta` is invalid ("Forbidden variable or
-constant: ta.") and shows no preview, so a variable never reveals its value;
-question tests still use those names. Name a variable so that a learner never
+either. An answer such as `ta` is invalid ("Forbidden variable or constant:
+ta.") and shows no preview, so a variable never reveals its value; question
+tests still use those names. STACK forbids the question variables' names
+the same way; the feedback variables' names are a rule of this engine, whose
+response trees evaluate the answer where those variables are defined (STACK
+does not forbid them). Name a variable so that a learner never
 needs its name as a symbol: a question variable `x` would forbid `x` in every
 answer.
 

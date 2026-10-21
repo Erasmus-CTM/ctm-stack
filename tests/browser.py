@@ -412,6 +412,23 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
             assert card.locator(".stack-result").get_attribute("data-state") == "invalid"
             assert card.locator(".stack-check").is_disabled()
 
+        # S-13 (ctm-checkers 0.6.0): STACK's rules for the text of an answer,
+        # with STACK's messages; π is STACK's pi.
+        for answer, message in (("sinx", "Forbidden variable or constant: sinx."),
+                                ("x²+8x+15", "CAS commands may not contain the following characters: ²."),
+                                ("x^2 + 8 x + 15", "Illegal spaces found in expression x^2+8_x+15."),
+                                ("Sin(x)", "Input is case sensitive: Sin is an unknown function. Did you mean sin?")):
+            card.locator(".stack-answer").first.fill(answer)
+            card.locator(".stack-validate").click()
+            card.locator('.stack-validation[data-state="invalid"]').wait_for(timeout=120000)
+            validation = card.locator(".stack-validation").first
+            assert validation.inner_text() == message, answer
+            assert card.locator(".stack-check").is_disabled()
+        card.locator(".stack-answer").first.fill("π")
+        card.locator(".stack-validate").click()
+        card.locator('.stack-validation[data-state="valid"]').wait_for(timeout=120000)
+        assert card.locator(".stack-validation").first.get_attribute("data-latex") == r"\pi"
+
         # The demo opts into STACK's implied-multiplication input setting.
         # Validation must display the same polynomial without artificial
         # parentheses from the parser's left-associated addition tree.
