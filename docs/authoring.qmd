@@ -177,7 +177,10 @@ block. File paths are relative to the containing `.qmd` page.
 
 The extension requires CTM Assessment (with ctm-checkers 0.2.0 or later;
 0.3.0 or later forbids learners the names of question and feedback variables,
-0.6.0 or later applies STACK's rules for the text of an answer, below),
+0.6.0 or later applies STACK's rules for the text of an answer, below;
+0.10.0 or later stops on question options it does not read, applies numerical tests and
+`checkanswertype` to answers that are not numbers or not of the teacher's type, and
+treats an answer a test cannot decide as false, below),
 Python 3.9+, SymPy 1.13.3, Quarto 1.8.27+ and HTML output with JavaScript.
 Set `STACK_SYMPY_PYTHON` to the Python interpreter to use
 when Quarto's default interpreter is not the required environment.
@@ -196,13 +199,20 @@ with a question-specific location.
 | `strictsyntax`, `insertstars` | Strict syntax is required. Insertion mode `0` requires explicit `*`; mode `1` also accepts adjacent products. |
 | `forbidwords`, `forbidfloat` | Reject configured words or decimal literals. |
 | `requirelowestterms` | Reject reducible written integer fractions during validation. |
-| `checkanswertype` | Check the supported STACK applicability/type rule; this is not a full shape or equality check. |
+| `checkanswertype` | Refuse an answer of another type than the teacher's answer (expression, equation, logical expression, list, set or matrix) with a message that names the expected type; a list of the teacher's length also needs entries of the teacher's types. This is not a check of the shape or of equality. |
 | `mustverify`, `showvalidation` | Verification metadata and preview visibility are retained; this UI always requires validation before grading. Supported visibility values are `0`, `1`, `3`. |
 | `syntaxhint`, `boxsize` | Parse the authored hint and size text fields within the supported limits. |
 | `matrix` | Optional fixed/resizable dimension settings; see [matrix input](matrix-input.qmd#for-developers). |
 
 `allowwords` and input `options` must be empty; nondefault syntax attributes
-and other insertion modes are unsupported. Question-level `assumereal` and
+and other insertion modes are unsupported. A question that sets a question
+option the engine does not read stops the build, with the question's name, the
+option and its value: `complexno` other than `i`, `decimals` other than `.`,
+`scientificnotation` other than `*10`, `inversetrig` other than `cos-1`,
+`logicsymbol` other than `lang`, `sqrtsign` other than `1`,
+`multiplicationsign` other than `dot` or `none`, and `matrixparens` other than
+`[` or `(` (the last two only change how a question writes products and
+matrices). An absent option is its default. Question-level `assumereal` and
 `assumepositive` affect symbolic assumptions. `questionsimplify=0` preserves
 supported written forms when they survive variant preparation; unsupported
 held expressions fail clearly.
@@ -255,6 +265,14 @@ comparing the teacher value or cancelling symbolic polynomial factors.
 `NumAbsolute` and `NumRelative` use the configured tolerance; omitted or
 syntactically malformed options default to `0.05`. `NumDecPlaces` requires an
 explicit count from 1 to 50 and checks trailing zeros as written precision.
+These tests compare finite real numbers. An answer that is not one (a symbol,
+a complex number, `inf`, a list, a set, a matrix, an equation) makes the test
+false, with the message "Your answer should be a floating point number, but is
+not." (`NumDecPlaces`: "Your answer must be a floating point number, but is
+not."), and the response tree takes the false branch; `NumDecPlaces` also needs a
+decimal literal (`1/2` and `sqrt(2)` are not). A tolerance or a count that is
+not a number, and a teacher's answer that is a collection or an equation, are
+errors of the question.
 Use a numerical answer test for an approximate measurement rather than treating
 algebraic equivalence as a tolerance test.
 
@@ -268,7 +286,19 @@ see [set conventions](../compliance/semantics.html#finite-sets).
 `Sets` explains outer duplicates and missing/extra members. `EqualComAss`
 retains list order, nested boundaries and repeated set entries. `SameType`
 follows applicability: two sets have the same type, and different-length lists
-can have the same type. It does not establish equality.
+can have the same type. An equation, a logical expression and an expression are
+three types, so `SameType` is false for `x=1` against `x+1`. It does not
+establish equality.
+
+A valid answer that a test does not compare or cannot decide does not stop the
+grading: the test is false and the response tree takes its false branch.
+`EqualComAss`, `FacForm` and `SingleFrac` give a message that the answer should be
+an expression (an equation) for an answer that is not one. For everything else
+(an answer outside a bound of the test, `LowestTerms` of a list, an equation or
+a matrix, a number too large to evaluate) the message is "This answer could not
+be checked automatically." and the answer note is the test's name followed by
+`_undecided`. A test that does not exist, an option that is wrong and a
+teacher's answer that the test cannot compare remain errors of the question.
 
 Use exact fractions in sets and prepared author collections. Direct decimal
 list entries have narrower support: literal constant arithmetic with integer
