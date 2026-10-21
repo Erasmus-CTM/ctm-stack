@@ -310,10 +310,7 @@ variants and are rejected. Learners cannot call author-only helpers.
 Learners cannot use the names of question variables or feedback variables
 either. An answer such as `ta` is invalid ("Forbidden variable or constant:
 ta.") and shows no preview, so a variable never reveals its value; question
-tests still use those names. STACK forbids the question variables' names
-the same way; the feedback variables' names are a rule of this engine, whose
-response trees evaluate the answer where those variables are defined (STACK
-does not forbid them). Name a variable so that a learner never
+tests still use those names. Name a variable so that a learner never
 needs its name as a symbol: a question variable `x` would forbid `x` in every
 answer.
 

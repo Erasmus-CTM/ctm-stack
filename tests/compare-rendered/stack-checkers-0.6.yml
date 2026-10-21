@@ -26,8 +26,8 @@ categories:
     title: The authoring guide's answer entry names STACK's constants (S-02), the inverse functions and STACK's input rules (S-13)
     match:
       - {area: dom, page: '^docs/authoring\.html$', change: '^(added|text changed)$', ancestors: 'section#answer-entry-and-form\b'}
-  - id: docs-feedback-variables
-    title: The authoring guide says that forbidding feedback variables is this engine's rule, not STACK's (the review of S-01)
+  - id: docs-variable-names
+    title: The authoring guide states the rule for question and feedback variable names in this engine's terms (the review of S-01)
     match:
       - {area: dom, page: '^docs/authoring\.html$', change: '^text changed$', ancestors: 'section#author-variables-and-helpers\b',
-         gained: '^(An|STACK forbids the question variables’ names the same way; the feedback variables’ names are a rule of this engine, .*\(STACK does not forbid them\)\.)$'}
+         lost: '^As in STACK, an$', gained: '^An$'}
