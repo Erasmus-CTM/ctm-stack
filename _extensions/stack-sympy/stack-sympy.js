@@ -65,7 +65,8 @@
         starting = null;
         reject(error);
       } };
-      target.postMessage({ id: id, type: 'init', runtime: scripts.runtime, checkers: scripts.checkers });
+      try { target.postMessage({ id: id, type: 'init', runtime: scripts.runtime, checkers: scripts.checkers }); }
+      catch (error) { resetWorker(error); }
     });
     starting.catch(function () { starting = null; });
     return starting;
