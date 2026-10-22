@@ -311,3 +311,90 @@ def test_check_can_preserve_hints_but_variant_selection_always_resets(browser_si
         assert prompt_data(card)["evidence"] == []
         assert "CURRENT HINT LEVEL: 1 OF 4" in card.locator(".ai-feedback-prompt").inner_text()
         browser.close()
+
+
+# Controlled transport failure, with the real production Worker and frontend.
+# Existing tests above continue to exercise real Pyodide and STACK grading.
+INIT_FAILURE_PROBE = r"""
+(() => {
+  const NativeWorker = window.Worker;
+  const set = window.setTimeout.bind(window), clear = window.clearTimeout.bind(window);
+  const probe = window.__stackInitFailure = {workers: [], deadlines: []};
+  window.setTimeout = function(callback, delay, ...args) {
+    const id = set(callback, delay, ...args);
+    if (delay === 31000) probe.deadlines.push({id, callback, cleared: false});
+    return id;
+  };
+  window.clearTimeout = function(id) {
+    for (const timer of probe.deadlines) if (timer.id === id) timer.cleared = true;
+    return clear(id);
+  };
+  window.Worker = class extends NativeWorker {
+    constructor(url, options) {
+      super(url, options);
+      const record = {terminated: false};
+      const first = probe.workers.length === 0;
+      probe.workers.push(record);
+      const post = this.postMessage.bind(this), terminate = this.terminate.bind(this);
+      this.postMessage = function(message, ...args) {
+        if (first && message.type === 'init') {
+          throw new DOMException('Controlled initial message clone failure', 'DataCloneError');
+        }
+        return post(message, ...args);
+      };
+      this.terminate = function() { record.terminated = true; return terminate(); };
+    }
+  };
+  probe.configure = function() {
+    // Exercise the real worker protocol without downloading a Python engine.
+    // Grading semantics remain covered by the ordinary real-Pyodide tests.
+    const runtime = "self.MathExerciseRuntime={loadTimeout:1000," +
+      "ensurePyodide:async()=>({loadPackage:async()=>{}}),ensureCheckers:async()=>{}," +
+      "callCheckers:async(py,name,data)=>JSON.stringify({ok:true,result:{status:'valid'," +
+      "inputs:Object.fromEntries(Object.keys(data.answers).map(key=>[key,{valid:true,latex:data.answers[key]}]))}})};";
+    window.MathExerciseRuntime = {loadTimeout: 1000, scriptURL: 'data:application/javascript,' + encodeURIComponent(runtime)};
+    window.CTMCheckers = window.CTMCheckersStack = {scriptURL: 'data:application/javascript,'};
+  };
+  probe.snapshot = function() {
+    return {workers: probe.workers.map(w=>({...w})),
+      deadlines: probe.deadlines.map(t=>({cleared:t.cleared}))};
+  };
+  probe.expireOriginalDeadline = function() {
+    const timer = probe.deadlines[0];
+    // A cleared timeout cannot fire. Expire only a leaked original deadline.
+    if (!timer.cleared) { clear(timer.id); timer.callback(); }
+  };
+})();
+"""
+
+
+def test_worker_initial_message_failure_cleans_up_and_retry_stays_alive(browser_site):
+    with serve(browser_site) as url, sync_playwright() as pw:
+        browser = browser_for(pw)
+        try:
+            page = browser.new_page()
+            page.add_init_script(INIT_FAILURE_PROBE)
+            page.goto(url + "/index.html", wait_until="domcontentloaded")
+            page.evaluate("window.__stackInitFailure.configure()")
+            card = page.locator('[data-stack-id="expansion"]')
+            card.locator(".stack-answer").first.fill("x+1")
+            card.locator(".stack-validate").click()
+            card.locator('.stack-result[data-state="error"]').wait_for()
+            assert "Controlled initial message clone failure" in card.locator(".stack-result").inner_text()
+            failed = page.evaluate("window.__stackInitFailure.snapshot()")
+            assert len(failed["workers"]) == 1
+            assert failed["workers"][0]["terminated"], failed
+            assert failed["deadlines"] == [{"cleared": True}], failed
+
+            card.locator(".stack-validate").click()
+            card.locator('.stack-result[data-state="valid"]').wait_for()
+            page.evaluate("window.__stackInitFailure.expireOriginalDeadline()")
+            card.locator(".stack-validate").click()
+            card.locator('.stack-result[data-state="valid"]').wait_for()
+            retried = page.evaluate("window.__stackInitFailure.snapshot()")
+            assert len(retried["workers"]) == 2, retried
+            assert not retried["workers"][1]["terminated"], retried
+            assert all(timer["cleared"] for timer in retried["deadlines"]), retried
+            assert card.locator(".stack-check").is_enabled()
+        finally:
+            browser.close()
