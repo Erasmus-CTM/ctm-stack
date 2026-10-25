@@ -6,7 +6,19 @@ title: Python basis test browser checks
 #| label: matrix-pair
 #| file: matrix-pair.xml
 #| question: Two matrix inputs with a later domain check
-#| python-checkers: pair-checkers.py
+#| checker: |
+#|   def check(response, symbols):
+#|       node = response.get("node")
+#|       if node is None:
+#|           return True
+#|       if node["options"]["phase"] == "paint":
+#|           student = response["answers"]["first"]
+#|           return {"correct": True,
+#|                   "assessment": {"first": {"columns": ["correct"] * student.cols}}}
+#|       student = response["answers"]["second"]
+#|       if student[0, 0] <= 0:
+#|           return {"valid": False, "feedback": "Enter a positive entry."}
+#|       return True
 #| review: true
 ```
 
@@ -20,7 +32,6 @@ title: Python basis test browser checks
 ```{#course-b-nullspace .stack-question}
 #| label: course-b-nullspace
 #| file: questions/course-b-nullspace.xml
-#| python-checkers: questions/matrix-checkers.py
 #| question: A basis for the null space of B
 #| review: true
 ```
@@ -28,7 +39,6 @@ title: Python basis test browser checks
 ```{#course-c-nullspace .stack-question}
 #| label: course-c-nullspace
 #| file: questions/course-c-nullspace.xml
-#| python-checkers: questions/matrix-checkers.py
 #| question: A basis for the null space of C
 #| review: true
 ```
@@ -36,7 +46,6 @@ title: Python basis test browser checks
 ```{#determinant-one .stack-question}
 #| label: determinant-one
 #| file: questions/determinant-one.xml
-#| python-checkers: questions/matrix-checkers.py
 #| question: A nonidentity integer matrix with determinant one
 #| review: true
 ```

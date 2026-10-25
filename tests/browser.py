@@ -53,7 +53,9 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             card = page.locator('[data-stack-id="custom-multiple"]')
             other = page.locator('[data-stack-id="custom-other"]')
             payload = card_data(card)
-            assert set(payload['question']['python_checkers']) == {'api_version', 'source'}
+            assert 'python_checkers' not in payload['question']
+            assert 'def check(response, symbols):' in payload['question']['checker']
+            assert payload['question']['checker_value'] == 1
             divisor = int(payload['variants'][0]['env']['d'])
             other_divisor=int(card_data(other)['variants'][0]['env']['d'])
 
@@ -92,7 +94,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             # Custom source and diagnostics must not enter optional AI hints.
             card.locator('.stack-feedback-button').click()
             prompt = card.locator('.ai-feedback-prompt').inner_text()
-            for forbidden in ('CHECKERS', 'def positive_multiple', 'python_checkers',
+            for forbidden in ('CHECKERS', 'def check(', 'python_checkers',
                               'Enter an integer value.', 'positive integer multiple of the given number.'):
                 assert forbidden not in prompt
             card.locator('.stack-answer').fill('1')

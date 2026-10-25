@@ -193,7 +193,9 @@ block. File paths are relative to the containing `.qmd` page.
 | `feedback-language` | Document `lang` | Language for AI explanations. |
 | `feedback-policy` | Inherited policy | Name of a policy loaded by CTM Assessment's AI feedback. |
 | `label` | Required, unique on the page | Stable exercise key for variant history, saved answers and policy overrides. |
-| `python-checkers` | Omitted | Python filename read during the build; register named functions in `CHECKERS`. No source manifest is required. |
+| `checker` | Omitted | Trusted `check(response, symbols)` source; see the [checker API](python-checker-api.qmd). |
+| `checker-value` | `1` | Positive weight of the implicit `checker` response tree. |
+| `tests` | Omitted | Declarative answers and expected verdicts, run for every variant at build time. |
 
 The extension requires CTM Assessment (with ctm-checkers 0.2.0 or later;
 0.3.0 or later forbids learners the names of question and feedback variables,
