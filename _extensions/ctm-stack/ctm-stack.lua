@@ -211,6 +211,7 @@ end
 -- false, CTM_FEEDBACK=off; P22) gives the cards none and names them in its
 -- build message (ctm.feedback.request).
 local function detect(doc)
+  ctm.settings.load(doc.meta)
   feedbackRequested = false
   local wanted = false
   doc:walk({CodeBlock = function(b)
