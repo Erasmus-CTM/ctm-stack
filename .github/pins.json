@@ -6,10 +6,10 @@
  },
  "ctm-checkers": {
   "repository": "Erasmus-CTM/ctm-checkers",
-  "commit": "046a541a2f343b7f9224aa97b7c90f2d3682c4eb"
+  "commit": "d2bcbc4a6d9a471069a185f2951063d62a3b7608"
  },
  "ctm-assessment": {
   "repository": "Erasmus-CTM/ctm-assessment",
-  "commit": "409654f076e5a3ab3e50090506772944a870a956"
+  "commit": "c05577661b5cd7eec3e19bde59eae41c1e55bf10"
  }
 }

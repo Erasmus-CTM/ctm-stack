@@ -43,7 +43,7 @@ jobs:
   compliance:
     name: Native STACK (ctm-checkers)
     needs: dependencies
-    uses: Erasmus-CTM/ctm-checkers/.github/workflows/native-stack.yml@046a541a2f343b7f9224aa97b7c90f2d3682c4eb # the ctm-checkers commit this run builds against (checked above)
+    uses: Erasmus-CTM/ctm-checkers/.github/workflows/native-stack.yml@d2bcbc4a6d9a471069a185f2951063d62a3b7608 # the ctm-checkers commit this run builds against (checked above)
     with:
       ctm-checkers-ref: ${{ needs.dependencies.outputs.ctm-checkers }}
 
