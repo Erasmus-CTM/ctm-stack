@@ -1,10 +1,10 @@
 -- Quarto HTML filter for trusted, authored STACK question XML.
--- stack-sympy is a part of CTM Assessment: its library ctm-libs (the Python
+-- ctm-stack is a part of CTM Assessment: its library ctm-libs (the Python
 -- runtime, AI feedback) is found by the canonical bootstrap, which stops the
 -- render with the install command when CTM Assessment is missing. The STACK
 -- engine is ctm-checkers' (ctm_checkers.stack), which ctm-libs finds
 -- (ctm.checkers): its wheels at build time, its page scripts in the browser.
-local ctm = dofile(quarto.utils.resolve_path('ctm-bootstrap.lua'))('stack-sympy')
+local ctm = dofile(quarto.utils.resolve_path('ctm-bootstrap.lua'))('ctm-stack', {api = 3})
 local installed = false
 local sequence = 0
 local feedbackRequested = false
@@ -39,16 +39,16 @@ local checkersReady = false
 local function requireCheckers()
   if checkersReady then return end
   if not ctm.checkers then
-    fail('stack-sympy ' .. extensionVersion() .. ' needs ctm-checkers, which the ctm-libs in ' .. ctm.dir
+    fail('ctm-stack ' .. extensionVersion() .. ' needs ctm-checkers, which the ctm-libs in ' .. ctm.dir
       .. ' does not provide. Update CTM Assessment: ' .. INSTALL)
   end
-  ctm.checkers.require('stack-sympy', 1)
+  ctm.checkers.require('ctm-stack', 2)
   checkersReady = true
 end
 
 local function readFile(path)
   local file, reason = io.open(path, 'rb')
-  if not file then fail('stack-sympy: could not read source ' .. path .. ': ' .. tostring(reason)) end
+  if not file then fail('ctm-stack: could not read source ' .. path .. ': ' .. tostring(reason)) end
   local contents = file:read('*a')
   file:close()
   return contents
@@ -89,9 +89,9 @@ local function setup()
   ctm.runtime.use()
   ctm.checkers.use('stack')
   quarto.doc.add_html_dependency({
-    name = 'stack-sympy', version = extensionVersion(),
-    scripts = {{path = 'vendor/matrix-input.js', afterBody = true}, {path = 'stack-sympy.js', afterBody = true}},
-    stylesheets = {'vendor/matrix-input.css', 'stack-sympy.css'},
+    name = 'ctm-stack', version = extensionVersion(),
+    scripts = {{path = 'vendor/matrix-input.js', afterBody = true}, {path = 'ctm-stack.js', afterBody = true}},
+    stylesheets = {'vendor/matrix-input.css', 'ctm-stack.css'},
     resources = {
       {name = 'worker.js', path = 'worker.js'}
     }
@@ -103,7 +103,7 @@ local function options(text)
   for line in (text .. '\n'):gmatch('([^\r\n]*)\n') do
     local key, value = line:match('^#|%s*([%w_-]+):%s*(.-)%s*$')
     if key then opts[key] = value
-    elseif line:match('%S') then fail('stack-sympy: only #| key: value lines are allowed in a stack-question block') end
+    elseif line:match('%S') then fail('ctm-stack: only #| key: value lines are allowed in a stack-question block') end
   end
   return opts
 end
@@ -112,14 +112,14 @@ local function booleanOption(opts, name)
   local v = opts[name]
   if v == nil or v == 'false' then return false end
   if v == 'true' then return true end
-  fail('stack-sympy: ' .. name .. ' must be true or false')
+  fail('ctm-stack: ' .. name .. ' must be true or false')
 end
 
 local function integerOption(opts, name, default, minimum, maximum)
   local value = opts[name] or tostring(default)
   local n = tonumber(value)
   if not n or n ~= math.floor(n) or n < minimum or n > maximum then
-    fail('stack-sympy: ' .. name .. ' must be an integer from ' .. minimum .. ' to ' .. maximum)
+    fail('ctm-stack: ' .. name .. ' must be an integer from ' .. minimum .. ' to ' .. maximum)
   end
   return n
 end
@@ -127,11 +127,11 @@ end
 local function render(block)
   if not block.classes:includes('stack-question') then return nil end
   if not quarto.doc.is_format('html:js') then
-    fail('stack-sympy: interactive questions require HTML output')
+    fail('ctm-stack: interactive questions require HTML output')
   end
   local opts = options(block.text)
-  if not opts.file or opts.file == '' then fail('stack-sympy: #| file: is required') end
-  if not opts.question or opts.question == '' then fail('stack-sympy: #| question: is required') end
+  if not opts.file or opts.file == '' then fail('ctm-stack: #| file: is required') end
+  if not opts.question or opts.question == '' then fail('ctm-stack: #| question: is required') end
   local variants = integerOption(opts, 'variants', 1, 1, 20)
   local seed = integerOption(opts, 'seed', 1, -2147483648, 2147483647)
   local review = booleanOption(opts, 'review')
@@ -139,7 +139,7 @@ local function render(block)
   -- AI feedback when the card asks for it and the build has it (S-15).
   local useFeedback = feedbackRequested and booleanOption(opts, 'feedback')
   sequence = sequence + 1
-  local identifier = block.identifier ~= '' and block.identifier or ('stack-sympy-' .. sequence)
+  local identifier = block.identifier ~= '' and block.identifier or ('ctm-stack-' .. sequence)
   requireCheckers()
   -- Author paths are relative to the QMD, unlike extension asset paths.
   local inputPath = pandoc.path.is_absolute(opts.file) and opts.file
@@ -169,12 +169,12 @@ local function render(block)
       tostring(type(output) == 'table' and output.error_code or '?') .. ')' end
     if diagnostics then
       setup()
-      return pandoc.RawBlock('html', '<section class="stack-sympy stack-diagnostic" role="alert"><strong>Question could not be rendered</strong><pre>' .. escape(detail) .. '</pre></section>')
+      return pandoc.RawBlock('html', '<section class="ctm-stack stack-diagnostic" role="alert"><strong>Question could not be rendered</strong><pre>' .. escape(detail) .. '</pre></section>')
     end
-    fail('stack-sympy: could not render ' .. opts.file .. ' / ' .. opts.question .. ': ' .. detail)
+    fail('ctm-stack: could not render ' .. opts.file .. ' / ' .. opts.question .. ': ' .. detail)
   end
   setup()
-  if output:find('class="stack-sympy stack-diagnostic"', 1, true) then
+  if output:find('class="ctm-stack stack-diagnostic"', 1, true) then
     return pandoc.RawBlock('html', output)
   end
   if useFeedback then
@@ -193,7 +193,7 @@ local function render(block)
     output, changed = output:gsub('(<section class="stack%-sympy"[^>]*)(>)', function(prefix, closing)
       return prefix .. attr .. closing
     end, 1)
-    if changed ~= 1 then fail('stack-sympy: could not add feedback to question card') end
+    if changed ~= 1 then fail('ctm-stack: could not add feedback to question card') end
   end
   local source = authoredSource(block)
   local xml = readFile(inputPath)
@@ -221,7 +221,7 @@ local function detect(doc)
   end})
   if wanted and quarto.doc.is_format('html') then
     ctm.settings.load(doc.meta)
-    feedbackRequested = ctm.feedback.request('stack-sympy', true, '#| feedback: true')
+    feedbackRequested = ctm.feedback.request('ctm-stack', true, '#| feedback: true')
   end
   if feedbackRequested then
     feedback = ctm.feedback

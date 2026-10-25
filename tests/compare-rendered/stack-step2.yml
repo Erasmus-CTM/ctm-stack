@@ -1,14 +1,14 @@
-# Expected differences of stack-sympy 0.3.0 (consolidation step 2, S1): this
-# site rendered at stack-sympy f450bcd (its own engine, ai-feedback 0.8.0 at
+# Expected differences of ctm-stack 0.3.0 (consolidation step 2, S1): this
+# site rendered at ctm-stack f450bcd (its own engine, ai-feedback 0.8.0 at
 # 68abb6d) against the site rendered at S1 (ctm-checkers 0.2.0 with the STACK
 # engine, ctm-libs). Cards, variants and question tests must be the same; any
 # difference that no category explains fails. Run with the umbrella's
 # tools/compare-rendered.mjs (ctm-assessment, its rules: step1.yml there):
 #
 #   node tools/compare-rendered.mjs --before <f450bcd>/_site --after <S1>/_site \
-#     --expect <stack-sympy>/tests/compare-rendered/stack-step2.yml
+#     --expect <ctm-stack>/tests/compare-rendered/stack-step2.yml
 #
-# Not compared by that tool: the extension's own files (stack-sympy.js and
+# Not compared by that tool: the extension's own files (ctm-stack.js and
 # worker.js: the worker loads ctm-libs' runtime and ctm-checkers' page
 # scripts, and the 120-s calculation timer starts once Python has loaded,
 # F-68) and the resources under questions/ (ctm-checkers' examples/stack: the
@@ -23,7 +23,7 @@ categories:
   - id: checker-import
     title: The embedded matrix-checkers.py imports assess_basis from ctm_checkers.matrix (stack_sympy.basis_helper before), its one home
     match:
-      - {area: config, object: '^stack-sympy-data', path: '^/\d+/question/python_checkers/source$', lost: '^stack_sympy\.basis_helper$', gained: '^ctm_checkers\.matrix$'}
+      - {area: config, object: '^ctm-stack-data', path: '^/\d+/question/python_checkers/source$', lost: '^stack_sympy\.basis_helper$', gained: '^ctm_checkers\.matrix$'}
 
   # AI feedback is ctm-libs' (CTM Assessment) instead of ai-feedback 0.8.0:
   # the page leaves out an unset storage (the browser's default is the same,
@@ -44,4 +44,4 @@ categories:
     title: The authoring documentation names CTM Assessment, ctm_checkers.stack and ctm-libs
     match:
       - {area: dom, page: '^docs/(authoring|python-checker-api)\.html$', ancestors: '^(?!.*stack-question-group)'}
-      - {area: dom, page: '^docs/authoring\.html$', attribute: '^data-stack-feedback$', where: {data-stack-feedback: '"mode":"auto"'}, lost: '^export\\nInstall project Add AI Feedback if you want hints:\\nAdd$', gained: '^export\\nSTACK SymPy is a part of CTM Assessment\. [^"]*\(AI feedback\):\\nAdd$'}
+      - {area: dom, page: '^docs/authoring\.html$', attribute: '^data-stack-feedback$', where: {data-stack-feedback: '"mode":"auto"'}, lost: '^export\\nInstall project Add AI Feedback if you want hints:\\nAdd$', gained: '^export\\nCTM STACK is a part of CTM Assessment\. [^"]*\(AI feedback\):\\nAdd$'}

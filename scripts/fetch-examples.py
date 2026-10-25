@@ -28,7 +28,7 @@ def source() -> Path:
     folder = Path(configured) if configured else ROOT / '_ctm-checkers-source'
     if not (folder / 'examples/stack').is_dir():
         pin = json.loads((ROOT / '.github/pins.json').read_text())['ctm-checkers']['commit']
-        sys.exit('stack-sympy shows the STACK examples of ctm-checkers, which were not found in '
+        sys.exit('ctm-stack shows the STACK examples of ctm-checkers, which were not found in '
                  f'{folder}. Check out Erasmus-CTM/ctm-checkers at {pin} (.github/pins.json) '
                  'there, or set CTM_CHECKERS_SOURCE to a ctm-checkers checkout.')
     return folder

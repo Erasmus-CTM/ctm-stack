@@ -6,7 +6,7 @@ format:
   html:
     html-math-method: mathjax
 filters:
-  - stack-sympy
+  - ctm-stack
 ai-feedback:
   policy-files: policies.yml
   project-policy:

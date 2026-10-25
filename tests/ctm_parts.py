@@ -1,4 +1,4 @@
-"""CTM Assessment's parts that stack-sympy builds against, for the tests.
+"""CTM Assessment's parts that ctm-stack builds against, for the tests.
 
 ctm-libs (the bootstrap's target: the Python runtime, AI feedback) and
 ctm-checkers (the STACK engine: wheels for native Python, page scripts for the

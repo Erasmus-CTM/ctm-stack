@@ -1,7 +1,7 @@
-title: STACK SymPy
-author: STACK SymPy contributors
+title: CTM STACK
+author: CTM STACK contributors
 version: 0.3.0
 quarto-required: ">=1.8.27"
 contributes:
   filters:
-    - stack-sympy.lua
+    - ctm-stack.lua

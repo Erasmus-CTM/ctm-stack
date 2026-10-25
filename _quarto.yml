@@ -15,7 +15,7 @@ project:
     - questions/**
 
 website:
-  title: "STACK SymPy"
+  title: "CTM STACK"
   navbar:
     left:
       - href: index.qmd
@@ -46,10 +46,10 @@ website:
             text: Semantics for STACK authors
     right:
       - icon: github
-        href: https://github.com/Erasmus-CTM/stack-sympy
+        href: https://github.com/Erasmus-CTM/ctm-stack
         aria-label: Source repository
   page-footer:
-    left: "STACK SymPy · interactive practice for Quarto teaching pages"
+    left: "CTM STACK · interactive practice for Quarto teaching pages"
 
 format:
   html:
@@ -59,7 +59,7 @@ format:
     code-copy: true
 
 filters:
-  - stack-sympy
+  - ctm-stack
 
 ai-feedback:
   policy-files: feedback/course.yml

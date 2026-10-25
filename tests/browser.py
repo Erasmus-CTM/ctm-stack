@@ -34,7 +34,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             page.goto(url + '/custom.html', wait_until='domcontentloaded')
             card = page.locator('[data-stack-id="custom-multiple"]')
             other = page.locator('[data-stack-id="custom-other"]')
-            payload = json.loads(card.locator('.stack-sympy-data').text_content())
+            payload = json.loads(card.locator('.ctm-stack-data').text_content())
             assert set(payload['question']['python_checkers']) == {'api_version', 'source'}
             divisor = int(payload['variants'][0]['env']['d'])
 
@@ -60,7 +60,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             assert 'All question tests passed' in card.inner_text()
             # Independently compare complete qtest results, not only UI labels.
             actual = page.evaluate("""async payload => {
-              const script = [...document.scripts].find(x => x.src.includes('stack-sympy.js'));
+              const script = [...document.scripts].find(x => x.src.includes('ctm-stack.js'));
               const worker = new Worker(new URL('worker.js', script.src));
               const ask = message => new Promise((resolve, reject) => {
                 const timer = setTimeout(() => reject(Error('Worker parity timeout')), 180000);
@@ -252,7 +252,7 @@ def test_browser_bounded_matrix_editor_worker_and_stale_evidence(browser_site):
             control = host.locator('[data-dynamic-action="add-row"]')
             assert control.evaluate('(el) => parseFloat(getComputedStyle(el).paddingTop)') < 3
             assert host.evaluate('(el) => getComputedStyle(el).borderTopStyle') == 'none'
-            payload = json.loads(card.locator('.stack-sympy-data').text_content())
+            payload = json.loads(card.locator('.ctm-stack-data').text_content())
             a = payload['variants'][0]['env']['a']
 
             def fill_correct():
@@ -356,7 +356,7 @@ def test_browser_published_pages_mount_cards():
             for qmd in question_pages():
                 route = qmd.relative_to(ROOT).with_suffix(".html").as_posix()
                 page.goto(f"{url}/{route}", wait_until="domcontentloaded")
-                cards = page.locator(".stack-sympy")
+                cards = page.locator(".ctm-stack")
                 assert cards.count() > 0, route
                 assert page.locator(".stack-diagnostic").count() == 0
                 for card in cards.all():
@@ -464,7 +464,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         card.locator(".stack-prompt mjx-container").first.wait_for(timeout=60000)
 
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
-        cards = page.locator(".stack-sympy:not(.stack-diagnostic)")
+        cards = page.locator(".ctm-stack:not(.stack-diagnostic)")
         assert cards.count() > 0
         for index in range(cards.count()):
             example = cards.nth(index)
@@ -481,7 +481,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
             ("Boolean equivalence", "not a or not b", True),
         ):
             example = next(cards.nth(i) for i in range(cards.count())
-                           if json.loads(cards.nth(i).locator(".stack-sympy-data").text_content())["question"]["name"] == question_name)
+                           if json.loads(cards.nth(i).locator(".ctm-stack-data").text_content())["question"]["name"] == question_name)
             example.locator(".stack-answer").fill(response)
             example.locator(".stack-validate").click()
             example.locator('.stack-validation[data-state="valid"]').wait_for(timeout=120000)
@@ -489,7 +489,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
             example.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
             assert example.locator(".stack-result").get_attribute("data-state") == ("correct" if correct else "retry")
         collection = page.locator('[data-stack-id="finite-collections"]')
-        payload = json.loads(collection.locator('.stack-sympy-data').text_content())
+        payload = json.loads(collection.locator('.ctm-stack-data').text_content())
         a = payload['variants'][0]['env']['a']
         for name, response in {'sequence':f'[{a},x+x]', 'members':f'{{2*x,{a}}}',
                                'explained':f'{{{a},2*x,2*x}}'}.items():
@@ -512,7 +512,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         collection.locator('.stack-result[data-state="invalid"]').wait_for(timeout=120000)
         assert collection.locator('.stack-check').is_disabled()
         nested = page.locator('[data-stack-id="nested-collections"]')
-        data = json.loads(nested.locator('.stack-sympy-data').text_content())
+        data = json.loads(nested.locator('.ctm-stack-data').text_content())
         a = data['variants'][0]['env']['a']
         responses = {'nested':f'[[{a},x+x],{{{{3,2}},1}},[]]',
                      'families':f'{{[{a},2*x],{{2,1}},[{a},2*x]}}',
@@ -612,12 +612,12 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             errors = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             page.goto(url + "/corpus.html", wait_until="domcontentloaded")
-            cards = page.locator(".stack-sympy:not(.stack-diagnostic)")
+            cards = page.locator(".ctm-stack:not(.stack-diagnostic)")
             assert cards.count() == len(expected) + 1
             by_name = {}
             for index in range(cards.count()):
                 card = cards.nth(index)
-                payload = json.loads(card.locator("script.stack-sympy-data").text_content())
+                payload = json.loads(card.locator("script.ctm-stack-data").text_content())
                 if payload["question"]["name"].endswith(" (presentation teaching copy)"):
                     assert payload["question"]["name"] == "7.3.26 (Write sim. eqns. with matrices) (presentation teaching copy)"
                     assert payload["variants"][0]["seed"] == 1930245414

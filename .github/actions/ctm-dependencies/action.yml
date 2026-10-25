@@ -1,6 +1,6 @@
 name: Install CTM Assessment's parts
 description: >
-  Installs what stack-sympy builds against in its own repository: ctm-libs,
+  Installs what ctm-stack builds against in its own repository: ctm-libs,
   the library of CTM Assessment (the Python runtime and AI feedback, found by
   the bootstrap), and ctm-checkers, the checker library with the STACK engine
   (its wheels and page scripts; its checkout `_ctm-checkers-source` also
@@ -77,16 +77,16 @@ runs:
         # Failures become annotations, readable without the raw log.
         step() { out=$("$@" 2>&1) || { echo "$out"; printf '::error title=%s failed::%s\n' "$*" "$(echo "$out" | tail -25 | sed -e ':a' -e 'N' -e '$!ba' -e 's/%/%25/g' -e 's/\n/%0A/g')"; exit 1; }; echo "$out"; }
         # The bootstrap is ctm-libs' file, byte for byte (design step 2, §5.2).
-        sha256sum _extensions/stack-sympy/ctm-bootstrap.lua _ctm-libs-source/bootstrap/ctm-bootstrap.lua
-        cmp -s _extensions/stack-sympy/ctm-bootstrap.lua _ctm-libs-source/bootstrap/ctm-bootstrap.lua || {
-          echo "::error file=_extensions/stack-sympy/ctm-bootstrap.lua::ctm-bootstrap.lua differs from ctm-libs' bootstrap/ctm-bootstrap.lua at ${{ steps.refs.outputs.ctm-libs }}: copy it from there"; exit 1; }
+        sha256sum _extensions/ctm-stack/ctm-bootstrap.lua _ctm-libs-source/bootstrap/ctm-bootstrap.lua
+        cmp -s _extensions/ctm-stack/ctm-bootstrap.lua _ctm-libs-source/bootstrap/ctm-bootstrap.lua || {
+          echo "::error file=_extensions/ctm-stack/ctm-bootstrap.lua::ctm-bootstrap.lua differs from ctm-libs' bootstrap/ctm-bootstrap.lua at ${{ steps.refs.outputs.ctm-libs }}: copy it from there"; exit 1; }
         step quarto add ./_ctm-libs-source --no-prompt
-        test -f _extensions/ctm-libs/lua/checkers.lua || { echo "::error::this ctm-libs has no ctm.checkers (stack-sympy 0.3 needs a ctm-libs from consolidation step 2 on)"; find _extensions -maxdepth 3; exit 1; }
+        test -f _extensions/ctm-libs/lua/checkers.lua || { echo "::error::this ctm-libs has no ctm.checkers (ctm-stack 0.3 needs a ctm-libs from consolidation step 2 on)"; find _extensions -maxdepth 3; exit 1; }
         step quarto add ./_ctm-checkers-source --no-prompt
-        jq -e '.parts.stack' _extensions/ctm-checkers/checkers.json > /dev/null || { echo "::error::this ctm-checkers has no STACK engine (stack-sympy 0.3 needs ctm-checkers 0.2.0 or later)"; exit 1; }
+        jq -e '.parts.stack' _extensions/ctm-checkers/checkers.json > /dev/null || { echo "::error::this ctm-checkers has no STACK engine (ctm-stack 0.3 needs ctm-checkers 0.2.0 or later)"; exit 1; }
         echo "CTM_LIBS_EXTENSION=$GITHUB_WORKSPACE/_extensions/ctm-libs" >> "$GITHUB_ENV"
         echo "CTM_CHECKERS_EXTENSION=$GITHUB_WORKSPACE/_extensions/ctm-checkers" >> "$GITHUB_ENV"
         echo "CTM_CHECKERS_SOURCE=$GITHUB_WORKSPACE/_ctm-checkers-source" >> "$GITHUB_ENV"
-        # stack-sympy stops without the CTM Assessment package unless the
+        # ctm-stack stops without the CTM Assessment package unless the
         # build says it is a component development build.
         echo "CTM_COMPONENT_DEV=1" >> "$GITHUB_ENV"

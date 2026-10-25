@@ -1,6 +1,6 @@
 # Expected differences of this site's pin of ctm-checkers 0.10.0 (consolidation
 # step 2, the STACK set S-07, S-05, S-10 and S-11): the site rendered at
-# stack-sympy main 1b1d50f (ctm-checkers 0.6.0, c366f17) against the site
+# ctm-stack main 1b1d50f (ctm-checkers 0.6.0, c366f17) against the site
 # rendered at this pull request's head (ctm-checkers 0.10.0). The cards, their
 # question tests and the variants do not change: the example questions are the
 # same files (the changes of ctm-checkers 0.7.0 to 0.10.0 are in the engine and
@@ -10,7 +10,7 @@
 # Run with the umbrella's tools/compare-rendered.mjs (ctm-assessment):
 #
 #   node tools/compare-rendered.mjs --before <1b1d50f>/_site --after <head>/_site \
-#     --expect <stack-sympy>/tests/compare-rendered/stack-checkers-0.10.yml
+#     --expect <ctm-stack>/tests/compare-rendered/stack-checkers-0.10.yml
 categories:
   - id: docs-requirements
     title: The requirements name ctm-checkers 0.10.0 (question options, answers that are not numbers or not of the teacher’s type, answers a test cannot decide)

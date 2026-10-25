@@ -67,7 +67,7 @@ answer supplies its dimensions. For learner-selected columns, as in the
 
 Each axis requires `initial`, `min`, `max` and `resizable`. A fixed axis uses
 `resizable="0"` with equal initial, minimum and maximum. The product of the
-two maxima may not exceed 64. This sizing element is a STACK SymPy extension
+two maxima may not exceed 64. This sizing element is a CTM STACK extension
 and needs adaptation for native Moodle STACK. The input model and authored
 tests must fit the configured dimensions. For a matrix-defined space, the
 input model can use `nullspace_basis(A)`, `columnspace_basis(A)` or
