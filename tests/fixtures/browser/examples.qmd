@@ -11,7 +11,6 @@ ai-feedback:
 #| file: questions/rational-equivalence.xml
 #| question: Equivalent rational expression
 #| variants: 3
-#| seed: 29
 #| review: true
 #| feedback: true
 #| label: rational-practice
@@ -25,9 +24,9 @@ Visible measurement context for the explicit-context activity.
 :::
 
 ```{#measurements .stack-question}
+#| label: measurements
 #| file: questions/numerical-measurement.xml
 #| question: Rectangle and triangle measurements
-#| seed: 47
 #| review: true
 #| feedback: true
 #| context: measurement-context
@@ -36,10 +35,10 @@ Visible measurement context for the explicit-context activity.
 ## No context
 
 ```{#upstream .stack-question}
+#| label: upstream
 #| file: questions/upstream/algmap-6-1.xml
 #| question: AlgMap-6.1
 #| variants: 2
-#| seed: 17
 #| review: true
 #| feedback: true
 #| context: none
@@ -48,66 +47,66 @@ Visible measurement context for the explicit-context activity.
 ## Numerical imports
 
 ```{#bodmas .stack-question}
+#| label: bodmas
 #| file: questions/upstream/bodmas.xml
 #| question: 1.1.4.T2 BODMAS
-#| seed: 29
 #| review: true
 ```
 
 ```{#rounding .stack-question}
+#| label: rounding
 #| file: questions/upstream/rounding-three-dp.xml
 #| question: 1.1.3.T1 Rounding to n Decimal Places
-#| seed: 47
 #| review: true
 ```
 
 ## Functions and logic
 
 ```{#hyperbolic .stack-question}
+#| label: hyperbolic
 #| file: questions/hyperbolic-equivalence.xml
 #| question: Hyperbolic equivalence
-#| seed: 17
 #| review: true
 ```
 
 ```{#zero-product .stack-question}
+#| label: zero-product
 #| file: questions/zero-product.xml
 #| question: Zero product equations
-#| seed: 17
 #| review: true
 ```
 
 ```{#boolean .stack-question}
+#| label: boolean
 #| file: questions/boolean-equivalence.xml
 #| question: Boolean equivalence
-#| seed: 17
 #| review: true
 ```
 
 ## Finite lists and sets
 
 ```{#finite-collections .stack-question}
+#| label: finite-collections
 #| file: questions/finite-collections.xml
 #| question: Finite scalar collections
 #| variants: 2
-#| seed: 17
 #| review: true
 ```
 
 ## Nested collections and written form
 
 ```{#nested-collections .stack-question}
+#| label: nested-collections
 #| file: questions/nested-collections.xml
 #| question: Nested finite collections
-#| seed: 17
 #| review: true
 ```
 
 ## Finite author helpers
 
 ```{#finite-author-helpers .stack-question}
+#| label: finite-author-helpers
 #| file: questions/finite-author-helpers.xml
 #| question: Finite author helpers
-#| seed: 17
 #| review: true
 ```

@@ -103,6 +103,7 @@ full credit when both conditions hold. See the
 [authoring walkthrough](#author-the-spd-checker) for the XML and Quarto block.
 
 ```{.stack-question #docs-spd-matrix}
+#| label: docs-spd-matrix
 #| file: ../questions/symmetric-positive-definite.xml
 #| question: A positive definite matrix
 #| python-checkers: ../questions/matrix-checkers.py
@@ -117,6 +118,7 @@ The second activity uses `is_hermitian` and `is_positive_definite` in two
 PRTs, each worth half the marks. Each condition has its own feedback.
 
 ```{.stack-question #docs-spd-separate}
+#| label: docs-spd-separate
 #| file: ../questions/symmetric-positive-definite-prt.xml
 #| question: Hermitian symmetry and positive definiteness separately
 #| python-checkers: ../questions/matrix-checkers.py
@@ -211,6 +213,7 @@ Add the XML and **the checker filename** to a root-level Quarto page:
 
 ````markdown
 ```{.stack-question}
+#| label: python-checker-api-a-positive-definite-matrix
 #| file: questions/symmetric-positive-definite.xml
 #| question: A positive definite matrix
 #| python-checkers: questions/matrix-checkers.py
@@ -276,11 +279,11 @@ The XML names the checker and passes the learner input and teacher value:
 Select the module on the Quarto question block as well:
 
 ```{.stack-question #docs-custom-multiple}
+#| label: docs-custom-multiple
 #| file: ../questions/python-checker.xml
 #| question: A positive integer multiple (PythonChecker)
 #| python-checkers: ../questions/checkers.py
 #| variants: 3
-#| seed: 17
 #| review: true
 ```
 

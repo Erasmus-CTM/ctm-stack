@@ -3,23 +3,24 @@ title: "Custom Python checker integration"
 ---
 
 ```{.stack-question #custom-multiple}
+#| label: custom-multiple
 #| file: questions/python-checker.xml
 #| question: A positive integer multiple (PythonChecker)
 #| python-checkers: questions/checkers.py
-#| seed: 17
 #| variants: 2
 #| review: true
 #| feedback: true
 ```
 
 ```{.stack-question #custom-other}
-#| file: questions/python-checker.xml
+#| label: custom-other
+#| file: questions/alternate-python-checker.xml
 #| question: A positive integer multiple (PythonChecker)
 #| python-checkers: alternate-checkers.py
-#| seed: 17
 ```
 
 ```{.stack-question #custom-spd}
+#| label: custom-spd
 #| file: questions/symmetric-positive-definite.xml
 #| question: A positive definite matrix
 #| python-checkers: questions/matrix-checkers.py
@@ -27,6 +28,7 @@ title: "Custom Python checker integration"
 ```
 
 ```{.stack-question #custom-spd-prt}
+#| label: custom-spd-prt
 #| file: questions/symmetric-positive-definite-prt.xml
 #| question: Hermitian symmetry and positive definiteness separately
 #| python-checkers: questions/matrix-checkers.py

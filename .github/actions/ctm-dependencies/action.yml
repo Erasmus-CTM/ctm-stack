@@ -83,6 +83,7 @@ runs:
         step quarto add ./_ctm-libs-source --no-prompt
         test -f _extensions/ctm-libs/lua/checkers.lua || { echo "::error::this ctm-libs has no ctm.checkers (ctm-stack 0.3 needs a ctm-libs from consolidation step 2 on)"; find _extensions -maxdepth 3; exit 1; }
         step quarto add ./_ctm-checkers-source --no-prompt
+        step python _ctm-checkers-source/tools/build_authoring.py --install-extension _extensions/ctm-checkers
         jq -e '.parts.stack' _extensions/ctm-checkers/checkers.json > /dev/null || { echo "::error::this ctm-checkers has no STACK engine (ctm-stack 0.3 needs ctm-checkers 0.2.0 or later)"; exit 1; }
         echo "CTM_LIBS_EXTENSION=$GITHUB_WORKSPACE/_extensions/ctm-libs" >> "$GITHUB_ENV"
         echo "CTM_CHECKERS_EXTENSION=$GITHUB_WORKSPACE/_extensions/ctm-checkers" >> "$GITHUB_ENV"

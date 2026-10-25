@@ -1,7 +1,7 @@
 -- CTM STACK owns the card shell; backend preparation returns data only.
 local ctm = dofile(quarto.utils.resolve_path('ctm-bootstrap.lua'))('ctm-stack', {api = 2})
 local installed, sequence, feedbackRequested, documentLanguage = false, 0, false, 'en'
-local feedback, seenBackends, warnedDefault = nil, {}, false
+local feedback, seenBackends, seenLabels, warnedDefault = nil, {}, {}, false
 local feedbackDefault = 'auto'
 local function fail(message) assert(false, 'ctm-stack: ' .. message) end
 local function escape(s) return tostring(s or ''):gsub('&','&amp;'):gsub('<','&lt;'):gsub('>','&gt;'):gsub('"','&quot;') end
@@ -48,7 +48,7 @@ end
 local function setup()
   if installed then return end
   installed = true; requireCheckers()
-  ctm.runtime.worker(); ctm.checkers.use('stack'); ctm.locale.use('ctm-stack'); ctm.matrix.use()
+  ctm.runtime.worker(); ctm.checkers.use('stack'); ctm.locale.use('ctm-stack'); ctm.matrix.use(); ctm.variants.use()
   ctm.deps.html({name = 'ctm-ui', stylesheets = {'ui/ctm-ui.css'}})
   quarto.doc.add_html_dependency({name = 'ctm-stack', version = version(),
     scripts = {{path = 'ctm-stack.js', afterBody = true}}, stylesheets = {'ctm-stack.css'},
@@ -74,6 +74,10 @@ local function render(block)
   if not block.classes:includes('stack-question') then return nil end
   if not quarto.doc.is_format('html:js') then fail('interactive questions require HTML output') end
   local opts = options(block.text)
+  if opts.seed then fail('seed: was removed; generate and review STACK variants instead') end
+  if not opts.label or not opts.label:match('^[%w][%w_.-]*$') or opts.label:find('..',1,true) then fail('STACK variants require a unique safe #| label:') end
+  if seenLabels[opts.label] then fail('duplicate STACK label: ' .. opts.label) end
+  seenLabels[opts.label] = true
   if not opts.file or opts.file == '' then fail('#| file: is required') end
   if not opts.question or opts.question == '' then fail('#| question: is required') end
   local cas = opts.cas or ctm.settings.choice('stack','cas',{'sympy','maxima'},{default='sympy'})
@@ -86,15 +90,22 @@ local function render(block)
   if not seenBackends[cas] and next(seenBackends) then quarto.log.info('ctm-stack: this page mixes STACK backends') end
   local firstBackend = not seenBackends[cas]; seenBackends[cas] = true
   requireCheckers(); setup(); sequence = sequence + 1
-  local identifier = (block.identifier ~= '' and block.identifier) or opts.label or ('ctm-stack-' .. sequence)
+  local identifier = opts.label
   local file = authoredPath(opts.file)
-  local args = {'-m','ctm_checkers.stack.cli','prepare','--file',file,'--question',opts.question,'--id',identifier,
-    '--variants',tostring(integer(opts,'variants',1,1,100)), '--seed',tostring(integer(opts,'seed',1,-2147483648,2147483647))}
-  if opts['python-checkers'] then args[#args+1] = '--python-checkers'; args[#args+1] = authoredPath(opts['python-checkers']) end
-  if bool(opts,'review') then args[#args+1] = '--review' end
+  integer(opts,'variants',25,1,100)
+  local mode = ctm.variants.renderMode()
+  local request = {version=1,action='resolve',source=block.text,question='',options=opts,
+    projectRoot=quarto.project.directory or pandoc.path.directory(quarto.doc.input_file),
+    file=quarto.doc.input_file,label=opts.label,manifest='_variants/' .. opts.label .. '.yml',
+    approval=ctm.variants.approval(),renderMode=mode,backend=cas,
+    reviewCandidate=os.getenv('CTM_VARIANTS_REVIEW_CANDIDATE'),
+    reviewCatalog=os.getenv('CTM_VARIANTS_REVIEW_CATALOG') == '1'}
+  local args = {'-I',quarto.utils.resolve_path('question-variants.py'),'--stdin'}
   local ok, output = pcall(function()
-    return pandoc.system.with_environment(ctm.checkers.environment(nil,'stack'), function()
-      return pandoc.pipe(os.getenv('CTM_STACK_PYTHON') or os.getenv('STACK_SYMPY_PYTHON') or 'python3', args, '')
+    local environment = ctm.checkers.environment(nil,'stack')
+    environment.CTM_VARIANTS_QUARTO = quarto.config.cli_path()
+    return pandoc.system.with_environment(environment, function()
+      return pandoc.pipe(os.getenv('CTM_STACK_PYTHON') or os.getenv('STACK_SYMPY_PYTHON') or 'python3', args, json(request))
     end)
   end)
   if not ok then
@@ -105,6 +116,9 @@ local function render(block)
     end
     fail('could not prepare ' .. opts.file .. ' / ' .. opts.question .. ': ' .. detail)
   end
+  local resolved = pandoc.json.decode(output)
+  for _,warning in ipairs(resolved.warnings or {}) do quarto.log.warning('ctm-stack: ' .. opts.label .. ': ' .. warning) end
+  output = assert(resolved.payloadJSON,'ctm-stack: native variants returned no prepared payload')
   local payload = pandoc.json.decode(output)
   assert(payload.version == 2 and payload.variants and #payload.variants > 0, 'ctm-stack: backend prepare requires payload version 2 with variants')
   local attrs = ' class="ctm-stack" data-stack-id="' .. escape(identifier) .. '" data-backend="' .. cas
@@ -127,10 +141,9 @@ local function render(block)
       source=pandoc.utils.sha1(block.text):sub(1,16),save=save}
     for key,value in pairs(record.attributes or {}) do attrs = attrs .. ' ' .. key .. '="' .. escape(value) .. '"' end
   end
-  local choices = {}
-  for index,_ in ipairs(payload.variants) do choices[#choices+1] = '<option value="' .. (index-1) .. '">' .. escape(text('variantChoice',index)) .. '</option>' end
-  local toolbar = '<div class="stack-toolbar"><label>' .. escape(text('variantLabel'))
-    .. '<select class="stack-variant" aria-label="' .. escape(text('variantAriaLabel')) .. '">' .. table.concat(choices) .. '</select></label></div>'
+  local toolbar = '<div class="stack-toolbar"><span class="stack-variant-number" aria-live="polite"></span>'
+    .. '<button type="button" class="stack-new-variant">' .. escape(text('newVariant')) .. '</button>'
+    .. '<span class="stack-variant-approval" role="status"></span></div>'
   local buttons = '<button type="button" class="stack-validate">' .. escape(text('validateButton')) .. '</button>'
     .. '<button type="button" class="stack-check" disabled>' .. escape(text('checkButton')) .. '</button>'
     .. (payload.review and '<button type="button" class="stack-tests">' .. escape(text('testsButton')) .. '</button>' or '')

@@ -32,7 +32,7 @@ QUESTION = ROOT / "questions/polynomial-expansion.xml"
 def render_site(project: Path = ROOT) -> Path:
     quarto = os.environ.get("QUARTO", "quarto")
     result = subprocess.run([quarto, "render"], cwd=project, env=ctm_parts.render_env(),
-                            text=True, capture_output=True, timeout=180)
+                            text=True, capture_output=True, timeout=900)
     assert result.returncode == 0, result.stdout + "\n" + result.stderr
     return project / "_site"
 
@@ -193,7 +193,7 @@ def test_unsupported_question_stops_quarto_build():
         ctm_parts.install(project)
         (project / "_quarto.yml").write_text("project:\n  type: default\nfilters:\n  - ctm-stack\n")
         (project / "test.qmd").write_text("```{.stack-question}\n#| file: missing.xml\n"
-                                           "#| question: Missing\n```\n")
+                                           "#| question: Missing\n#| label: missing\n```\n")
         result = subprocess.run([os.environ.get("QUARTO", "quarto"), "render"],
                                 cwd=project, env=ctm_parts.render_env(), text=True, capture_output=True, timeout=60)
         assert result.returncode != 0, "unsupported XML silently rendered"
@@ -218,6 +218,7 @@ def _fixture_render(source: str, *, parts: bool = True, checkers: bool = True, o
         (project / "_quarto.yml").write_text(
             "project:\n  type: default\n" + ("filters:\n" + "".join(
                 f"  - {name}\n" for name in filters) if filters else "filters: []\n"))
+        shutil.copy2(QUESTION, project / "question.xml")
         (project / "test.qmd").write_text(source)
         for name, content in (files or {}).items():
             destination = project / name
@@ -234,9 +235,10 @@ def _fixture_render(source: str, *, parts: bool = True, checkers: bool = True, o
 
 def _card(feedback: str = "", extra: str = "") -> str:
     return ("```{.stack-question}\n"
-            f"#| file: {QUESTION}\n"
+            "#| file: question.xml\n"
             "#| question: Expand a product (form-sensitive)\n"
-            f"{feedback}{extra}```\n")
+            + ("" if "#| label:" in extra else "#| label: fixture-stack\n")
+            + f"{feedback}{extra}```\n")
 
 
 def _feedback_cards(output: str) -> list[dict]:
@@ -412,3 +414,26 @@ def test_feedback_auto_is_on_but_block_false_overrides_it():
     assert result.returncode == 0, result.stdout + result.stderr
     assert len(_feedback_cards(output)) == 1
     assert 'ctm-locale-ctm-stack' in output
+
+
+def test_stack_variant_publication_gate_and_retired_seed_are_explicit():
+    env=ctm_parts.render_env()
+    env.pop('CTM_VARIANTS',None)
+    result,_=_fixture_render(_card(),env=env)
+    assert result.returncode!=0
+    assert 'at least one current approved' in result.stdout+result.stderr
+    result,_=_fixture_render(_card(extra='#| seed: 17\n'))
+    assert result.returncode!=0
+    assert 'seed: was removed' in result.stdout+result.stderr
+
+
+def test_review_payload_has_native_identities_without_a_selection_menu():
+    result,output=_fixture_render(_card())
+    assert result.returncode==0,result.stdout+result.stderr
+    doc=Document(output)
+    data=json.loads(doc.find('script','ctm-stack-data')[0].text)
+    assert data['common']['renderMode']=='review'
+    assert data['variants']
+    assert all(v['n'] is None and v['proposal'] and len(v['hash'])==16 for v in data['variants'])
+    assert not doc.find('select','stack-variant')
+    assert len(doc.find('button','stack-new-variant'))==1

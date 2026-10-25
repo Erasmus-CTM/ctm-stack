@@ -7,10 +7,10 @@ title: Browser integration fixture
 Visible course context for the expansion activity.
 
 ```{#expansion .stack-question}
+#| label: expansion
 #| file: questions/polynomial-expansion.xml
 #| question: Expand a product (form-sensitive)
 #| variants: 3
-#| seed: 17
 #| review: true
 #| feedback: true
 ```

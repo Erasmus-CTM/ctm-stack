@@ -23,10 +23,10 @@ replace the question's scoring. Review controls let authors replay the
 question's own tests.
 
 ```{.stack-question}
+#| label: index-expand-a-product-form-sensitive
 #| file: questions/polynomial-expansion.xml
 #| question: Expand a product (form-sensitive)
 #| variants: 3
-#| seed: 17
 #| review: true
 #| feedback: true
 ```

@@ -3,6 +3,7 @@ title: Python basis test browser checks
 ---
 
 ```{#matrix-pair .stack-question}
+#| label: matrix-pair
 #| file: matrix-pair.xml
 #| question: Two matrix inputs with a later domain check
 #| python-checkers: pair-checkers.py
@@ -10,29 +11,30 @@ title: Python basis test browser checks
 ```
 
 ```{#course-b-rank-pivots .stack-question}
+#| label: course-b-rank-pivots
 #| file: questions/course-b-rank-pivots.xml
 #| question: Rank and pivot columns of B
-#| seed: 17
 #| review: true
 ```
 
 ```{#course-b-nullspace .stack-question}
+#| label: course-b-nullspace
 #| file: questions/course-b-nullspace.xml
 #| python-checkers: questions/matrix-checkers.py
 #| question: A basis for the null space of B
-#| seed: 17
 #| review: true
 ```
 
 ```{#course-c-nullspace .stack-question}
+#| label: course-c-nullspace
 #| file: questions/course-c-nullspace.xml
 #| python-checkers: questions/matrix-checkers.py
 #| question: A basis for the null space of C
-#| seed: 17
 #| review: true
 ```
 
 ```{#determinant-one .stack-question}
+#| label: determinant-one
 #| file: questions/determinant-one.xml
 #| python-checkers: questions/matrix-checkers.py
 #| question: A nonidentity integer matrix with determinant one

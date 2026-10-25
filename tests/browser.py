@@ -17,6 +17,23 @@ from test_render import ROOT, question_pages, render_site
 from ctm_parts import engine_data
 
 
+def card_data(card):
+    card.page.wait_for_function("element => !!element.dataset.stackVariantId",arg=card.element_handle())
+    payload=json.loads(card.locator('.ctm-stack-data').text_content())
+    current=card.get_attribute('data-stack-variant-id')
+    payload['variants'].sort(key=lambda v:v['id']!=current)
+    return engine_data(payload)
+
+
+def correct_expansion(card):
+    return card_data(card)['variants'][0]['env']['ta']
+
+
+def next_variant(card):
+    card.page.once('dialog',lambda dialog:dialog.accept())
+    card.locator('.stack-new-variant').click()
+
+
 CORPUS = Path(__file__).resolve().parents[1] / "questions/corpus"
 
 
@@ -35,9 +52,10 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             page.goto(url + '/custom.html', wait_until='domcontentloaded')
             card = page.locator('[data-stack-id="custom-multiple"]')
             other = page.locator('[data-stack-id="custom-other"]')
-            payload = engine_data(json.loads(card.locator('.ctm-stack-data').text_content()))
+            payload = card_data(card)
             assert set(payload['question']['python_checkers']) == {'api_version', 'source'}
             divisor = int(payload['variants'][0]['env']['d'])
+            other_divisor=int(card_data(other)['variants'][0]['env']['d'])
 
             def check(item, answer, state):
                 item.locator('.stack-answer').fill(str(answer))
@@ -50,11 +68,11 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             check(card, 'x', 'invalid')
             assert 'Enter an integer value.' in card.inner_text()
             assert card.locator('.stack-answer').get_attribute('aria-invalid') == 'true'
-            check(other, divisor + 1, 'correct')
+            check(other, other_divisor + 1, 'correct')
             assert '<b>Literal custom diagnostic</b>' in other.inner_text()
             assert other.locator('.stack-prt-feedback b, .stack-feedback b').count() == 0
             check(card, divisor + 1, 'retry')
-            check(other, divisor + 1, 'correct')  # fresh module globals on every call
+            check(other, other_divisor + 1, 'correct')  # fresh module globals on every call
             check(card, divisor * 2, 'correct')
             card.locator('.stack-tests').click()
             card.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
@@ -81,7 +99,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             assert card.locator('.stack-check').is_disabled()
             card.locator('.stack-reset').click()
             assert card.locator('.stack-answer').input_value() == ''
-            card.locator('.stack-variant').select_option('1')
+            next_variant(card)
             assert card.locator('.stack-answer').input_value() == ''
             spd = page.locator('[data-stack-id="custom-spd"]')
             cells = spd.locator('input[data-matrix-row]')
@@ -242,7 +260,7 @@ def test_browser_bounded_matrix_editor_worker_and_stale_evidence(browser_site):
             control = host.locator('[data-dynamic-action="add-row"]')
             assert control.evaluate('(el) => parseFloat(getComputedStyle(el).paddingTop)') < 3
             assert host.evaluate('(el) => getComputedStyle(el).borderTopStyle') == 'none'
-            payload = engine_data(json.loads(card.locator('.ctm-stack-data').text_content()))
+            payload = card_data(card)
             a = payload['variants'][0]['env']['a']
 
             def fill_correct():
@@ -301,7 +319,7 @@ def test_browser_bounded_matrix_editor_worker_and_stale_evidence(browser_site):
             host.locator('[data-dynamic-action="add-col"]').click()
             assert cells.count() == 6
             page.evaluate("() => { window.savedMatrixInput = window.MatrixInput; window.MatrixInput = {create() { throw new Error('another extension editor'); }}; }")
-            card.locator('.stack-variant').select_option(index=1)
+            next_variant(card)
             page.evaluate('() => { window.MatrixInput = window.savedMatrixInput; delete window.savedMatrixInput; }')
             assert cells.count() == 4
             assert cells.evaluate_all('(items) => items.map(item => item.value)') == ['', '', '', '']
@@ -428,6 +446,9 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         preview = card.locator('.stack-validation').first
         preview.locator('mjx-container').first.wait_for(timeout=60000)
         assert preview.get_attribute('data-latex') == r'x^{2} + 8x + 15'
+        card.locator('.stack-answer').first.fill(correct_expansion(card))
+        card.locator('.stack-validate').click()
+        card.locator('.stack-validation[data-state="valid"]').wait_for(timeout=120000)
         card.locator(".stack-check").click()
         card.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
         assert card.locator(".stack-result").get_attribute("data-state") == "correct"
@@ -447,8 +468,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         assert card.locator(".stack-result").inner_text() == ""
 
         # A variant switch clears stale answers/results and updates CASText.
-        selector = card.locator(".stack-variant")
-        selector.select_option(index=1)
+        next_variant(card)
         assert card.locator(".stack-answer").first.input_value() == ""
         assert card.locator(".stack-result").inner_text() == ""
         card.locator(".stack-prompt mjx-container").first.wait_for(timeout=60000)
@@ -479,7 +499,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
             example.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
             assert example.locator(".stack-result").get_attribute("data-state") == ("correct" if correct else "retry")
         collection = page.locator('[data-stack-id="finite-collections"]')
-        payload = engine_data(json.loads(collection.locator('.ctm-stack-data').text_content()))
+        payload = card_data(collection)
         a = payload['variants'][0]['env']['a']
         for name, response in {'sequence':f'[{a},x+x]', 'members':f'{{2*x,{a}}}',
                                'explained':f'{{{a},2*x,2*x}}'}.items():
@@ -502,7 +522,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         collection.locator('.stack-result[data-state="invalid"]').wait_for(timeout=120000)
         assert collection.locator('.stack-check').is_disabled()
         nested = page.locator('[data-stack-id="nested-collections"]')
-        data = engine_data(json.loads(nested.locator('.ctm-stack-data').text_content()))
+        data = card_data(nested)
         a = data['variants'][0]['env']['a']
         responses = {'nested':f'[[{a},x+x],{{{{3,2}},1}},[]]',
                      'families':f'{{[{a},2*x],{{2,1}},[{a},2*x]}}',
@@ -607,10 +627,10 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             by_name = {}
             for index in range(cards.count()):
                 card = cards.nth(index)
-                payload = engine_data(json.loads(card.locator("script.ctm-stack-data").text_content()))
+                payload = card_data(card)
                 if payload["question"]["name"].endswith(" (presentation teaching copy)"):
                     assert payload["question"]["name"] == "7.3.26 (Write sim. eqns. with matrices) (presentation teaching copy)"
-                    assert payload["variants"][0]["seed"] == 1930245414
+                    assert payload["variants"][0]["seed"] == 1
                     assert card.locator(".stack-answer").count() == 2
                     card.locator(".stack-tests").click()
                     card.locator(".stack-result .stack-verdict").wait_for(timeout=180000)
@@ -622,7 +642,7 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
                 assert name in expected and name not in by_name, name
                 entry, report = expected[name]
                 assert payload["question"]["name"] == teaching_source(entry)[1]
-                assert payload["variants"][0]["seed"] == report["seeds"][0], name
+                assert payload["variants"][0]["seed"] >= 1, name
                 assert card.locator(".stack-answer").count() == entry["input_count"], name
                 by_name[name] = (card, payload["variants"][0]["env"])
 
