@@ -101,7 +101,7 @@ local function render(block)
     approval=ctm.variants.approval(),renderMode=mode,backend=cas,
     reviewCandidate=os.getenv('CTM_VARIANTS_REVIEW_CANDIDATE'),
     reviewCatalog=os.getenv('CTM_VARIANTS_REVIEW_CATALOG') == '1'}
-  local args = {'-I',quarto.utils.resolve_path('question-variants.py'),'--stdin'}
+  local args = {'-I',quarto.utils.resolve_path('question-variants.py'),'--stdin','--errors-to-stdout'}
   local ok, output = pcall(function()
     local environment = ctm.checkers.environment(nil,'stack')
     environment.CTM_VARIANTS_QUARTO = quarto.config.cli_path()

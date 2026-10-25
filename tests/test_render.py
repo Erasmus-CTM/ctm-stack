@@ -201,6 +201,21 @@ def test_unsupported_question_stops_quarto_build():
             result.stdout + "\n" + result.stderr)
 
 
+def test_h1_failed_declarative_case_names_the_actual_test_in_quarto():
+    code=_card().replace('```\n', '''#| checker: |
+#|   def check(response, symbols):
+#|       return bool(response["answers"]["ans"] == response["teacher"]["ans"])
+#| tests:
+#|   - name: H1_ASSERTION_VISIBLE_7419
+#|     answers: {ans: 'raw("0")'}
+#|     expect: correct
+```\n''')
+    result,_=_fixture_render(code)
+    diagnostic=result.stdout+result.stderr
+    assert result.returncode!=0
+    assert 'H1_ASSERTION_VISIBLE_7419' in diagnostic,diagnostic
+
+
 def _fixture_render(source: str, *, parts: bool = True, checkers: bool = True, owner: str = "",
                     filters: tuple[str, ...] = ("ctm-stack",),
                     files: dict[str, str | None] | None = None,

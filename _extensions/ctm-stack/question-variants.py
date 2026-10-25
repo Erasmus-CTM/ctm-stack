@@ -146,7 +146,7 @@ def supervised(raw, *, timeout=300, worker_args=()):
         stdout = output.read(output_limit)
         stderr = errors.read(max(0, output_limit - len(stdout)))
         if reason:
-            return 1, b"", stderr + ("math-exercise variants: " + reason[0] + "\n").encode()
+            return 1, b"", stderr + ("ctm-stack variants: " + reason[0] + "\n").encode()
         return child.returncode, stdout, stderr
 
 def parse_source(source):
@@ -233,6 +233,7 @@ def main(argv=None):
     parser.add_argument("command", nargs="?", choices=("generate25more", "review", "resolve", "apply"))
     parser.add_argument("request_file", nargs="?", type=Path, help="downloaded decision JSON for apply")
     parser.add_argument("--stdin", action="store_true", help="read the version-1 JSON request")
+    parser.add_argument("--errors-to-stdout", action="store_true", help="include the bounded build diagnostic in pandoc.pipe failures")
     parser.add_argument("--project", type=Path, help="course project root for file authoring")
     parser.add_argument("--file", help="authored source file inside the project")
     parser.add_argument("--label", help="unique authored exercise label")
@@ -281,6 +282,10 @@ def main(argv=None):
             code, stdout, stderr = supervised(raw, worker_args=worker_args)
             sys.stdout.buffer.write(stdout)
             sys.stderr.buffer.write(stderr)
+            if code and args.errors_to_stdout:
+                diagnostic=next((line for line in reversed(stderr.splitlines()) if line.startswith(b'ctm-stack variants: ')),None)
+                if diagnostic:
+                    sys.stdout.buffer.write(diagnostic.decode('utf-8',errors='replace')[:4096].encode('utf-8')+b'\n')
             return code
         install_imports()
         with contextlib.redirect_stdout(sys.stderr):
