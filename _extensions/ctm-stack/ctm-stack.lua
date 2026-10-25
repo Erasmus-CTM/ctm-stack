@@ -4,7 +4,7 @@
 -- render with the install command when CTM Assessment is missing. The STACK
 -- engine is ctm-checkers' (ctm_checkers.stack), which ctm-libs finds
 -- (ctm.checkers): its wheels at build time, its page scripts in the browser.
-local ctm = dofile(quarto.utils.resolve_path('ctm-bootstrap.lua'))('ctm-stack', {api = 3})
+local ctm = dofile(quarto.utils.resolve_path('ctm-bootstrap.lua'))('ctm-stack', {api = 2})
 local installed = false
 local sequence = 0
 local feedbackRequested = false
@@ -42,7 +42,7 @@ local function requireCheckers()
     fail('ctm-stack ' .. extensionVersion() .. ' needs ctm-checkers, which the ctm-libs in ' .. ctm.dir
       .. ' does not provide. Update CTM Assessment: ' .. INSTALL)
   end
-  ctm.checkers.require('ctm-stack', 2)
+  ctm.checkers.require('ctm-stack', '1.1')
   checkersReady = true
 end
 
@@ -169,12 +169,12 @@ local function render(block)
       tostring(type(output) == 'table' and output.error_code or '?') .. ')' end
     if diagnostics then
       setup()
-      return pandoc.RawBlock('html', '<section class="ctm-stack stack-diagnostic" role="alert"><strong>Question could not be rendered</strong><pre>' .. escape(detail) .. '</pre></section>')
+      return pandoc.RawBlock('html', '<section class="stack-sympy stack-diagnostic" role="alert"><strong>Question could not be rendered</strong><pre>' .. escape(detail) .. '</pre></section>')
     end
     fail('ctm-stack: could not render ' .. opts.file .. ' / ' .. opts.question .. ': ' .. detail)
   end
   setup()
-  if output:find('class="ctm-stack stack-diagnostic"', 1, true) then
+  if output:find('class="stack-sympy stack-diagnostic"', 1, true) then
     return pandoc.RawBlock('html', output)
   end
   if useFeedback then

@@ -44,12 +44,12 @@ def test_project_renders_cards_and_deployable_assets():
         page = site / qmd.relative_to(ROOT).with_suffix(".html")
         doc = Document(page.read_text())
         authored = question_blocks(qmd)
-        cards = doc.find(css_class="ctm-stack")
+        cards = doc.find(css_class="stack-sympy")
         assert len(cards) == len(authored), qmd
         assert not doc.find(css_class="stack-diagnostic"), qmd
         total += len(cards)
         for card in cards:
-            payloads = list(card.find("script", "ctm-stack-data"))
+            payloads = list(card.find("script", "stack-sympy-data"))
             assert len(payloads) == 1
             assert json.loads(payloads[0].text)["question"]["name"]
         scripts = [node.attrs["src"].split("?", 1)[0] for node in doc.find("script")
@@ -170,7 +170,7 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
     passing = [entry for entry in entries if reports[entry["id"]]["status"] == "qtests_pass"]
     # One markup-only teaching derivative is deliberately separate from the
     # unchanged-export baseline, where its original remains unsupported.
-    assert len(doc.find("script", "ctm-stack-data")) == len(passing) + 1
+    assert len(doc.find("script", "stack-sympy-data")) == len(passing) + 1
     assert not doc.find(css_class="stack-diagnostic")
     panels = doc.find("details", "stack-source")
     assert len(panels) == 2 * (len(passing) + 1)
@@ -274,7 +274,7 @@ def test_feedback_cards_in_a_build_without_ai(switch):
     assert result.returncode == 0, result.stdout + result.stderr
     assert "feedback-core.js" not in output
     assert "data-stack-feedback" not in output
-    assert output.count('class="ctm-stack"') == 1
+    assert output.count('class="stack-sympy"') == 1
     assert output.count("ctm-checkers-stack.js") == 1
     assert "ctm-stack feedback (#| feedback: true)" in result.stdout + result.stderr
 

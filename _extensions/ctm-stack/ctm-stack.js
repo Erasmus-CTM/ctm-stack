@@ -292,7 +292,7 @@
   }
 
   function initialize(card) {
-    var data = card.querySelector('script.ctm-stack-data');
+    var data = card.querySelector('script.stack-sympy-data');
     if (!data) return;
     var payload;
     try { payload = JSON.parse(data.textContent); }
@@ -544,5 +544,5 @@
     math(card);
   }
 
-  document.querySelectorAll('.ctm-stack:not(.stack-diagnostic)').forEach(initialize);
+  document.querySelectorAll('.stack-sympy:not(.stack-diagnostic)').forEach(initialize);
 })();

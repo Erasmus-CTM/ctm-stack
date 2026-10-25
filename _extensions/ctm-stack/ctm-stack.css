@@ -1,4 +1,4 @@
-.ctm-stack {
+.stack-sympy {
   --stack-ink: #263746;
   --stack-muted: #526678;
   --stack-line: #d7e0e7;
@@ -12,10 +12,10 @@
   border-radius: 0.6rem;
   box-shadow: 0 3px 18px rgba(21, 53, 71, 0.06);
 }
-.ctm-stack .stack-heading { margin: 0 0 1rem; font-size: 1.15rem; }
-.ctm-stack .stack-prompt { line-height: 1.65; }
-.ctm-stack .stack-prompt p:last-child { margin-bottom: .5rem; }
-.ctm-stack input.stack-answer {
+.stack-sympy .stack-heading { margin: 0 0 1rem; font-size: 1.15rem; }
+.stack-sympy .stack-prompt { line-height: 1.65; }
+.stack-sympy .stack-prompt p:last-child { margin-bottom: .5rem; }
+.stack-sympy input.stack-answer {
   max-width: 100%;
   padding: .45rem .6rem;
   margin: .2rem .25rem;
@@ -25,15 +25,15 @@
   color: #172c3b;
   font: inherit;
 }
-.ctm-stack input.stack-answer:focus-visible, .ctm-stack button:focus-visible,
-.ctm-stack select:focus-visible { outline: 3px solid #67bfdc; outline-offset: 2px; }
-.ctm-stack input.stack-answer[aria-invalid="true"] { border-color: #b7433e; }
-.ctm-stack .stack-matrix { display: inline-block; vertical-align: middle; overflow-x: auto; }
-.ctm-stack .stack-reset { color: var(--stack-accent); background: white; }
-.ctm-stack .stack-variant-wrap { display: flex; gap: .7rem; align-items: center; margin: 0 0 1rem; }
-.ctm-stack select { padding: .4rem .5rem; border: 1px solid #9aaebb; border-radius: .3rem; background: white; }
-.ctm-stack .stack-actions { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; margin: 1rem 0 .3rem; }
-.ctm-stack .stack-actions button {
+.stack-sympy input.stack-answer:focus-visible, .stack-sympy button:focus-visible,
+.stack-sympy select:focus-visible { outline: 3px solid #67bfdc; outline-offset: 2px; }
+.stack-sympy input.stack-answer[aria-invalid="true"] { border-color: #b7433e; }
+.stack-sympy .stack-matrix { display: inline-block; vertical-align: middle; overflow-x: auto; }
+.stack-sympy .stack-reset { color: var(--stack-accent); background: white; }
+.stack-sympy .stack-variant-wrap { display: flex; gap: .7rem; align-items: center; margin: 0 0 1rem; }
+.stack-sympy select { padding: .4rem .5rem; border: 1px solid #9aaebb; border-radius: .3rem; background: white; }
+.stack-sympy .stack-actions { display: flex; gap: .4rem; align-items: center; flex-wrap: wrap; margin: 1rem 0 .3rem; }
+.stack-sympy .stack-actions button {
   padding: .55rem .95rem;
   border: 1px solid var(--stack-accent);
   border-radius: .35rem;
@@ -43,13 +43,13 @@
   font-weight: 600;
   cursor: pointer;
 }
-.ctm-stack .stack-actions > button {
+.stack-sympy .stack-actions > button {
   margin: 0;
   padding: 0 .6rem;
   font-size: .875rem;
   line-height: 1.25;
 }
-.ctm-stack .stack-actions button,
+.stack-sympy .stack-actions button,
 .ai-feedback-button {
   box-sizing: border-box;
   height: 40px;
@@ -59,44 +59,44 @@
   align-items: center;
   justify-content: center;
 }
-.ctm-stack button.stack-tests { color: var(--stack-accent); background: white; }
-.ctm-stack button.ai-feedback-gear {
+.stack-sympy button.stack-tests { color: var(--stack-accent); background: white; }
+.stack-sympy button.ai-feedback-gear {
   color: var(--stack-accent);
   background: transparent;
   border-color: transparent;
   font-size: 1rem;
   padding-inline: .45rem;
 }
-.ctm-stack > .ai-feedback-output:not(:empty) {
+.stack-sympy > .ai-feedback-output:not(:empty) {
   margin-top: .8rem;
   padding: .8rem .9rem;
   border: 1px solid var(--stack-line);
   border-radius: .35rem;
   background: #f0f5f7;
 }
-.ctm-stack .stack-actions button:hover { filter: brightness(.91); }
-.ctm-stack .stack-actions button:disabled { opacity: .55; cursor: progress; }
-.ctm-stack .stack-result:not(:empty) {
+.stack-sympy .stack-actions button:hover { filter: brightness(.91); }
+.stack-sympy .stack-actions button:disabled { opacity: .55; cursor: progress; }
+.stack-sympy .stack-result:not(:empty) {
   margin-top: 1rem;
   padding: .7rem .9rem;
   border: 1px solid var(--stack-line);
   border-radius: .35rem;
   background: #f0f5f7;
 }
-.ctm-stack .stack-result[data-state="correct"] { border-color: #a7cdb5; background: #eff8f1; }
-.ctm-stack .stack-result[data-state="valid"] { border-color: #a7cdb5; background: #eff8f1; }
-.ctm-stack .stack-result[data-state="retry"],
-.ctm-stack .stack-result[data-state="invalid"] { border-color: #e4c0a0; background: #fff8ef; }
-.ctm-stack .stack-result[data-state="error"] { border-color: #e3aaaa; background: #fff4f3; }
-.ctm-stack .stack-result p { margin: .2rem 0 .5rem; }
-.ctm-stack .stack-result p:last-child { margin-bottom: .2rem; }
-.ctm-stack .stack-verdict { font-weight: 700; }
-.ctm-stack .stack-validation, .ctm-stack .stack-feedback { color: #a23934; }
-.ctm-stack .stack-validation[data-state="valid"] { color: #216a43; }
-.ctm-stack.stack-diagnostic { border-color: #b7433e; background: #fff7f6; }
-.ctm-stack.stack-diagnostic pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.stack-sympy .stack-result[data-state="correct"] { border-color: #a7cdb5; background: #eff8f1; }
+.stack-sympy .stack-result[data-state="valid"] { border-color: #a7cdb5; background: #eff8f1; }
+.stack-sympy .stack-result[data-state="retry"],
+.stack-sympy .stack-result[data-state="invalid"] { border-color: #e4c0a0; background: #fff8ef; }
+.stack-sympy .stack-result[data-state="error"] { border-color: #e3aaaa; background: #fff4f3; }
+.stack-sympy .stack-result p { margin: .2rem 0 .5rem; }
+.stack-sympy .stack-result p:last-child { margin-bottom: .2rem; }
+.stack-sympy .stack-verdict { font-weight: 700; }
+.stack-sympy .stack-validation, .stack-sympy .stack-feedback { color: #a23934; }
+.stack-sympy .stack-validation[data-state="valid"] { color: #216a43; }
+.stack-sympy.stack-diagnostic { border-color: #b7433e; background: #fff7f6; }
+.stack-sympy.stack-diagnostic pre { white-space: pre-wrap; overflow-wrap: anywhere; }
 .stack-question-group { margin: 1.6rem 0; }
-.stack-question-group > .ctm-stack { margin: 0; }
+.stack-question-group > .stack-sympy { margin: 0; }
 .stack-source-panels {
   margin-top: .55rem;
   color: var(--stack-ink, #263746);
@@ -129,5 +129,5 @@
 }
 .stack-source code { color: inherit; background: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .ctm-stack .stack-actions button { transition: filter .15s ease; }
+  .stack-sympy .stack-actions button { transition: filter .15s ease; }
 }
