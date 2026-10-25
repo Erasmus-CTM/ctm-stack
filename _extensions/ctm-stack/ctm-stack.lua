@@ -86,7 +86,7 @@ local function render(block)
   if not seenBackends[cas] and next(seenBackends) then quarto.log.info('ctm-stack: this page mixes STACK backends') end
   local firstBackend = not seenBackends[cas]; seenBackends[cas] = true
   requireCheckers(); setup(); sequence = sequence + 1
-  local identifier = opts.label or (block.identifier ~= '' and block.identifier) or ('ctm-stack-' .. sequence)
+  local identifier = (block.identifier ~= '' and block.identifier) or opts.label or ('ctm-stack-' .. sequence)
   local file = authoredPath(opts.file)
   local args = {'-m','ctm_checkers.stack.cli','prepare','--file',file,'--question',opts.question,'--id',identifier,
     '--variants',tostring(integer(opts,'variants',1,1,100)), '--seed',tostring(integer(opts,'seed',1,-2147483648,2147483647))}

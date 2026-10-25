@@ -289,7 +289,7 @@ def test_check_can_preserve_hints_but_variant_selection_always_resets(browser_si
         page.evaluate("""() => {
           const card = document.querySelector('[data-stack-feedback]');
           const key = JSON.parse(card.dataset.stackFeedback).policySelection.exercise;
-          window.__aiFeedbackPolicies.layers.push({exercises: {'math-exercise': {
+          window.__aiFeedbackPolicies.layers.push({exercises: {'stack': {
             [key]: {'reset-on-run': false, language: 'nb', 'max-words': 80}
           }}});
         }""")
