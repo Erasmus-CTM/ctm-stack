@@ -297,10 +297,12 @@ def test_missing_ctm_assessment_stops_the_render_with_the_install_command():
 
 
 def test_an_older_ctm_assessment_stops_the_render_with_the_update_command():
-    # A ctm-libs from before ctm.checkers (consolidation step 2).
-    result, _ = _fixture_render("# Question\n\n" + _card(), files={"_extensions/ctm-libs/lua/checkers.lua": None})
+    manifest = json.loads((ctm_parts.CTM_CHECKERS / "checkers.json").read_text())
+    manifest["api"] = 1
+    result, _ = _fixture_render("# Question\n\n" + _card(), files={
+        "_extensions/ctm-checkers/checkers.json": json.dumps(manifest)})
     assert result.returncode != 0
-    assert "needs ctm-checkers, which the ctm-libs in" in result.stdout + result.stderr
+    assert "needs ctm-checkers API 1.1" in result.stdout + result.stderr
     assert "Update CTM Assessment: " + INSTALL in result.stdout + result.stderr
     # A ctm-checkers without the STACK engine (0.1).
     manifest = json.loads((ctm_parts.CTM_CHECKERS / "checkers.json").read_text())
