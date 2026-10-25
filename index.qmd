@@ -8,7 +8,7 @@ in their browser, see how their answers are interpreted, and can request
 guided **AI Feedback** alongside the question's mathematical grading. The
 exported XML, scoring rules and author tests remain available for inspection.
 
-**Quarto** turns plain-text teaching material into web pages. STACK SymPy adds
+**Quarto** turns plain-text teaching material into web pages. CTM STACK adds
 interactive question cards to those pages for publication as a static site.
 
 ## For teachers
@@ -52,7 +52,7 @@ and which need author attention.
 ### Use your own question {#use-your-own-question}
 
 1. Export a supported question from Moodle as STACK XML.
-2. Add STACK SymPy to a Quarto project and embed the named question in a page.
+2. Add CTM STACK to a Quarto project and embed the named question in a page.
 3. Run its author tests, render the site and inspect an alternate correct and
    an incorrect answer before publishing.
 
@@ -78,5 +78,5 @@ conditions. Ordinary response trees still control scores and feedback.
 - [STACK compliance](compliance/): comparisons with upstream answer-test cases.
 - [Port regressions](compliance/port-regressions.html): focused checks for
   mathematical behavior discovered during the port.
-- [Source and development guide](https://github.com/Erasmus-CTM/stack-sympy#readme):
+- [Source and development guide](https://github.com/Erasmus-CTM/ctm-stack#readme):
   setup and implementation notes.

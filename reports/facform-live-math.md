@@ -1,6 +1,6 @@
 # Live exercise checks after FacForm support
 
-Tested 2026-10-15 UTC in a cloud Chromium browser against deployed commit `6590df2295e3b0b7c5c535138540e597b0e2b3d8` (v0.1.6). The browser tab's verified URL was `https://erasmus-ctm.github.io/stack-sympy/corpus.html`. The page showed **14 interactive cards** and a corpus baseline of **14 passed, 0 mismatches, 16 blocked**. This report records direct interactions with eight newly enabled or corrected cards: six formerly mismatching native examples and two new FacForm cards (10.1 and 13.1). For every syntactically valid row, the card's Check button was disabled after typing, Validate answers displayed an “Interpreted as …” preview and enabled Check, and Check answer produced the result below. “retry” is the UI's “Not quite. Try again.” state.
+Tested 2026-10-15 UTC in a cloud Chromium browser against deployed commit `6590df2295e3b0b7c5c535138540e597b0e2b3d8` (v0.1.6). The browser tab's verified URL was `https://erasmus-ctm.github.io/ctm-stack/corpus.html`. The page showed **14 interactive cards** and a corpus baseline of **14 passed, 0 mismatches, 16 blocked**. This report records direct interactions with eight newly enabled or corrected cards: six formerly mismatching native examples and two new FacForm cards (10.1 and 13.1). For every syntactically valid row, the card's Check button was disabled after typing, Validate answers displayed an “Interpreted as …” preview and enabled Check, and Check answer produced the result below. “retry” is the UI's “Not quite. Try again.” state.
 
 | Exercise and displayed task | Entered answer | Observed Check result |
 | --- | --- | --- |
@@ -43,7 +43,7 @@ There were **28 distinct entered-answer scenarios** (25 graded valid form or val
 
 ## v0.1.7 targeted regression (2026-10-15 UTC)
 
-After deployment of commit `155507b290cf0755f3fcb83b6fcf96b5fb81c835`, I repeated the AlgMap-13.1 issue in a cloud Chromium tab at the verified URL `https://erasmus-ctm.github.io/stack-sympy/corpus.html?release=155507b290cf0755f3fcb83b6fcf96b5fb81c835`. Its script tag referenced `site_libs/quarto-contrib/stack-sympy-0.1.7/stack-sympy.js`. The initial canonical tab had briefly served v0.1.6 HTML; a normal reload then showed the v0.1.7 script at the separately verified canonical URL `https://erasmus-ctm.github.io/stack-sympy/corpus.html`. I repeated the same transition there as well.
+After deployment of commit `155507b290cf0755f3fcb83b6fcf96b5fb81c835`, I repeated the AlgMap-13.1 issue in a cloud Chromium tab at the verified URL `https://erasmus-ctm.github.io/ctm-stack/corpus.html?release=155507b290cf0755f3fcb83b6fcf96b5fb81c835`. Its script tag referenced `site_libs/quarto-contrib/ctm-stack-0.1.7/ctm-stack.js`. The initial canonical tab had briefly served v0.1.6 HTML; a normal reload then showed the v0.1.7 script at the separately verified canonical URL `https://erasmus-ctm.github.io/ctm-stack/corpus.html`. I repeated the same transition there as well.
 
 | Tested URL | Input and action | Observed outcome |
 | --- | --- | --- |

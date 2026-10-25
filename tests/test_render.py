@@ -53,7 +53,7 @@ def test_project_renders_cards_and_deployable_assets():
             assert len(payloads) == 1
             assert json.loads(payloads[0].text)["question"]["name"]
         scripts = [node.attrs["src"].split("?", 1)[0] for node in doc.find("script")
-                   if "stack-sympy.js" in node.attrs.get("src", "")]
+                   if "ctm-stack.js" in node.attrs.get("src", "")]
         assert len(scripts) == 1, qmd
         asset = page.parent / scripts[0]
         assert asset.is_file(), asset
@@ -67,7 +67,7 @@ def test_project_renders_cards_and_deployable_assets():
         for script in ("pyodide-runtime.js", "ctm-checkers.js", "ctm-checkers-stack.js"):
             assert head_scripts.count(script) == 1, (qmd, script)
         assert head_scripts.index("ctm-checkers.js") < head_scripts.index("ctm-checkers-stack.js")
-        assert head_scripts.index("ctm-checkers-stack.js") < head_scripts.index("stack-sympy.js")
+        assert head_scripts.index("ctm-checkers-stack.js") < head_scripts.index("ctm-stack.js")
         # Quarto may flatten registered scripts/stylesheets. Follow the HTML
         # references rather than assuming dependency-resource paths for them.
         page_scripts = [node.attrs['src'].split('?', 1)[0] for node in doc.find('script')
@@ -79,7 +79,7 @@ def test_project_renders_cards_and_deployable_assets():
         assert page_scripts.index(editor_scripts[0]) < page_scripts.index(scripts[0])
         for reference in editor_scripts + editor_styles:
             deployed = page.parent / reference
-            pinned = ROOT / '_extensions/stack-sympy/vendor' / Path(reference).name
+            pinned = ROOT / '_extensions/ctm-stack/vendor' / Path(reference).name
             assert deployed.is_file(), deployed
             assert deployed.read_bytes() == pinned.read_bytes(), deployed
     assert total > 0, "the published site should demonstrate at least one question"
@@ -87,7 +87,7 @@ def test_project_renders_cards_and_deployable_assets():
 
 def test_vendored_matrix_editor_matches_audited_source_manifest():
     import hashlib
-    vendor = ROOT / '_extensions/stack-sympy/vendor'
+    vendor = ROOT / '_extensions/ctm-stack/vendor'
     manifest = json.loads((vendor / 'matrix-input-provenance.json').read_text())
     assert manifest['commit'] == 'f238da6d9a43d58d1fdf9ad592ac6223225268e0'
     assert manifest['license'] == 'AGPL-3.0-or-later'
@@ -195,9 +195,9 @@ def test_unsupported_question_stops_quarto_build():
     # An independent project avoids mutating the built site's website cache.
     with tempfile.TemporaryDirectory(dir=ROOT, prefix="invalid_stack_") as temporary:
         project = Path(temporary)
-        shutil.copytree(ROOT / "_extensions/stack-sympy", project / "_extensions/stack-sympy")
+        shutil.copytree(ROOT / "_extensions/ctm-stack", project / "_extensions/ctm-stack")
         ctm_parts.install(project)
-        (project / "_quarto.yml").write_text("project:\n  type: default\nfilters:\n  - stack-sympy\n")
+        (project / "_quarto.yml").write_text("project:\n  type: default\nfilters:\n  - ctm-stack\n")
         (project / "test.qmd").write_text("```{.stack-question}\n#| file: missing.xml\n"
                                            "#| question: Missing\n```\n")
         result = subprocess.run([os.environ.get("QUARTO", "quarto"), "render"],
@@ -208,17 +208,17 @@ def test_unsupported_question_stops_quarto_build():
 
 
 def _fixture_render(source: str, *, parts: bool = True, checkers: bool = True, owner: str = "",
-                    filters: tuple[str, ...] = ("stack-sympy",),
+                    filters: tuple[str, ...] = ("ctm-stack",),
                     files: dict[str, str | None] | None = None,
                     env: dict[str, str] | None = None) -> tuple[subprocess.CompletedProcess, str]:
-    """Renders test.qmd in a project with stack-sympy and (`parts`) ctm-libs and
+    """Renders test.qmd in a project with ctm-stack and (`parts`) ctm-libs and
     (`checkers`) ctm-checkers, flat or under an `owner` folder as `quarto add` installs them;
     `files` are written last, so they can replace installed files."""
     with tempfile.TemporaryDirectory(dir=ROOT.parent, prefix="stack_feedback_render_") as temporary:
         project = Path(temporary)
         ext = project / "_extensions"
         ext.mkdir()
-        shutil.copytree(ROOT / "_extensions/stack-sympy", ext / owner / "stack-sympy")
+        shutil.copytree(ROOT / "_extensions/ctm-stack", ext / owner / "ctm-stack")
         if parts:
             ctm_parts.install(project, owner, checkers=checkers)
         (project / "_quarto.yml").write_text(
@@ -276,16 +276,16 @@ def test_feedback_cards_in_a_build_without_ai(switch):
     assert "data-stack-feedback" not in output
     assert output.count('class="stack-sympy"') == 1
     assert output.count("ctm-checkers-stack.js") == 1
-    assert "stack-sympy feedback (#| feedback: true)" in result.stdout + result.stderr
+    assert "ctm-stack feedback (#| feedback: true)" in result.stdout + result.stderr
 
 
 def test_missing_ctm_assessment_stops_the_render_with_the_install_command():
-    # stack-sympy is part of CTM Assessment: without the package (and outside a
+    # ctm-stack is part of CTM Assessment: without the package (and outside a
     # component development build), or without ctm-libs, the bootstrap stops.
     production = {key: value for key, value in os.environ.items() if key != "CTM_COMPONENT_DEV"}
     result, _ = _fixture_render("# Question\n\n" + _card(), env=production)
     assert result.returncode != 0
-    assert "stack-sympy is part of CTM Assessment, which is not installed" in result.stdout + result.stderr
+    assert "ctm-stack is part of CTM Assessment, which is not installed" in result.stdout + result.stderr
     assert INSTALL in result.stdout + result.stderr
     result, _ = _fixture_render("# Question\n\n" + _card(), parts=False)
     assert result.returncode != 0
@@ -297,10 +297,12 @@ def test_missing_ctm_assessment_stops_the_render_with_the_install_command():
 
 
 def test_an_older_ctm_assessment_stops_the_render_with_the_update_command():
-    # A ctm-libs from before ctm.checkers (consolidation step 2).
-    result, _ = _fixture_render("# Question\n\n" + _card(), files={"_extensions/ctm-libs/lua/checkers.lua": None})
+    manifest = json.loads((ctm_parts.CTM_CHECKERS / "checkers.json").read_text())
+    manifest["api"] = 1
+    result, _ = _fixture_render("# Question\n\n" + _card(), files={
+        "_extensions/ctm-checkers/checkers.json": json.dumps(manifest)})
     assert result.returncode != 0
-    assert "needs ctm-checkers, which the ctm-libs in" in result.stdout + result.stderr
+    assert "needs ctm-checkers API 1.1" in result.stdout + result.stderr
     assert "Update CTM Assessment: " + INSTALL in result.stdout + result.stderr
     # A ctm-checkers without the STACK engine (0.1).
     manifest = json.loads((ctm_parts.CTM_CHECKERS / "checkers.json").read_text())
@@ -320,10 +322,10 @@ def test_shared_feedback_context_and_policy_are_emitted_once_per_page():
               + _card("#| feedback: true\n", "#| context: explanation\n#| label: policy-key\n")
               + "\n" + _card("#| feedback: true\n", "#| context: none\n"))
     # Flat or under an owner folder; alone, or after ctm-libs' own filter (as
-    # the CTM Assessment package lists it), whose preparation stack-sympy repeats.
-    for owner, filters in (("", ("stack-sympy",)),
-                           ("Erasmus-CTM", ("stack-sympy",)),
-                           ("", ("ctm-libs", "stack-sympy"))):
+    # the CTM Assessment package lists it), whose preparation ctm-stack repeats.
+    for owner, filters in (("", ("ctm-stack",)),
+                           ("Erasmus-CTM", ("ctm-stack",)),
+                           ("", ("ctm-libs", "ctm-stack"))):
         result, output = _fixture_render(source, owner=owner, filters=filters)
         assert result.returncode == 0, result.stdout + result.stderr
         cards = _feedback_cards(output)

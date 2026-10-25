@@ -60,7 +60,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             assert 'All question tests passed' in card.inner_text()
             # Independently compare complete qtest results, not only UI labels.
             actual = page.evaluate("""async payload => {
-              const script = [...document.scripts].find(x => x.src.includes('stack-sympy.js'));
+              const script = [...document.scripts].find(x => x.src.includes('ctm-stack.js'));
               const worker = new Worker(new URL('worker.js', script.src));
               const ask = message => new Promise((resolve, reject) => {
                 const timer = setTimeout(() => reject(Error('Worker parity timeout')), 180000);

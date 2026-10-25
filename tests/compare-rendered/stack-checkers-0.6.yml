@@ -1,6 +1,6 @@
 # Expected differences of this site's pin of ctm-checkers 0.6.0 (consolidation
 # step 2, the STACK set of the S-01 review's follow-ups, S-02 and S-13): the
-# site rendered at stack-sympy main fa0c751, or acdc41a after #27, which changed only pins
+# site rendered at ctm-stack main fa0c751, or acdc41a after #27, which changed only pins
 # (ctm-checkers 0.3.0, e84bc8c)
 # against the site rendered at this pull request's head (ctm-checkers 0.6.0).
 # The cards, their question tests and the variants do not change, except
@@ -11,12 +11,12 @@
 # Run with the umbrella's tools/compare-rendered.mjs (ctm-assessment):
 #
 #   node tools/compare-rendered.mjs --before <fa0c751>/_site --after <head>/_site \
-#     --expect <stack-sympy>/tests/compare-rendered/stack-checkers-0.6.yml
+#     --expect <ctm-stack>/tests/compare-rendered/stack-checkers-0.6.yml
 categories:
   - id: s02-imaginary-unit
     title: A frozen variant writes the imaginary unit as %i (S-02, ctm-checkers 0.5.0)
     match:
-      - {area: config, page: '^corpus\.html$', object: '^stack-sympy-data$', change: '^changed$', path: '^/\d+/variants/\d+/env/\w+$',
+      - {area: config, page: '^corpus\.html$', object: '^ctm-stack-data$', change: '^changed$', path: '^/\d+/variants/\d+/env/\w+$',
          lost: '\*I$', gained: '\*%i$'}
   - id: docs-requirements
     title: The requirements name ctm-checkers 0.6.0 (STACK's rules for the text of an answer)

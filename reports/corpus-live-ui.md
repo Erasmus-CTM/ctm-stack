@@ -1,6 +1,6 @@
 # Live browser UI review — question corpus
 
-2026-10-15 · deployed commit `5c16adbc250e39f909639152c9d51ca3d701893c` · Chrome cloud browser · verified URL <https://erasmus-ctm.github.io/stack-sympy/corpus.html> (also <https://erasmus-ctm.github.io/stack-sympy/> and <https://erasmus-ctm.github.io/stack-sympy/examples.html>).
+2026-10-15 · deployed commit `5c16adbc250e39f909639152c9d51ca3d701893c` · Chrome cloud browser · verified URL <https://erasmus-ctm.github.io/ctm-stack/corpus.html> (also <https://erasmus-ctm.github.io/ctm-stack/> and <https://erasmus-ctm.github.io/ctm-stack/examples.html>).
 
 The deployed page loaded with 30 corpus table rows: 6 passed authored tests, 6 authored test mismatches, 11 unsupported at import, and 7 unsupported at instantiation. All 30 table question anchors resolved to existing document IDs, and all original XML hrefs pointed into the local `questions/corpus/` path. The six passed entries alone displayed interactive cards. MathJax output was visible (`mjx-container` elements), with no diagnostic card. The desktop viewport was 1363 pixels wide and the document 1348 pixels wide, with no horizontal overflow. Visual screenshots of the [overview](corpus-overview.jpg), two-input card, expanded source controls, More examples feedback, and unsupported section showed readable typography and controls; the long copy prompt remained in its own scroll area.
 

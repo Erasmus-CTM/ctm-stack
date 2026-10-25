@@ -100,7 +100,7 @@
       return Promise.resolve(window.MathJax.startup && window.MathJax.startup.promise)
         .then(function () { return window.MathJax; });
     }
-    if (window.__stackSympyMathJax) return window.__stackSympyMathJax;
+    if (window.__ctmStackMathJax) return window.__ctmStackMathJax;
     var ownedScript = null;
     var pending = (async function () {
       // Keep an existing page's MathJax configuration. Version 3 recognizes
@@ -116,7 +116,7 @@
         script = document.createElement('script');
         script.src = MATHJAX_URL;
         script.async = true;
-        script.dataset.stackSympyMathjax = '1';
+        script.dataset.ctmStackMathjax = '1';
         ownedScript = script;
         var loaded = new Promise(function (resolve, reject) {
           script.onload = resolve;
@@ -153,10 +153,10 @@
       }
       return window.MathJax;
     })();
-    window.__stackSympyMathJax = pending;
+    window.__ctmStackMathJax = pending;
     pending.catch(function () {
       if (ownedScript && ownedScript.isConnected) ownedScript.remove();
-      if (window.__stackSympyMathJax === pending) delete window.__stackSympyMathJax;
+      if (window.__ctmStackMathJax === pending) delete window.__ctmStackMathJax;
     });
     return pending;
   }
@@ -166,14 +166,14 @@
     mathQueue = mathQueue.catch(function () {}).then(async function () {
       var mj = await ensureMathJax();
       if (element.isConnected) await mj.typesetPromise([element]);
-    }).catch(function (error) { console.warn('STACK SymPy math display:', error); });
+    }).catch(function (error) { console.warn('CTM STACK math display:', error); });
     return mathQueue;
   }
 
   function clearMath(element) {
     if (window.MathJax && typeof window.MathJax.typesetClear === 'function') {
       try { window.MathJax.typesetClear([element]); }
-      catch (error) { console.warn('STACK SymPy math cleanup:', error); }
+      catch (error) { console.warn('CTM STACK math cleanup:', error); }
     }
   }
 

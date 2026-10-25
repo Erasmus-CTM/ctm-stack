@@ -13,14 +13,14 @@ matrix condition or positive definiteness, see [Python answer tests](python-chec
 
 ### Start with a native export {#start-with-a-native-export}
 
-STACK SymPy is a part of CTM Assessment. Install CTM Assessment and STACK
+CTM STACK is a part of CTM Assessment. Install CTM Assessment and STACK
 SymPy in your Quarto project, and SymPy in the Python environment that Quarto
 uses. CTM Assessment brings the STACK engine (ctm-checkers) and the guided
 hints (AI feedback):
 
 ```bash
 quarto add https://erasmus-ctm.github.io/ctm-assessment/ctm-assessment.tar.gz
-quarto add Erasmus-CTM/stack-sympy
+quarto add Erasmus-CTM/ctm-stack
 python -m pip install 'sympy==1.13.3'
 ```
 
@@ -28,7 +28,7 @@ Add the question filter to `_quarto.yml`:
 
 ```yaml
 filters:
-  - stack-sympy
+  - ctm-stack
 ```
 
 Export a supported Moodle STACK question as XML and keep it in your project.
@@ -417,7 +417,7 @@ a normal `quarto render` does not rerun their mathematical comparisons.
 For a source checkout, install `requirements-dev.txt` and CTM Assessment's
 parts at the commits in `.github/pins.json`, run
 `CTM_COMPONENT_DEV=1 python -m pytest -q tests`, and consult the
-[development guide](https://github.com/Erasmus-CTM/stack-sympy#design-and-contribution)
+[development guide](https://github.com/Erasmus-CTM/ctm-stack#design-and-contribution)
 for browser/native checks. Include a minimal XML question and its qtests when
 reporting a grading issue. General matrix arithmetic, inequalities, units,
 arbitrary Maxima scripts and Moodle's full attempt workflow remain unsupported.

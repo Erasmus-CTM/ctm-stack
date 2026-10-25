@@ -16,7 +16,7 @@ from test_render import ROOT, render_site
 def browser_site(tmp_path_factory):
     project = tmp_path_factory.mktemp("browser-project")
     shutil.copytree(ROOT / "tests/fixtures/browser", project, dirs_exist_ok=True)
-    shutil.copytree(ROOT / "_extensions/stack-sympy", project / "_extensions/stack-sympy")
+    shutil.copytree(ROOT / "_extensions/ctm-stack", project / "_extensions/ctm-stack")
     ctm_parts.install(project)
     shutil.copytree(ROOT / "questions", project / "questions")
     return render_site(project)

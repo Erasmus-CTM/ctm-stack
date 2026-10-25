@@ -1,6 +1,6 @@
 # Live checks of rational-form exercises
 
-Tested 2026-10-15 UTC in a cloud Chromium browser against deployed v0.1.9 code commit `582e91ed3c210f957fe3daf10997f12bd2d98830`. The browser tab's verified URL was `https://erasmus-ctm.github.io/stack-sympy/corpus.html`; its script tag referenced `site_libs/quarto-contrib/stack-sympy-0.1.9/stack-sympy.js`. The page showed 16 interactive cards. I directly exercised the two newly supported answer tests, AlgMap-2.5 `LowestTerms` and AlgMap-4.13 `SingleFrac`, on their first displayed variants. The former displayed `-6/60` (correct reduced value `-1/10`); the latter displayed `2*x+2+3/(x+1)` (correct combined value `(2*x^2+4*x+5)/(x+1)`).
+Tested 2026-10-15 UTC in a cloud Chromium browser against deployed v0.1.9 code commit `582e91ed3c210f957fe3daf10997f12bd2d98830`. The browser tab's verified URL was `https://erasmus-ctm.github.io/ctm-stack/corpus.html`; its script tag referenced `site_libs/quarto-contrib/ctm-stack-0.1.9/ctm-stack.js`. The page showed 16 interactive cards. I directly exercised the two newly supported answer tests, AlgMap-2.5 `LowestTerms` and AlgMap-4.13 `SingleFrac`, on their first displayed variants. The former displayed `-6/60` (correct reduced value `-1/10`); the latter displayed `2*x+2+3/(x+1)` (correct combined value `(2*x^2+4*x+5)/(x+1)`).
 
 For every valid answer below, Check was disabled after input, Validate displayed an “Interpreted as …” mathematical preview and enabled Check, and Check gave the recorded result. `retry` means the visible “Not quite. Try again.” state.
 

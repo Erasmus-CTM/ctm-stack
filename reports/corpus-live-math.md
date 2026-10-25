@@ -1,6 +1,6 @@
 # Live corpus exercise checks
 
-Tested 2026-10-15 UTC against deployed commit `5c16adbc250e39f909639152c9d51ca3d701893c` in a cloud Chromium browser. The browser tab's verified URL was `https://erasmus-ctm.github.io/stack-sympy/corpus.html`. I interacted with each rendered input and its **Validate answers** and **Check answer** controls; the outcomes below are observed UI results, not inferred from unit tests. All six initial Check buttons were disabled. For a valid input, Validate displayed an “Interpreted as …” preview, enabled Check, and displayed “Inputs parsed. Review them, then check your answer.” The table uses “retry” for the UI's “Not quite” result state.
+Tested 2026-10-15 UTC against deployed commit `5c16adbc250e39f909639152c9d51ca3d701893c` in a cloud Chromium browser. The browser tab's verified URL was `https://erasmus-ctm.github.io/ctm-stack/corpus.html`. I interacted with each rendered input and its **Validate answers** and **Check answer** controls; the outcomes below are observed UI results, not inferred from unit tests. All six initial Check buttons were disabled. For a valid input, Validate displayed an “Interpreted as …” preview, enabled Check, and displayed “Inputs parsed. Review them, then check your answer.” The table uses “retry” for the UI's “Not quite” result state.
 
 | Exercise | Entered answer(s) | Observed validation and grade |
 | --- | --- | --- |

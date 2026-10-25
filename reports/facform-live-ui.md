@@ -1,6 +1,6 @@
 # Live browser UI review — FacForm corpus release
 
-2026-10-15 UTC · deployed commit `6590df2295e3b0b7c5c535138540e597b0e2b3d8` (v0.1.6) · Chrome cloud browser · verified URL <https://erasmus-ctm.github.io/stack-sympy/corpus.html> (home <https://erasmus-ctm.github.io/stack-sympy/>).
+2026-10-15 UTC · deployed commit `6590df2295e3b0b7c5c535138540e597b0e2b3d8` (v0.1.6) · Chrome cloud browser · verified URL <https://erasmus-ctm.github.io/ctm-stack/corpus.html> (home <https://erasmus-ctm.github.io/ctm-stack/>).
 
 The deployed page displayed all 30 corpus rows and **14 interactive cards**, with **14 passed, 0 authored-test mismatches, and 16 unsupported** (8 import, 8 instantiation). The page stated 84 native author-test combinations across recorded seeds and no mismatch. At a 1363-pixel desktop viewport, the 1348-pixel document fit without horizontal overflow. MathJax rendered the exercise expressions (37 `mjx-container` elements observed). This is a live UI review; the 84-case baseline and CI results are separate evidence.
 

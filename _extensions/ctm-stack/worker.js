@@ -36,7 +36,7 @@ function init(message) {
   return ready;
 }
 
-// stack-sympy's requests, as ctm-checkers' calls (stack.grade, stack.validate,
+// ctm-stack's requests, as ctm-checkers' calls (stack.grade, stack.validate,
 // stack.tests) with the same answer: {ok: true, result} or {ok: false, error}.
 var CALLS = { grade: 'stack.grade', validate: 'stack.validate', tests: 'stack.tests' };
 
