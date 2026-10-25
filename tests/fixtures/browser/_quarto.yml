@@ -10,4 +10,4 @@ filters:
 ai-feedback:
   policy-files: policies.yml
   project-policy:
-    math-exercise: course-mathematics
+    stack: course-mathematics

@@ -14,6 +14,7 @@ from threading import Thread
 from playwright.sync_api import sync_playwright
 
 from test_render import ROOT, question_pages, render_site
+from ctm_parts import engine_data
 
 
 CORPUS = Path(__file__).resolve().parents[1] / "questions/corpus"
@@ -24,9 +25,9 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
     from ctm_checkers.stack.engine import run_question_tests
     with serve(browser_site) as url, sync_playwright() as pw:
         options = {"headless": True}
-        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+        if os.getenv("CTM_STACK_BROWSER", "chromium") == "chromium" and os.environ.get("STACK_SYMPY_CHROMIUM"):
             options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
-        browser = pw.chromium.launch(**options)
+        browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**options)
         try:
             page = browser.new_page()
             errors = []
@@ -34,7 +35,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             page.goto(url + '/custom.html', wait_until='domcontentloaded')
             card = page.locator('[data-stack-id="custom-multiple"]')
             other = page.locator('[data-stack-id="custom-other"]')
-            payload = json.loads(card.locator('.stack-sympy-data').text_content())
+            payload = engine_data(json.loads(card.locator('.ctm-stack-data').text_content()))
             assert set(payload['question']['python_checkers']) == {'api_version', 'source'}
             divisor = int(payload['variants'][0]['env']['d'])
 
@@ -59,24 +60,13 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             card.locator('.stack-result[data-state="correct"]').wait_for(timeout=180000)
             assert 'All question tests passed' in card.inner_text()
             # Independently compare complete qtest results, not only UI labels.
-            actual = page.evaluate("""async payload => {
-              const script = [...document.scripts].find(x => x.src.includes('ctm-stack.js'));
-              const worker = new Worker(new URL('worker.js', script.src));
-              const ask = message => new Promise((resolve, reject) => {
-                const timer = setTimeout(() => reject(Error('Worker parity timeout')), 180000);
-                worker.onmessage = event => { clearTimeout(timer); resolve(event.data); };
-                worker.onerror = reject;
-                worker.postMessage(message);
-              });
-              try {
-                // The worker loads the page's Python: ctm-libs' runtime and
-                // ctm-checkers' page scripts with the STACK engine.
-                const ready = await ask({id: 1, type: 'init', runtime: MathExerciseRuntime.scriptURL,
-                                         checkers: [CTMCheckers.scriptURL, CTMCheckersStack.scriptURL]});
-                if (!ready.ok) return ready;
-                return await ask({id: 2, type:'tests', question:payload.question,
-                                  variant:payload.variants[0]});
-              } finally { worker.terminate(); }
+            actual = page.evaluate(r"""async payload => {
+              const descriptor = JSON.parse(document.querySelector('.ctm-stack-backend').textContent);
+              const script = [...document.scripts].find(x => /\/ctm-stack-[^/]+\/ctm-stack.js/.test(x.src));
+              await MathExerciseRuntime.loadScript(new URL(descriptor.adapter, script.src).href);
+              const adapter = CTMStackAdapters[descriptor.id](descriptor);
+              await adapter.start();
+              return await adapter.request({type:'tests',question:payload.question,variant:payload.variants[0],answers:{}});
             }""", payload)
             assert actual['ok'], actual
             expected = run_question_tests(payload['question'], variants=[payload['variants'][0]])
@@ -137,9 +127,9 @@ def test_browser_python_basis_and_ordinary_matrix_questions(browser_site):
     """Actual bundled Python tests, alternate bases, colors and stale state."""
     with serve(browser_site) as url, sync_playwright() as pw:
         options = {"headless": True}
-        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+        if os.getenv("CTM_STACK_BROWSER", "chromium") == "chromium" and os.environ.get("STACK_SYMPY_CHROMIUM"):
             options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
-        browser = pw.chromium.launch(**options)
+        browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**options)
         try:
             page = browser.new_page()
             errors = []
@@ -237,9 +227,9 @@ def test_browser_bounded_matrix_editor_worker_and_stale_evidence(browser_site):
     """The vendored editor feeds raw cells to the real Worker/Pyodide grader."""
     with serve(browser_site) as url, sync_playwright() as pw:
         options = {"headless": True}
-        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+        if os.getenv("CTM_STACK_BROWSER", "chromium") == "chromium" and os.environ.get("STACK_SYMPY_CHROMIUM"):
             options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
-        browser = pw.chromium.launch(**options)
+        browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**options)
         try:
             page = browser.new_page()
             errors = []
@@ -252,7 +242,7 @@ def test_browser_bounded_matrix_editor_worker_and_stale_evidence(browser_site):
             control = host.locator('[data-dynamic-action="add-row"]')
             assert control.evaluate('(el) => parseFloat(getComputedStyle(el).paddingTop)') < 3
             assert host.evaluate('(el) => getComputedStyle(el).borderTopStyle') == 'none'
-            payload = json.loads(card.locator('.stack-sympy-data').text_content())
+            payload = engine_data(json.loads(card.locator('.ctm-stack-data').text_content()))
             a = payload['variants'][0]['env']['a']
 
             def fill_correct():
@@ -346,9 +336,9 @@ def test_browser_published_pages_mount_cards():
     site = render_site()
     with serve(site) as url, sync_playwright() as pw:
         options = {"headless": True}
-        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+        if os.getenv("CTM_STACK_BROWSER", "chromium") == "chromium" and os.environ.get("STACK_SYMPY_CHROMIUM"):
             options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
-        browser = pw.chromium.launch(**options)
+        browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**options)
         try:
             page = browser.new_page()
             errors = []
@@ -356,7 +346,7 @@ def test_browser_published_pages_mount_cards():
             for qmd in question_pages():
                 route = qmd.relative_to(ROOT).with_suffix(".html").as_posix()
                 page.goto(f"{url}/{route}", wait_until="domcontentloaded")
-                cards = page.locator(".stack-sympy")
+                cards = page.locator(".ctm-stack")
                 assert cards.count() > 0, route
                 assert page.locator(".stack-diagnostic").count() == 0
                 for card in cards.all():
@@ -375,9 +365,9 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
     site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser_options = {"headless": True}
-        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+        if os.getenv("CTM_STACK_BROWSER", "chromium") == "chromium" and os.environ.get("STACK_SYMPY_CHROMIUM"):
             browser_options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
-        browser = pw.chromium.launch(**browser_options)
+        browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**browser_options)
         page = browser.new_page()
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
@@ -464,7 +454,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         card.locator(".stack-prompt mjx-container").first.wait_for(timeout=60000)
 
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
-        cards = page.locator(".stack-sympy:not(.stack-diagnostic)")
+        cards = page.locator(".ctm-stack:not(.stack-diagnostic)")
         assert cards.count() > 0
         for index in range(cards.count()):
             example = cards.nth(index)
@@ -481,7 +471,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
             ("Boolean equivalence", "not a or not b", True),
         ):
             example = next(cards.nth(i) for i in range(cards.count())
-                           if json.loads(cards.nth(i).locator(".stack-sympy-data").text_content())["question"]["name"] == question_name)
+                           if engine_data(json.loads(cards.nth(i).locator(".ctm-stack-data").text_content()))["question"]["name"] == question_name)
             example.locator(".stack-answer").fill(response)
             example.locator(".stack-validate").click()
             example.locator('.stack-validation[data-state="valid"]').wait_for(timeout=120000)
@@ -489,7 +479,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
             example.locator(".stack-result .stack-verdict").wait_for(timeout=120000)
             assert example.locator(".stack-result").get_attribute("data-state") == ("correct" if correct else "retry")
         collection = page.locator('[data-stack-id="finite-collections"]')
-        payload = json.loads(collection.locator('.stack-sympy-data').text_content())
+        payload = engine_data(json.loads(collection.locator('.ctm-stack-data').text_content()))
         a = payload['variants'][0]['env']['a']
         for name, response in {'sequence':f'[{a},x+x]', 'members':f'{{2*x,{a}}}',
                                'explained':f'{{{a},2*x,2*x}}'}.items():
@@ -512,7 +502,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         collection.locator('.stack-result[data-state="invalid"]').wait_for(timeout=120000)
         assert collection.locator('.stack-check').is_disabled()
         nested = page.locator('[data-stack-id="nested-collections"]')
-        data = json.loads(nested.locator('.stack-sympy-data').text_content())
+        data = engine_data(json.loads(nested.locator('.ctm-stack-data').text_content()))
         a = data['variants'][0]['env']['a']
         responses = {'nested':f'[[{a},x+x],{{{{3,2}},1}},[]]',
                      'families':f'{{[{a},2*x],{{2,1}},[{a},2*x]}}',
@@ -604,20 +594,20 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
     site = render_site()
     with serve(site) as url, sync_playwright() as pw:
         browser_options = {"headless": True}
-        if os.environ.get("STACK_SYMPY_CHROMIUM"):
+        if os.getenv("CTM_STACK_BROWSER", "chromium") == "chromium" and os.environ.get("STACK_SYMPY_CHROMIUM"):
             browser_options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
-        browser = pw.chromium.launch(**browser_options)
+        browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**browser_options)
         try:
             page = browser.new_page()
             errors = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             page.goto(url + "/corpus.html", wait_until="domcontentloaded")
-            cards = page.locator(".stack-sympy:not(.stack-diagnostic)")
+            cards = page.locator(".ctm-stack:not(.stack-diagnostic)")
             assert cards.count() == len(expected) + 1
             by_name = {}
             for index in range(cards.count()):
                 card = cards.nth(index)
-                payload = json.loads(card.locator("script.stack-sympy-data").text_content())
+                payload = engine_data(json.loads(card.locator("script.ctm-stack-data").text_content()))
                 if payload["question"]["name"].endswith(" (presentation teaching copy)"):
                     assert payload["question"]["name"] == "7.3.26 (Write sim. eqns. with matrices) (presentation teaching copy)"
                     assert payload["variants"][0]["seed"] == 1930245414

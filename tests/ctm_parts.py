@@ -58,3 +58,12 @@ def install(project: Path, owner: str = "", *, checkers: bool = True) -> None:
     shutil.copytree(CTM_LIBS, project / "_extensions" / owner / "ctm-libs")
     if checkers:
         shutil.copytree(CTM_CHECKERS, project / "_extensions" / owner / "ctm-checkers")
+
+
+def engine_data(payload):
+    """Extract backend plans for the independent native oracle in browser tests."""
+    assert payload["version"] == 2
+    assert {"common", "backend", "variants"} <= payload.keys()
+    assert all({"n", "id", "hash", "display", "plan"} <= item.keys() for item in payload["variants"])
+    return dict(payload, question=payload["backend"]["question"],
+                variants=[dict(item["plan"], **item["display"]) for item in payload["variants"]])

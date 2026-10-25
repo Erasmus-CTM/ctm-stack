@@ -8,6 +8,7 @@ project:
     - examples.qmd
     - corpus.qmd
     - docs/authoring.qmd
+    - docs/backend-contract.qmd
     - docs/python-answer-tests.qmd
     - docs/python-checker-api.qmd
     - docs/matrix-input.qmd
@@ -63,5 +64,8 @@ filters:
 
 ai-feedback:
   policy-files: feedback/course.yml
-  project-policy:
-    math-exercise: course-mathematics
+  policy:
+    stack: course-mathematics
+
+stack:
+  source-panels: true
