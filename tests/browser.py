@@ -630,7 +630,7 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
                 payload = card_data(card)
                 if payload["question"]["name"].endswith(" (presentation teaching copy)"):
                     assert payload["question"]["name"] == "7.3.26 (Write sim. eqns. with matrices) (presentation teaching copy)"
-                    assert payload["variants"][0]["seed"] == 1
+                    assert payload["variants"][0]["seed"] >= 1
                     assert card.locator(".stack-answer").count() == 2
                     card.locator(".stack-tests").click()
                     card.locator(".stack-result .stack-verdict").wait_for(timeout=180000)

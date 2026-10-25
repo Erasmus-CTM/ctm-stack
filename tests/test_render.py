@@ -313,10 +313,10 @@ def test_shared_feedback_context_and_policy_are_emitted_once_per_page():
     source = ("---\nlang: de\n---\n"
               "# Exercise\n\nImplicit lesson context before the card.\n\n"
               "::: {.callout-note .ai-feedback-ignore}\nConfidential example answer in hidden callout.\n:::\n\n"
-              + _card("#| feedback: true\n", "#| feedback-language: es\n")
+              + _card("#| feedback: true\n", "#| label: first-context\n#| feedback-language: es\n")
               + "\n::: {#explanation .ai-context}\nUse $x^2$ in this explicit context.\n:::\n\n"
               + _card("#| feedback: true\n", "#| context: explanation\n#| label: policy-key\n")
-              + "\n" + _card("#| feedback: true\n", "#| context: none\n"))
+              + "\n" + _card("#| feedback: true\n", "#| label: no-context\n#| context: none\n"))
     # Flat or under an owner folder; alone, or after ctm-libs' own filter (as
     # the CTM Assessment package lists it), whose preparation ctm-stack repeats.
     for owner, filters in (("", ("ctm-stack",)),
@@ -393,7 +393,7 @@ def test_lua_shell_uses_api_two_and_stack_settings_without_source_panels():
     card = doc.find(css_class='ctm-stack')[0]
     payload = json.loads(list(card.find('script', 'ctm-stack-data'))[0].text)
     assert payload['version'] == 2 and payload['backend']['id'] == 'sympy'
-    assert set(payload['common']) == {'inputs', 'qtests', 'checker'}
+    assert set(payload['common']) == {'inputs', 'qtests', 'checker', 'renderMode', 'reviewCatalog'}
     assert all({'n', 'id', 'hash', 'display', 'plan'} <= item.keys() for item in payload['variants'])
     descriptors = doc.find('script', 'ctm-stack-backend')
     assert len(descriptors) == 1
@@ -410,7 +410,7 @@ def test_maxima_selection_stops_at_build_without_a_runtime_fallback():
 
 
 def test_feedback_auto_is_on_but_block_false_overrides_it():
-    result, output = _fixture_render(_card() + '\n' + _card('#| feedback: false\n'))
+    result, output = _fixture_render(_card() + '\n' + _card('#| feedback: false\n', '#| label: feedback-off\n'))
     assert result.returncode == 0, result.stdout + result.stderr
     assert len(_feedback_cards(output)) == 1
     assert 'ctm-locale-ctm-stack' in output
