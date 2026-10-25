@@ -2,7 +2,7 @@
 title: Browser example fixtures
 ai-feedback:
   page-policy:
-    math-exercise: brief-mathematics
+    stack: brief-mathematics
 ---
 
 ## Inherited policy

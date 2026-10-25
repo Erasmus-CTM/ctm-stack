@@ -99,7 +99,7 @@ def test_inherited_policy_steps_permissions_and_parent_changes(browser_site):
         browser = browser_for(pw)
         page = browser.new_page()
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
-        card = page.locator('[data-stack-id="rational"]')
+        card = page.locator('[data-stack-id="rational-practice"]')
         card.locator(".stack-answer").first.fill("x+1")
         prompt_data(card)
         first = card.locator(".ai-feedback-prompt").inner_text()
