@@ -72,7 +72,7 @@ def test_feedback_copy_prompt_and_context_modes(browser_site):
         assert wrapped[0]["content"] == "Visible course context."
 
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
-        cards = page.locator(".ctm-stack[data-stack-feedback]")
+        cards = page.locator(".stack-sympy[data-stack-feedback]")
         assert cards.count() > 0
         seen_modes = set()
         assert page.locator("#ai-feedback-settings").count() == 0
