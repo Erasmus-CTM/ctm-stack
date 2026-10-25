@@ -1,0 +1,45 @@
+---
+title: "STACK backend contract"
+---
+
+CTM STACK builds one card shell in Lua. `cas: sympy` is the provisional default;
+`cas: maxima` stops the build until its backend is installed. A mixed-backend
+page is noted once at build time. Each backend generates its own variants:
+SymPy seeds use Python's RNG and do not reproduce Moodle's deployed seeds.
+
+The version-2 JSON island contains `common` input/qtest/checker data,
+`backend.question` and per-variant `plan` data that the controller treats as
+opaque, display HTML, and `{n, id, hash}` identities. `stackRevision` reports the
+engine's actual reference pin; SymPy's `runtimeHash` is null.
+
+Each backend descriptor is `{id, version, adapter, requires: {isolation}}`.
+The adapter URL is relative to the component script. Its script registers a
+factory under `window.CTMStackAdapters[id]`, returning:
+
+- `start()`: a promise that resolves when requests may run;
+- `request({type, question, variant, answers})`: a promise of `{ok, result}` or
+  `{ok: false, error: {kind, code, message}}`;
+- `stop(reason)`: stop this backend only; resolves with `{restarted}`;
+- `restart(reason)`: start a new session for this backend;
+- `isolationRequired`: whether this backend requires cross-origin isolation.
+
+The controller has no backend-specific branch. It serializes requests per
+backend, drops queued requests superseded by the same card/kind, and ignores
+stale results after edits. The calculation clock starts after `start()`;
+loading has its own bound. Stop keeps answers, interrupts first when the shared
+runtime can do so, and otherwise restarts only the private backend. Runtime
+errors offer Retry; author errors preserve the session. Invalid answers and
+undecidable CAS tests remain ordinary results.
+
+SymPy starts `CTMWorker` with `publish: false`, then loads SymPy and the STACK
+checker part from the page. It never assigns or stops `mainPyodide`. Its
+adapter normalizes ctm-checkers' additive `errorDetail` envelope. MathJax and
+matrix input are shared page assets. Error and message arguments are data;
+only backend-sanitized CASText HTML is inserted as HTML.
+
+`stack:` settings include `cas`, `lang`, `feedback`, `stop-after`, `save`,
+`source-panels`, and `validation`. The intended validation default is `instant`;
+until the backend's bounded admission is shipped, SymPy uses the explicit
+Validate button. API 2 is sufficient; `CTMStore` is probed at runtime. No-AI
+builds have no feedback payload, button or gear. Exam delivery retains the
+umbrella's Pyodide-only restrictions.

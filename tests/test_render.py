@@ -44,20 +44,20 @@ def test_project_renders_cards_and_deployable_assets():
         page = site / qmd.relative_to(ROOT).with_suffix(".html")
         doc = Document(page.read_text())
         authored = question_blocks(qmd)
-        cards = doc.find(css_class="stack-sympy")
+        cards = doc.find(css_class="ctm-stack")
         assert len(cards) == len(authored), qmd
         assert not doc.find(css_class="stack-diagnostic"), qmd
         total += len(cards)
         for card in cards:
-            payloads = list(card.find("script", "stack-sympy-data"))
+            payloads = list(card.find("script", "ctm-stack-data"))
             assert len(payloads) == 1
-            assert json.loads(payloads[0].text)["question"]["name"]
+            assert json.loads(payloads[0].text)["backend"]["question"]["name"]
         scripts = [node.attrs["src"].split("?", 1)[0] for node in doc.find("script")
-                   if "ctm-stack.js" in node.attrs.get("src", "")]
+                   if "/ctm-stack-" in node.attrs.get("src", "") and "ctm-locale-" not in node.attrs.get("src", "")]
         assert len(scripts) == 1, qmd
         asset = page.parent / scripts[0]
         assert asset.is_file(), asset
-        for sibling in ("worker.js",):
+        for sibling in ("backends/sympy.js",):
             assert (asset.parent / sibling).is_file(), sibling
         # The grader's Python: ctm-libs' runtime and ctm-checkers' page scripts
         # with the STACK engine, in the head (the worker loads them by URL),
@@ -72,28 +72,22 @@ def test_project_renders_cards_and_deployable_assets():
         # references rather than assuming dependency-resource paths for them.
         page_scripts = [node.attrs['src'].split('?', 1)[0] for node in doc.find('script')
                         if node.attrs.get('src')]
-        editor_scripts = [src for src in page_scripts if Path(src).name == 'matrix-input.js']
+        editor_scripts = [src for src in page_scripts if Path(src).name == 'ctm-matrix-input.js']
         editor_styles = [node.attrs['href'].split('?', 1)[0] for node in doc.find('link')
-                         if Path(node.attrs.get('href', '').split('?', 1)[0]).name == 'matrix-input.css']
+                         if Path(node.attrs.get('href', '').split('?', 1)[0]).name == 'ctm-matrix-input.css']
         assert len(editor_scripts) == len(editor_styles) == 1
         assert page_scripts.index(editor_scripts[0]) < page_scripts.index(scripts[0])
         for reference in editor_scripts + editor_styles:
             deployed = page.parent / reference
-            pinned = ROOT / '_extensions/ctm-stack/vendor' / Path(reference).name
+            pinned = ctm_parts.CTM_LIBS / 'ui' / Path(reference).name
             assert deployed.is_file(), deployed
             assert deployed.read_bytes() == pinned.read_bytes(), deployed
     assert total > 0, "the published site should demonstrate at least one question"
 
 
-def test_vendored_matrix_editor_matches_audited_source_manifest():
-    import hashlib
-    vendor = ROOT / '_extensions/ctm-stack/vendor'
-    manifest = json.loads((vendor / 'matrix-input-provenance.json').read_text())
-    assert manifest['commit'] == 'f238da6d9a43d58d1fdf9ad592ac6223225268e0'
-    assert manifest['license'] == 'AGPL-3.0-or-later'
-    for record in manifest['files']:
-        assert hashlib.sha256((vendor / record['file']).read_bytes()).hexdigest() == record['sha256']
-        assert '/' + manifest['commit'] + '/' in record['source']
+def test_shared_matrix_editor_has_one_home():
+    assert not (ROOT / '_extensions/ctm-stack/vendor').exists()
+    assert (ctm_parts.CTM_LIBS / 'ui/ctm-matrix-input.js').is_file()
 
 
 def question_blocks(qmd):
@@ -170,7 +164,7 @@ def test_corpus_page_tracks_manifest_baseline_and_only_passing_cards():
     passing = [entry for entry in entries if reports[entry["id"]]["status"] == "qtests_pass"]
     # One markup-only teaching derivative is deliberately separate from the
     # unchanged-export baseline, where its original remains unsupported.
-    assert len(doc.find("script", "stack-sympy-data")) == len(passing) + 1
+    assert len(doc.find("script", "ctm-stack-data")) == len(passing) + 1
     assert not doc.find(css_class="stack-diagnostic")
     panels = doc.find("details", "stack-source")
     assert len(panels) == 2 * (len(passing) + 1)
@@ -203,7 +197,7 @@ def test_unsupported_question_stops_quarto_build():
         result = subprocess.run([os.environ.get("QUARTO", "quarto"), "render"],
                                 cwd=project, env=ctm_parts.render_env(), text=True, capture_output=True, timeout=60)
         assert result.returncode != 0, "unsupported XML silently rendered"
-        assert "could not render missing.xml / Missing" in result.stdout + result.stderr, (
+        assert "could not prepare missing.xml / Missing" in result.stdout + result.stderr, (
             result.stdout + "\n" + result.stderr)
 
 
@@ -253,8 +247,8 @@ def _feedback_cards(output: str) -> list[dict]:
 INSTALL = "quarto add https://erasmus-ctm.github.io/ctm-assessment/ctm-assessment.tar.gz"
 
 
-def test_feedback_is_optional():
-    result, output = _fixture_render("# Question\n\n" + _card())
+def test_feedback_false_is_optional_even_with_auto_default():
+    result, output = _fixture_render("# Question\n\n" + _card("#| feedback: false\n"))
     assert result.returncode == 0, result.stdout + result.stderr
     assert "data-stack-feedback" not in output
     assert "feedback-core.js" not in output
@@ -274,7 +268,7 @@ def test_feedback_cards_in_a_build_without_ai(switch):
     assert result.returncode == 0, result.stdout + result.stderr
     assert "feedback-core.js" not in output
     assert "data-stack-feedback" not in output
-    assert output.count('class="stack-sympy"') == 1
+    assert output.count('class="ctm-stack"') == 1
     assert output.count("ctm-checkers-stack.js") == 1
     assert "ctm-stack feedback (#| feedback: true)" in result.stdout + result.stderr
 
@@ -377,3 +371,44 @@ def test_invalid_shared_policies_stop_rendering(policy, diagnostic):
     result, _ = _fixture_render(source, files={"invalid.yml": "ai-feedback:\n  " + policy + "\n"})
     assert result.returncode != 0
     assert diagnostic in result.stdout + result.stderr
+
+
+def test_lua_shell_uses_api_two_and_stack_settings_without_source_panels():
+    source = ('---\nlang: en\nctm-assessment:\n  lang: de\n  stop-after: 9\n'
+              'stack:\n  lang: nb\n  feedback: false\n---\n' + _card(extra='#| label: saved-stack\n'))
+    lib = ctm_parts.CTM_LIBS / 'lua/ctm.lua'
+    code = lib.read_text()
+    # API 2 remains supported even when the installed additive library has store.
+    code = re.sub(r'api = [23]', 'api = 2', code)
+    result, output = _fixture_render(source, files={'_extensions/ctm-libs/lua/ctm.lua': code})
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert 'Valider svar' in output and 'Sjekk svar' in output
+    assert 'data-lang="nb"' in output and 'data-stop-after="9"' in output
+    assert 'stack-source-panels' not in output
+    assert 'data-stack-feedback' not in output
+    assert 'data-ctm-id="saved-stack"' in output
+    doc = Document(output)
+    card = doc.find(css_class='ctm-stack')[0]
+    payload = json.loads(list(card.find('script', 'ctm-stack-data'))[0].text)
+    assert payload['version'] == 2 and payload['backend']['id'] == 'sympy'
+    assert set(payload['common']) == {'inputs', 'qtests', 'checker'}
+    assert all({'n', 'id', 'hash', 'display', 'plan'} <= item.keys() for item in payload['variants'])
+    descriptors = doc.find('script', 'ctm-stack-backend')
+    assert len(descriptors) == 1
+    descriptor = json.loads(descriptors[0].text)
+    assert set(descriptor) == {'id', 'version', 'adapter', 'requires'}
+    assert descriptor['adapter'] == 'backends/sympy.js'
+
+
+def test_maxima_selection_stops_at_build_without_a_runtime_fallback():
+    result, output = _fixture_render(_card(extra='#| cas: maxima\n'))
+    assert result.returncode != 0
+    assert 'the Maxima backend is not available yet' in result.stdout + result.stderr
+    assert 'ctm-stack-data' not in output
+
+
+def test_feedback_auto_is_on_but_block_false_overrides_it():
+    result, output = _fixture_render(_card() + '\n' + _card('#| feedback: false\n'))
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert len(_feedback_cards(output)) == 1
+    assert 'ctm-locale-ctm-stack' in output

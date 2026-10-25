@@ -2,8 +2,8 @@
 title: "Worked questions"
 subtitle: "Choose what counts as a correct mathematical answer"
 ai-feedback:
-  page-policy:
-    math-exercise: brief-mathematics
+  policy:
+    stack: brief-mathematics
 ---
 
 Press **Validate answers** to inspect each interpreted response, then **Check answer** to grade it. After an edit, validate again.

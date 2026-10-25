@@ -43,7 +43,7 @@ jobs:
   compliance:
     name: Native STACK (ctm-checkers)
     needs: dependencies
-    uses: Erasmus-CTM/ctm-checkers/.github/workflows/native-stack.yml@a94a64914860460fbdd05728cab2c5ef85db697c # the ctm-checkers commit this run builds against (checked above)
+    uses: Erasmus-CTM/ctm-checkers/.github/workflows/native-stack.yml@a09ed14f230bab6c6398d4efb74f839775f1f58b # the ctm-checkers commit this run builds against (checked above)
     with:
       ctm-checkers-ref: ${{ needs.dependencies.outputs.ctm-checkers }}
 
@@ -65,8 +65,12 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - run: python scripts/fetch-examples.py
       - run: python -m pytest -q tests
-      - run: python -m playwright install --with-deps chromium
-      - run: python -m pytest -q tests/browser.py tests/feedback_browser.py
+      - run: python -m playwright install --with-deps chromium firefox webkit
+      - name: STACK browser checks in Chromium, Firefox and WebKit
+        run: |
+          for browser in chromium firefox webkit; do
+            CTM_STACK_BROWSER="$browser" python -m pytest -q tests/browser.py tests/feedback_browser.py tests/backend_browser.py || exit 1
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:

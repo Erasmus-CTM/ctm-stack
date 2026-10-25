@@ -13,9 +13,9 @@ from browser import serve
 
 def browser_for(pw):
     options = {"headless": True}
-    if os.environ.get("STACK_SYMPY_CHROMIUM"):
+    if os.getenv("CTM_STACK_BROWSER", "chromium") == "chromium" and os.environ.get("STACK_SYMPY_CHROMIUM"):
         options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
-    return pw.chromium.launch(**options)
+    return getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**options)
 
 
 def prompt_data(card):
@@ -72,7 +72,7 @@ def test_feedback_copy_prompt_and_context_modes(browser_site):
         assert wrapped[0]["content"] == "Visible course context."
 
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
-        cards = page.locator(".stack-sympy[data-stack-feedback]")
+        cards = page.locator(".ctm-stack[data-stack-feedback]")
         assert cards.count() > 0
         seen_modes = set()
         assert page.locator("#ai-feedback-settings").count() == 0
@@ -317,53 +317,23 @@ def test_check_can_preserve_hints_but_variant_selection_always_resets(browser_si
 # Existing tests above continue to exercise real Pyodide and STACK grading.
 INIT_FAILURE_PROBE = r"""
 (() => {
-  const NativeWorker = window.Worker;
   const set = window.setTimeout.bind(window), clear = window.clearTimeout.bind(window);
   const probe = window.__stackInitFailure = {workers: [], deadlines: []};
   window.setTimeout = function(callback, delay, ...args) {
-    const id = set(callback, delay, ...args);
-    if (delay === 31000) probe.deadlines.push({id, callback, cleared: false});
-    return id;
+    const id=set(callback,delay,...args); if (delay===1000) probe.deadlines.push({id,callback,cleared:false}); return id;
   };
-  window.clearTimeout = function(id) {
-    for (const timer of probe.deadlines) if (timer.id === id) timer.cleared = true;
-    return clear(id);
-  };
-  window.Worker = class extends NativeWorker {
-    constructor(url, options) {
-      super(url, options);
-      const record = {terminated: false};
-      const first = probe.workers.length === 0;
-      probe.workers.push(record);
-      const post = this.postMessage.bind(this), terminate = this.terminate.bind(this);
-      this.postMessage = function(message, ...args) {
-        if (first && message.type === 'init') {
-          throw new DOMException('Controlled initial message clone failure', 'DataCloneError');
-        }
-        return post(message, ...args);
-      };
-      this.terminate = function() { record.terminated = true; return terminate(); };
-    }
-  };
+  window.clearTimeout = function(id) { for (const timer of probe.deadlines) if (timer.id===id) timer.cleared=true; return clear(id); };
   probe.configure = function() {
-    // Exercise the real worker protocol without downloading a Python engine.
-    // Grading semantics remain covered by the ordinary real-Pyodide tests.
-    const runtime = "self.MathExerciseRuntime={loadTimeout:1000," +
-      "ensurePyodide:async()=>({loadPackage:async()=>{}}),ensureCheckers:async()=>{}," +
-      "callCheckers:async(py,name,data)=>JSON.stringify({ok:true,result:{status:'valid'," +
-      "inputs:Object.fromEntries(Object.keys(data.answers).map(key=>[key,{valid:true,latex:data.answers[key]}]))}})};";
-    window.MathExerciseRuntime = {loadTimeout: 1000, scriptURL: 'data:application/javascript,' + encodeURIComponent(runtime)};
-    window.CTMCheckers = window.CTMCheckersStack = {scriptURL: 'data:application/javascript,'};
+    MathExerciseRuntime.loadTimeout=1000;
+    MathExerciseRuntime.ensureCheckers=async()=>{};
+    MathExerciseRuntime.callCheckers=async(py,name,data)=>JSON.stringify({ok:true,result:{status:'valid',inputs:Object.fromEntries(Object.keys(data.answers).map(key=>[key,{valid:true,latex:data.answers[key]}]))}});
+    CTMWorker.start=async()=>{
+      const record={terminated:false}, first=probe.workers.length===0; probe.workers.push(record);
+      return {loadPackage:async()=>{if(first)throw Error('Controlled initial package failure');},terminate:()=>{record.terminated=true;}};
+    };
   };
-  probe.snapshot = function() {
-    return {workers: probe.workers.map(w=>({...w})),
-      deadlines: probe.deadlines.map(t=>({cleared:t.cleared}))};
-  };
-  probe.expireOriginalDeadline = function() {
-    const timer = probe.deadlines[0];
-    // A cleared timeout cannot fire. Expire only a leaked original deadline.
-    if (!timer.cleared) { clear(timer.id); timer.callback(); }
-  };
+  probe.snapshot=()=>({workers:probe.workers.map(w=>({...w})),deadlines:probe.deadlines.map(t=>({cleared:t.cleared}))});
+  probe.expireOriginalDeadline=()=>{const timer=probe.deadlines[0];if(!timer.cleared){clear(timer.id);timer.callback();}};
 })();
 """
 
@@ -380,7 +350,7 @@ def test_worker_initial_message_failure_cleans_up_and_retry_stays_alive(browser_
             card.locator(".stack-answer").first.fill("x+1")
             card.locator(".stack-validate").click()
             card.locator('.stack-result[data-state="error"]').wait_for()
-            assert "Controlled initial message clone failure" in card.locator(".stack-result").inner_text()
+            assert "Controlled initial package failure" in card.locator(".stack-result").inner_text()
             failed = page.evaluate("window.__stackInitFailure.snapshot()")
             assert len(failed["workers"]) == 1
             assert failed["workers"][0]["terminated"], failed
