@@ -145,7 +145,8 @@ local function render(block)
     .. '<section' .. attrs .. ' data-mathjax="' .. escape(mathjax) .. '">' .. toolbar
     .. '<div class="stack-prompt stack-question">' .. payload.variants[1].display.question_html .. '</div><div class="stack-actions">' .. buttons
     .. '</div><div class="stack-result" aria-live="polite"></div><div class="stack-generalfeedback" hidden></div>'
-    .. '<script type="application/json" class="ctm-stack-data">' .. json(payload) .. '</script></section>' .. source .. '</div>')
+    -- Keep backend map order: qtest diagnostics follow the authored PRT order.
+    .. '<script type="application/json" class="ctm-stack-data">' .. output:gsub('<','\\u003c'):gsub('>','\\u003e'):gsub('&','\\u0026') .. '</script></section>' .. source .. '</div>')
 end
 local function detect(doc)
   ctm.settings.load(doc.meta); documentLanguage = ctm.locale.resolve('ctm-stack')
