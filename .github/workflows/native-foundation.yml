@@ -1,0 +1,93 @@
+name: Native Maxima transport and author runner
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '_extensions/ctm-stack/native/**'
+      - 'scripts/*native*'
+      - 'tests/native/**'
+      - '.github/workflows/native-foundation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  node:
+    name: Trusted build programs (Node ${{ matrix.node }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22.16.0', '24.19.0']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: maths/moodle-qtype_stack
+          ref: 33383047af39c204bf4442802a058f8b918b2b1b
+          path: .cache/stack
+          persist-credentials: false
+      - name: Download the immutable v3 release; stage and verify every byte
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download runtime-v3 --repo Erasmus-CTM/stack-wasm-maxima --dir .cache/release --pattern maxima-runtime-v3.json --pattern maxima-runtime-v3.tar.gz
+          python scripts/stage-native.py --release .cache/release --stack-source .cache/stack --output .cache/native-v3
+          mkdir -p test-results/native
+          gzip -dc tests/native/accepted-programs.json.gz > test-results/native/programs.json
+      - name: Watchdog, stale-generation and error taxonomy controls
+        run: node tests/native/session.test.mjs
+      - name: Exact 327-program replay, lifecycle, isolation and build cache
+        run: node tests/native/integration.mjs .cache/native-v3 test-results/native/programs.json test-results/native/node.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-node-${{ matrix.node }}
+          path: test-results/native/
+          if-no-files-found: error
+
+  browser:
+    name: Non-isolated direct calls (${{ matrix.browser }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/checkout@v4
+        with:
+          repository: maths/moodle-qtype_stack
+          ref: 33383047af39c204bf4442802a058f8b918b2b1b
+          path: .cache/stack
+          persist-credentials: false
+      - name: Stage the verified v3 release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download runtime-v3 --repo Erasmus-CTM/stack-wasm-maxima --dir .cache/release --pattern maxima-runtime-v3.json --pattern maxima-runtime-v3.tar.gz
+          python scripts/stage-native.py --release .cache/release --stack-source .cache/stack --output .cache/native-v3
+      - name: Install the browser harness
+        run: |
+          python -m pip install playwright==1.56.1
+          python -m playwright install --with-deps ${{ matrix.browser }}
+      - name: Replay the preparation and controller programs without COOP/COEP
+        run: python tests/native/browser.py .cache/native-v3 test-results/native/browser.json --browser ${{ matrix.browser }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-browser-${{ matrix.browser }}
+          path: test-results/native/
+          if-no-files-found: error
