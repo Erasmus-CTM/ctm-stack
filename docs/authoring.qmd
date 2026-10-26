@@ -13,14 +13,11 @@ matrix condition or positive definiteness, see [Python answer tests](python-chec
 
 ### Start with a native export {#start-with-a-native-export}
 
-CTM STACK is a part of CTM Assessment. Install CTM Assessment and STACK
-SymPy in your Quarto project, and SymPy in the Python environment that Quarto
-uses. CTM Assessment brings the STACK engine (ctm-checkers) and the guided
+CTM STACK is a part of CTM Assessment. Install CTM Assessment in your Quarto project and SymPy in the Python environment that Quarto uses. CTM Assessment brings the STACK engine (ctm-checkers) and the guided
 hints (AI feedback):
 
 ```bash
 quarto add https://erasmus-ctm.github.io/ctm-assessment/ctm-assessment.tar.gz
-quarto add Erasmus-CTM/ctm-stack
 python -m pip install 'sympy==1.13.3'
 ```
 
@@ -28,25 +25,48 @@ Add the question filter to `_quarto.yml`:
 
 ```yaml
 filters:
-  - ctm-stack
+  - ctm-assessment
 ```
 
 Export a supported Moodle STACK question as XML and keep it in your project.
 Use its filename and exact question name in a Quarto block:
 
 ```{.stack-question}
+#| label: authoring-expand-a-product-form-sensitive
 #| file: ../questions/polynomial-expansion.xml
 #| question: Expand a product (form-sensitive)
-#| seed: 17
 #| variants: 3
 #| review: true
 #| feedback: true
 ```
 
 This page sits in `docs/`, so its filename starts with `../questions/`. A page
-at the project root would use `questions/`. The three variants provide fresh
-coefficients; a fixed seed reproduces this port's choices. It does not reproduce
-Moodle's random sequence. Omit `feedback: true` if you do not need AI hints.
+at the project root would use `questions/`. The stable `label` identifies the
+card and its review history. `variants` is a proposal batch size, default 25.
+SymPy generates its own seeds starting at 1; Moodle's deployed seeds do not
+carry over. Equal question notes produce one proposal. Maxima owns its own
+seed generation and is not available through this SymPy generator.
+
+Generate candidates from the current source, then inspect their live student
+cards and actual XML question-test results before approving any for publication:
+
+```bash
+python _extensions/ctm-stack/question-variants.py --project . --file docs/authoring.qmd --label authoring-expand-a-product-form-sensitive generate25more
+python _extensions/ctm-stack/variants-review.py --project . --file docs/authoring.qmd --label authoring-expand-a-product-form-sensitive
+```
+
+The shared manifest is `_variants/<label>.yml`. Approval is required by default;
+a publication without a current approved variant fails. `CTM_VARIANTS=review`
+builds an explicit teacher preview with unapproved proposals visibly marked.
+Decisions use the current source and manifest lease; stale decisions require a
+fresh review. Content hashes preserve approval and stable numbers when a seed's
+locator moves to equivalent mathematical content. Changed grading requires review.
+
+Learners receive a stable choice from the shared variant selector. **New variant**
+asks before clearing a nonempty answer and avoids repeats until all deployed
+choices have been seen. A saved answer is restored only for the same mathematical
+content. Answers to changed or withdrawn variants remain readable and require
+accepting a current variant. `#| seed:` and the learner's old selection menu retire.
 
 A learner first presses **Validate answers** to review the interpreted answer,
 then **Check answer** to receive a mark. Editing an answer requires validation
@@ -99,6 +119,7 @@ Distributivity gives $a(b+c)=ab+ac$.
 :::
 
 ```{.stack-question}
+#| label: authoring-expand-a-product-form-sensitive-670eab
 #| file: questions/polynomial-expansion.xml
 #| question: Expand a product (form-sensitive)
 #| feedback: true
@@ -164,15 +185,14 @@ block. File paths are relative to the containing `.qmd` page.
 |---|---|---|
 | `file` | Required | XML filename. |
 | `question` | Required | Exact XML question name. |
-| `seed` | `1`; signed 32-bit integer | Starting seed for repeatable variants. |
-| `variants` | `1`; from 1 to 20 | Number of variants prepared at build time. |
+| `variants` | `25`; from 1 to 100 | Requested proposal batch; only approved current variants publish. |
 | `review` | `false` | Show **Run question tests** for the selected variant. |
 | `diagnostics` | `false` | Display build errors while authoring. |
-| `feedback` | `false` | Enable CTM Assessment's AI feedback for the card. |
+| `feedback` | `auto` | Enable CTM Assessment's AI feedback for the card. |
 | `context` | `auto` | Nearby prose, `none`, or comma-separated context IDs. |
 | `feedback-language` | Document `lang` | Language for AI explanations. |
 | `feedback-policy` | Inherited policy | Name of a policy loaded by CTM Assessment's AI feedback. |
-| `label` | Generated card ID | Stable exercise key for policy overrides. A Quarto block ID also identifies a card. |
+| `label` | Required, unique on the page | Stable exercise key for variant history, saved answers and policy overrides. |
 | `python-checkers` | Omitted | Python filename read during the build; register named functions in `CHECKERS`. No source manifest is required. |
 
 The extension requires CTM Assessment (with ctm-checkers 0.2.0 or later;

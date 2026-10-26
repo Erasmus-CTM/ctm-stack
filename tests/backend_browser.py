@@ -18,17 +18,20 @@ def browser_for(pw):
     return getattr(pw, name).launch(**options)
 
 
-def mount(page, behavior='valid', *, stop_after=20, store=False):
+def mount(page, behavior='valid', *, stop_after=20, store=False, variants=1, changed_hash=False):
     inputs = '<input class="stack-answer" data-name="a"><span class="stack-validation" data-name="a"></span>'
     data = {'version': 2, 'id': 'future-card', 'common': {'inputs': [{'name': 'a'}], 'qtests': [], 'checker': None},
             'backend': {'id': 'future-backend', 'question': {'opaque': 'question'}},
             'variants': [{'n': 7, 'id': 'seed=9', 'hash': '0123456789abcdef',
                           'display': {'question_html': inputs}, 'plan': {'opaque': 'plan'}}], 'review': False}
+    if variants>1:
+        import copy
+        data['variants']=[dict(copy.deepcopy(data['variants'][0]),n=i+1,id='seed='+str(i+1),hash=('changed' if changed_hash else 'stable')+str(i+1)) for i in range(variants)]
     descriptor = {'id': 'future-backend', 'version': 'test', 'adapter': 'future-adapter.js', 'requires': {'isolation': False}}
     page.set_content('<script type="application/json" class="ctm-stack-backend" data-backend="future-backend">'
         + json.dumps(descriptor) + '</script><section class="ctm-stack" data-stack-id="future-card" data-backend="future-backend" '
         + 'data-lang="en" data-ctm-id="future-card" data-ctm-source="0123456789abcdef" data-stop-after="' + str(stop_after) + '">'
-        + '<div class="stack-prompt">' + inputs + '</div><div class="stack-actions">'
+        + '<div class="stack-toolbar"><span class="stack-variant-number"></span><button class="stack-new-variant">New variant</button><span class="stack-variant-approval"></span></div><div class="stack-prompt">' + inputs + '</div><div class="stack-actions">'
         + '<button class="stack-validate">Validate</button><button class="stack-check" disabled>Check</button></div>'
         + '<div class="stack-result"></div><script type="application/json" class="ctm-stack-data">'
         + json.dumps(data) + '</script></section>')
@@ -50,11 +53,14 @@ def mount(page, behavior='valid', *, stop_after=20, store=False):
         stop: async () => { probe.stops++; probe.finish({ok:false,error:{kind:'runtime',code:'interrupt',message:'interrupted'}}); return {restarted:false}; },
         restart: async () => { probe.restarts++; behavior='valid'; }
       })};
-      if (store) window.CTMStore = {register: options => {
+      if (store===true) window.CTMStore = {register: options => {
         probe.storeOptions=options;
         return {restore:()=>{},changed:()=>{},flush:()=>{},result:value=>probe.results.push(value)};
       }};
     }''', {'behavior': behavior, 'store': store})
+    if store=='real':
+        page.add_script_tag(path=str(ctm_parts.CTM_LIBS/'ui/ctm-store.js'))
+        page.add_script_tag(path=str(ctm_parts.CTM_LIBS/'ui/variants.js'))
     # Serve exact production bytes through a local route, with a real script URL.
     page.route('https://ctm.test/ctm-stack.js', lambda route: route.fulfill(content_type='application/javascript',
         body=(ROOT / '_extensions/ctm-stack/ctm-stack.js').read_text()))
@@ -231,3 +237,42 @@ def test_superseded_queued_request_never_reaches_a_backend():
             assert page.locator('.stack-check').is_enabled()
         finally:
             browser.close()
+
+
+def test_real_store_variant_rotation_confirmation_restore_and_changed_content():
+    with sync_playwright() as pw:
+        browser=browser_for(pw)
+        try:
+            page=browser.new_page()
+            page.route('https://ctm.test/',lambda route:route.fulfill(body='<html></html>',content_type='text/html'))
+            page.goto('https://ctm.test/')
+            mount(page,store='real',variants=3)
+            card=page.locator('.ctm-stack')
+            first=card.get_attribute('data-stack-variant-id')
+            card.locator('.stack-answer').fill('saved answer')
+            page.wait_for_timeout(350)
+            page.once('dialog',lambda dialog:dialog.dismiss())
+            card.locator('.stack-new-variant').click()
+            assert card.get_attribute('data-stack-variant-id')==first
+            assert card.locator('.stack-answer').input_value()=='saved answer'
+            page.once('dialog',lambda dialog:dialog.accept())
+            card.locator('.stack-new-variant').click()
+            second=card.get_attribute('data-stack-variant-id')
+            assert second!=first and card.locator('.stack-answer').input_value()==''
+            card.locator('.stack-new-variant').click()
+            third=card.get_attribute('data-stack-variant-id')
+            assert third not in (first,second)
+            card.locator('.stack-answer').fill('keep this old answer')
+            page.wait_for_timeout(350)
+            page.goto('https://ctm.test/')
+            mount(page,store='real',variants=3)
+            assert card.get_attribute('data-stack-variant-id')==third
+            assert card.locator('.stack-answer').input_value()=='keep this old answer'
+            page.goto('https://ctm.test/')
+            mount(page,store='real',variants=3,changed_hash=True)
+            assert card.locator('.stack-answer').input_value()==''
+            card.locator('.stack-withdrawn summary').click()
+            assert 'keep this old answer' in card.locator('.stack-withdrawn').inner_text()
+            card.locator('.stack-new-variant').click()
+            assert card.locator('.stack-withdrawn').count()==0
+        finally:browser.close()

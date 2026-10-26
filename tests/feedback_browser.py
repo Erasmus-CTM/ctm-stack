@@ -8,7 +8,7 @@ import re
 
 from playwright.sync_api import sync_playwright
 
-from browser import serve
+from browser import serve, correct_expansion, next_variant
 
 
 def browser_for(pw):
@@ -39,7 +39,7 @@ def test_feedback_copy_prompt_and_context_modes(browser_site):
         card.locator(".ai-feedback-gear").click()
         assert page.locator("#ai-feedback-settings[open]").count() == 1
         page.locator("#ai-feedback-settings button").first.click()
-        card.locator(".stack-answer").first.fill("x**2+8x+15")
+        card.locator(".stack-answer").first.fill(correct_expansion(card))
         first = prompt_data(card)
         assert "[Answer " in first["task"]
         # Numeric TeX groups such as {5} preserve CAS expression boundaries.
@@ -49,7 +49,7 @@ def test_feedback_copy_prompt_and_context_modes(browser_site):
         assert "{@" not in first["task"]  # Frozen coefficients, not author CAS text.
         assert "<quiz>" not in json.dumps(first)
         assert "questionvariables" not in json.dumps(first)
-        assert first["responses"][0]["value"] == "x**2+8x+15"
+        assert first["responses"][0]["value"] == correct_expansion(card)
         assert first["evidence"] == []
         assert first["materials"] and "Visible course context for the expansion activity." in first["materials"][0]["text"]
         assert "CURRENT HINT LEVEL: 1 OF 4" in card.locator(".ai-feedback-prompt").inner_text()
@@ -99,7 +99,7 @@ def test_inherited_policy_steps_permissions_and_parent_changes(browser_site):
         browser = browser_for(pw)
         page = browser.new_page()
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
-        card = page.locator('[data-stack-id="rational"]')
+        card = page.locator('[data-stack-id="rational-practice"]')
         card.locator(".stack-answer").first.fill("x+1")
         prompt_data(card)
         first = card.locator(".ai-feedback-prompt").inner_text()
@@ -211,7 +211,7 @@ def test_feedback_api_evidence_and_stale_cancellation(browser_site):
         card = page.locator('[data-stack-id="expansion"]')
         answer = card.locator(".stack-answer").first
         button = card.locator(".stack-feedback-button")
-        answer.fill("x**2+8x+15")
+        answer.fill(correct_expansion(card))
         button.click()
         first = api_request(page, 1)
         assert user_data(first)["evidence"] == []
@@ -230,7 +230,7 @@ def test_feedback_api_evidence_and_stale_cancellation(browser_site):
         card.locator(".ai-feedback-body").wait_for()
 
         # Neither authored tests nor Validate become provider-visible assessment.
-        answer.fill("x**2+8x+15")
+        answer.fill(correct_expansion(card))
         card.locator(".stack-validate").click()
         card.locator('.stack-result[data-state="valid"]').wait_for(timeout=120000)
         button.click()
@@ -264,8 +264,7 @@ def test_feedback_api_evidence_and_stale_cancellation(browser_site):
         assert card.locator(".ai-feedback-output").inner_text() == ""
         button.click()
         assert user_data(api_request(page, 6))["evidence"] == []
-        selector = card.locator(".stack-variant")
-        selector.select_option(index=1)
+        next_variant(card)
         assert answer.input_value() == ""
         answer.fill("x+1")  # Same string on a different frozen variant remains stale.
         page.evaluate("window.__replyFeedback()")
@@ -294,7 +293,7 @@ def test_check_can_preserve_hints_but_variant_selection_always_resets(browser_si
           }}});
         }""")
         card = page.locator('[data-stack-id="expansion"]')
-        card.locator(".stack-answer").first.fill("x**2+8x+15")
+        card.locator(".stack-answer").first.fill(correct_expansion(card))
         prompt_data(card)
         first = card.locator(".ai-feedback-prompt").inner_text()
         assert "CURRENT HINT LEVEL: 1 OF 4" in first
@@ -306,7 +305,7 @@ def test_check_can_preserve_hints_but_variant_selection_always_resets(browser_si
         card.locator('.stack-result[data-state="correct"]').wait_for(timeout=120000)
         assert prompt_data(card)["evidence"]
         assert "CURRENT HINT LEVEL: 2 OF 4" in card.locator(".ai-feedback-prompt").inner_text()
-        card.locator(".stack-variant").select_option(index=1)
+        next_variant(card)
         card.locator(".stack-answer").first.fill("x+1")
         assert prompt_data(card)["evidence"] == []
         assert "CURRENT HINT LEVEL: 1 OF 4" in card.locator(".ai-feedback-prompt").inner_text()

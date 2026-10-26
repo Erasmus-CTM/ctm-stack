@@ -57,12 +57,12 @@ The [worked matrix examples](examples.qmd#find-a-nonidentity-matrix-with-determi
 
 The four elementary-row-operation problems below run directly from unchanged official exports: [row 2 plus a multiple of row 3](#linearalgebra-elementary-1), [row 1 plus a multiple of row 3](#linearalgebra-elementary-2), [row 2 plus a multiple of row 1](#linearalgebra-elementary-3), and [row 1 minus a multiple of row 2](#linearalgebra-elementary-4). Together their original tests pass all 24 recorded seed/case combinations. Each uses a fixed 3 by 3 matrix editor and whole-matrix algebraic equivalence; no automatic cell partial credit is added.
 
-The fifth asks learners to write a system of three linear equations as a coefficient matrix and a column vector. Its original XML is [preserved unchanged](questions/corpus/7-3-26-(Write-sim-eqns-with-matrices).xml) and remains blocked by an unsupported inline HTML style. This explicitly attributed presentation teaching copy removes that style and closes its list; variables, answers, PRT and authored qtest are unchanged. Its original qtest passes on the first three deployed seeds. This is a presentation adaptation, not evidence that the original export runs unchanged.
+The fifth asks learners to write a system of three linear equations as a coefficient matrix and a column vector. Its original XML is [preserved unchanged](questions/corpus/7-3-26-(Write-sim-eqns-with-matrices).xml) and remains blocked by an unsupported inline HTML style. This explicitly attributed presentation teaching copy removes that style and closes its list; variables, answers, PRT and authored qtest are unchanged. Its original qtest passed on the recorded Moodle seeds; the SymPy proposals below run their own qtests. This is a presentation adaptation, not evidence that the original export runs unchanged.
 
 ```{.stack-question}
 #| file: questions/corrected/7-3-26-(Write-sim-eqns-with-matrices).xml
 #| question: 7.3.26 (Write sim. eqns. with matrices) (presentation teaching copy)
-#| seed: 1930245414
+#| label: corpus-matrix-system
 #| review: true
 ```
 
@@ -70,7 +70,7 @@ The fifth asks learners to write a system of three linear equations as a coeffic
 
 ### Ready to try
 
-These 23 cards use a replayed variant of each question. Press **Validate answers**, then **Check answer**. **Run question tests** checks the displayed variant against the question's authored cases. Three cards use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Each original remains downloadable; the [baseline](questions/corpus/baseline.json) records every tested variant.
+These 23 cards use independently generated SymPy variants of each question. Press **Validate answers**, then **Check answer**. **Run question tests** checks the displayed variant against the question's authored cases. Three cards use [corrected teaching copies](questions/corrected/README.md) for mathematical or grading defects in the originals. Each original remains downloadable; the [baseline](questions/corpus/baseline.json) records every tested variant.
 
 #### AlgMap-1.5 {#algmap-1-5}
 
@@ -81,7 +81,7 @@ Algebra Refresher / 01 Combinations of arithmetic operations · 1 answer field �
 ```{.stack-question}
 #| file: questions/corrected/AlgMap-1-5.xml
 #| question: AlgMap-1.5 (corrected teaching copy)
-#| seed: 128137392
+#| label: corpus-algmap-1-5
 #| review: true
 ```
 
@@ -95,7 +95,7 @@ Algebra Refresher / 01 Combinations of arithmetic operations · 1 answer field �
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-1-6.xml
 #| question: AlgMap-1.6
-#| seed: 891319547
+#| label: corpus-algmap-1-6
 #| review: true
 ```
 
@@ -108,7 +108,7 @@ Algebra Refresher / 02 Factorisation of whole numbers · 1 answer field · 2 aut
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-2-1.xml
 #| question: AlgMap-2.1
-#| seed: 675382660
+#| label: corpus-algmap-2-1
 #| review: true
 ```
 
@@ -123,7 +123,7 @@ Algebra Refresher / 02 Factorisation of whole numbers · 1 answer field · 2 aut
 ```{.stack-question}
 #| file: questions/corrected/AlgMap-2-5.xml
 #| question: AlgMap-2.5 (corrected teaching copy)
-#| seed: 554625703
+#| label: corpus-algmap-2-5
 #| review: true
 ```
 
@@ -137,7 +137,7 @@ Algebra Refresher / 04 Multiplication and division of fractions · 1 answer fiel
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-4-1.xml
 #| question: AlgMap-4.1
-#| seed: 167731690
+#| label: corpus-algmap-4-1
 #| review: true
 ```
 
@@ -150,7 +150,7 @@ Algebra Refresher / 04 Multiplication and division of fractions · 1 answer fiel
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-4-13.xml
 #| question: AlgMap-4.13
-#| seed: 1088093467
+#| label: corpus-algmap-4-13
 #| review: true
 ```
 
@@ -165,7 +165,7 @@ Algebra Refresher / 06 Simplifying algebraic expressions · 1 answer field · 3 
 ```{.stack-question}
 #| file: questions/corrected/AlgMap-6-4.xml
 #| question: AlgMap-6.4 (corrected teaching copy)
-#| seed: 17
+#| label: corpus-algmap-6-4
 #| review: true
 ```
 
@@ -179,7 +179,7 @@ Algebra Refresher / 06 Simplifying algebraic expressions · 1 answer field · 2 
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-6-7.xml
 #| question: AlgMap-6.7
-#| seed: 1214045767
+#| label: corpus-algmap-6-7
 #| review: true
 ```
 
@@ -192,7 +192,7 @@ Algebra Refresher / 07 Removing brackets · 1 answer field · 2 author tests.
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-7-1.xml
 #| question: AlgMap-7.1
-#| seed: 891379060
+#| label: corpus-algmap-7-1
 #| review: true
 ```
 
@@ -205,7 +205,7 @@ Algebra Refresher / 08 Algebraic fractions · 1 answer field · 4 author tests.
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-8-5.xml
 #| question: AlgMap-8.5
-#| seed: 17
+#| label: corpus-algmap-8-5
 #| review: true
 ```
 
@@ -218,7 +218,7 @@ Algebra Refresher / 09 Linear equations · 1 answer field · 1 author test.
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-9-1.xml
 #| question: AlgMap-9.1
-#| seed: 253453649
+#| label: corpus-algmap-9-1
 #| review: true
 ```
 
@@ -231,7 +231,7 @@ Algebra Refresher / 09 Linear equations · 1 answer field · 1 author test.
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-9-6.xml
 #| question: AlgMap-9.6
-#| seed: 1775658430
+#| label: corpus-algmap-9-6
 #| review: true
 ```
 
@@ -244,7 +244,7 @@ Algebra Refresher / 10 Expressions single term common factors · 1 answer field 
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-10-1.xml
 #| question: AlgMap-10.1
-#| seed: 1910622122
+#| label: corpus-algmap-10-1
 #| review: true
 ```
 
@@ -257,7 +257,7 @@ Algebra Refresher / 11 Rearranging algebraic formulae · 2 answer fields · 1 au
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-11-1.xml
 #| question: AlgMap-11.1
-#| seed: 17
+#| label: corpus-algmap-11-1
 #| review: true
 ```
 
@@ -270,7 +270,7 @@ Algebra Refresher / 11 Rearranging algebraic formulae · 1 answer field · 2 aut
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-11-8.xml
 #| question: AlgMap-11.8
-#| seed: 17
+#| label: corpus-algmap-11-8
 #| review: true
 ```
 
@@ -283,7 +283,7 @@ Algebra Refresher / 13 Factorising algebraic expressions · 1 answer field · 2 
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-13-1-.xml
 #| question: AlgMap-13.1
-#| seed: 1874421384
+#| label: corpus-algmap-13-1
 #| review: true
 ```
 
@@ -296,7 +296,7 @@ Algebra Refresher / 14 Algebraic fractions involving factorising · 1 answer fie
 ```{.stack-question}
 #| file: questions/corpus/AlgMap-14-1.xml
 #| question: AlgMap-14.1
-#| seed: 1720352247
+#| label: corpus-algmap-14-1
 #| review: true
 ```
 
@@ -309,7 +309,7 @@ Topics / Complex Numbers · 1 answer field · 2 author tests.
 ```{.stack-question}
 #| file: questions/corpus/Complex_Convert_1.xml
 #| question: Complex_Convert_1
-#| seed: 817828831
+#| label: corpus-complex-convert-1
 #| review: true
 ```
 
@@ -322,7 +322,7 @@ Topics / Logs and Exponentials · 1 answer field · 3 author tests.
 ```{.stack-question}
 #| file: questions/corpus/Logs_1.xml
 #| question: Logs_1
-#| seed: 1531295862
+#| label: corpus-logs-1
 #| review: true
 ```
 
@@ -335,7 +335,7 @@ Linear algebra / Matrix input · 1 answer field · 2 author tests.
 ```{.stack-question}
 #| file: questions/corpus/LinearAlgebra_elementary_1.xml
 #| question: LinearAlgebra_elementary_1
-#| seed: 948077501
+#| label: corpus-linearalgebra-elementary-1
 #| review: true
 ```
 
@@ -348,7 +348,7 @@ Linear algebra / Matrix input · 1 answer field · 2 author tests.
 ```{.stack-question}
 #| file: questions/corpus/LinearAlgebra_elementary_2.xml
 #| question: LinearAlgebra_elementary_2
-#| seed: 404337827
+#| label: corpus-linearalgebra-elementary-2
 #| review: true
 ```
 
@@ -361,7 +361,7 @@ Linear algebra / Matrix input · 1 answer field · 2 author tests.
 ```{.stack-question}
 #| file: questions/corpus/LinearAlgebra_elementary_3.xml
 #| question: LinearAlgebra_elementary_3
-#| seed: 386876637
+#| label: corpus-linearalgebra-elementary-3
 #| review: true
 ```
 
@@ -374,7 +374,7 @@ Linear algebra / Matrix input · 1 answer field · 2 author tests.
 ```{.stack-question}
 #| file: questions/corpus/LinearAlgebra_elementary_4.xml
 #| question: LinearAlgebra_elementary_4
-#| seed: 2043088205
+#| label: corpus-linearalgebra-elementary-4
 #| review: true
 ```
 

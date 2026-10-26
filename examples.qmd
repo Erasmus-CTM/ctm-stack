@@ -22,7 +22,6 @@ The prompt states the domain $x\ne -n$. A cancelled fraction and the original un
 #| file: questions/rational-equivalence.xml
 #| question: Equivalent rational expression
 #| variants: 3
-#| seed: 29
 #| review: true
 #| feedback: true
 #| label: rational-practice
@@ -38,10 +37,10 @@ Its **AI Feedback** first asks a guiding question and then offers a worked expla
 This unchanged Moodle export asks for a particular written form. Its author tests remain in the XML, so you can inspect how `EqualComAss` grades the response. If an imported question uses an unsupported feature, the site build identifies it for the author.
 
 ```{.stack-question}
+#| label: examples-algmap-6-1
 #| file: questions/upstream/algmap-6-1.xml
 #| question: AlgMap-6.1
 #| variants: 2
-#| seed: 17
 #| review: true
 #| feedback: true
 #| context: none
@@ -56,9 +55,9 @@ supported equivalent expression using hyperbolic functions, such as `tanh`.
 It checks mathematical equivalence rather than requiring one written form.
 
 ```{.stack-question}
+#| label: examples-hyperbolic-equivalence
 #| file: questions/hyperbolic-equivalence.xml
 #| question: Hyperbolic equivalence
-#| seed: 17
 #| review: true
 ```
 
@@ -75,9 +74,9 @@ For a measured quantity, absolute tolerance compares $|x-a|$ to a fixed bound. R
 :::
 
 ```{.stack-question}
+#| label: examples-rectangle-and-triangle-measurements
 #| file: questions/numerical-measurement.xml
 #| question: Rectangle and triangle measurements
-#| seed: 47
 #| review: true
 #| feedback: true
 #| context: measurement-context
@@ -90,9 +89,9 @@ For a measured quantity, absolute tolerance compares $|x-a|$ to a fixed bound. R
 This unchanged question accepts numerical answers within a relative tolerance. Review mode shows its authored test case and the resulting score.
 
 ```{.stack-question}
+#| label: examples-1-1-4-t2-bodmas
 #| file: questions/upstream/bodmas.xml
 #| question: 1.1.4.T2 BODMAS
-#| seed: 29
 #| review: true
 ```
 
@@ -103,9 +102,9 @@ This unchanged question accepts numerical answers within a relative tolerance. R
 This unchanged question has several answer fields and checks the number of reported decimal places. Its author tests are visible in review mode.
 
 ```{.stack-question}
+#| label: examples-1-1-3-t1-rounding-to-n-decimal-places
 #| file: questions/upstream/rounding-three-dp.xml
 #| question: 1.1.3.T1 Rounding to n Decimal Places
-#| seed: 47
 #| review: true
 ```
 
@@ -120,9 +119,9 @@ solutions represented by polynomial equations, including repeated-root
 information; it is not simply comparing the strings on either side.
 
 ```{.stack-question}
+#| label: examples-zero-product-equations
 #| file: questions/zero-product.xml
 #| question: Zero product equations
-#| seed: 17
 #| review: true
 ```
 
@@ -135,9 +134,9 @@ Use De Morgan's law to rewrite `not(a and b)` using `or`. In this question
 for every assignment in its supported finite domain.
 
 ```{.stack-question}
+#| label: examples-boolean-equivalence
 #| file: questions/boolean-equivalence.xml
 #| question: Boolean equivalence
-#| seed: 17
 #| review: true
 ```
 
@@ -152,10 +151,10 @@ repetitions; sets ignore order and repeated mathematical members. One field
 also shows feedback about extra, missing or repeated set entries.
 
 ```{#finite-collections .stack-question}
+#| label: finite-collections
 #| file: questions/finite-collections.xml
 #| question: Finite scalar collections
 #| variants: 2
-#| seed: 17
 #| review: true
 ```
 
@@ -166,9 +165,9 @@ and list order; a separate written-form check can distinguish repeated entries
 or different arithmetic forms even when values agree.
 
 ```{#nested-collections .stack-question}
+#| label: nested-collections
 #| file: questions/nested-collections.xml
 #| question: Nested finite collections
-#| seed: 17
 #| review: true
 ```
 
@@ -179,9 +178,9 @@ still enter ordinary list and set literals; the helper functions are for
 preparing question values, not new learner syntax.
 
 ```{#finite-author-helpers .stack-question}
+#| label: finite-author-helpers
 #| file: questions/finite-author-helpers.xml
 #| question: Finite author helpers
-#| seed: 17
 #| review: true
 ```
 
@@ -195,10 +194,10 @@ determinant one, and nonidentity. You are finding a matrix that satisfies
 conditions, rather than copying a displayed model answer.
 
 ```{#determinant-one .stack-question}
+#| label: determinant-one
 #| file: questions/determinant-one.xml
 #| question: A nonidentity integer matrix with determinant one
 #| python-checkers: questions/matrix-checkers.py
-#| seed: 17
 #| review: true
 #| feedback: true
 #| context: none
@@ -224,6 +223,7 @@ question below; the [teacher explanation](docs/python-checker-api.qmd#symmetric-
 shows the exact mathematical test.
 
 ```{.stack-question #spd-example}
+#| label: spd-example
 #| file: questions/symmetric-positive-definite.xml
 #| question: A positive definite matrix
 #| python-checkers: questions/matrix-checkers.py
@@ -241,6 +241,7 @@ half the marks for each. The checker uses Sylvester's criterion. See the
 to compare the two scoring choices.
 
 ```{.stack-question #spd-separate-example}
+#| label: spd-separate-example
 #| file: questions/symmetric-positive-definite-prt.xml
 #| question: Hermitian symmetry and positive definiteness separately
 #| python-checkers: questions/matrix-checkers.py
@@ -260,9 +261,9 @@ This question uses `AlgEquiv` and two equally weighted response trees. The rank
 and the complete ordered pivot list each earn half the total.
 
 ```{#course-b-rank-pivots .stack-question}
+#| label: course-b-rank-pivots
 #| file: questions/course-b-rank-pivots.xml
 #| question: Rank and pivot columns of B
-#| seed: 17
 #| review: true
 ```
 
@@ -276,10 +277,10 @@ number of columns before validating. The checker uses the original matrix
 $B$ to define the space, so another independent basis is accepted.
 
 ```{#course-b-nullspace .stack-question}
+#| label: course-b-nullspace
 #| file: questions/course-b-nullspace.xml
 #| question: A basis for the null space of B
 #| python-checkers: questions/matrix-checkers.py
-#| seed: 17
 #| review: true
 ```
 
@@ -293,10 +294,10 @@ model matrix would reject many correct answers. The checker uses the
 original matrix $C$ to define the target space.
 
 ```{#course-c-nullspace .stack-question}
+#| label: course-c-nullspace
 #| file: questions/course-c-nullspace.xml
 #| question: A basis for the null space of C
 #| python-checkers: questions/matrix-checkers.py
-#| seed: 17
 #| review: true
 ```
 
@@ -323,11 +324,11 @@ required property; the question's ordinary response tree awards credit.
 See the [author API](docs/python-checker-api.qmd#pythonchecker-api-and-a-scalar-example).
 
 ```{.stack-question #python-multiple}
+#| label: python-multiple
 #| file: questions/python-checker.xml
 #| question: A positive integer multiple (PythonChecker)
 #| python-checkers: questions/checkers.py
 #| variants: 3
-#| seed: 17
 #| review: true
 ```
 

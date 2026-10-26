@@ -50,7 +50,7 @@ def python_path() -> None:
 
 def render_env() -> dict[str, str]:
     """A component development build: ctm-libs and ctm-checkers without the package."""
-    return {**os.environ, "CTM_COMPONENT_DEV": "1"}
+    return {**os.environ, "CTM_COMPONENT_DEV": "1", "CTM_VARIANTS": "review"}
 
 
 def install(project: Path, owner: str = "", *, checkers: bool = True) -> None:

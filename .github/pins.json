@@ -2,14 +2,14 @@
  "comment": "Commits CI uses (.github/actions/ctm-dependencies and site.yml; a head commit's CTM-Review-Refs trailer names others for review). ctm-libs: the library of CTM Assessment (the Python runtime, AI feedback, the bootstrap's target). ctm-checkers: the Python checker library with the STACK engine (ctm_checkers.stack), its example questions (examples/stack, copied into questions/ by scripts/fetch-examples.py) and the native STACK workflow that renders the compliance report. ctm-assessment: the umbrella, for tools/ci/review-dependencies.py (the one copy of every CTM repository).",
  "ctm-libs": {
   "repository": "Erasmus-CTM/ctm-libs",
-  "commit": "a4216a67eff736ee7ba113a375ec896ad8eb4a05"
+  "commit": "4a63de66108bc5a89be4b9b6f7717cfcb6eb357c"
  },
  "ctm-checkers": {
   "repository": "Erasmus-CTM/ctm-checkers",
-  "commit": "a71c031da618a66c14420dd978ae5cea24a6860e"
+  "commit": "58fe5f16b40e5da308d34084bb4d6c1728a6af9f"
  },
  "ctm-assessment": {
   "repository": "Erasmus-CTM/ctm-assessment",
-  "commit": "1f72b570163d662942a514a59e5bcd6487ab363f"
+  "commit": "c05577661b5cd7eec3e19bde59eae41c1e55bf10"
  }
 }
