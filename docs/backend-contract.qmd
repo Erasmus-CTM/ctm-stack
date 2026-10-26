@@ -12,6 +12,21 @@ The version-2 JSON island contains `common` input/qtest/checker data,
 opaque, display HTML, and `{n, id, hash}` identities. `stackRevision` reports the
 engine's actual reference pin; SymPy's `runtimeHash` is null.
 
+H1 sets `common.checker` to `{source, value}` for a block checker; otherwise
+it is null. The SymPy backend keeps the same source and weight in its opaque
+question plan. Checker plans carry the selected `{n, id, hash}` identity.
+The text-only `stack.check` continuation accepts validated `raw`/`canonical`
+inputs, exact teacher and variable text, assumptions and optional node values.
+For an XML node, `node.sans` names its validated input, `node.tans` is the
+evaluated teacher text, and `node.options` is the complete XML testoptions
+object (`checker` and optional `options`). The shared entry resolves these
+for both block checkers and library predicates; author code receives decoded
+node values and the inner literal options object. Library matrix assessments
+are keyed by the same input name.
+It returns the usual STACK envelope, including author errors that retain the
+session. SymPy prints canonical input from the written AST until the shared
+JS admission exists. See the [checker contract](python-checker-api.qmd).
+
 Each backend descriptor is `{id, version, adapter, requires: {isolation}}`.
 The adapter URL is relative to the component script. Its script registers a
 factory under `window.CTMStackAdapters[id]`, returning:

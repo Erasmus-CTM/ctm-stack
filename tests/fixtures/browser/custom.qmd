@@ -6,7 +6,15 @@ title: "Custom Python checker integration"
 #| label: custom-multiple
 #| file: questions/python-checker.xml
 #| question: A positive integer multiple (PythonChecker)
-#| python-checkers: questions/checkers.py
+#| checker: |
+#|   def check(response, symbols):
+#|       student = response["answers"]["ans"]
+#|       divisor = response["variables"]["d"]
+#|       if student.is_Integer is not True:
+#|           return {"valid": False, "feedback": "Enter an integer value."}
+#|       correct = student > 0 and student % divisor == 0
+#|       return {"correct": bool(correct),
+#|               "feedback": "" if correct else "Use a positive integer multiple of the given number."}
 #| variants: 2
 #| review: true
 #| feedback: true
@@ -16,14 +24,22 @@ title: "Custom Python checker integration"
 #| label: custom-other
 #| file: questions/alternate-python-checker.xml
 #| question: A positive integer multiple (PythonChecker)
-#| python-checkers: alternate-checkers.py
+#| checker: |
+#|   calls = 0
+#|
+#|   def check(response, symbols):
+#|       global calls
+#|       calls += 1
+#|       student = response["answers"]["ans"]
+#|       teacher = response["variables"]["d"]
+#|       return {"correct": bool(calls == 1 and student == teacher + 1),
+#|               "feedback": "<b>Literal custom diagnostic</b>"}
 ```
 
 ```{.stack-question #custom-spd}
 #| label: custom-spd
 #| file: questions/symmetric-positive-definite.xml
 #| question: A positive definite matrix
-#| python-checkers: questions/matrix-checkers.py
 #| review: true
 ```
 
@@ -31,6 +47,5 @@ title: "Custom Python checker integration"
 #| label: custom-spd-prt
 #| file: questions/symmetric-positive-definite-prt.xml
 #| question: Hermitian symmetry and positive definiteness separately
-#| python-checkers: questions/matrix-checkers.py
 #| review: true
 ```

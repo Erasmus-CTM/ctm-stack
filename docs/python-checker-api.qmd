@@ -1,151 +1,28 @@
 ---
-title: "Python answer tests"
-subtitle: "Basis questions, matrix conditions and your own checker"
+title: "Python answer tests and custom checkers"
 ---
 
-A question may have many mathematically correct answers. This guide helps you
-choose a test for a space or property and shows how ordinary STACK response
-trees (PRTs) continue to award the marks. The [worked questions](../examples.qmd)
-let you try each choice.
+Use a Python checker when the task accepts a mathematical property rather
+than one displayed answer. Install CTM Assessment and use
+`filters: [ctm-assessment]`; the shared checker library supplies Python and
+SymPy. Checker source is trusted author code and is public in the static
+page. Keep credentials and private data out of it.
 
-## For teachers
+## Choose the mathematical test
 
-### Choose the mathematical test {#choose-the-mathematical-test}
+Use the XML's ordinary answer tests for equivalence, written form and numeric
+tolerance. For matrix properties, `PythonChecker` nodes can select these
+predicates from `ctm_checkers.matrix`:
 
-| Task | Answer test | What counts as correct |
+| Name | Options | What the node checks |
 |---|---|---|
-| Give this particular matrix | `AlgEquiv` | Corresponding entries are equivalent and dimensions agree. |
-| Give any basis of a matrix's null, column or row space | `PythonChecker` with a basis function | Independent vectors span that space, regardless of the particular basis chosen. |
-| Give a matrix satisfying stated conditions | `PythonChecker` with a property function | The submitted matrix has the expected properties; each may earn its own marks. |
+| `basis` | `space: nullspace`, `columnspace` or `rowspace` | A basis for the space of the matrix in `<tans>` |
+| `matrix_property` | `property: integer_entries`, `determinant` or `identity` | The indicated property equals `<tans>` |
+| `is_hermitian` | None | Hermitian symmetry equals the boolean `<tans>` |
+| `is_positive_definite` | None | Positivity of the Hermitian part equals `<tans>` |
+| `is_hpd` | None | Hermitian symmetry and positive definiteness together |
 
-The basis and matrix-property examples use one
-[supplied checker file](../questions/matrix-checkers.py).
-`PythonChecker` calls the named function; the usual response trees (PRTs)
-still decide marks and feedback. `AlgEquiv` is an existing STACK answer-test
-name. `PythonChecker` is an addition to this port, so a native Moodle STACK
-version needs equivalent Maxima checks and may need different matrix-input
-settings.
-
-### Basis questions: use the matrix in the question {#basis-questions-use-the-matrix-in-the-question}
-
-If the prompt asks for a basis of $\ker A$, the PRT compares the learner's
-proposed vectors against the **original matrix $A$**, not against one
-precomputed list of basis vectors. Select the `basis` checker with the
-`space` option set to `nullspace`; use `columnspace` or `rowspace` for the
-other two spaces.
-The input's model answer can be generated from $A$ with the matching author
-helper. Another independent basis is still correct. For example, if
-$A=\begin{pmatrix}1&2&3\\2&4&6\end{pmatrix}$, both the columns of
-$\begin{pmatrix}-2&-3\\1&0\\0&1\end{pmatrix}$ and those of
-$\begin{pmatrix}-5&-1\\1&-1\\1&1\end{pmatrix}$ span $\ker A$.
-
-| `space` option for `basis` | Space being checked | How learners enter vectors |
-|---|---|---|
-| `nullspace` | Null space of the original $A$ | One vector per column |
-| `columnspace` | Column space of the original $A$ | One vector per column |
-| `rowspace` | Row space of the original $A$ | One vector per row |
-
-The [basis examples](../examples.qmd#matrix-problems-from-ingmat-3a)
-show alternate correct responses and learner-selected column counts. The
-matrix editor cannot represent an empty basis, so choose a task with a
-nonzero-dimensional answer space.
-
-After checking a basis, green marks a nonzero vector in the target space when
-the valid submitted vectors are independent; it can still belong to an
-incomplete family. Yellow marks a dependent valid family and red marks zero
-or out-of-space vectors. These colors explain the answer; the PRT awards marks
-only for the complete basis in the examples. Edits and resizing clear the
-colors.
-
-### Matrix conditions and partial credit {#matrix-conditions-and-partial-credit}
-
-The [determinant-one task](../examples.qmd#find-a-nonidentity-matrix-with-determinant-one)
-accepts any integer $2\times2$ matrix with determinant $1$ except the
-identity. Three PRTs give one third of the score each: integer entries,
-determinant and nonidentity. An entry-by-entry comparison with the model
-would reject other correct matrices.
-
-| `property` option for `matrix_property` | Expected result supplied in PRT `tans` | Condition |
-|---|---|---|
-| `integer_entries` | `true` or `false` | Are all entries integers? |
-| `determinant` | An exact rational value such as `1` | Does this square matrix have that determinant? |
-| `identity` | `true` or `false` | Is it the identity matrix? |
-
-The PRT's `tans` is the **expected property result**, not the matrix in the
-prompt. For determinant one it is `1`; for nonidentity it is `false`.
-The supplied file provides one `matrix_property` function with these three
-choices. It also has the positive-definiteness functions below. A question
-can select any registered function in this file or another author Python file.
-
-### Positive definite matrices {#symmetric-positive-definite-matrices}
-
-A positive definite matrix has a positive quadratic form for every nonzero
-vector. The full task also requires Hermitian symmetry, which is ordinary
-symmetry for real matrices. The checker uses **Sylvester's criterion** with
-exact arithmetic, for both real and complex entries.
-
-You can grade the two conditions together or give separate marks for each.
-The independent positivity check uses the real part of the quadratic form.
-These four examples show the scoring choices:
-
-| Matrix | Hermitian (symmetric here)? | Positive definite? | Combined / separate marks |
-|---|---|---|---|
-| $\begin{pmatrix}2&1\\1&2\end{pmatrix}$ | Yes | Yes | $1$ / $1$ |
-| $\begin{pmatrix}2&1\\0&2\end{pmatrix}$ | No | Yes | $0$ / $1/2$ |
-| $\begin{pmatrix}1&2\\2&1\end{pmatrix}$ | Yes | No | $0$ / $1/2$ |
-| $\begin{pmatrix}0&1\\0&0\end{pmatrix}$ | No | No | $0$ / $0$ |
-
-Use integers or exact fractions for real and imaginary parts; enter `%i`
-for $i$. For example, `matrix([2,%i],[-%i,2])` earns full credit.
-
-The first activity uses `is_hpd` for one overall decision. Its PRT awards
-full credit when both conditions hold. See the
-[authoring walkthrough](#author-the-spd-checker) for the XML and Quarto block.
-
-```{.stack-question #docs-spd-matrix}
-#| label: docs-spd-matrix
-#| file: ../questions/symmetric-positive-definite.xml
-#| question: A positive definite matrix
-#| python-checkers: ../questions/matrix-checkers.py
-#| review: true
-```
-
-[Download the question XML](../questions/symmetric-positive-definite.xml) ·
-[View the checker file](../questions/matrix-checkers.py) ·
-[Try it with the other matrix examples](../examples.qmd#symmetric-positive-definite-matrix)
-
-The second activity uses `is_hermitian` and `is_positive_definite` in two
-PRTs, each worth half the marks. Each condition has its own feedback.
-
-```{.stack-question #docs-spd-separate}
-#| label: docs-spd-separate
-#| file: ../questions/symmetric-positive-definite-prt.xml
-#| question: Hermitian symmetry and positive definiteness separately
-#| python-checkers: ../questions/matrix-checkers.py
-#| review: true
-```
-
-[Download the two-PRT question XML](../questions/symmetric-positive-definite-prt.xml) ·
-[Compare the two authoring patterns](#author-the-spd-checker)
-
-## For developers
-
-### Use the supplied matrix checkers
-
-Save the [supplied checker file](../questions/matrix-checkers.py) with your
-question materials. Each matrix PRT uses `PythonChecker`, puts the learner
-matrix in `sans`, and selects a function and optional choice in `testoptions`:
-
-| Task | `checker` | `options` object | PRT `tans` |
-|---|---|---|---|
-| Basis of the null, column or row space of `A` | `basis` | `{"space":"nullspace"}`, `{"space":"columnspace"}` or `{"space":"rowspace"}` | The original `A` |
-| Integer entries | `matrix_property` | `{"property":"integer_entries"}` | `true` or `false` |
-| A particular determinant | `matrix_property` | `{"property":"determinant"}` | An exact value such as `1` |
-| Identity matrix | `matrix_property` | `{"property":"identity"}` | `true` or `false` |
-| Hermitian symmetry, positivity or both | `is_hermitian`, `is_positive_definite`, `is_hpd` | Omit (defaults to `{}`) | `true` or `false` |
-
-For the null space of an author variable `A`, the input model can use
-`<tans>nullspace_basis(A)</tans>` and the PRT node uses the **original** `A`:
+For example, a basis node uses:
 
 ```xml
 <answertest>PythonChecker</answertest>
@@ -154,241 +31,151 @@ For the null space of an author variable `A`, the input model can use
 <testoptions>{"checker":"basis","options":{"space":"nullspace"}}</testoptions>
 ```
 
-Use `columnspace_basis(A)` with `{"space":"columnspace"}`, or
-`rowspace_basis(A)` with `{"space":"rowspace"}`. For a determinant-one
-condition, use the matrix input in `sans`, `<tans>1</tans>`, and
-`<testoptions>{"checker":"matrix_property","options":{"property":"determinant"}}</testoptions>`.
-Separate PRTs can
-award separate marks for integer entries, determinant and nonidentity.
-The input's `tans` is a model matrix; a property PRT's `tans` states its
-expected result.
+`A` is the defining matrix, not a displayed basis. The basis predicate accepts
+any independent family that spans the required space. It reports green,
+red and dependent-vector assessments without preferring an ordering. Library
+predicates keep their exact rational-domain and matrix-size restrictions.
+A question using them needs no checker filename or block `checker:`.
 
-The supplied basis and elementary property functions require exact
-rational entries (integers or fractions). The positive-definiteness
-functions accept exact rational real and imaginary parts. Matrix inputs
-have 1–16 rows or columns and at most 64 cells; the [matrix input
-guide](matrix-input.qmd) explains learner-selectable dimensions. An empty
-basis cannot currently be entered. The build and authored tests exercise
-the model answer through the selected checker; choose a model that satisfies
-the question and include qtests for alternate correct and wrong responses.
-The checker runs on **Check answer**, while **Validate answers** checks
-input syntax and settings. The PRT branches, not colored vectors or cells,
-award credit.
+## Symmetric positive definite matrices
 
-### Author the positive-definiteness question {#author-the-spd-checker}
+For a real matrix, `is_hpd` requires symmetry and positive definiteness.
+For a complex matrix, it requires Hermitian symmetry and positive
+definiteness. The library checks every leading principal minor; a positive
+determinant alone is insufficient. Use integers or exact fractions for real
+and imaginary parts and `%i` for the imaginary unit.
 
-The same [matrix checker file](../questions/matrix-checkers.py) registers
-`is_hermitian`, `is_positive_definite` and their conjunction `is_hpd`.
-It checks the Hermitian part with exact arithmetic. The
-[complete one-PRT XML](../questions/symmetric-positive-definite.xml)
-uses a $2\times2$ matrix input with model answer
-`<tans>matrix([1,0],[0,1])</tans>`. The model sets the input shape;
-other correct matrices also earn full credit. Its decision node is:
-
-```xml
-<answertest>PythonChecker</answertest>
-<sans>ansm</sans>
-<tans>true</tans>
-<testoptions>{"checker":"is_hpd"}</testoptions>
-<truescoremode>=</truescoremode><truescore>1</truescore>
-<falsescoremode>=</falsescoremode><falsescore>0</falsescore>
-```
-
-The [second XML question](../questions/symmetric-positive-definite-prt.xml)
-uses two response trees so each condition earns half the total:
-
-| PRT | Checker | Weight | Awarded when |
-|---|---|---|---|
-| `symmetry` | `is_hermitian` | $0.5$ | $A=A^*$ |
-| `positivity` | `is_positive_definite` | $0.5$ | The positivity condition holds |
-
-Each PRT uses `<tans>true</tans>`, scores `1` on its true branch and
-`0` on its false branch. Because the two tests are independent, a
-non-Hermitian matrix with a positive Hermitian part earns half credit.
-For all-or-nothing grading, choose `is_hpd` in one PRT or route a
-successful symmetry node to a positivity node. The XML owns scores and
-feedback; the checker decides the mathematical condition.
-
-Add the XML and **the checker filename** to a root-level Quarto page:
-
-````markdown
-```{.stack-question}
-#| label: python-checker-api-a-positive-definite-matrix
-#| file: questions/symmetric-positive-definite.xml
+```{.stack-question #docs-spd-matrix}
+#| label: docs-spd-matrix
+#| file: ../questions/symmetric-positive-definite.xml
 #| question: A positive definite matrix
-#| python-checkers: questions/matrix-checkers.py
 #| review: true
 ```
-````
 
-For the separately weighted question, change `file` to
-`questions/symmetric-positive-definite-prt.xml` and `question` to
-`Hermitian symmetry and positive definiteness separately`. A page inside
-`docs/` uses `../questions/...` paths. Quarto includes the selected
-source for browser grading; the XML only names a function. There is no
-additional source setting.
+Separate `is_hermitian` and `is_positive_definite` response trees can award
+separate marks. A nonsymmetric matrix can pass the latter because it checks
+the Hermitian part; `is_hpd` requires both conditions. See the
+[separate-mark example](../examples.qmd#symmetry-and-positive-definiteness-separately).
 
-Test the authored cases from the project root with the same filename:
+Try the same matrix with separate marks for symmetry and positivity:
 
-```bash
-export PYTHONPATH=$(ls _extensions/ctm-checkers/*.whl | paste -sd: -)  # ctm-checkers' two wheels
-python -m ctm_checkers.stack.cli test \
-  --file questions/symmetric-positive-definite.xml \
-  --python-checkers questions/matrix-checkers.py
-python -m ctm_checkers.stack.cli test \
-  --file questions/symmetric-positive-definite-prt.xml \
-  --python-checkers questions/matrix-checkers.py
-quarto render
+```{.stack-question #docs-spd-separate}
+#| label: docs-spd-separate
+#| file: ../questions/symmetric-positive-definite-prt.xml
+#| question: Hermitian symmetry and positive definiteness separately
+#| review: true
 ```
 
-The XML files include alternate real and complex matrices and examples of
-each scoring outcome. Try `matrix([2,%i],[-%i,2])` for full credit and
-`matrix([1,%i],[%i,1])` in the two-PRT question for the positivity half.
-The [live activities](#symmetric-positive-definite-matrices) show both
-scoring policies.
+## PythonChecker API and a scalar example
 
-### PythonChecker API and a scalar example
-
-Use the supplied matrix functions or write your own `PythonChecker` rule.
-Save a Python file beside your question materials, register a named function in
-its `CHECKERS` dictionary, then give Quarto that **filename** in
-`#| python-checkers:`. Quarto reads the file when it builds the page and
-includes its source for browser grading; the XML only names the function.
-The [positive-multiple example](../examples.qmd#custom-python-checker) checks any
-positive integer multiple of a given number. Its author module contains:
-
-```python
-def positive_multiple(student, teacher, options):
-    if student.is_Integer is not True:
-        return {"valid": False, "correct": False,
-                "feedback": "Enter an integer value."}
-    return bool(student > 0 and student % teacher == 0)
-
-CHECKERS = {"positive_multiple": positive_multiple}
-```
-
-The XML names the checker and passes the learner input and teacher value:
-
-```xml
-<answertest>PythonChecker</answertest>
-<sans>ans</sans>
-<tans>d</tans>
-<testoptions>{"checker":"positive_multiple"}</testoptions>
-```
-
-Select the module on the Quarto question block as well:
+Write a block `checker:` with `check(response, symbols)`. The same function
+contract works in math-exercise when its field labels equal the STACK input
+names. This example accepts any positive integer multiple of the displayed
+number:
 
 ```{.stack-question #docs-custom-multiple}
 #| label: docs-custom-multiple
+#| variants: 3
 #| file: ../questions/python-checker.xml
 #| question: A positive integer multiple (PythonChecker)
-#| python-checkers: ../questions/checkers.py
-#| variants: 3
+#| checker: |
+#|   def check(response, symbols):
+#|       answer = response["answers"]["ans"]
+#|       divisor = response["variables"]["d"]
+#|       if answer.is_Integer is not True:
+#|           return {"valid": False, "feedback": "Enter an integer value."}
+#|       correct = answer > 0 and answer % divisor == 0
+#|       return {"correct": bool(correct),
+#|               "feedback": "" if correct else "Use a positive integer multiple of the given number."}
+#| tests:
+#|   - name: displayed multiple
+#|     answers: {ans: d}
+#|     expect: correct
+#|   - name: wrong offset
+#|     answers: {ans: d+1}
+#|     expect: wrong
+#|   - name: fractional input
+#|     answers: {ans: 'raw("1/2")'}
+#|     expect: invalid
 #| review: true
 ```
 
-Both filenames in this block are relative to this `.qmd` page. For the CLI,
-filenames are relative to the working directory. There is no separate source
-configuration to maintain. `sans` must directly name an input. `tans` can
-be a parsed teacher answer or author value, such as the divisor `d`.
-`testoptions` is a JSON object. Its required `checker` key names one entry
-in `CHECKERS`; its optional `options` key is another JSON object passed to
-that function. For example,
-`{"checker":"basis","options":{"space":"nullspace"}}` selects `basis`
-and passes `{"space":"nullspace"}`. With no `options` key, the function
-receives `{}`, as in `{"checker":"positive_multiple"}`. An options
-object can hold several named settings, including nested arrays or objects.
-For an author-written `my_rule`, for example,
-`{"checker":"my_rule","options":{"mode":"strict","weights":[1,2]}}`
-passes a Python dictionary with both settings; the function decides what
-they mean.
-The checker name is a case-sensitive ASCII identifier of at most 64
-characters, beginning with a letter and followed by letters, digits or
-underscores. Options are JSON values, not CAS or Python expressions; they
-are not interpolated with author variables. The selected module is author
-code packaged with the page; use only code you trust and expect learners
-to be able to see in a published site.
+The XML node uses `{"checker":"check"}`. It adds its own evaluated values as
+`response["node"] = {"sans": ..., "tans": ..., "options": ...}`. `options`
+is the literal JSON object inside `testoptions`, never evaluated as CAS or
+Python. A partial checker result takes the node's false branch; the node's
+normal branch scores still determine that XML tree's score.
 
-#### Callable and values
+## Response and result
 
-Each registered function must be callable with the three positional arguments
-`student`, `teacher` and `options`, and finish synchronously. The first two
-are parsed values, not raw answer strings: the learner's submitted answer
-and whatever teacher value the PRT's `tans` selects. This could be an
-expected Boolean for a property question or the original matrix for a basis
-question. `options` is the parsed JSON object described above. The API does not
-pass a context object or question state. Scalar expressions are SymPy
-expressions; matrices are
-immutable SymPy matrices. Lists and finite sets are distinct `ListValue` and
-`SetValue` objects with ordered `.args` (a set retains its submitted entries).
-Equations have two `.args`; held logic has `.operator` and `.operands`;
-logical constants use SymPy `true` and `false`. The collection and logic types
-and `collection_items` are available from `ctm_checkers.stack.checker_api`.
-These values do not promise to retain the learner's exact written arithmetic
-form. A custom checker decides its own mathematical domain, within the
-existing input and parser limits.
+The checker receives these values after the selected backend has validated
+all inputs:
 
-Return a Python `bool` for an ordinary true/false decision, or a dictionary:
+| Key | Value |
+|---|---|
+| `kind` | `"expressions"` |
+| `raw` | Student strings in XML input order |
+| `expressions` | Parsed values in the same order |
+| `answers` | Parsed values keyed by XML input name |
+| `teacher` | Teacher values keyed by XML input name |
+| `variables` | Exact question variables |
+| `inputs` | Named input descriptions, including `raw` and `canonical` |
+| `variant` | `{n, id, hash}`; an unapproved candidate has no published number |
+| `node` | Present only during a `PythonChecker` node call |
+
+Matrix input descriptions also carry `rows`, `cols`, flattened `expressions`
+and a SymPy `matrix`. `symbols` maps free symbol names to their SymPy symbols,
+with the question's assumptions. The checker namespace contains the shared
+math-exercise helpers, including SymPy names and `assess_basis`.
+
+Return `True` or `False`, a number between 0 and 1, or a dictionary containing
+`score` or `correct`. Optional keys are `feedback`, `show_score` and
+`assessment`. Feedback is plain text. A matrix assessment names the input:
 
 ```python
-{"valid": True, "correct": False, "feedback": "Try another value."}
+return {"score": 0.5, "feedback": "Review the dependent columns.",
+        "assessment": {"ans": {"columns": ["correct", "dependent"]}}}
 ```
 
-Both required fields must be Python booleans. Use `valid=False` for a response
-outside this checker's domain: the learner sees an invalid-input diagnostic
-and the PRT's false branch does not run. Use `valid=True, correct=False` for
-a mathematically wrong response within the domain. `feedback` is optional
-plain text of at most 4,096 characters. A checker cannot return a score or an
-answer note; the PRT branches control those. Exceptions and malformed results
-are authoring errors, rather than wrong student answers.
+Each assessment list must match the submitted row or column count. A result
+such as `{"valid": False, "feedback": "Enter an integer value."}` rejects the
+attempt without a score. Invalid attempts clear vector assessments. A checker
+that raises, returns a malformed result or cannot decode a required author
+value is an author error; it does not count as a wrong learner answer.
+Each invocation gets a fresh namespace.
 
-For a matrix, a valid result may also include one diagnostic axis:
+## Score and placement
 
-```python
-{"valid": True, "correct": False,
- "assessment": {"columns": ["correct", "dependent"]}}
-```
+A block checker creates an implicit response tree named `checker`, with
+`checker-value: 1` by default. Its normalized score counts alongside the
+XML trees:
 
-Choose exactly `rows` or `columns`, with one status per submitted vector.
-Statuses are `correct`, `incorrect`, or `dependent`. They color the editor but
-do not award marks. A checker may omit the assessment entirely. If several
-visited PRT nodes supply an assessment for one input, the last one displayed
-wins. A quiet PRT node suppresses its checker diagnostic and assessment. The result
-cannot include extra keys, an assessment for an invalid response, or a
-SymPy Boolean in place of a Python `bool`.
+$$
+\text{score}=\frac{\sum_{\text{trees}}\text{value}\times\text{score}}
+                       {\sum_{\text{trees}}\text{value}}.
+$$
 
-#### Test and publish
+For XML tree scores 1 and 0, both of weight 1, and a checker score 0.5 with
+`checker-value: 2`, the question scores 0.5. With no XML trees, the checker
+supplies the whole grade. Use `[[feedback:checker]]` in CASText to place its
+feedback. Penalties and score rounding follow the same rules as XML trees.
+The name `checker` is reserved when the block defines a checker.
 
-Run authored tests with the same module you render:
+The XML node and the implicit checker are separate evaluations. A node calls
+the function as a predicate and supplies `response["node"]`; the implicit
+checker call has no `node` key and contributes its numeric score. Write the
+function to support both contexts when the XML calls it.
 
-```bash
-export PYTHONPATH=$(ls _extensions/ctm-checkers/*.whl | paste -sd: -)  # ctm-checkers' two wheels
-python -m ctm_checkers.stack.cli test \
-  --file questions/python-checker.xml --python-checkers questions/checkers.py
-```
+## Test and publish
 
-The build checks referenced names, function signatures and model-answer
-grading on each rendered variant. Add qtests for alternative correct answers, wrong
-answers, and important PRT branches. **Validate answers** checks syntax and
-input rules; the custom predicate runs on **Check answer**. The page includes
-the selected Python source so the same checker runs in local tests and the
-learner's browser. Keep secrets out of the module, use available Python and
-SymPy features, and avoid local imports or services that the browser cannot
-provide. Make checker functions deterministic; do not rely on module state
-persisting from one check, variant or test to the next. Custom code can perform
-arbitrary computation, so review it before
-publishing. The API does not install packages or add new input types. For code
-that imports questions directly, `import_xml(xml_path, python_checkers=module_path)`
-selects the source; call `ctm_checkers.stack.checkers.preflight(question, variants)`
-before publication to run the same author checks. `grade()` and
-`run_question_tests()` execute the selected predicate on visited PRT nodes.
+[Run XML and declarative question tests](python-answer-tests.qmd) for every
+variant, inspect the student previews, and approve the variants before
+publishing. Review mode permits proposals for teacher inspection; it does not
+approve them. Normal publishing requires current approved variants.
 
-::: {.callout-note collapse="true"}
-#### Technical limits
-
-A module may register at most 32 named functions in `CHECKERS`. Its source
-must be a nonempty UTF-8 file no larger than 64 KiB. Feedback is plain text
-up to 4,096 characters. Custom execution does not gain a server process or
-additional package installation; apply a process timeout to local test runs
-if authored code could take a long time.
-:::
+The old `python-checkers:` filename, `CHECKERS` registry and
+`ctm_checkers.stack.checker_api` module have been removed. Move custom logic
+into `checker:` and change its arguments to `response, symbols`. Supplied
+matrix predicates now come from the shared library without a filename.
+The SymPy backend implements this contract now. Maxima's future continuation
+will call the same checker with validated written values.

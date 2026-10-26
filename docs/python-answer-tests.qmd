@@ -1,5 +1,81 @@
 ---
-title: "Python answer tests"
+title: "Run STACK question tests"
 ---
 
-This guide has moved to [Python answer tests and custom checkers](python-checker-api.qmd).
+Question tests exercise the real STACK grader. XML `<qtest>` cases and the
+block's declarative `tests:` run for every generated and replayed variant.
+A failed assertion stops the build and identifies the question and test.
+Tests also run in CI. See the [checker API](python-checker-api.qmd) for the
+response and result contract.
+
+## Declare the answers and expected result
+
+Add `tests:` to a `.stack-question` block. Each test needs a unique `name`,
+`answers` and an expectation. Answers may be keyed by XML input name or listed
+in XML input order. Expressions use the question's variables; `raw("...")`
+submits a literal student string without computing it.
+
+````markdown
+```{.stack-question}
+#| label: tested-product
+#| file: questions/polynomial-expansion.xml
+#| question: Expand a product (form-sensitive)
+#| tests:
+#|   - name: expanded teacher answer
+#|     answers: {ans: 'expand(ta)'}
+#|     expect: correct
+#|   - name: deliberate wrong answer
+#|     answers: {ans: 'raw("0")'}
+#|     expect: wrong
+#| review: true
+```
+````
+
+Use `expect: invalid` for a deliberately invalid input. Invalid or empty input
+cannot satisfy an ordinary wrong-answer expectation. Use `score: 0.5` or
+`partial: true` to assert partial credit. An overall expectation can contain
+`status`, `score` and `answer-note`, for example:
+
+```yaml
+- name: a particular branch
+  answers: {ans: 'raw("0")'}
+  expect: {status: wrong, score: 0, answer-note: expected-branch-note}
+```
+
+The answer note must be the actual note produced by the XML branches. For an
+unambiguous direct-input tree, a named field expectation checks that input's
+own tree scores. Use an overall expectation for a tree combining several
+inputs or for the implicit checker. Tests never substitute a second grader.
+
+## XML tests and checker tests
+
+XML tests continue to resolve author expressions and compare each named
+response tree's score, penalty and answer notes. An XML expected result can
+name `checker` when the block has a checker. Declarative tests can test the
+whole weighted question score, including `checker-value`.
+
+Use cases that distinguish alternate correct answers, wrong answers,
+partial credit and the checker's valid domain. A basis question should test
+reordered and rescaled bases, dependence, missing vectors and invalid entries.
+A positive-definiteness question should distinguish Hermitian symmetry from
+a positive determinant. The supplied examples include XML tests for these
+properties.
+
+## Generate, inspect and approve
+
+Generate variants through the shared authoring workflow described in the
+[authoring guide](authoring.qmd). A candidate must pass its XML tests,
+declarative tests and full-mark teacher vector before it can be reviewed.
+Generation failures are authoring errors; failed seeds are not silently skipped.
+The SymPy backend generates its own seeds. It does not reuse Moodle's deployed
+Maxima seeds.
+
+`review: true` adds **Run question tests** to the card. In explicit review
+mode, use it to inspect the frozen plans, including declarative tests. This
+uses the same grader as the build. A changed checker or grading rule changes
+the variant's content identity and requires a fresh approval. Editing test
+expectations alone does not change that mathematical identity.
+
+Normal course publishing requires approved variants. Teacher previews and
+review pages may show proposals, which have no published variant number.
+Do not turn off assertions to publish a failing question.

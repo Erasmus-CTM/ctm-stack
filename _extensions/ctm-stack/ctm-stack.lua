@@ -74,6 +74,7 @@ local function render(block)
   if not block.classes:includes('stack-question') then return nil end
   if not quarto.doc.is_format('html:js') then fail('interactive questions require HTML output') end
   local opts = options(block.text)
+  if opts['python-checkers'] then fail('python-checkers: was removed; use checker: with check(response, symbols)') end
   if opts.seed then fail('seed: was removed; generate and review STACK variants instead') end
   if not opts.label or not opts.label:match('^[%w][%w_.-]*$') or opts.label:find('..',1,true) then fail('STACK variants require a unique safe #| label:') end
   if seenLabels[opts.label] then fail('duplicate STACK label: ' .. opts.label) end
@@ -100,7 +101,7 @@ local function render(block)
     approval=ctm.variants.approval(),renderMode=mode,backend=cas,
     reviewCandidate=os.getenv('CTM_VARIANTS_REVIEW_CANDIDATE'),
     reviewCatalog=os.getenv('CTM_VARIANTS_REVIEW_CATALOG') == '1'}
-  local args = {'-I',quarto.utils.resolve_path('question-variants.py'),'--stdin'}
+  local args = {'-I',quarto.utils.resolve_path('question-variants.py'),'--stdin','--errors-to-stdout'}
   local ok, output = pcall(function()
     local environment = ctm.checkers.environment(nil,'stack')
     environment.CTM_VARIANTS_QUARTO = quarto.config.cli_path()

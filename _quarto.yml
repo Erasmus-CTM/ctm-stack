@@ -31,8 +31,8 @@ website:
             text: Teacher guide
           - href: docs/matrix-input.qmd
             text: Matrix input and grading
-          - href: docs/python-checker-api.qmd#author-the-spd-checker
-            text: Positive-definiteness checker walkthrough
+          - href: docs/python-checker-api.qmd#symmetric-positive-definite-matrices
+            text: Positive-definiteness checks
           - href: docs/authoring.qmd#for-developers
             text: Developer reference
       - href: docs/python-checker-api.qmd
