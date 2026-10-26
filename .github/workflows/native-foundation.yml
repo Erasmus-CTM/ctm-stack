@@ -81,7 +81,7 @@ jobs:
           python scripts/stage-native.py --release .cache/release --stack-source .cache/stack --output .cache/native-v3
       - name: Install the browser harness
         run: |
-          python -m pip install playwright==1.56.1
+          python -m pip install playwright==1.56.0
           python -m playwright install --with-deps ${{ matrix.browser }}
       - name: Replay the preparation and controller programs without COOP/COEP
         run: python tests/native/browser.py .cache/native-v3 test-results/native/browser.json --browser ${{ matrix.browser }}
