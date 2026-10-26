@@ -6,9 +6,10 @@ function fault(message, code = 'maxima-runtime') {
   return Object.assign(new Error(message), {kind: 'runtime', code});
 }
 export class NodeMaximaSession {
-  constructor(root, {loadTimeout = 180000, callTimeout = 30000, WorkerClass = Worker} = {}) {
+  constructor(root, {loadTimeout = 180000, callTimeout = 30000, WorkerClass = Worker, gcFreeSpaceDivisor} = {}) {
     this.root = root; this.loadTimeout = loadTimeout; this.callTimeout = callTimeout;
     this.WorkerClass = WorkerClass; this.sequence = 0; this.epoch = 0; this.pending = new Map();
+    this.gcFreeSpaceDivisor = gcFreeSpaceDivisor;
   }
   async start() {
     if (this.ready) return this.ready;
@@ -18,7 +19,7 @@ export class NodeMaximaSession {
     if (requested !== this.epoch) throw fault('Maxima startup superseded');
     const epoch = ++this.epoch;
     const child = this.child = new this.WorkerClass(new URL('./node-worker.mjs', import.meta.url), {
-      workerData: {root: this.root}, execArgv: process.execArgv.filter(value => !value.startsWith('--input-type'))});
+      workerData: {root: this.root, gcFreeSpaceDivisor: this.gcFreeSpaceDivisor}, execArgv: process.execArgv.filter(value => !value.startsWith('--input-type'))});
     this.ready = new Promise((resolve, reject) => {
       const timer = setTimeout(() => this.stop('Maxima loading timed out', 'maxima-load-timeout'), this.loadTimeout);
       this.starting = {reject, timer};

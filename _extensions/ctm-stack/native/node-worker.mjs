@@ -7,7 +7,8 @@ function failure(error) {
   return {kind: error.kind || 'runtime', code: error.code || 'maxima-runtime', message: String(error.message || error)};
 }
 try {
-  session = await openNode(workerData.root, {onOutput(text) { tail = (tail + text).slice(-4000); }});
+  session = await openNode(workerData.root, {gcFreeSpaceDivisor: workerData.gcFreeSpaceDivisor,
+    onOutput(text) { tail = (tail + text).slice(-4000); }});
   parentPort.postMessage({type: 'ready', packageHash: session.packageHash,
     adapterHash: session.adapterHash, maximaVersion: session.maximaVersion, manifest: session.manifest});
 } catch (error) {

@@ -47,6 +47,8 @@ jobs:
         run: node tests/native/session.test.mjs
       - name: Exact 327-program replay, lifecycle, isolation and build cache
         run: node tests/native/integration.mjs .cache/native-v3 test-results/native/programs.json test-results/native/node.json
+      - name: Direct-call root safety during frequent garbage collection
+        run: node tests/native/gc-stress.mjs .cache/native-v3 test-results/native/programs.json test-results/native/gc-stress.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -20,6 +20,12 @@ the mathematical grading rules, or Moodle PHP-controller compatibility.
 The original same-source and independent-reference presentation classifications
 remain in the runtime repository's acceptance evidence.
 
+`gc-stress.mjs` sets GC_FREE_SPACE_DIVISOR=1000 before ECL starts and repeats
+the eight exact previously failing `[1,1]`/`[2,2]` validations 400 times, then
+replays all 327 programs. Its before/after GC counters must prove collection
+occurred during the calls. It changes neither v3 bytes nor its normal startup
+configuration and exposes no Lisp message endpoint.
+
 `integration.mjs` also checks ordinary CAS errors, internal Lisp faults,
 Unicode including a supplementary-plane character, worker replacement,
 namespace clearing, a real unbounded loop, whole-batch cache hit/invalidation,

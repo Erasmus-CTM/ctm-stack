@@ -9,8 +9,12 @@
   class CASError extends Error {
     constructor(message) { super(message); this.kind = 'cas'; this.code = 'maxima-cas'; }
   }
-  function open({scope, execute, bytes, manifest, stackFiles, startup, onOutput = () => {}, locateFile = path => path}) {
+  function open({scope, execute, bytes, manifest, stackFiles, startup, onOutput = () => {}, locateFile = path => path, gcFreeSpaceDivisor}) {
     let output = '', cursor = 0, eof = 0, poisoned = false, started = false;
+    if (gcFreeSpaceDivisor !== undefined) {
+      if (!Number.isInteger(gcFreeSpaceDivisor) || gcFreeSpaceDivisor < 1 || gcFreeSpaceDivisor > 10000) throw new TypeError('Invalid GC diagnostic divisor');
+      startup += '\n:lisp (defun maxima::$ctm_gc_stats () (cons (quote (maxima::mlist)) (multiple-value-list (si::gc-stats t))))\n';
+    }
     const input = Array.from(startup, c => c.codePointAt(0));
     const consume = text => {
       output += text;
@@ -43,6 +47,7 @@
         };
         Module.preRun.push(function () {
           const {FS, MEMFS} = scope;
+          if (gcFreeSpaceDivisor !== undefined) scope.ENV.GC_FREE_SPACE_DIVISOR = String(gcFreeSpaceDivisor);
           const missing = new FS.ErrnoError(44);
           MEMFS.ops_table.dir.node.lookup = () => { throw missing; };
           const ioctl = FS.ioctl;

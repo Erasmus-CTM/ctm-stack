@@ -62,7 +62,7 @@ export async function loadPackage(root) {
 }
 
 let opened = false;
-export async function openNode(root, {onOutput} = {}) {
+export async function openNode(root, {onOutput, gcFreeSpaceDivisor} = {}) {
   if (isMainThread || opened) throw new Error('Each Maxima runtime requires a fresh dedicated Node worker');
   opened = true;
   const loaded = await loadPackage(root);
@@ -91,7 +91,7 @@ export async function openNode(root, {onOutput} = {}) {
     vm.runInThisContext(new TextDecoder().decode(bytes.get(name)), {filename: name});
   };
   const session = await globalThis.CTMMaximaDirect.open({scope: context, execute, bytes,
-    manifest: spec.manifest, stackFiles, startup: spec.startup, onOutput});
+    manifest: spec.manifest, stackFiles, startup: spec.startup, onOutput, gcFreeSpaceDivisor});
   session.packageHash = loaded.packageHash;
   session.adapterHash = coreHash;
   session.heapBytes = () => context.HEAPU8.buffer.byteLength;
