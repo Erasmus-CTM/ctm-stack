@@ -268,7 +268,16 @@
       return;
     }
     if (payload.version !== 2) { message(card.querySelector('.stack-result'), t(card, 'questionDataError'), 'error'); return; }
-    var selector = card.querySelector('.stack-variant');
+    var chooser = null, selectedIndex = 0, catalogReview = false;
+    if(payload.common.renderMode === 'review') {
+      var reviewKeys = new URLSearchParams(location.search).getAll('ctm-review');
+      if(payload.common.reviewCatalog === true || reviewKeys.length) {
+        if(reviewKeys.length!==1 || !/^[0-9a-f]{64}$/.test(reviewKeys[0]))throw new Error('Invalid review candidate selector.');
+        var matches=payload.variants.filter(function(v){return v.reviewKey===reviewKeys[0];});
+        if(matches.length!==1)throw new Error('Unknown or ambiguous review candidate selector.');
+        payload.variants=matches;catalogReview=true;
+      }
+    }
     var version = 0;
     var validatedSnapshot = null;
     var checkedEvidence = null;
@@ -303,6 +312,12 @@
         answers[input.dataset.name] = 'matrix(' + rows.join(',') + ')';
       });
       return answers;
+    }
+    function hasAnswers() {
+      return Array.from(card.querySelectorAll('.stack-answer[data-name]')).some(function(input){
+        var editor=matrixEditors.get(input);
+        return editor?editor.read().raw.some(function(value){return value.trim();}):input.value.trim();
+      });
     }
     function mountMatrices() {
       card.querySelectorAll('.stack-matrix[data-name]').forEach(function (host, index) {
@@ -345,11 +360,10 @@
       clearPresentation();
     }
     var variantAt = function () {
-      var index = selector ? Number(selector.value) : 0;
-      return payload.variants[index] || payload.variants[0];
+      return payload.variants[selectedIndex] || payload.variants[0];
     };
     function responseIdentity() {
-      return JSON.stringify([version, selector ? selector.value : '0', readAnswers()]);
+      return JSON.stringify([version, variantAt().id, variantAt().hash, readAnswers()]);
     }
     // AI feedback is CTM Assessment's (ctm-libs, AIFeedback). A build without
     // AI (ai-feedback: enabled: false, CTM_FEEDBACK=off) loads none: the card
@@ -427,8 +441,10 @@
         delete item.dataset.state;
       });
     }
-    if (selector) selector.addEventListener('change', function () {
+    function renderVariant() {
       var variant = variantAt();
+      card.dataset.stackVariantId=variant.id;
+      card.dataset.stackVariantHash=variant.hash;
       var prompt = card.querySelector('.stack-prompt');
       if (prompt && variant) {
         destroyMatrices();
@@ -438,7 +454,12 @@
         math(prompt);
       }
       clear();
-    });
+      var number = card.querySelector('.stack-variant-number');
+      if (number) number.textContent = variant.proposal ? t(card,'variantProposal') : t(card,'variantChoice',{n:variant.n});
+      var approval = card.querySelector('.stack-variant-approval');
+      if (approval) approval.textContent = variant.proposal ? t(card,'unapprovedVariant') : '';
+      card.dispatchEvent(new CustomEvent('ctm-stack:variant-accepted',{bubbles:true,detail:{label:card.dataset.ctmId || payload.id,variant:identity()}}));
+    }
     card.addEventListener('input', function (event) {
       if (event.target.matches('.stack-answer[data-name]')) {
         invalidate();
@@ -524,7 +545,7 @@
       reset.addEventListener('click', function () { clear(); if (storeHandle) storeHandle.flush(); });
       actions.appendChild(reset);
     }
-    function identity() { var value = variantAt(); return {n: value.n, id: value.id, hash: value.hash}; }
+    function identity() { var value = variantAt(); return value.proposal ? null : {n: value.n, id: value.id, hash: value.hash}; }
     function accessibility() {
       card.querySelectorAll('.stack-validation, .stack-feedback').forEach(function (item, index) { item.id = card.dataset.stackId + '-detail-' + index; });
       card.querySelectorAll('.stack-answer[data-name]').forEach(function (item) {
@@ -545,14 +566,21 @@
       return result;
     }
     accessibility(); mountMatrices();
-    if (window.CTMStore && card.dataset.ctmSource) {
+    if (!catalogReview && window.CTMStore && card.dataset.ctmSource) {
       storeHandle = window.CTMStore.register({component: 'ctm-stack', id: card.dataset.ctmId, element: card,
         source: card.dataset.ctmSource, save: card.dataset.ctmSave !== 'false', variant: identity,
-        variants: function () { return payload.variants.map(function (item) { return {n: item.n, id: item.id, hash: item.hash}; }); },
+        allowProposals: true,
+        proposal: function () {var value=variantAt();return value.proposal?{id:value.id,hash:value.hash}:undefined;},
+        seen: function () {return chooser?chooser.seen():[];},
+        choice: function () {return chooser?chooser.state():{variant:identity(),seen:[]};},
+        variants: function () { return payload.variants; },
         read: storedInputs, write: function (value, meta) {
           restoring = true;
           try {
-            if (meta.variant && selector) { selector.value = String(payload.variants.findIndex(function (item) { return item.id === meta.variant.id && item.hash === meta.variant.hash; })); selector.dispatchEvent(new Event('change')); }
+            if (meta.variant) {
+              var index=payload.variants.findIndex(function(item){return item.hash===meta.variant.hash && (Number.isSafeInteger(meta.variant.n) && item.n===meta.variant.n || item.id===meta.variant.id);});
+              if(index>=0 && index!==selectedIndex){selectedIndex=index;renderVariant();}
+            }
             card.querySelectorAll('.stack-answer[data-name]').forEach(function (input) {
               var editor = matrixEditors.get(input);
               if (editor && value.matrices && value.matrices[input.dataset.name]) editor.write(value.matrices[input.dataset.name]);
@@ -560,7 +588,31 @@
             }); invalidate();
           } finally { restoring = false; }
         }, clear: clear});
-      storeHandle.restore();
+    }
+    if (!catalogReview && window.CTMVariants && window.CTMStore && typeof window.CTMStore.seed==='function') {
+      chooser=window.CTMVariants.create({label:card.dataset.ctmId || payload.id,variants:payload.variants,allowProposals:true,
+        saved:storeHandle && storeHandle.restoreChoice ? storeHandle.restoreChoice() : null});
+      selectedIndex=payload.variants.indexOf(chooser.current());
+    } else if(payload.variants.length>1) throw new Error('Shared STACK variant selection is unavailable. Update CTM Assessment.');
+    renderVariant();
+    var restored=storeHandle && storeHandle.restore();
+    if(restored && ['changed','withdrawn'].includes(restored.state)) {
+      var old=node('details','stack-withdrawn');
+      old.appendChild(node('summary','',t(card,'savedVariantUnavailable')));
+      old.appendChild(node('pre','',JSON.stringify(restored.record.inputs,null,2)));
+      card.querySelector('.stack-toolbar').after(old);
+    } else if(storeHandle && chooser && storeHandle.choice) storeHandle.choice(chooser.state());
+    var nextVariant=card.querySelector('.stack-new-variant');
+    if(nextVariant){
+      nextVariant.disabled=payload.variants.length<2 && !(restored && ['changed','withdrawn'].includes(restored.state));
+      nextVariant.addEventListener('click',function(){
+        if(hasAnswers() && !window.confirm(t(card,'confirmNewVariant')))return;
+        if(storeHandle)storeHandle.flush();
+        chooser.next();selectedIndex=payload.variants.indexOf(chooser.current());renderVariant();
+        var old=card.querySelector('.stack-withdrawn');if(old)old.remove();
+        if(storeHandle && storeHandle.choice)storeHandle.choice(chooser.state());
+        var prompt=card.querySelector('.stack-prompt');prompt.tabIndex=-1;prompt.focus();
+      });
     }
     card.addEventListener('keydown', function (event) {
       if (event.key !== 'Enter' || event.shiftKey || !event.target.closest('.stack-answer')) return;

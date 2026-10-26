@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Python answer tests – CTM STACK</title>
+<title>Run STACK question tests – CTM STACK</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -115,8 +150,8 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Matrix input and grading</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../docs/python-checker-api.html#author-the-spd-checker">
- <span class="dropdown-text">Positive-definiteness checker walkthrough</span></a>
+    <a class="dropdown-item" href="../docs/python-checker-api.html#symmetric-positive-definite-matrices">
+ <span class="dropdown-text">Positive-definiteness checks</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../docs/authoring.html#for-developers">
@@ -165,15 +200,23 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#declare-the-answers-and-expected-result" id="toc-declare-the-answers-and-expected-result" class="nav-link active" data-scroll-target="#declare-the-answers-and-expected-result">Declare the answers and expected result</a></li>
+  <li><a href="#xml-tests-and-checker-tests" id="toc-xml-tests-and-checker-tests" class="nav-link" data-scroll-target="#xml-tests-and-checker-tests">XML tests and checker tests</a></li>
+  <li><a href="#generate-inspect-and-approve" id="toc-generate-inspect-and-approve" class="nav-link" data-scroll-target="#generate-inspect-and-approve">Generate, inspect and approve</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Python answer tests</h1>
+<h1 class="title">Run STACK question tests</h1>
 </div>
 
 
@@ -190,9 +233,42 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>This guide has moved to <a href="../docs/python-checker-api.html">Python answer tests and custom checkers</a>.</p>
+<p>Question tests exercise the real STACK grader. XML <code>&lt;qtest&gt;</code> cases and the block’s declarative <code>tests:</code> run for every generated and replayed variant. A failed assertion stops the build and identifies the question and test. Tests also run in CI. See the <a href="../docs/python-checker-api.html">checker API</a> for the response and result contract.</p>
+<section id="declare-the-answers-and-expected-result" class="level2">
+<h2 class="anchored" data-anchor-id="declare-the-answers-and-expected-result">Declare the answers and expected result</h2>
+<p>Add <code>tests:</code> to a <code>.stack-question</code> block. Each test needs a unique <code>name</code>, <code>answers</code> and an expectation. Answers may be keyed by XML input name or listed in XML input order. Expressions use the question’s variables; <code>raw("...")</code> submits a literal student string without computing it.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{.stack-question}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="in">#| label: tested-product</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="in">#| file: questions/polynomial-expansion.xml</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="in">#| question: Expand a product (form-sensitive)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="in">#| tests:</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="in">#|   - name: expanded teacher answer</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="in">#|     answers: {ans: 'expand(ta)'}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="in">#|     expect: correct</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="in">#|   - name: deliberate wrong answer</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="in">#|     answers: {ans: 'raw("0")'}</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="in">#|     expect: wrong</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="in">#| review: true</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use <code>expect: invalid</code> for a deliberately invalid input. Invalid or empty input cannot satisfy an ordinary wrong-answer expectation. Use <code>score: 0.5</code> or <code>partial: true</code> to assert partial credit. An overall expectation can contain <code>status</code>, <code>score</code> and <code>answer-note</code>, for example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">-</span><span class="at"> </span><span class="fu">name</span><span class="kw">:</span><span class="at"> a particular branch</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">answers</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">ans</span><span class="kw">:</span><span class="at"> </span><span class="st">'raw("0")'</span><span class="kw">}</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">expect</span><span class="kw">:</span><span class="at"> </span><span class="kw">{</span><span class="fu">status</span><span class="kw">:</span><span class="at"> wrong</span><span class="kw">,</span><span class="at"> </span><span class="fu">score</span><span class="kw">:</span><span class="at"> </span><span class="dv">0</span><span class="kw">,</span><span class="at"> </span><span class="fu">answer-note</span><span class="kw">:</span><span class="at"> expected-branch-note</span><span class="kw">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The answer note must be the actual note produced by the XML branches. For an unambiguous direct-input tree, a named field expectation checks that input’s own tree scores. Use an overall expectation for a tree combining several inputs or for the implicit checker. Tests never substitute a second grader.</p>
+</section>
+<section id="xml-tests-and-checker-tests" class="level2">
+<h2 class="anchored" data-anchor-id="xml-tests-and-checker-tests">XML tests and checker tests</h2>
+<p>XML tests continue to resolve author expressions and compare each named response tree’s score, penalty and answer notes. An XML expected result can name <code>checker</code> when the block has a checker. Declarative tests can test the whole weighted question score, including <code>checker-value</code>.</p>
+<p>Use cases that distinguish alternate correct answers, wrong answers, partial credit and the checker’s valid domain. A basis question should test reordered and rescaled bases, dependence, missing vectors and invalid entries. A positive-definiteness question should distinguish Hermitian symmetry from a positive determinant. The supplied examples include XML tests for these properties.</p>
+</section>
+<section id="generate-inspect-and-approve" class="level2">
+<h2 class="anchored" data-anchor-id="generate-inspect-and-approve">Generate, inspect and approve</h2>
+<p>Generate variants through the shared authoring workflow described in the <a href="../docs/authoring.html">authoring guide</a>. A candidate must pass its XML tests, declarative tests and full-mark teacher vector before it can be reviewed. Generation failures are authoring errors; failed seeds are not silently skipped. The SymPy backend generates its own seeds. It does not reuse Moodle’s deployed Maxima seeds.</p>
+<p><code>review: true</code> adds <strong>Run question tests</strong> to the card. In explicit review mode, use it to inspect the frozen plans, including declarative tests. This uses the same grader as the build. A changed checker or grading rule changes the variant’s content identity and requires a fresh approval. Editing test expectations alone does not change that mathematical identity.</p>
+<p>Normal course publishing requires approved variants. Teacher previews and review pages may show proposals, which have no published variant number. Do not turn off assertions to publish a failing question.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

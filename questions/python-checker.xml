@@ -8,7 +8,7 @@
 <generalfeedback format="html"><text><![CDATA[<p>Multiplying the given integer by any positive integer gives an answer. The Python predicate decides whether the condition holds; the response tree awards credit.</p>]]></text></generalfeedback>
 <defaultgrade>1</defaultgrade><penalty>0.1</penalty>
 <input><name>ans</name><type>algebraic</type><tans>d</tans><strictsyntax>1</strictsyntax><insertstars>0</insertstars><forbidfloat>0</forbidfloat><checkanswertype>1</checkanswertype><mustverify>1</mustverify><showvalidation>1</showvalidation></input>
-<prt><name>prt1</name><value>1</value><autosimplify>1</autosimplify><node><name>0</name><answertest>PythonChecker</answertest><sans>ans</sans><tans>d</tans><testoptions>{"checker": "positive_multiple"}</testoptions>
+<prt><name>prt1</name><value>1</value><autosimplify>1</autosimplify><node><name>0</name><answertest>PythonChecker</answertest><sans>ans</sans><tans>d</tans><testoptions>{"checker": "check"}</testoptions>
 <truescoremode>=</truescoremode><truescore>1</truescore><truenextnode>-1</truenextnode><trueanswernote>multiple-T</trueanswernote>
 <falsescoremode>=</falsescoremode><falsescore>0</falsescore><falsenextnode>-1</falsenextnode><falseanswernote>multiple-F</falseanswernote>
 </node></prt>
