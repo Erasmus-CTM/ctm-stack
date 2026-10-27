@@ -31,7 +31,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 414,
+        "elapsed_ms": 387,
         "scope": "supported"
       },
       "native": {
@@ -54,7 +54,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 414,
+          "elapsed_ms": 387,
           "scope": "supported"
         },
         "pyodide": {
@@ -100,7 +100,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 993,
+        "elapsed_ms": 862,
         "scope": "supported"
       },
       "native": {
@@ -123,7 +123,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 993,
+          "elapsed_ms": 862,
           "scope": "supported"
         },
         "pyodide": {
@@ -169,7 +169,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 321,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": {
@@ -192,7 +192,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 321,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -238,7 +238,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 387,
+        "elapsed_ms": 377,
         "scope": "supported"
       },
       "native": {
@@ -261,7 +261,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 387,
+          "elapsed_ms": 377,
           "scope": "supported"
         },
         "pyodide": {
@@ -307,7 +307,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 357,
+        "elapsed_ms": 360,
         "scope": "supported"
       },
       "native": {
@@ -330,7 +330,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 357,
+          "elapsed_ms": 360,
           "scope": "supported"
         },
         "pyodide": {
@@ -370,7 +370,7 @@
         "test": "AlgEquiv",
         "kind": "invalid_student",
         "message": "Non-finite value",
-        "elapsed_ms": 332,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": null,
@@ -382,7 +382,7 @@
           "test": "AlgEquiv",
           "kind": "invalid_student",
           "message": "Non-finite value",
-          "elapsed_ms": 332,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -425,7 +425,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 359,
+        "elapsed_ms": 343,
         "scope": "supported"
       },
       "native": {
@@ -448,7 +448,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 359,
+          "elapsed_ms": 343,
           "scope": "supported"
         },
         "pyodide": {
@@ -494,7 +494,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 359,
+        "elapsed_ms": 346,
         "scope": "supported"
       },
       "native": {
@@ -517,7 +517,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 359,
+          "elapsed_ms": 346,
           "scope": "supported"
         },
         "pyodide": {
@@ -563,7 +563,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 362,
+        "elapsed_ms": 352,
         "scope": "supported"
       },
       "native": {
@@ -586,7 +586,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 362,
+          "elapsed_ms": 352,
           "scope": "supported"
         },
         "pyodide": {
@@ -632,7 +632,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 357,
+        "elapsed_ms": 342,
         "scope": "supported"
       },
       "native": {
@@ -655,7 +655,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 357,
+          "elapsed_ms": 342,
           "scope": "supported"
         },
         "pyodide": {
@@ -701,7 +701,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 359,
+        "elapsed_ms": 342,
         "scope": "supported"
       },
       "native": {
@@ -724,7 +724,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 359,
+          "elapsed_ms": 342,
           "scope": "supported"
         },
         "pyodide": {
@@ -770,7 +770,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 361,
+        "elapsed_ms": 343,
         "scope": "supported"
       },
       "native": {
@@ -793,7 +793,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 361,
+          "elapsed_ms": 343,
           "scope": "supported"
         },
         "pyodide": {
@@ -839,7 +839,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 363,
+        "elapsed_ms": 340,
         "scope": "supported"
       },
       "native": {
@@ -862,7 +862,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 363,
+          "elapsed_ms": 340,
           "scope": "supported"
         },
         "pyodide": {
@@ -908,7 +908,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 364,
+        "elapsed_ms": 342,
         "scope": "supported"
       },
       "native": {
@@ -931,7 +931,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 364,
+          "elapsed_ms": 342,
           "scope": "supported"
         },
         "pyodide": {
@@ -977,7 +977,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 361,
+        "elapsed_ms": 347,
         "scope": "supported"
       },
       "native": {
@@ -1000,7 +1000,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 361,
+          "elapsed_ms": 347,
           "scope": "supported"
         },
         "pyodide": {
@@ -1046,7 +1046,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 374,
+        "elapsed_ms": 348,
         "scope": "supported"
       },
       "native": {
@@ -1069,7 +1069,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 374,
+          "elapsed_ms": 348,
           "scope": "supported"
         },
         "pyodide": {
@@ -1115,7 +1115,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 371,
+        "elapsed_ms": 355,
         "scope": "supported"
       },
       "native": {
@@ -1138,7 +1138,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 371,
+          "elapsed_ms": 355,
           "scope": "supported"
         },
         "pyodide": {
@@ -1184,7 +1184,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 371,
+        "elapsed_ms": 354,
         "scope": "supported"
       },
       "native": {
@@ -1207,7 +1207,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 371,
+          "elapsed_ms": 354,
           "scope": "supported"
         },
         "pyodide": {
@@ -1253,7 +1253,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 365,
+        "elapsed_ms": 341,
         "scope": "supported"
       },
       "native": {
@@ -1276,7 +1276,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 365,
+          "elapsed_ms": 341,
           "scope": "supported"
         },
         "pyodide": {
@@ -1322,7 +1322,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 365,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -1345,7 +1345,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 365,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -1391,7 +1391,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 362,
+        "elapsed_ms": 361,
         "scope": "supported"
       },
       "native": {
@@ -1414,7 +1414,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 362,
+          "elapsed_ms": 361,
           "scope": "supported"
         },
         "pyodide": {
@@ -1461,7 +1461,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 358,
+        "elapsed_ms": 352,
         "scope": "supported"
       },
       "native": {
@@ -1485,7 +1485,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 358,
+          "elapsed_ms": 352,
           "scope": "supported"
         },
         "pyodide": {
@@ -1533,7 +1533,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 358,
+        "elapsed_ms": 346,
         "scope": "supported"
       },
       "native": {
@@ -1557,7 +1557,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 358,
+          "elapsed_ms": 346,
           "scope": "supported"
         },
         "pyodide": {
@@ -1604,7 +1604,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 709,
+        "elapsed_ms": 629,
         "scope": "supported"
       },
       "native": {
@@ -1627,7 +1627,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 709,
+          "elapsed_ms": 629,
           "scope": "supported"
         },
         "pyodide": {
@@ -1674,7 +1674,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 692,
+        "elapsed_ms": 633,
         "scope": "supported"
       },
       "native": {
@@ -1698,7 +1698,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 692,
+          "elapsed_ms": 633,
           "scope": "supported"
         },
         "pyodide": {
@@ -1745,7 +1745,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 515,
+        "elapsed_ms": 483,
         "scope": "supported"
       },
       "native": {
@@ -1768,7 +1768,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 515,
+          "elapsed_ms": 483,
           "scope": "supported"
         },
         "pyodide": {
@@ -1820,7 +1820,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 484,
+        "elapsed_ms": 449,
         "scope": "supported"
       },
       "native": {
@@ -1843,7 +1843,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 484,
+          "elapsed_ms": 449,
           "scope": "supported"
         },
         "pyodide": {
@@ -1890,7 +1890,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 332,
+        "elapsed_ms": 306,
         "scope": "supported"
       },
       "native": {
@@ -1914,7 +1914,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 332,
+          "elapsed_ms": 306,
           "scope": "supported"
         },
         "pyodide": {
@@ -1962,7 +1962,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 321,
+        "elapsed_ms": 313,
         "scope": "supported"
       },
       "native": {
@@ -1986,7 +1986,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 321,
+          "elapsed_ms": 313,
           "scope": "supported"
         },
         "pyodide": {
@@ -2034,7 +2034,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 358,
+        "elapsed_ms": 347,
         "scope": "supported"
       },
       "native": {
@@ -2058,7 +2058,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 358,
+          "elapsed_ms": 347,
           "scope": "supported"
         },
         "pyodide": {
@@ -2105,7 +2105,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 324,
+        "elapsed_ms": 312,
         "scope": "supported"
       },
       "native": {
@@ -2128,7 +2128,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 324,
+          "elapsed_ms": 312,
           "scope": "supported"
         },
         "pyodide": {
@@ -2174,7 +2174,7 @@
         "correct": false,
         "note": "wrong_decimal_places",
         "feedback": "Incorrect number of decimal places",
-        "elapsed_ms": 323,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": {
@@ -2197,7 +2197,7 @@
           "correct": false,
           "note": "wrong_decimal_places",
           "feedback": "Incorrect number of decimal places",
-          "elapsed_ms": 323,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -2243,7 +2243,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 360,
+        "elapsed_ms": 341,
         "scope": "supported"
       },
       "native": {
@@ -2266,7 +2266,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 360,
+          "elapsed_ms": 341,
           "scope": "supported"
         },
         "pyodide": {
@@ -2312,7 +2312,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 513,
+        "elapsed_ms": 476,
         "scope": "supported"
       },
       "native": {
@@ -2335,7 +2335,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 513,
+          "elapsed_ms": 476,
           "scope": "supported"
         },
         "pyodide": {
@@ -2381,7 +2381,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 361,
+        "elapsed_ms": 353,
         "scope": "supported"
       },
       "native": {
@@ -2404,7 +2404,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 361,
+          "elapsed_ms": 353,
           "scope": "supported"
         },
         "pyodide": {
@@ -2445,7 +2445,7 @@
         "kind": "unsupported",
         "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
         "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-        "elapsed_ms": 363,
+        "elapsed_ms": 341,
         "scope": "unsupported"
       },
       "native": null,
@@ -2458,7 +2458,7 @@
           "kind": "unsupported",
           "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
           "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-          "elapsed_ms": 363,
+          "elapsed_ms": 341,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2497,7 +2497,7 @@
         "kind": "unsupported",
         "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
         "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-        "elapsed_ms": 356,
+        "elapsed_ms": 341,
         "scope": "unsupported"
       },
       "native": null,
@@ -2510,7 +2510,7 @@
           "kind": "unsupported",
           "reason": "Equations require polynomials with rational complex coefficients and numeric denominators",
           "message": "Equations require polynomials with rational complex coefficients and numeric denominators",
-          "elapsed_ms": 356,
+          "elapsed_ms": 341,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2549,7 +2549,7 @@
         "kind": "unsupported",
         "reason": "Equation logic supports equations and disjunctions of equations",
         "message": "Equation logic supports equations and disjunctions of equations",
-        "elapsed_ms": 358,
+        "elapsed_ms": 339,
         "scope": "unsupported"
       },
       "native": null,
@@ -2562,7 +2562,7 @@
           "kind": "unsupported",
           "reason": "Equation logic supports equations and disjunctions of equations",
           "message": "Equation logic supports equations and disjunctions of equations",
-          "elapsed_ms": 358,
+          "elapsed_ms": 339,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2601,7 +2601,7 @@
         "kind": "unsupported",
         "reason": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
         "message": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
-        "elapsed_ms": 324,
+        "elapsed_ms": 301,
         "scope": "unsupported"
       },
       "native": null,
@@ -2614,7 +2614,7 @@
           "kind": "unsupported",
           "reason": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
           "message": "student syntax outside scalar grammar: Unexpected character \"'\" (U+0027) at position 0",
-          "elapsed_ms": 324,
+          "elapsed_ms": 301,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2653,7 +2653,7 @@
         "kind": "unsupported",
         "reason": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
         "message": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
-        "elapsed_ms": 323,
+        "elapsed_ms": 306,
         "scope": "unsupported"
       },
       "native": null,
@@ -2666,7 +2666,7 @@
           "kind": "unsupported",
           "reason": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
           "message": "student syntax outside scalar grammar: Function lg is not allowed; use lg*(...) for multiplication",
-          "elapsed_ms": 323,
+          "elapsed_ms": 306,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2705,7 +2705,7 @@
         "kind": "unsupported",
         "reason": "Plus/minus input requires explicit alternatives",
         "message": "Plus/minus input requires explicit alternatives",
-        "elapsed_ms": 331,
+        "elapsed_ms": 305,
         "scope": "unsupported"
       },
       "native": null,
@@ -2718,7 +2718,7 @@
           "kind": "unsupported",
           "reason": "Plus/minus input requires explicit alternatives",
           "message": "Plus/minus input requires explicit alternatives",
-          "elapsed_ms": 331,
+          "elapsed_ms": 305,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -2763,7 +2763,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 328,
+        "elapsed_ms": 308,
         "scope": "supported"
       },
       "native": {
@@ -2787,7 +2787,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 328,
+          "elapsed_ms": 308,
           "scope": "supported"
         },
         "pyodide": {
@@ -2834,7 +2834,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 359,
+        "elapsed_ms": 338,
         "scope": "supported"
       },
       "native": {
@@ -2857,7 +2857,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 359,
+          "elapsed_ms": 338,
           "scope": "supported"
         },
         "pyodide": {
@@ -2903,7 +2903,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 365,
+        "elapsed_ms": 333,
         "scope": "supported"
       },
       "native": {
@@ -2926,7 +2926,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 365,
+          "elapsed_ms": 333,
           "scope": "supported"
         },
         "pyodide": {
@@ -2972,7 +2972,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 361,
+        "elapsed_ms": 333,
         "scope": "supported"
       },
       "native": {
@@ -2995,7 +2995,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 361,
+          "elapsed_ms": 333,
           "scope": "supported"
         },
         "pyodide": {
@@ -3041,7 +3041,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 358,
+        "elapsed_ms": 336,
         "scope": "supported"
       },
       "native": {
@@ -3064,7 +3064,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 358,
+          "elapsed_ms": 336,
           "scope": "supported"
         },
         "pyodide": {
@@ -3110,7 +3110,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 361,
+        "elapsed_ms": 337,
         "scope": "supported"
       },
       "native": {
@@ -3133,7 +3133,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 361,
+          "elapsed_ms": 337,
           "scope": "supported"
         },
         "pyodide": {
@@ -3179,7 +3179,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 324,
+        "elapsed_ms": 302,
         "scope": "supported"
       },
       "native": {
@@ -3202,7 +3202,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 324,
+          "elapsed_ms": 302,
           "scope": "supported"
         },
         "pyodide": {
@@ -3248,7 +3248,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 322,
+        "elapsed_ms": 309,
         "scope": "supported"
       },
       "native": {
@@ -3271,7 +3271,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 322,
+          "elapsed_ms": 309,
           "scope": "supported"
         },
         "pyodide": {
@@ -3317,7 +3317,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 325,
+        "elapsed_ms": 308,
         "scope": "supported"
       },
       "native": {
@@ -3340,7 +3340,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 325,
+          "elapsed_ms": 308,
           "scope": "supported"
         },
         "pyodide": {
@@ -3386,7 +3386,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 360,
+        "elapsed_ms": 345,
         "scope": "supported"
       },
       "native": {
@@ -3409,7 +3409,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 360,
+          "elapsed_ms": 345,
           "scope": "supported"
         },
         "pyodide": {
@@ -3455,7 +3455,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 325,
+        "elapsed_ms": 303,
         "scope": "supported"
       },
       "native": {
@@ -3478,7 +3478,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 325,
+          "elapsed_ms": 303,
           "scope": "supported"
         },
         "pyodide": {
@@ -3524,7 +3524,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 327,
+        "elapsed_ms": 305,
         "scope": "supported"
       },
       "native": {
@@ -3547,7 +3547,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 327,
+          "elapsed_ms": 305,
           "scope": "supported"
         },
         "pyodide": {
@@ -3593,7 +3593,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 328,
+        "elapsed_ms": 311,
         "scope": "supported"
       },
       "native": {
@@ -3616,7 +3616,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 328,
+          "elapsed_ms": 311,
           "scope": "supported"
         },
         "pyodide": {
@@ -3663,7 +3663,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 330,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -3687,7 +3687,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 330,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -3734,7 +3734,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 324,
+        "elapsed_ms": 304,
         "scope": "supported"
       },
       "native": {
@@ -3757,7 +3757,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 324,
+          "elapsed_ms": 304,
           "scope": "supported"
         },
         "pyodide": {
@@ -3803,7 +3803,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 367,
+        "elapsed_ms": 341,
         "scope": "supported"
       },
       "native": {
@@ -3826,7 +3826,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 367,
+          "elapsed_ms": 341,
           "scope": "supported"
         },
         "pyodide": {
@@ -3872,7 +3872,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 370,
+        "elapsed_ms": 344,
         "scope": "supported"
       },
       "native": {
@@ -3895,7 +3895,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 370,
+          "elapsed_ms": 344,
           "scope": "supported"
         },
         "pyodide": {
@@ -3941,7 +3941,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 325,
+        "elapsed_ms": 305,
         "scope": "supported"
       },
       "native": {
@@ -3964,7 +3964,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 325,
+          "elapsed_ms": 305,
           "scope": "supported"
         },
         "pyodide": {
@@ -4010,7 +4010,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 326,
+        "elapsed_ms": 310,
         "scope": "supported"
       },
       "native": {
@@ -4033,7 +4033,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 326,
+          "elapsed_ms": 310,
           "scope": "supported"
         },
         "pyodide": {
@@ -4079,7 +4079,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 323,
+        "elapsed_ms": 312,
         "scope": "supported"
       },
       "native": {
@@ -4102,7 +4102,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 323,
+          "elapsed_ms": 312,
           "scope": "supported"
         },
         "pyodide": {
@@ -4148,7 +4148,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 360,
+        "elapsed_ms": 355,
         "scope": "supported"
       },
       "native": {
@@ -4171,7 +4171,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 360,
+          "elapsed_ms": 355,
           "scope": "supported"
         },
         "pyodide": {
@@ -4219,7 +4219,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 356,
+        "elapsed_ms": 340,
         "scope": "supported"
       },
       "native": {
@@ -4242,7 +4242,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 356,
+          "elapsed_ms": 340,
           "scope": "supported"
         },
         "pyodide": {
@@ -4283,7 +4283,7 @@
         "kind": "unsupported",
         "reason": "Symbolic complex logarithms require branch-aware proof",
         "message": "Symbolic complex logarithms require branch-aware proof",
-        "elapsed_ms": 323,
+        "elapsed_ms": 309,
         "scope": "unsupported"
       },
       "native": null,
@@ -4296,7 +4296,7 @@
           "kind": "unsupported",
           "reason": "Symbolic complex logarithms require branch-aware proof",
           "message": "Symbolic complex logarithms require branch-aware proof",
-          "elapsed_ms": 323,
+          "elapsed_ms": 309,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -4340,7 +4340,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 323,
+        "elapsed_ms": 315,
         "scope": "supported"
       },
       "native": {
@@ -4363,7 +4363,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 323,
+          "elapsed_ms": 315,
           "scope": "supported"
         },
         "pyodide": {
@@ -4409,7 +4409,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 329,
+        "elapsed_ms": 315,
         "scope": "supported"
       },
       "native": {
@@ -4432,7 +4432,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 329,
+          "elapsed_ms": 315,
           "scope": "supported"
         },
         "pyodide": {
@@ -4478,7 +4478,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 356,
+        "elapsed_ms": 358,
         "scope": "supported"
       },
       "native": {
@@ -4501,7 +4501,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 356,
+          "elapsed_ms": 358,
           "scope": "supported"
         },
         "pyodide": {
@@ -4547,7 +4547,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 370,
+        "elapsed_ms": 354,
         "scope": "supported"
       },
       "native": {
@@ -4570,7 +4570,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 370,
+          "elapsed_ms": 354,
           "scope": "supported"
         },
         "pyodide": {
@@ -4616,7 +4616,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 505,
+        "elapsed_ms": 474,
         "scope": "supported"
       },
       "native": {
@@ -4639,7 +4639,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 505,
+          "elapsed_ms": 474,
           "scope": "supported"
         },
         "pyodide": {
@@ -4686,7 +4686,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 326,
+        "elapsed_ms": 312,
         "scope": "supported"
       },
       "native": {
@@ -4710,7 +4710,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 326,
+          "elapsed_ms": 312,
           "scope": "supported"
         },
         "pyodide": {
@@ -4758,7 +4758,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 362,
+        "elapsed_ms": 348,
         "scope": "supported"
       },
       "native": {
@@ -4782,7 +4782,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 362,
+          "elapsed_ms": 348,
           "scope": "supported"
         },
         "pyodide": {
@@ -4830,7 +4830,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 325,
+        "elapsed_ms": 313,
         "scope": "supported"
       },
       "native": {
@@ -4854,7 +4854,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 325,
+          "elapsed_ms": 313,
           "scope": "supported"
         },
         "pyodide": {
@@ -4901,7 +4901,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 362,
+        "elapsed_ms": 341,
         "scope": "supported"
       },
       "native": {
@@ -4924,7 +4924,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 362,
+          "elapsed_ms": 341,
           "scope": "supported"
         },
         "pyodide": {
@@ -4971,7 +4971,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 326,
+        "elapsed_ms": 310,
         "scope": "supported"
       },
       "native": {
@@ -4995,7 +4995,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 326,
+          "elapsed_ms": 310,
           "scope": "supported"
         },
         "pyodide": {
@@ -5043,7 +5043,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 322,
+        "elapsed_ms": 306,
         "scope": "supported"
       },
       "native": {
@@ -5067,7 +5067,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 322,
+          "elapsed_ms": 306,
           "scope": "supported"
         },
         "pyodide": {
@@ -5115,7 +5115,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 326,
+        "elapsed_ms": 313,
         "scope": "supported"
       },
       "native": {
@@ -5139,7 +5139,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 326,
+          "elapsed_ms": 313,
           "scope": "supported"
         },
         "pyodide": {
@@ -5187,7 +5187,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 326,
+        "elapsed_ms": 306,
         "scope": "supported"
       },
       "native": {
@@ -5211,7 +5211,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 326,
+          "elapsed_ms": 306,
           "scope": "supported"
         },
         "pyodide": {
@@ -5259,7 +5259,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 324,
+        "elapsed_ms": 310,
         "scope": "supported"
       },
       "native": {
@@ -5283,7 +5283,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 324,
+          "elapsed_ms": 310,
           "scope": "supported"
         },
         "pyodide": {
@@ -5330,7 +5330,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 333,
+        "elapsed_ms": 313,
         "scope": "supported"
       },
       "native": {
@@ -5353,7 +5353,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 333,
+          "elapsed_ms": 313,
           "scope": "supported"
         },
         "pyodide": {
@@ -5399,7 +5399,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 363,
+        "elapsed_ms": 348,
         "scope": "supported"
       },
       "native": {
@@ -5422,7 +5422,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 363,
+          "elapsed_ms": 348,
           "scope": "supported"
         },
         "pyodide": {
@@ -5468,7 +5468,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 360,
+        "elapsed_ms": 341,
         "scope": "supported"
       },
       "native": {
@@ -5491,7 +5491,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 360,
+          "elapsed_ms": 341,
           "scope": "supported"
         },
         "pyodide": {
@@ -5537,7 +5537,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 327,
+        "elapsed_ms": 309,
         "scope": "supported"
       },
       "native": {
@@ -5560,7 +5560,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 327,
+          "elapsed_ms": 309,
           "scope": "supported"
         },
         "pyodide": {
@@ -5606,7 +5606,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 340,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -5629,7 +5629,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 340,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -5675,7 +5675,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 324,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -5698,7 +5698,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 324,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -5744,7 +5744,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 323,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -5767,7 +5767,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 323,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -5813,7 +5813,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 356,
+        "elapsed_ms": 343,
         "scope": "supported"
       },
       "native": {
@@ -5836,7 +5836,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 356,
+          "elapsed_ms": 343,
           "scope": "supported"
         },
         "pyodide": {
@@ -5882,7 +5882,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 482,
+        "elapsed_ms": 454,
         "scope": "supported"
       },
       "native": {
@@ -5905,7 +5905,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 482,
+          "elapsed_ms": 454,
           "scope": "supported"
         },
         "pyodide": {
@@ -5951,7 +5951,7 @@
         "correct": false,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 367,
+        "elapsed_ms": 354,
         "scope": "supported"
       },
       "native": {
@@ -5974,7 +5974,7 @@
           "correct": false,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 367,
+          "elapsed_ms": 354,
           "scope": "supported"
         },
         "pyodide": {
@@ -6021,7 +6021,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 349,
+        "elapsed_ms": 324,
         "scope": "supported"
       },
       "native": {
@@ -6045,7 +6045,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 349,
+          "elapsed_ms": 324,
           "scope": "supported"
         },
         "pyodide": {
@@ -6093,7 +6093,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 330,
+        "elapsed_ms": 313,
         "scope": "supported"
       },
       "native": {
@@ -6117,7 +6117,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 330,
+          "elapsed_ms": 313,
           "scope": "supported"
         },
         "pyodide": {
@@ -6165,7 +6165,7 @@
         "cas_valid": true,
         "note": "ATList_wrongentries",
         "feedback": "Check list positions: 1, 2.",
-        "elapsed_ms": 334,
+        "elapsed_ms": 321,
         "scope": "supported"
       },
       "native": {
@@ -6189,7 +6189,7 @@
           "cas_valid": true,
           "note": "ATList_wrongentries",
           "feedback": "Check list positions: 1, 2.",
-          "elapsed_ms": 334,
+          "elapsed_ms": 321,
           "scope": "supported"
         },
         "pyodide": {
@@ -6237,7 +6237,7 @@
         "cas_valid": true,
         "note": "ATList_wronglen",
         "feedback": "The list has the wrong number of entries.",
-        "elapsed_ms": 331,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -6261,7 +6261,7 @@
           "cas_valid": true,
           "note": "ATList_wronglen",
           "feedback": "The list has the wrong number of entries.",
-          "elapsed_ms": 331,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -6309,7 +6309,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 387,
+        "elapsed_ms": 374,
         "scope": "supported"
       },
       "native": {
@@ -6333,7 +6333,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 387,
+          "elapsed_ms": 374,
           "scope": "supported"
         },
         "pyodide": {
@@ -6381,7 +6381,7 @@
         "cas_valid": true,
         "note": "ATList_wrongentries",
         "feedback": "Check list positions: 1.",
-        "elapsed_ms": 334,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -6405,7 +6405,7 @@
           "cas_valid": true,
           "note": "ATList_wrongentries",
           "feedback": "Check list positions: 1.",
-          "elapsed_ms": 334,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -6453,7 +6453,7 @@
         "cas_valid": true,
         "note": "ATList_wrongentries",
         "feedback": "Check list positions: 1.",
-        "elapsed_ms": 361,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -6477,7 +6477,7 @@
           "cas_valid": true,
           "note": "ATList_wrongentries",
           "feedback": "Check list positions: 1.",
-          "elapsed_ms": 361,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -6525,7 +6525,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 331,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -6549,7 +6549,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 331,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -6597,7 +6597,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 326,
+        "elapsed_ms": 320,
         "scope": "supported"
       },
       "native": {
@@ -6621,7 +6621,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 326,
+          "elapsed_ms": 320,
           "scope": "supported"
         },
         "pyodide": {
@@ -6669,7 +6669,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 328,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -6693,7 +6693,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 328,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -6741,7 +6741,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 356,
+        "elapsed_ms": 344,
         "scope": "supported"
       },
       "native": {
@@ -6765,7 +6765,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 356,
+          "elapsed_ms": 344,
           "scope": "supported"
         },
         "pyodide": {
@@ -6813,7 +6813,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 360,
+        "elapsed_ms": 343,
         "scope": "supported"
       },
       "native": {
@@ -6837,7 +6837,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 360,
+          "elapsed_ms": 343,
           "scope": "supported"
         },
         "pyodide": {
@@ -6885,7 +6885,7 @@
         "cas_valid": true,
         "note": "ATSet_wrongentries",
         "feedback": "Check the elements of the set.",
-        "elapsed_ms": 359,
+        "elapsed_ms": 348,
         "scope": "supported"
       },
       "native": {
@@ -6909,7 +6909,7 @@
           "cas_valid": true,
           "note": "ATSet_wrongentries",
           "feedback": "Check the elements of the set.",
-          "elapsed_ms": 359,
+          "elapsed_ms": 348,
           "scope": "supported"
         },
         "pyodide": {
@@ -6983,7 +6983,7 @@
             "text": "Missing elements: 1."
           }
         ],
-        "elapsed_ms": 362,
+        "elapsed_ms": 347,
         "scope": "supported"
       },
       "native": {
@@ -7033,7 +7033,7 @@
               "text": "Missing elements: 1."
             }
           ],
-          "elapsed_ms": 362,
+          "elapsed_ms": 347,
           "scope": "supported"
         },
         "pyodide": {
@@ -7114,7 +7114,7 @@
             "text": "Repeated elements were removed from the set."
           }
         ],
-        "elapsed_ms": 356,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -7145,7 +7145,7 @@
               "text": "Repeated elements were removed from the set."
             }
           ],
-          "elapsed_ms": 356,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -7214,7 +7214,7 @@
             "text": "Missing elements: 2."
           }
         ],
-        "elapsed_ms": 328,
+        "elapsed_ms": 320,
         "scope": "supported"
       },
       "native": {
@@ -7252,7 +7252,7 @@
               "text": "Missing elements: 2."
             }
           ],
-          "elapsed_ms": 328,
+          "elapsed_ms": 320,
           "scope": "supported"
         },
         "pyodide": {
@@ -7328,7 +7328,7 @@
             "text": "Extra elements: 3."
           }
         ],
-        "elapsed_ms": 326,
+        "elapsed_ms": 322,
         "scope": "supported"
       },
       "native": {
@@ -7366,7 +7366,7 @@
               "text": "Extra elements: 3."
             }
           ],
-          "elapsed_ms": 326,
+          "elapsed_ms": 322,
           "scope": "supported"
         },
         "pyodide": {
@@ -7454,7 +7454,7 @@
             "text": "Missing elements: 2."
           }
         ],
-        "elapsed_ms": 330,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -7504,7 +7504,7 @@
               "text": "Missing elements: 2."
             }
           ],
-          "elapsed_ms": 330,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -7578,7 +7578,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 325,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -7602,7 +7602,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 325,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -7650,7 +7650,7 @@
         "cas_valid": false,
         "note": "",
         "feedback": "The answer and teacher must have the same collection type.",
-        "elapsed_ms": 324,
+        "elapsed_ms": 325,
         "scope": "supported"
       },
       "native": {
@@ -7674,7 +7674,7 @@
           "cas_valid": false,
           "note": "",
           "feedback": "The answer and teacher must have the same collection type.",
-          "elapsed_ms": 324,
+          "elapsed_ms": 325,
           "scope": "supported"
         },
         "pyodide": {
@@ -7722,7 +7722,7 @@
         "cas_valid": false,
         "note": "ATSets_SA_not_set",
         "feedback": "Enter a set using braces {...}.",
-        "elapsed_ms": 328,
+        "elapsed_ms": 315,
         "scope": "supported"
       },
       "native": {
@@ -7746,7 +7746,7 @@
           "cas_valid": false,
           "note": "ATSets_SA_not_set",
           "feedback": "Enter a set using braces {...}.",
-          "elapsed_ms": 328,
+          "elapsed_ms": 315,
           "scope": "supported"
         },
         "pyodide": {
@@ -7794,7 +7794,7 @@
         "cas_valid": false,
         "note": "ATList_wrongentries",
         "feedback": "Check list positions: 1.",
-        "elapsed_ms": 326,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -7818,7 +7818,7 @@
           "cas_valid": false,
           "note": "ATList_wrongentries",
           "feedback": "Check list positions: 1.",
-          "elapsed_ms": 326,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -7866,7 +7866,7 @@
         "cas_valid": false,
         "note": "",
         "feedback": "The answer and teacher must have the same collection type.",
-        "elapsed_ms": 325,
+        "elapsed_ms": 320,
         "scope": "supported"
       },
       "native": {
@@ -7890,7 +7890,7 @@
           "cas_valid": false,
           "note": "",
           "feedback": "The answer and teacher must have the same collection type.",
-          "elapsed_ms": 325,
+          "elapsed_ms": 320,
           "scope": "supported"
         },
         "pyodide": {
@@ -7932,7 +7932,7 @@
         "kind": "unsupported",
         "reason": "Collection leaves must be scalar expressions",
         "message": "Collection leaves must be scalar expressions",
-        "elapsed_ms": 323,
+        "elapsed_ms": 309,
         "scope": "unsupported"
       },
       "native": null,
@@ -7945,7 +7945,7 @@
           "kind": "unsupported",
           "reason": "Collection leaves must be scalar expressions",
           "message": "Collection leaves must be scalar expressions",
-          "elapsed_ms": 323,
+          "elapsed_ms": 309,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -7984,7 +7984,7 @@
         "kind": "unsupported",
         "reason": "Collection leaves must be scalar expressions",
         "message": "Collection leaves must be scalar expressions",
-        "elapsed_ms": 326,
+        "elapsed_ms": 314,
         "scope": "unsupported"
       },
       "native": null,
@@ -7997,7 +7997,7 @@
           "kind": "unsupported",
           "reason": "Collection leaves must be scalar expressions",
           "message": "Collection leaves must be scalar expressions",
-          "elapsed_ms": 326,
+          "elapsed_ms": 314,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -8036,7 +8036,7 @@
         "kind": "unsupported",
         "reason": "Collection size exceeds supported bound",
         "message": "Collection size exceeds supported bound",
-        "elapsed_ms": 322,
+        "elapsed_ms": 313,
         "scope": "unsupported"
       },
       "native": null,
@@ -8049,7 +8049,7 @@
           "kind": "unsupported",
           "reason": "Collection size exceeds supported bound",
           "message": "Collection size exceeds supported bound",
-          "elapsed_ms": 322,
+          "elapsed_ms": 313,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -8094,7 +8094,7 @@
         "cas_valid": true,
         "note": "ATSet_wrongentries",
         "feedback": "Check the elements of the set.",
-        "elapsed_ms": 360,
+        "elapsed_ms": 347,
         "scope": "supported"
       },
       "native": {
@@ -8118,7 +8118,7 @@
           "cas_valid": true,
           "note": "ATSet_wrongentries",
           "feedback": "Check the elements of the set.",
-          "elapsed_ms": 360,
+          "elapsed_ms": 347,
           "scope": "supported"
         },
         "pyodide": {
@@ -8166,7 +8166,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 359,
+        "elapsed_ms": 352,
         "scope": "supported"
       },
       "native": {
@@ -8190,7 +8190,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 359,
+          "elapsed_ms": 352,
           "scope": "supported"
         },
         "pyodide": {
@@ -8238,7 +8238,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 368,
+        "elapsed_ms": 351,
         "scope": "supported"
       },
       "native": {
@@ -8262,7 +8262,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 368,
+          "elapsed_ms": 351,
           "scope": "supported"
         },
         "pyodide": {
@@ -8310,7 +8310,7 @@
         "cas_valid": true,
         "note": "ATSet_wrongentries",
         "feedback": "Check the elements of the set.",
-        "elapsed_ms": 333,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": {
@@ -8334,7 +8334,7 @@
           "cas_valid": true,
           "note": "ATSet_wrongentries",
           "feedback": "Check the elements of the set.",
-          "elapsed_ms": 333,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -8382,7 +8382,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 330,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -8406,7 +8406,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 330,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -8480,7 +8480,7 @@
             "text": "Missing elements: [1]."
           }
         ],
-        "elapsed_ms": 334,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": {
@@ -8530,7 +8530,7 @@
               "text": "Missing elements: [1]."
             }
           ],
-          "elapsed_ms": 334,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -8604,7 +8604,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 335,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": {
@@ -8628,7 +8628,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 335,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -8683,7 +8683,7 @@
             "text": "Repeated elements were removed from the set."
           }
         ],
-        "elapsed_ms": 334,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -8714,7 +8714,7 @@
               "text": "Repeated elements were removed from the set."
             }
           ],
-          "elapsed_ms": 334,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -8776,7 +8776,7 @@
             "text": "Repeated elements were removed from the set."
           }
         ],
-        "elapsed_ms": 334,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": {
@@ -8807,7 +8807,7 @@
               "text": "Repeated elements were removed from the set."
             }
           ],
-          "elapsed_ms": 334,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -8862,7 +8862,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 326,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": {
@@ -8886,7 +8886,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 326,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -8934,7 +8934,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 335,
+        "elapsed_ms": 320,
         "scope": "supported"
       },
       "native": {
@@ -8958,7 +8958,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 335,
+          "elapsed_ms": 320,
           "scope": "supported"
         },
         "pyodide": {
@@ -9006,7 +9006,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 325,
+        "elapsed_ms": 311,
         "scope": "supported"
       },
       "native": {
@@ -9030,7 +9030,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 325,
+          "elapsed_ms": 311,
           "scope": "supported"
         },
         "pyodide": {
@@ -9078,7 +9078,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 331,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -9102,7 +9102,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 331,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -9150,7 +9150,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 330,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -9174,7 +9174,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 330,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -9222,7 +9222,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 339,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -9246,7 +9246,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 339,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -9294,7 +9294,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 332,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -9318,7 +9318,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 332,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -9366,7 +9366,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 332,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -9390,7 +9390,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 332,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -9438,7 +9438,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 333,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -9462,7 +9462,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 333,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -9510,7 +9510,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 331,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": {
@@ -9534,7 +9534,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 331,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -9582,7 +9582,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 331,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -9606,7 +9606,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 331,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -9653,7 +9653,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 358,
+        "elapsed_ms": 343,
         "scope": "supported"
       },
       "native": {
@@ -9676,7 +9676,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 358,
+          "elapsed_ms": 343,
           "scope": "supported"
         },
         "pyodide": {
@@ -9722,7 +9722,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 361,
+        "elapsed_ms": 346,
         "scope": "supported"
       },
       "native": {
@@ -9745,7 +9745,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 361,
+          "elapsed_ms": 346,
           "scope": "supported"
         },
         "pyodide": {
@@ -9791,7 +9791,7 @@
         "correct": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 330,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -9814,7 +9814,7 @@
           "correct": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 330,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -9861,7 +9861,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 330,
+        "elapsed_ms": 320,
         "scope": "supported"
       },
       "native": {
@@ -9885,7 +9885,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 330,
+          "elapsed_ms": 320,
           "scope": "supported"
         },
         "pyodide": {
@@ -9933,7 +9933,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 332,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -9957,7 +9957,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 332,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -10005,7 +10005,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 334,
+        "elapsed_ms": 324,
         "scope": "supported"
       },
       "native": {
@@ -10029,7 +10029,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 334,
+          "elapsed_ms": 324,
           "scope": "supported"
         },
         "pyodide": {
@@ -10077,7 +10077,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 331,
+        "elapsed_ms": 321,
         "scope": "supported"
       },
       "native": {
@@ -10101,7 +10101,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 331,
+          "elapsed_ms": 321,
           "scope": "supported"
         },
         "pyodide": {
@@ -10149,7 +10149,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 329,
+        "elapsed_ms": 328,
         "scope": "supported"
       },
       "native": {
@@ -10173,7 +10173,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 329,
+          "elapsed_ms": 328,
           "scope": "supported"
         },
         "pyodide": {
@@ -10215,7 +10215,7 @@
         "kind": "unsupported",
         "reason": "Finite collection helpers are author-only and require AlgEquiv or SameType",
         "message": "Finite collection helpers are author-only and require AlgEquiv or SameType",
-        "elapsed_ms": 321,
+        "elapsed_ms": 309,
         "scope": "unsupported"
       },
       "native": null,
@@ -10228,7 +10228,7 @@
           "kind": "unsupported",
           "reason": "Finite collection helpers are author-only and require AlgEquiv or SameType",
           "message": "Finite collection helpers are author-only and require AlgEquiv or SameType",
-          "elapsed_ms": 321,
+          "elapsed_ms": 309,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -10268,7 +10268,7 @@
         "exception_type": "Unsupported",
         "message": "listify ordering supports rational scalar set members only",
         "phase": "evaluation",
-        "elapsed_ms": 325,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": null,
@@ -10282,7 +10282,7 @@
           "exception_type": "Unsupported",
           "message": "listify ordering supports rational scalar set members only",
           "phase": "evaluation",
-          "elapsed_ms": 325,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -10321,7 +10321,7 @@
         "test": "AlgEquiv",
         "kind": "invalid_teacher",
         "message": "setify requires a list",
-        "elapsed_ms": 326,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": null,
@@ -10333,7 +10333,7 @@
           "test": "AlgEquiv",
           "kind": "invalid_teacher",
           "message": "setify requires a list",
-          "elapsed_ms": 326,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -10370,7 +10370,7 @@
         "test": "AlgEquiv",
         "kind": "invalid_teacher",
         "message": "setdifference has an unsupported number of arguments",
-        "elapsed_ms": 329,
+        "elapsed_ms": 317,
         "scope": "supported"
       },
       "native": null,
@@ -10382,7 +10382,7 @@
           "test": "AlgEquiv",
           "kind": "invalid_teacher",
           "message": "setdifference has an unsupported number of arguments",
-          "elapsed_ms": 329,
+          "elapsed_ms": 317,
           "scope": "supported"
         },
         "pyodide": {
@@ -10420,7 +10420,7 @@
         "kind": "unsupported",
         "reason": "Collection depth exceeds supported bound",
         "message": "Collection depth exceeds supported bound",
-        "elapsed_ms": 323,
+        "elapsed_ms": 310,
         "scope": "unsupported"
       },
       "native": null,
@@ -10433,7 +10433,7 @@
           "kind": "unsupported",
           "reason": "Collection depth exceeds supported bound",
           "message": "Collection depth exceeds supported bound",
-          "elapsed_ms": 323,
+          "elapsed_ms": 310,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -10472,7 +10472,7 @@
         "kind": "unsupported",
         "reason": "Collection tree exceeds supported bound",
         "message": "Collection tree exceeds supported bound",
-        "elapsed_ms": 331,
+        "elapsed_ms": 313,
         "scope": "unsupported"
       },
       "native": null,
@@ -10485,7 +10485,7 @@
           "kind": "unsupported",
           "reason": "Collection tree exceeds supported bound",
           "message": "Collection tree exceeds supported bound",
-          "elapsed_ms": 331,
+          "elapsed_ms": 313,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -10524,7 +10524,7 @@
         "kind": "unsupported",
         "reason": "Decimal literals inside sets require exact fractions",
         "message": "Decimal literals inside sets require exact fractions",
-        "elapsed_ms": 322,
+        "elapsed_ms": 312,
         "scope": "unsupported"
       },
       "native": null,
@@ -10537,7 +10537,7 @@
           "kind": "unsupported",
           "reason": "Decimal literals inside sets require exact fractions",
           "message": "Decimal literals inside sets require exact fractions",
-          "elapsed_ms": 322,
+          "elapsed_ms": 312,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -10576,7 +10576,7 @@
         "kind": "unsupported",
         "reason": "Decimal literals inside sets require exact fractions",
         "message": "Decimal literals inside sets require exact fractions",
-        "elapsed_ms": 321,
+        "elapsed_ms": 310,
         "scope": "unsupported"
       },
       "native": null,
@@ -10589,7 +10589,7 @@
           "kind": "unsupported",
           "reason": "Decimal literals inside sets require exact fractions",
           "message": "Decimal literals inside sets require exact fractions",
-          "elapsed_ms": 321,
+          "elapsed_ms": 310,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -10628,7 +10628,7 @@
         "kind": "unsupported",
         "reason": "Decimal literals inside sets require exact fractions",
         "message": "Decimal literals inside sets require exact fractions",
-        "elapsed_ms": 324,
+        "elapsed_ms": 310,
         "scope": "unsupported"
       },
       "native": null,
@@ -10641,7 +10641,7 @@
           "kind": "unsupported",
           "reason": "Decimal literals inside sets require exact fractions",
           "message": "Decimal literals inside sets require exact fractions",
-          "elapsed_ms": 324,
+          "elapsed_ms": 310,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -10686,7 +10686,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 332,
+        "elapsed_ms": 318,
         "scope": "supported"
       },
       "native": {
@@ -10710,7 +10710,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 332,
+          "elapsed_ms": 318,
           "scope": "supported"
         },
         "pyodide": {
@@ -10758,7 +10758,7 @@
         "cas_valid": true,
         "note": "",
         "feedback": "",
-        "elapsed_ms": 360,
+        "elapsed_ms": 349,
         "scope": "supported"
       },
       "native": {
@@ -10782,7 +10782,7 @@
           "cas_valid": true,
           "note": "",
           "feedback": "",
-          "elapsed_ms": 360,
+          "elapsed_ms": 349,
           "scope": "supported"
         },
         "pyodide": {
@@ -10830,7 +10830,7 @@
         "cas_valid": true,
         "note": "ATMatrix_wrongsz_rows",
         "feedback": "The matrix has the wrong number of rows.",
-        "elapsed_ms": 333,
+        "elapsed_ms": 319,
         "scope": "supported"
       },
       "native": {
@@ -10854,7 +10854,7 @@
           "cas_valid": true,
           "note": "ATMatrix_wrongsz_rows",
           "feedback": "The matrix has the wrong number of rows.",
-          "elapsed_ms": 333,
+          "elapsed_ms": 319,
           "scope": "supported"
         },
         "pyodide": {
@@ -10902,7 +10902,7 @@
         "cas_valid": true,
         "note": "ATMatrix_wrongsz_columns",
         "feedback": "The matrix has the wrong number of columns.",
-        "elapsed_ms": 326,
+        "elapsed_ms": 316,
         "scope": "supported"
       },
       "native": {
@@ -10926,7 +10926,7 @@
           "cas_valid": true,
           "note": "ATMatrix_wrongsz_columns",
           "feedback": "The matrix has the wrong number of columns.",
-          "elapsed_ms": 326,
+          "elapsed_ms": 316,
           "scope": "supported"
         },
         "pyodide": {
@@ -10974,7 +10974,7 @@
         "cas_valid": true,
         "note": "ATMatrix_wrongentries",
         "feedback": "Check the entries of the matrix.",
-        "elapsed_ms": 335,
+        "elapsed_ms": 312,
         "scope": "supported"
       },
       "native": {
@@ -10998,7 +10998,7 @@
           "cas_valid": true,
           "note": "ATMatrix_wrongentries",
           "feedback": "Check the entries of the matrix.",
-          "elapsed_ms": 335,
+          "elapsed_ms": 312,
           "scope": "supported"
         },
         "pyodide": {
@@ -11046,7 +11046,7 @@
         "cas_valid": false,
         "note": "",
         "feedback": "The answer and teacher must have the same collection type.",
-        "elapsed_ms": 326,
+        "elapsed_ms": 347,
         "scope": "supported"
       },
       "native": {
@@ -11070,7 +11070,7 @@
           "cas_valid": false,
           "note": "",
           "feedback": "The answer and teacher must have the same collection type.",
-          "elapsed_ms": 326,
+          "elapsed_ms": 347,
           "scope": "supported"
         },
         "pyodide": {
@@ -11118,7 +11118,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 333,
+        "elapsed_ms": 313,
         "scope": "supported"
       },
       "native": {
@@ -11142,7 +11142,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 333,
+          "elapsed_ms": 313,
           "scope": "supported"
         },
         "pyodide": {
@@ -11190,7 +11190,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 325,
+        "elapsed_ms": 309,
         "scope": "supported"
       },
       "native": {
@@ -11214,7 +11214,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 325,
+          "elapsed_ms": 309,
           "scope": "supported"
         },
         "pyodide": {
@@ -11262,7 +11262,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 362,
+        "elapsed_ms": 341,
         "scope": "supported"
       },
       "native": {
@@ -11286,7 +11286,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 362,
+          "elapsed_ms": 341,
           "scope": "supported"
         },
         "pyodide": {
@@ -11334,7 +11334,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 360,
+        "elapsed_ms": 343,
         "scope": "supported"
       },
       "native": {
@@ -11358,7 +11358,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 360,
+          "elapsed_ms": 343,
           "scope": "supported"
         },
         "pyodide": {
@@ -11406,7 +11406,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": true,
-        "elapsed_ms": 361,
+        "elapsed_ms": 344,
         "scope": "supported"
       },
       "native": {
@@ -11430,7 +11430,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": true,
-          "elapsed_ms": 361,
+          "elapsed_ms": 344,
           "scope": "supported"
         },
         "pyodide": {
@@ -11478,7 +11478,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 332,
+        "elapsed_ms": 314,
         "scope": "supported"
       },
       "native": {
@@ -11502,7 +11502,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 332,
+          "elapsed_ms": 314,
           "scope": "supported"
         },
         "pyodide": {
@@ -11550,7 +11550,7 @@
         "note": "",
         "feedback": "",
         "cas_valid": false,
-        "elapsed_ms": 326,
+        "elapsed_ms": 320,
         "scope": "supported"
       },
       "native": {
@@ -11574,7 +11574,7 @@
           "note": "",
           "feedback": "",
           "cas_valid": false,
-          "elapsed_ms": 326,
+          "elapsed_ms": 320,
           "scope": "supported"
         },
         "pyodide": {
@@ -11622,7 +11622,7 @@
         "cas_valid": true,
         "note": "ATMatrix_wrongentries",
         "feedback": "Check the entries of the matrix.",
-        "elapsed_ms": 357,
+        "elapsed_ms": 347,
         "scope": "supported"
       },
       "native": {
@@ -11646,7 +11646,7 @@
           "cas_valid": true,
           "note": "ATMatrix_wrongentries",
           "feedback": "Check the entries of the matrix.",
-          "elapsed_ms": 357,
+          "elapsed_ms": 347,
           "scope": "supported"
         },
         "pyodide": {
@@ -11688,7 +11688,7 @@
         "kind": "unsupported",
         "reason": "Matrix shape outside bounded positive rectangular subset",
         "message": "Matrix shape outside bounded positive rectangular subset",
-        "elapsed_ms": 327,
+        "elapsed_ms": 308,
         "scope": "unsupported"
       },
       "native": null,
@@ -11701,7 +11701,7 @@
           "kind": "unsupported",
           "reason": "Matrix shape outside bounded positive rectangular subset",
           "message": "Matrix shape outside bounded positive rectangular subset",
-          "elapsed_ms": 327,
+          "elapsed_ms": 308,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -11740,7 +11740,7 @@
         "kind": "unsupported",
         "reason": "Matrix shape outside bounded positive rectangular subset",
         "message": "Matrix shape outside bounded positive rectangular subset",
-        "elapsed_ms": 324,
+        "elapsed_ms": 306,
         "scope": "unsupported"
       },
       "native": null,
@@ -11753,7 +11753,7 @@
           "kind": "unsupported",
           "reason": "Matrix shape outside bounded positive rectangular subset",
           "message": "Matrix shape outside bounded positive rectangular subset",
-          "elapsed_ms": 324,
+          "elapsed_ms": 306,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -11792,7 +11792,7 @@
         "kind": "unsupported",
         "reason": "Matrix shape outside bounded positive rectangular subset",
         "message": "Matrix shape outside bounded positive rectangular subset",
-        "elapsed_ms": 326,
+        "elapsed_ms": 305,
         "scope": "unsupported"
       },
       "native": null,
@@ -11805,7 +11805,7 @@
           "kind": "unsupported",
           "reason": "Matrix shape outside bounded positive rectangular subset",
           "message": "Matrix shape outside bounded positive rectangular subset",
-          "elapsed_ms": 326,
+          "elapsed_ms": 305,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -11844,7 +11844,7 @@
         "kind": "unsupported",
         "reason": "Nested matrices and matrix operations are outside the bounded matrix subset",
         "message": "Nested matrices and matrix operations are outside the bounded matrix subset",
-        "elapsed_ms": 322,
+        "elapsed_ms": 304,
         "scope": "unsupported"
       },
       "native": null,
@@ -11857,7 +11857,7 @@
           "kind": "unsupported",
           "reason": "Nested matrices and matrix operations are outside the bounded matrix subset",
           "message": "Nested matrices and matrix operations are outside the bounded matrix subset",
-          "elapsed_ms": 322,
+          "elapsed_ms": 304,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -11896,7 +11896,7 @@
         "kind": "unsupported",
         "reason": "Nested matrices and matrix operations are outside the bounded matrix subset",
         "message": "Nested matrices and matrix operations are outside the bounded matrix subset",
-        "elapsed_ms": 324,
+        "elapsed_ms": 315,
         "scope": "unsupported"
       },
       "native": null,
@@ -11909,7 +11909,7 @@
           "kind": "unsupported",
           "reason": "Nested matrices and matrix operations are outside the bounded matrix subset",
           "message": "Nested matrices and matrix operations are outside the bounded matrix subset",
-          "elapsed_ms": 324,
+          "elapsed_ms": 315,
           "scope": "unsupported"
         },
         "pyodide": {
@@ -11943,9 +11943,9 @@
   },
   "errors": {},
   "provenance": {
-    "code_sha": "57823df14c42a83f808f85bf0086a7feacc920cf",
+    "code_sha": "ec9eb4ff086ca612e2cb0af9150384f703733a09",
     "fixture_sha256": "8fafc09c31ce2c3d9d740c3d15f27528f339c1578c6db0666fbe88701a608573",
-    "source_bundle_sha256": "08eb02c0834b8ba3fee6c9620055ba983a71b410d4a47399a47df1ef795d34de",
+    "source_bundle_sha256": "a16cdb54e6cbdbbd2b9fd193d84a4d764e653d09c4a6516197e108160007adb8",
     "stack_sha": "33383047af39c204bf4442802a058f8b918b2b1b",
     "input_preparation": "stack-logic-nouns-numeric-default-v2",
     "sympy_version": "1.13.3",
@@ -12019,7 +12019,7 @@
         "image_sha256": "f3f1a668d0aa7899a9c4d58349c6a382f9e0afd2579cd34fcb8c8ff711a1484f",
         "cache_status": "hit"
       },
-      "case_wall_seconds": 17.77849070299999,
+      "case_wall_seconds": 15.44426391799999,
       "loader_probe": {
         "i_binding": "%i",
         "parsed_i": "i",
@@ -12056,8 +12056,8 @@
       "schema_version": 1,
       "engine": "parity",
       "fixture_sha256": "8fafc09c31ce2c3d9d740c3d15f27528f339c1578c6db0666fbe88701a608573",
-      "python_report_sha256": "3f9accbf0c6625ccc324ac4e3ab7c1012fb9f6151702990ec43e7a26798c94eb",
-      "source_bundle_sha256": "08eb02c0834b8ba3fee6c9620055ba983a71b410d4a47399a47df1ef795d34de",
+      "python_report_sha256": "9f1929972890a86d1c083ddc0f1438c6734a02be6a14b887243cea86b11860aa",
+      "source_bundle_sha256": "a16cdb54e6cbdbbd2b9fd193d84a4d764e653d09c4a6516197e108160007adb8",
       "pyodide_version": "0.28.3",
       "sympy_version": "1.13.3",
       "browser_versions": {

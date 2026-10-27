@@ -115,6 +115,10 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Matrix input and grading</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../docs/native-authoring.html">
+ <span class="dropdown-text">Native runtime-v3 authoring</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../docs/python-checker-api.html#symmetric-positive-definite-matrices">
  <span class="dropdown-text">Positive-definiteness checks</span></a>
   </li>  
@@ -190,18 +194,21 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>CTM STACK builds one card shell in Lua. <code>cas: sympy</code> is the provisional default; <code>cas: maxima</code> stops the build until its backend is installed. A mixed-backend page is noted once at build time. Each backend generates its own variants: SymPy seeds use Python’s RNG and do not reproduce Moodle’s deployed seeds.</p>
+<p>CTM STACK builds one card shell in Lua. <code>cas: sympy</code> is the provisional default; <code>cas: maxima</code> uses the owned runtime-v3 package for preparation and grading. A native author build needs Node and a staged package; missing resources stop the build. A mixed-backend page is noted once at build time. Each backend generates its own variants: SymPy seeds use Python’s RNG and do not reproduce Moodle’s deployed seeds.</p>
+<p>The <a href="../docs/native-authoring.html">native authoring guide</a> describes staging, supported features, the Python compiler and the independent/upstream audit.</p>
 <p>The version-2 JSON island contains <code>common</code> input/qtest/checker data, <code>backend.question</code> and per-variant <code>plan</code> data that the controller treats as opaque, display HTML, and <code>{n, id, hash}</code> identities. <code>stackRevision</code> reports the engine’s actual reference pin; SymPy’s <code>runtimeHash</code> is null.</p>
 <p>H1 sets <code>common.checker</code> to <code>{source, value}</code> for a block checker; otherwise it is null. The SymPy backend keeps the same source and weight in its opaque question plan. Checker plans carry the selected <code>{n, id, hash}</code> identity. The text-only <code>stack.check</code> continuation accepts validated <code>raw</code>/<code>canonical</code> inputs, exact teacher and variable text, assumptions and optional node values. For an XML node, <code>node.sans</code> names its validated input, <code>node.tans</code> is the evaluated teacher text, and <code>node.options</code> is the complete XML testoptions object (<code>checker</code> and optional <code>options</code>). The shared entry resolves these for both block checkers and library predicates; author code receives decoded node values and the inner literal options object. Library matrix assessments are keyed by the same input name. It returns the usual STACK envelope, including author errors that retain the session. SymPy prints canonical input from the written AST until the shared JS admission exists. See the <a href="../docs/python-checker-api.html">checker contract</a>.</p>
 <p>Each backend descriptor is <code>{id, version, adapter, requires: {isolation}}</code>. The adapter URL is relative to the component script. Its script registers a factory under <code>window.CTMStackAdapters[id]</code>, returning:</p>
 <ul>
 <li><code>start()</code>: a promise that resolves when requests may run;</li>
+<li>optional <code>prepareRequest(request)</code>: load the question/variant context before the calculation clock starts;</li>
 <li><code>request({type, question, variant, answers})</code>: a promise of <code>{ok, result}</code> or <code>{ok: false, error: {kind, code, message}}</code>;</li>
 <li><code>stop(reason)</code>: stop this backend only; resolves with <code>{restarted}</code>;</li>
 <li><code>restart(reason)</code>: start a new session for this backend;</li>
 <li><code>isolationRequired</code>: whether this backend requires cross-origin isolation.</li>
 </ul>
-<p>The controller has no backend-specific branch. It serializes requests per backend, drops queued requests superseded by the same card/kind, and ignores stale results after edits. The calculation clock starts after <code>start()</code>; loading has its own bound. Stop keeps answers, interrupts first when the shared runtime can do so, and otherwise restarts only the private backend. Runtime errors offer Retry; author errors preserve the session. Invalid answers and undecidable CAS tests remain ordinary results.</p>
+<p>The controller has no backend-specific branch. It serializes requests per backend, drops queued requests superseded by the same card/kind, and ignores stale results after edits. The calculation clock starts after <code>start()</code> and <code>prepareRequest()</code>; loading has its own bound. Stop keeps answers, interrupts first when the shared runtime can do so, and otherwise restarts only the private backend. Runtime errors offer Retry; author errors preserve the session. Invalid answers and undecidable CAS tests remain ordinary results.</p>
+<p>Maxima seals one question and variant into each worker. Switching variants or cards starts a fresh native heap. Loading has a 180-second deadline; individual calculations have a 30-second deadline. Stop and internal failure retire the worker without replaying the failed request. Its protocol exposes validation, grading and question tests, never raw Maxima/Lisp evaluation. Ordinary native questions do not load Pyodide. PythonChecker questions use a private unpublished Python worker, warmed before calculation and retired with the native worker. Only sealed <code>stack.check</code> and declarative-test result verification calls cross that boundary; the page’s interpreter is untouched.</p>
 <p>SymPy starts <code>CTMWorker</code> with <code>publish: false</code>, then loads SymPy and the STACK checker part from the page. It never assigns or stops <code>mainPyodide</code>. Its adapter normalizes ctm-checkers’ additive <code>errorDetail</code> envelope. MathJax and matrix input are shared page assets. Error and message arguments are data; only backend-sanitized CASText HTML is inserted as HTML.</p>
 <p><code>stack:</code> settings include <code>cas</code>, <code>lang</code>, <code>feedback</code>, <code>stop-after</code>, <code>save</code>, <code>source-panels</code>, and <code>validation</code>. The intended validation default is <code>instant</code>; until the backend’s bounded admission is shipped, SymPy uses the explicit Validate button. API 2 is sufficient; <code>CTMStore</code> is probed at runtime. No-AI builds have no feedback payload, button or gear. Exam delivery retains the umbrella’s Pyodide-only restrictions.</p>
 
