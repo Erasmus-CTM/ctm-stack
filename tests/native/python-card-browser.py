@@ -47,7 +47,7 @@ def run(project,output,engine='chromium',executable=None):
                 report['checks'].append('ordinary native grading starts no Python interpreter')
                 card=page.locator('[data-stack-id="native-python"]')
                 answer(card,selected(card)['plan']['teachers']['ans']['source'])
-                identity=payload(card)['common']['question']['native']['pythonIdentity']
+                identity=payload(card)['backend']['question']['native']['pythonIdentity']
                 assert identity['browserSympyVersion']==identity['sympyVersion']
                 report['pythonIdentity']=identity
                 report['checks'].append('loaded Pyodide SymPy version matches the compiled host/browser identity')
