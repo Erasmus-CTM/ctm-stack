@@ -103,30 +103,16 @@ def compile_model(question):
 
 def prepare_question(source, question_name, seeds, *, runtime_root, checker_folder, cache=None,
                      checker=None, checker_value=1, tests=None):
-    question, source_hash = model(source,question_name,checker=checker,checker_value=checker_value,tests=tests)
-    compiled=compile_model(question)
-    wheel, checker_hash = checker_part(checker_folder)
-    folder=Path(checker_folder).resolve()
-    descriptor=json.loads((folder/'checkers.json').read_text())
-    base=(folder/descriptor['wheel']).resolve()
-    if not base.is_relative_to(folder) or sha(base.read_bytes())!=descriptor['sha256']:
-        raise ValueError('Checker wheel differs from its canonical descriptor')
-    with tempfile.TemporaryDirectory(prefix='ctm-admission-',dir=os.environ.get('CTM_STACK_BUILD_TMP')) as tmp:
-        with zipfile.ZipFile(wheel) as bundle:
-            for filename in ['admission.js','admission-data.json']:
-                Path(tmp,filename).write_bytes(bundle.read('ctm_checkers/stack/'+filename))
-        request = dict(schema=1,question=question,compiled=compiled,sourceSha256=source_hash,seeds=list(seeds),runtimeRoot=str(Path(runtime_root).resolve()),
-                       admissionRoot=tmp,checkerWheelSha256=checker_hash,cache=str(cache) if cache else None,
-                       python={'executable':sys.executable,'paths':[str(base),str(wheel)],
-                               'baseWheelSha256':descriptor['sha256'],'version':list(sys.version_info[:3])})
-        try:
-            result = subprocess.run([os.environ.get('CTM_STACK_NODE','node'),str(HERE/'compile-question.mjs')],
-                input=json.dumps(request),capture_output=True,text=True,timeout=240)
-        except FileNotFoundError as error:
-            raise ValueError('Native author builds require Node 22 or 24 (CTM_STACK_NODE)') from error
-        if result.returncode:
-            raise ValueError(result.stderr[-8000:] or 'Native Maxima preparation failed')
-        if len(result.stdout)>16*1024*1024:
-            raise ValueError('Native preparation output exceeds 16 MiB')
-        prepared = json.loads(result.stdout)
-    return prepared
+    seeds=list(seeds)
+    if not 1<=len(seeds)<=100:raise ValueError('Expected 1–100 native seeds')
+    # Reuse the same two-phase candidate/identity flow as the installed producer.
+    spec=importlib.util.spec_from_file_location('_ctm_native_prepare_backend',HERE.parent/'ctm_stack_native.py')
+    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    options={'checker':checker,'checker-value':checker_value} if checker else {}
+    with module.NativeBackend(runtime_root=runtime_root,checker_folder=checker_folder,cache=cache) as backend:
+        question=backend.load_question(source,question_name,options,authored_tests=tests)
+        records=[]
+        for seed in seeds:
+            backend.seed_record(question,seed)
+            records.append(backend.records[(seed,json.dumps(None))])
+        return {'schema':1,'identity':backend.identity,'question':backend.prepared_question,'records':records}

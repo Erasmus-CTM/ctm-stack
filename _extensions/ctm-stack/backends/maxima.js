@@ -38,7 +38,7 @@
           const testResults=request?.operation==='test-results';
           if(!item||!['grade','tests'].includes(item.type)||!Number.isSafeInteger(data.call)||data.call!==lastCheck+1||!python
             ||request?.backend!=='maxima'||(testResults
-              ?item.type!=='tests'||JSON.stringify(request.tests)!==JSON.stringify(lastRequest.question.authored_tests)
+              ?item.type!=='tests'||request.candidate?.id!==lastRequest.variant.id||request.candidate?.hash!==lastRequest.variant.hash||JSON.stringify(request.tests)!==JSON.stringify(lastRequest.question.authored_tests)
               :request.checker!==(lastRequest.question.checker||'')||request.variant?.id!==(lastRequest.variant.id||'seed='+lastRequest.variant.seed)
                 ||request.variant.n!==(lastRequest.variant.n??null)||request.variant.hash!==lastRequest.variant.hash)){
             retire(fault('Malformed or stale PythonChecker continuation'));return;

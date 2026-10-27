@@ -20,6 +20,7 @@
   const bool = x => x ? 'true' : 'false';
   const map = pairs => '["stack_map"' + pairs.map(([k, v]) => ',[' + quote(k) + ',' + v + ']').join('') + ']';
   const block = (locals, values) => 'block([' + [...new Set(locals)].join(',') + '],' + values.filter(Boolean).join(',') + ')';
+  const exact=expression=>'block([fpprintprec:0],string('+expression+'))';
   const evaluate = source => 'eval_string(' + quote(source) + ')';
   const aliases = Object.assign(Object.create(null), {ln: 'log', cosec: 'csc', cosech: 'csch',
     arcsin:'asin', arccos:'acos', arctan:'atan', arcsec:'asec', arccot:'acot', arccsc:'acsc',
@@ -146,9 +147,9 @@
       question = {...question, native: {...question.native, seed}};
       const c = question.native.compiled;
       const teacherSource=i=>c.inputTeachers?.[i.name]??i.teacher;
-      const teachers = map(question.inputs.map(i => [i.name, map([['source','string(' + teacherSource(i) + ')'], ['type',typeOf(teacherSource(i))],
+      const teachers = map(question.inputs.map(i => [i.name, map([['source',exact(teacherSource(i))], ['type',typeOf(teacherSource(i))],
         ['shape','if matrixp(' + teacherSource(i) + ') then matrix_size(' + teacherSource(i) + ') else []']]) ]));
-      const expression = map([['env',map(Object.keys(c.variables.references.write).map(n => [n,'string(' + name(n) + ')']))],
+      const expression = map([['env',map(Object.keys(c.variables.references.write).map(n => [n,exact(name(n))]))],
         ['teachers',teachers], ['texts',map(Object.entries(c.texts))],
         ['math',c.math], ['grading',c.grading],
         ['testInputs',block(['simp',...question.inputs.map(i => name(i.name))], [
@@ -311,7 +312,7 @@
       return result;
     }
     async tests(question, variant) {
-      const results = [];
+      const results = [];let authored;
       for (const [index,test] of question.qtests.entries()) {
         const actual = await this.grade(question,variant,variant.testInputs[index]);
         const checks = Object.entries(test.expected).map(([key,wanted]) => {
@@ -324,7 +325,8 @@
       if(question.authored_tests){
         const outcomes=[];
         const verdict=score=>score>=1-1e-9?'correct':score<=1e-9?'wrong':'partial';
-        for(const answers of variant.authoredInputs){
+        const candidate={id:variant.id,hash:variant.hash};
+        for(const [index,answers] of variant.authoredInputs.entries()){
           const grade=await this.grade(question,variant,answers),fields={};
           for(const input of question.inputs){
             if(!grade.inputs[input.name]?.valid){fields[input.name]={status:'invalid'};continue;}
@@ -335,16 +337,18 @@
               fields[input.name]={score,status:verdict(score)};
             }
           }
-          outcomes.push({status:grade.status==='graded'?verdict(grade.score):grade.status,score:grade.score,
+          outcomes.push({name:question.authored_tests[index].name,declaration:question.authored_tests[index],candidate,status:grade.status==='graded'?verdict(grade.score):grade.status,score:grade.score,
             fields,'answer-note':Object.values(grade.prts).map(p=>p.note).filter(Boolean).join(' | ')});
         }
         if(typeof this.checker!=='function')throw fault('Authored test expectation checker is missing','runtime');
         const verified=await this.checker({operation:'test-results',backend:'maxima',questionName:question.name,
-          tests:question.authored_tests,fields:question.inputs.map(i=>i.name),results:outcomes});
-        if(verified?.passed!==true||!Array.isArray(verified.results)||verified.results.length!==outcomes.length)throw fault('Malformed native authored-test verification','runtime');
+          candidate,tests:question.authored_tests,fields:question.inputs.map(i=>i.name),results:outcomes});
+        if(JSON.stringify(verified?.candidate)!==JSON.stringify(candidate)||verified?.passed!==true||!Array.isArray(verified.results)||verified.results.length!==outcomes.length)throw fault('Malformed native authored-test verification','runtime');
+        if(verified.results.some((row,index)=>row.name!==question.authored_tests[index].name||JSON.stringify(row.declaration)!==JSON.stringify(question.authored_tests[index])||JSON.stringify(row.candidate)!==JSON.stringify(candidate)))throw fault('Stale native authored-test verification','runtime');
+        authored=verified;
         for(const row of verified.results)results.push({...row,testcase:'authored: '+row.name,seed:variant.seed});
       }
-      return {passed:results.every(r => r.passed),results};
+      return {passed:results.every(r => r.passed),results,...(authored?{authored}:{})};
     }
   }
   const api = {Engine,learnerSource,casttext,quote,testAnswerNote,written};

@@ -173,11 +173,12 @@ def compile_tree(tree):
             'if length(%ERR)>1 then return(["CTM_PRT_ERROR","author",'+quote(where)+'])']
 
     if continuations:
-        fields=['ctm_score','ctm_penalty','ctm_feedback','ctm_path','ctm_notes','ctm_active',*tree.feedback_names]
+        fields=['ctm_score','ctm_penalty','ctm_feedback','ctm_path','ctm_notes','ctm_active']
         initialize=checked(tree.feedback_program,'feedback variables') if tree.feedback_program else ['false']
         restore=['simp:false','ctm_saved:eval_string(ctm_resume)',
                  *[key+':ctm_saved['+str(index+1)+']' for index,key in enumerate(fields)]]
-        body.append('if stringp(ctm_resume) then ('+','.join(restore)+') else ('+','.join(initialize)+')')
+        body.extend(initialize)
+        body.append('if stringp(ctm_resume) then ('+','.join(restore)+')')
     elif tree.feedback_program:
         body.extend(checked(tree.feedback_program,'feedback variables'))
     for node in ordered:
@@ -185,8 +186,8 @@ def compile_tree(tree):
             descriptor=node.predicate.descriptor
             if not isinstance(descriptor,dict) or set(descriptor)!={'sans','teacher','options'}:
                 raise ValueError('Invalid PythonChecker continuation descriptor')
-            saved='string(['+','.join(fields)+'])'
-            steps=['if not listp(ctm_reply) then return(["CTM_PYTHON",'+quote(node.id)+','+saved+',string('+descriptor['teacher']+')])',
+            saved='block([fpprintprec:0],string(['+','.join(fields)+']))'
+            steps=['if not listp(ctm_reply) then return(["CTM_PYTHON",'+quote(node.id)+','+saved+',block([fpprintprec:0],string('+descriptor['teacher']+'))])',
                    'ctm_test:[true,ctm_reply[1],"",ctm_reply[2]]','ctm_reply:false']
         else:
             test=node.predicate;identifier(test.name)

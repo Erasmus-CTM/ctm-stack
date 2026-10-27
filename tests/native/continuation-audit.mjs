@@ -11,12 +11,12 @@ try{
   for(const row of fixture.rows){
     const compiled=row.compiled;
     const yes=row.verdicts.flatMap((v,n)=>v?[n]:[]).join(',');
-    const program=call=>'block([ans:1,ctm_verdicts:{'+yes+'}],local(ATAlgEquiv,ctm_prt_audit),'+
+    const program=call=>'block([ans:1,fpprintprec:12,ctm_verdicts:{'+yes+'}],local(ATAlgEquiv,ctm_prt_audit),'+
       'ATAlgEquiv(s,t):=[true,member(s,ctm_verdicts),string(s),""],'+compiled.def+','+call+')';
     let raw=await session.evaluate(program(compiled.sig)),calls=0;const seen=new Set();
     while(raw[0]==='CTM_PYTHON'){
-      assert.ok(row.pythonNodes.includes(raw[1]));assert.equal(raw[3],fixture.big);
-      assert.ok(raw[2].includes(fixture.big),'Exact feedback variable must survive serialization');
+      assert.ok(row.pythonNodes.includes(raw[1]));assert.equal(raw[3],row.expectedTans);
+      assert.ok(!raw[2].includes(row.expectedTans),'Feedback variables must be re-evaluated, never restored from display text');
       assert.ok(!seen.has(raw[1]),'A suspended node must run once');seen.add(raw[1]);calls++;
       assert.ok(calls<=row.pythonNodes.length);
       const call='ctm_prt_audit(ans,'+quote(raw[2])+',['+String(row.verdicts[Number(raw[1])])+',""])';

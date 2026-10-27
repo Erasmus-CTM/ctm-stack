@@ -88,6 +88,8 @@ jobs:
       - name: Native preparation with custom and library PythonCheckers
         run: |
           python tests/native/python-integration.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --sources _ctm-checkers-source/examples/stack --output test-results/native-questions/python-integration.json
+      - name: Three Python nodes and ten tests stay within the per-seed budget
+        run: python tests/native/python-budget.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --sources _ctm-checkers-source/examples/stack --output test-results/native-questions/python-budget.json
       - name: Render the actual mixed-backend Quarto card
         run: |
           python tests/native/render-card.py --libs "$CTM_LIBS_EXTENSION" --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --xml _ctm-checkers-source/examples/stack/polynomial-expansion.xml --output "$RUNNER_TEMP/native-card-project"

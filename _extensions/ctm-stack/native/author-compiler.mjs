@@ -11,6 +11,7 @@ const quote=s=>'"'+String(s).replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'"';
 const bool=x=>x?'true':'false';
 const map=pairs=>'["stack_map"'+Object.entries(pairs).map(([k,v])=>',['+quote(k)+','+v+']').join('')+']';
 const scope=(locals,steps)=>'block(['+[...new Set(locals)].join(',')+'],'+steps.filter(Boolean).join(',')+')';
+const exact=expression=>'block([fpprintprec:0],string('+expression+'))';
 const ec=(expression,where)=>'_EC(errcatch('+expression+'),'+quote(where)+')';
 const functions=new Set(('sqrt sin cos tan sec csc cot sinh cosh tanh sech csch coth exp log ln abs '
   +'asin acos atan asec acsc acot asinh acosh atanh asech acsch acoth cosec cosech gcd mod matrix '
@@ -217,7 +218,7 @@ export function compileIR(question){
       if(n.name==='latex'||n.name==='raw'){
         const text=n.children.map(c=>c.value).join(''),parsed=operand(text,where+'/'+n.name),value=parsed.text;
         parsed.read.forEach(key=>readOutput.add(key));
-        mathOutput.push('string('+value+')');
+        mathOutput.push(exact(value));
         if(n.name==='raw')return scope(['ctm_text'],[ec('ctm_text:'+value,where+'/raw'),'string(ctm_text)']);
         const inMath=mathMode(source.slice(0,n.position.start.offset));
         return scope(['_ct2_tmp','_ct2_simp'],['_ct2_simp:simp','_ct2_tmp:'+quote(text),ec('_ct2_tmp:'+value,where+'/latex'),
@@ -229,7 +230,7 @@ export function compileIR(question){
         let index=0;const branches=lengths.map(length=>{const nodes=n.children.slice(index,index+length);index+=length;return list(nodes);});
         let expression=branches.length>tests.length?branches.at(-1):'""';
         for(let at=tests.length-1;at>=0;at--){
-          const parsed=operand(tests[at].value,where+'/if'),condition=parsed.text;parsed.read.forEach(key=>readOutput.add(key));mathOutput.push('string('+condition+')');
+          const parsed=operand(tests[at].value,where+'/if'),condition=parsed.text;parsed.read.forEach(key=>readOutput.add(key));mathOutput.push(exact(condition));
           expression='if ('+condition+') then '+branches[at]+' else '+expression;
         }
         return expression;
@@ -257,8 +258,8 @@ export function compileIR(question){
       for(const branch of ['true','false'])value[branch+'Feedback']=node[branch].feedback?.trim()
         ?casttext(' '+node[branch].feedback,where+'/'+branch+'feedback',feedbackMath,required):null;
       parsedNodes[node.name]=value;
-      snapshots[node.name]=map({student:'string('+student.text+')',teacher:'string('+teacher.text+')',
-        options:node.test==='PythonChecker'?quote(node.options):options.text?'string('+options.text+')':'""'});
+      snapshots[node.name]=map({student:exact(student.text),teacher:exact(teacher.text),
+        options:node.test==='PythonChecker'?quote(node.options):options.text?exact(options.text):'""'});
     }
     prts[prt.name]={feedbackStatement:fv.statement,feedbackNames:fv.names,required:inputs.filter(n=>required.has(n)),nodes:parsedNodes,defaultPenalty:question.penalty};
     grading[prt.name]=scope([...fv.names,'simp'],['simp:'+bool(prt.autosimplify),fv.statement,'simp:false',map(snapshots)]);
@@ -274,12 +275,12 @@ export function compileIR(question){
     // native Maxima below; this branch performs no mathematical calculation.
     if(/^[+-]?(?:\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(value.trim()))return [key,quote(value.trim())];
     let text;try{text=operand(value,'question test').text;}catch(error){return [key,quote(value)];}
-    return [key,'string('+text+')'];
+    return [key,exact(text)];
   })))).join(',')+']';
   const authoredInputs='['+(question.native_test_inputs||[]).map(row=>map(Object.fromEntries(Object.entries(row).map(([key,value])=>{
     if(Object.hasOwn(value,'raw'))return [key,quote(value.raw)];
     const source=operand(value.expression,'authored test').text;
-    return [key,/^[+-]?(?:\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(source.trim())?quote(source.trim()):'string('+source+')'];
+    return [key,/^[+-]?(?:\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(source.trim())?quote(source.trim()):exact(source)];
   })))).join(',')+']';
   return {schema:1,variables,prts,texts,statics,inputTeachers,answerTests:data.answerTests,feedbackNames:[...feedbackNames],math:'flatten(['+math.join(',')+'])',grading:map(grading),testInputs,
     authoredInputs,language:{schema:1,stackRevision:data.stackRevision,language:'en',messages:data.messages,latexReplacements:latexReplacements()}};

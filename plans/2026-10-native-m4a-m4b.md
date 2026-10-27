@@ -139,3 +139,25 @@ now bypasses CASText substitutions and escapes exactly once. The regression
 checks nested roots, literal markers, angle brackets and existing entities;
 real installed-card acceptance retains the literal marker. This is our adapter
 finding, not an upstream compiler report.
+
+## Pre-merge independent review fixes
+
+Provider records are checked against the active backend and seed; backend moves
+preserve decision history and require new approval without replaying foreign
+CAS tapes. Native backends receive parsed authored tests and must supply named
+per-candidate evidence. Result verification binds names, full declarations and
+the actual candidate id/hash. Resource admission precedes history writes.
+
+String-named evaluator/random substitutions are rejected. Native question and
+feedback variables are re-evaluated rather than restored from printed text;
+the fpprintprec-12 float regression passes. Host PythonChecker execution now
+uses one supervised process per question with fresh H1 namespaces. Its actual
+Python and SymPy versions are recorded. A three-node/ten-test fixture runs 47
+checker calls per seed; local seed samples were 5.87 s and 5.32 s (30 s budget).
+CI records its own raw samples as artifacts, outside the repositories.
+
+The editable STACK revision is stack-pin.json; browser pin and provenance are
+generated. NOTICE identifies STACK-derived files and the requested combined
+SPDX notices are present. Host CPython checker code is explicitly trusted and
+unsandboxed, as required by H1. AC retains merge-commit-only merge ownership:
+ctm-checkers #42 → #43, then ctm-stack #39 → #40. No tag/release or branch deletion.
