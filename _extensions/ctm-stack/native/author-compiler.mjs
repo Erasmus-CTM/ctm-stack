@@ -29,10 +29,11 @@ const constants=new Map([['e','%e'],['pi','%pi'],['Pi','%pi'],['PI','%pi'],['i',
 // audited direct calls, never as callbacks hidden in a collection or variable.
 const syntaxFunctions=new Set('map sort apply subst substinpart ev at lambda block if makelist sum product'.split(' '));
 const callbacks=new Set([...functions].filter(name=>!syntaxFunctions.has(name)));
+const evaluationFlags=new Set(['simp','numer','nouns','noeval']);
 function fail(where,message){throw new Error(where+': '+message);}
 function safeName(value,where,allowFunction=false){
   if(typeof value!=='string'||!/^[A-Za-z][A-Za-z0-9_]*$/.test(value)||value.startsWith('ctm_')||!allowFunction&&constants.has(value)
-      ||!allowFunction&&(functions.has(aliases[value]||value)||data.security[value]?.function)) fail(where,'reserved or unsupported native name '+value);
+      ||!allowFunction&&(functions.has(aliases[value]||value)||evaluationFlags.has(value)||data.security[value]?.function)) fail(where,'reserved or unsupported native name '+value);
   return value;
 }
 function children(node){
@@ -81,7 +82,7 @@ function analyse(node,source,where,random=false){
       }
       if(target==='block'&&n.args[0]?.kind==='MPList')for(const param of n.args[0].items){if(param.kind!=='MPIdentifier')fail(where,'unsupported block binding');safeName(param.value,where);}
       if(target==='ev')for(const flag of n.args.slice(1)){
-        if(flag.kind!=='MPIdentifier'||!callbacks.has(flag.value)&&!['simp','numer','nouns','noeval'].includes(flag.value))fail(where,'unsupported native evaluation flag');
+        if(flag.kind!=='MPIdentifier'||!callbacks.has(flag.value)&&!evaluationFlags.has(flag.value))fail(where,'unsupported native evaluation flag');
       }
       if(target==='subst'){
         if(n.args.length!==3)fail(where,'unsupported substitution rules: use subst(new,old,expression)');

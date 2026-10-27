@@ -91,6 +91,8 @@ test('function authority uses an explicit allowlist including every callback pos
     `a:map(lambda([sin],map(sin,[${lisp}])),[eval_string_lisp]);`,
     `a:makelist(map(sin,[${lisp}]),sin,[eval_string_lisp]);`,
     `a:'map(sin,[1]);`,
+    `numer:eval_string_lisp;a:ev(${lisp},numer);`,
+    `a:map(lambda([numer],ev(${lisp},numer)),[eval_string_lisp]);`,
   ])assert.throws(()=>compileIR(question('{@a@}',source)),undefined,source);
 });
 
