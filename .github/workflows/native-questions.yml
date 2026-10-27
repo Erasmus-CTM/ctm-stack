@@ -58,6 +58,7 @@ jobs:
         run: |
           python -m pytest -q tests/native/test_prt_compiler.py tests/native/test_compiler_frontend.py
           node tests/native/author-compiler.test.mjs
+          node tests/native/pin.test.mjs
           node tests/native/card-adapter.test.mjs
           node tests/native/question-engine.test.mjs
       - name: Independent Python emitter and upstream adversarial audit
