@@ -28,6 +28,8 @@
   const calls = new Set(('sqrt sin cos tan sec csc cot sinh cosh tanh sech csch coth exp log abs ' +
     'asin acos atan asec acsc acot asinh acosh atanh asech acsch acoth gcd mod matrix').split(' '));
   const constants = new Map([['pi','%pi'],['%pi','%pi'],['e','%e'],['%e','%e'],['i','%i'],['%i','%i']]);
+  // Convert native display vocabulary, preserving quoted string contents.
+  const written=text=>text.replace(/"(?:\\.|[^"\\])*"|%pi\b|%e\b|%i\b|\bnoun(?:and|or|not)\b/g,token=>token.startsWith('"')?token:token.replace(/^%/,'').replace(/^noun/,''));
   function learnerSource(tree) {
     let count = 0;
     function visit(n, depth) {
@@ -80,7 +82,7 @@
   function inputHTML(token, question, teachers) {
     const channel = token[1], key = token[2], safe = escape(key);
     const input = question.inputs.find(i => i.name === key);
-    if (channel === 'feedback' && question.prts.some(p => p.name === key)) return '<span class="stack-feedback" data-name="' + safe + '"></span>';
+    if (channel === 'feedback' && (question.prts.some(p => p.name === key)||key==='checker'&&question.checker)) return '<span class="stack-feedback" data-name="' + safe + '"></span>';
     if (!input) throw fault('Unknown native CASText input: ' + key);
     if (channel === 'validation') return '<span class="stack-validation" data-name="' + safe + '" aria-live="polite"></span>';
     if (channel !== 'input') throw fault('Unsupported native CASText input channel: ' + channel);
@@ -111,7 +113,7 @@
     return true;
   }
   class Engine {
-    constructor(evaluateProgram, admission) { this.evaluateProgram = evaluateProgram; this.admission = admission; }
+    constructor(evaluateProgram, admission, checker) { this.evaluateProgram = evaluateProgram; this.admission = admission; this.checker=checker; }
     check(question, variant) {
       if (!question || question.native?.schema !== 1 || question.native.stackRevision !== STACK || !/^[a-f0-9]{64}$/.test(question.native.questionHash)) throw fault('Malformed native question plan');
       if (variant && (variant.schema !== 1 || variant.questionHash !== question.native.questionHash || !Number.isInteger(variant.seed) || variant.seed < 1 || variant.seed > 2147483647)) throw fault('Stale native variant plan');
@@ -124,11 +126,12 @@
         'assume_real:' + bool(question.assumereal), '%ERR:["stack_map"]', '%NOTES:["stack_map"]', '%FEEDBACK:["stack_map"]',
         '%stmt:"ctm-question"', '_INPUT_STRING:["stack_map"]', ...question.inputs.map(i => name(i.name)),
         ...Object.keys(c.variables.references.write).map(name)];
-      const setup = ['local(' + Object.values(c.prts).map(p => {
+      const functions=Object.values(c.prts).map(p => {
         const identifier=p.function||p.sig.split('(')[0];
         if(!/^[A-Za-z][A-Za-z0-9_]*$/.test(identifier))throw fault('Malformed compiled PRT function');
         return identifier;
-      }).join(',') + ')'];
+      });
+      const setup = functions.length?['local('+functions.join(',')+')']:[];
       if (variant) {
         // Recreate native values/structure from the owned seed. Printed env
         // text is evidence for the checker, never a native state checkpoint.
@@ -147,10 +150,17 @@
         ['teachers',teachers], ['texts',map(Object.entries(c.texts))],
         ['math',c.math], ['grading',c.grading],
         ['testInputs',block(['simp',...question.inputs.map(i => name(i.name))], [
-          ...question.inputs.map(i => name(i.name) + ':' + teacherSource(i)), 'simp:false', c.testInputs])]]);
+          ...question.inputs.map(i => name(i.name) + ':' + teacherSource(i)), 'simp:false', c.testInputs])],
+        ['authoredInputs',block(['simp',...question.inputs.map(i => name(i.name))],[
+          ...question.inputs.map(i => name(i.name)+':'+teacherSource(i)),'simp:false',c.authoredInputs||'[]'])]]);
       const prepared = await this.evaluateProgram(this.program(question, null, [expression]));
       const variant = {schema:1, questionHash:question.native.questionHash, seed, env:prepared.env,
-        teachers:prepared.teachers, testInputs:prepared.testInputs, approval:{math:prepared.math,grading:prepared.grading}};
+        teachers:prepared.teachers, testInputs:prepared.testInputs, authoredInputs:prepared.authoredInputs,
+        approval:{math:prepared.math,grading:prepared.grading}};
+      variant.testInputs=prepared.testInputs.map((row,index)=>Object.fromEntries(Object.entries(row).map(([key,value])=>
+        [key,question.qtests[index].inputs[key]?.startsWith('RAW:')?value:written(value)])));
+      variant.authoredInputs=prepared.authoredInputs.map((row,index)=>Object.fromEntries(Object.entries(row).map(([key,value])=>
+        [key,Object.hasOwn(question.native_test_inputs[index][key],'raw')?value:written(value)])));
       for (const [field, value] of Object.entries(prepared.texts)) {
         const target = {questiontext:'question_html', generalfeedback:'generalfeedback_html',
           specificfeedback:'specificfeedback_html', questionnote:'questionnote_html'}[field];
@@ -228,9 +238,37 @@
       const expressions = ['simp:false', ...Object.entries(admitted).map(([k,v]) => name(k) + ':' + evaluate(v.source)),
         '_INPUT_STRING:' + map(Object.entries(admitted).map(([k,v]) => [k,quote(v.raw)])),
         map(Object.entries(c.prts).map(([k,p]) => [k,p.sig]))];
-      const results = await this.evaluateProgram(this.program(question, variant, expressions));
+      let results;
+      const invalid=(result,key)=>{
+        for(const detail of Object.values(validation.inputs))delete detail.assessment;
+        if(key)Object.assign(validation.inputs[key],{valid:false,feedback:result.feedback||'Invalid answer'});
+        const prts=key?{}:{checker:{score:0,penalty:0,feedback:escape(result.feedback||'Invalid answer'),notes:[],answerNotes:[],note:'',path:[]}};
+        return {status:'invalid',score:0,inputs:validation.inputs,prts,feedback:result.feedback||'Invalid answer'};
+      };
+      if(Object.values(c.prts).some(p=>p.continuations)){
+        results={};
+        const setup=expressions.slice(0,-1);
+        for(const [name,p] of Object.entries(c.prts)){
+          let raw=await this.evaluateProgram(this.program(question,variant,[...setup,p.sig]));
+          let calls=0;
+          while(Array.isArray(raw)&&raw[0]==='CTM_PYTHON'){
+            const descriptor=p.continuations?.[raw[1]];
+            if(!descriptor||typeof raw[2]!=='string'||typeof raw[3]!=='string'||++calls>Object.keys(p.continuations).length)throw fault('Malformed PythonChecker continuation','runtime');
+            const response=await this.python(question,variant,admitted,{sans:descriptor.sans,tans:raw[3],options:descriptor.options});
+            const node=question.prts.find(tree=>tree.name===name).nodes.find(n=>n.name===raw[1]);
+            if(!response.valid)return invalid(node.quiet?{...response,feedback:'Invalid answer'}:response,descriptor.sans);
+            if(!node.quiet)for(const [key,value] of Object.entries(response.assessment||{}))validation.inputs[key].assessment=value;
+            const feedback=node.quiet?'':escape(response.feedback||'');
+            const call=p.function+'('+[...p.callArguments,quote(raw[2]),'['+bool(response.status==='correct')+','+quote(feedback)+']'].join(',')+')';
+            raw=await this.evaluateProgram(this.program(question,variant,[...setup,call]));
+          }
+          results[name]=raw;
+        }
+      }else results = await this.evaluateProgram(this.program(question, variant, expressions));
       const prts = {}; let score = 0;
-      const total = question.prts.reduce((sum,p) => sum + p.value, 0);
+      const weighted=[...question.prts];
+      if(question.checker)weighted.push({name:'checker',value:question.checker_value||1});
+      const total = weighted.reduce((sum,p) => sum + p.value, 0);
       for (const prt of question.prts) {
         const raw = results[prt.name];
         if(Array.isArray(raw)&&raw[0]==='CTM_PRT_ERROR')throw fault('Native response tree failed: '+raw[2],raw[1]==='internal'?'runtime':'author');
@@ -241,14 +279,34 @@
           feedback:casttext(feedback,c), notes, answerNotes, note:notes.join(' | '), path};
         score += total ? fraction * prt.value / total : 0;
       }
+      if(question.checker){
+        const result=await this.python(question,variant,admitted);
+        if(!result.valid)return invalid(result);
+        for(const [key,value] of Object.entries(result.assessment||{}))validation.inputs[key].assessment=value;
+        prts.checker={score:result.score,penalty:0,feedback:escape(result.feedback||''),notes:[],answerNotes:[],note:'',path:[],show_score:result.show_score};
+        score+=result.score*(question.checker_value||1)/total;
+      }
       // Six equal full-mark PRTs otherwise sum to 0.9999999999999999 in
       // JavaScript, making the common card display "partial, 100%". Preserve
       // exact full-mark semantics independently of weighted float arithmetic.
       if(total>0){
-        const full=question.prts.every(p=>p.value===0||prts[p.name].score===1);
+        const full=weighted.every(p=>p.value===0||prts[p.name].score===1);
         score=full?1:Math.min(1-Number.EPSILON,Math.max(0,score));
       }
       return {status:'graded',score,inputs:validation.inputs,prts,feedback:Object.values(prts).map(p => p.feedback).filter(Boolean).join(' ')};
+    }
+    async python(question,variant,admitted,node){
+      if(typeof this.checker!=='function')throw fault('Python checker runtime is missing','runtime');
+      const request={checker:question.checker||'',questionName:question.name,backend:'maxima',
+        inputs:Object.fromEntries(question.inputs.map(i=>[i.name,{type:i.type,raw:admitted[i.name].raw,canonical:admitted[i.name].canonical}])),
+        variables:Object.fromEntries(Object.entries(variant.env).map(([k,v])=>[k,written(v)])),
+        teacher:Object.fromEntries(Object.entries(variant.teachers).map(([k,v])=>[k,written(v.source)])),
+        assumptions:{positive:!!question.assumepositive,real:!!question.assumereal},
+        variant:{n:variant.n??null,id:variant.id||'seed='+variant.seed,hash:variant.hash}};
+      if(node)request.node={...node,tans:written(node.tans)};
+      const result=await this.checker(request);
+      if(!result||typeof result.valid!=='boolean'||result.valid&&(!Number.isFinite(result.score)||result.score<0||result.score>1))throw fault('Malformed Python checker result','runtime');
+      return result;
     }
     async tests(question, variant) {
       const results = [];
@@ -261,10 +319,33 @@
         });
         results.push({testcase:test.testcase,seed:variant.seed,passed:checks.every(c => c.passed),checks,actual});
       }
+      if(question.authored_tests){
+        const outcomes=[];
+        const verdict=score=>score>=1-1e-9?'correct':score<=1e-9?'wrong':'partial';
+        for(const answers of variant.authoredInputs){
+          const grade=await this.grade(question,variant,answers),fields={};
+          for(const input of question.inputs){
+            if(!grade.inputs[input.name]?.valid){fields[input.name]={status:'invalid'};continue;}
+            const direct=question.prts.filter(p=>p.nodes.every(n=>n.student===input.name));
+            const weight=direct.reduce((s,p)=>s+p.value,0);
+            if(weight&&grade.status==='graded'){
+              const score=direct.reduce((s,p)=>s+p.value*grade.prts[p.name].score,0)/weight;
+              fields[input.name]={score,status:verdict(score)};
+            }
+          }
+          outcomes.push({status:grade.status==='graded'?verdict(grade.score):grade.status,score:grade.score,
+            fields,'answer-note':Object.values(grade.prts).map(p=>p.note).filter(Boolean).join(' | ')});
+        }
+        if(typeof this.checker!=='function')throw fault('Authored test expectation checker is missing','runtime');
+        const verified=await this.checker({operation:'test-results',backend:'maxima',questionName:question.name,
+          tests:question.authored_tests,fields:question.inputs.map(i=>i.name),results:outcomes});
+        if(verified?.passed!==true||!Array.isArray(verified.results)||verified.results.length!==outcomes.length)throw fault('Malformed native authored-test verification','runtime');
+        for(const row of verified.results)results.push({...row,testcase:'authored: '+row.name,seed:variant.seed});
+      }
       return {passed:results.every(r => r.passed),results};
     }
   }
-  const api = {Engine,learnerSource,casttext,quote,testAnswerNote};
+  const api = {Engine,learnerSource,casttext,quote,testAnswerNote,written};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.CTMMaximaQuestions = api;
 })(globalThis);

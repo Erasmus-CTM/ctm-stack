@@ -209,7 +209,7 @@ export function compileIR(question){
       if(n.kind==='CTPRaw')return literal(n.value);
       if(n.kind==='CTPIOBlock'){
         if(!['input','validation','feedback'].includes(n.channel))fail(where,'unsupported IO channel '+n.channel);
-        if(n.channel==='feedback'?!question.prts.some(p=>p.name===n.variable):!inputs.includes(n.variable))fail(where,'unknown IO target '+n.variable);
+        if(n.channel==='feedback'?!question.prts.some(p=>p.name===n.variable)&&!(n.variable==='checker'&&question.checker):!inputs.includes(n.variable))fail(where,'unknown IO target '+n.variable);
         return '["ioblock",'+quote(n.channel)+','+quote(n.variable)+']';
       }
       if(n.kind!=='CTPBlock')fail(where,'unsupported CASText node '+n.kind);
@@ -257,7 +257,8 @@ export function compileIR(question){
       for(const branch of ['true','false'])value[branch+'Feedback']=node[branch].feedback?.trim()
         ?casttext(' '+node[branch].feedback,where+'/'+branch+'feedback',feedbackMath,required):null;
       parsedNodes[node.name]=value;
-      snapshots[node.name]=map({student:'string('+student.text+')',teacher:'string('+teacher.text+')',options:options.text?'string('+options.text+')':'""'});
+      snapshots[node.name]=map({student:'string('+student.text+')',teacher:'string('+teacher.text+')',
+        options:node.test==='PythonChecker'?quote(node.options):options.text?'string('+options.text+')':'""'});
     }
     prts[prt.name]={feedbackStatement:fv.statement,feedbackNames:fv.names,required:inputs.filter(n=>required.has(n)),nodes:parsedNodes,defaultPenalty:question.penalty};
     grading[prt.name]=scope([...fv.names,'simp'],['simp:'+bool(prt.autosimplify),fv.statement,'simp:false',map(snapshots)]);
@@ -275,6 +276,11 @@ export function compileIR(question){
     let text;try{text=operand(value,'question test').text;}catch(error){return [key,quote(value)];}
     return [key,'string('+text+')'];
   })))).join(',')+']';
+  const authoredInputs='['+(question.native_test_inputs||[]).map(row=>map(Object.fromEntries(Object.entries(row).map(([key,value])=>{
+    if(Object.hasOwn(value,'raw'))return [key,quote(value.raw)];
+    const source=operand(value.expression,'authored test').text;
+    return [key,/^[+-]?(?:\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(source.trim())?quote(source.trim()):'string('+source+')'];
+  })))).join(',')+']';
   return {schema:1,variables,prts,texts,statics,inputTeachers,answerTests:data.answerTests,feedbackNames:[...feedbackNames],math:'flatten(['+math.join(',')+'])',grading:map(grading),testInputs,
-    language:{schema:1,stackRevision:data.stackRevision,language:'en',messages:data.messages,latexReplacements:latexReplacements()}};
+    authoredInputs,language:{schema:1,stackRevision:data.stackRevision,language:'en',messages:data.messages,latexReplacements:latexReplacements()}};
 }

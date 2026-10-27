@@ -5,7 +5,16 @@
 importScripts('stack-pin.js','direct-runtime.js','browser-package.js','feedback.js','question-engine.js');
 const send=self.postMessage.bind(self);
 let configured=false,engine,session,question,variant,queue=Promise.resolve();
+let active=0,sequence=0;
+const checks=new Map();
+function python(request){
+  return new Promise((resolve,reject)=>{
+    const call=++sequence;checks.set(call,{resolve,reject,id:active});
+    send({id:active,type:'python-check',call,request});
+  });
+}
 async function handle(message){
+  active=message.id;
   try{
     let result;
     if(message.type==='init'){
@@ -17,7 +26,7 @@ async function handle(message){
       if(!self.CTMCheckersStack?.admission||CTMCheckersStack.sha256!==message.question?.native?.checkerWheelSha256)throw new Error('Native plan and shared admission wheel differ');
       question=message.question;variant=message.variant;
       if(question.native.packageHash!==message.packageHash)throw new Error('Native plan and runtime package differ');
-      engine=new CTMMaximaQuestions.Engine(expression=>session.evaluate(expression),CTMCheckersStack.admission);
+      engine=new CTMMaximaQuestions.Engine(expression=>session.evaluate(expression),CTMCheckersStack.admission,python);
       engine.check(question,variant);
       session=await CTMMaximaPackage.open(message);
       self.onmessage=receive;
@@ -34,5 +43,13 @@ async function handle(message){
     send({id:message.id,ok:false,error:{kind,code:error.code||'maxima-card',message:String(error.message||error)},poisoned:kind==='runtime'});
   }
 }
-function receive({data}){queue=queue.then(()=>handle(data));}
+function receive({data}){
+  if(data?.type==='python-result'){
+    const check=checks.get(data.call);
+    if(!check||check.id!==data.id||data.id!==active)return;
+    checks.delete(data.call);
+    if(data.ok===true)check.resolve(data.result);
+    else check.reject(Object.assign(new Error(data.error?.message||'Python checker failed'),data.error||{kind:'runtime'}));
+  }else queue=queue.then(()=>handle(data));
+}
 self.onmessage=receive;

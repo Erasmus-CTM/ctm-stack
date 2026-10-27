@@ -177,5 +177,6 @@ The old `python-checkers:` filename, `CHECKERS` registry and
 `ctm_checkers.stack.checker_api` module have been removed. Move custom logic
 into `checker:` and change its arguments to `response, symbols`. Supplied
 matrix predicates now come from the shared library without a filename.
-The SymPy backend implements this contract now. Maxima's future continuation
-will call the same checker with validated written values.
+Both backends implement this contract. Maxima calls the same checker with
+validated written values, while native Maxima owns question preparation and
+compiled response-tree routing. See the [native guide](native-authoring.qmd).

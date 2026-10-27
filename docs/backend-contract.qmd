@@ -58,8 +58,10 @@ Maxima seals one question and variant into each worker. Switching variants or
 cards starts a fresh native heap. Loading has a 180-second deadline; individual
 calculations have a 30-second deadline. Stop and internal failure retire the
 worker without replaying the failed request. Its protocol exposes validation,
-grading and question tests, never raw Maxima/Lisp evaluation. Maxima does not
-load Pyodide or use the page's Python interpreter.
+grading and question tests, never raw Maxima/Lisp evaluation. Ordinary native questions do not load Pyodide. PythonChecker questions use a
+private unpublished Python worker, warmed before calculation and retired with
+the native worker. Only sealed `stack.check` and declarative-test result
+verification calls cross that boundary; the page's interpreter is untouched.
 
 SymPy starts `CTMWorker` with `publish: false`, then loads SymPy and the STACK
 checker part from the page. It never assigns or stops `mainPyodide`. Its

@@ -15,6 +15,7 @@ import subprocess
 import tempfile
 import threading
 import time
+import sys
 
 from ctm_variants.model import candidate, snapshot, classify, digest, VariantError
 
@@ -25,6 +26,7 @@ compiler=importlib.util.module_from_spec(spec);spec.loader.exec_module(compiler)
 
 class NativeBackend:
     id='maxima'
+    supports_authored_tests=True
 
     def __init__(self, *, runtime_root=None, checker_folder=None, cache=None):
         self.runtime_root=Path(runtime_root or os.environ.get('CTM_STACK_NATIVE_PACKAGE',HERE/'native/runtime-v3')).resolve()
@@ -53,10 +55,12 @@ class NativeBackend:
             self.errors.close();del self.errors
 
     def load_question(self,source,question_name,options,*,authored_tests=None):
-        if authored_tests is not None:raise VariantError('maxima backend does not support authored tests until M4d')
-        if any(k in options for k in ['checker','checker-value','tests','python-checkers']):
-            raise VariantError('Native Python/declarative continuation is a separate capability (M4d)')
-        question,self.source_hash=compiler.model(source,question_name)
+        tests=authored_tests
+        if tests is None and 'tests' in options:
+            from ctm_checkers.math_exercise.authored import _tests
+            tests=_tests(options['tests'])
+        question,self.source_hash=compiler.model(source,question_name,checker=options.get('checker'),
+            checker_value=float(options.get('checker-value',1)),tests=tests)
         self.source_question=question
         self._open(question)
         return question
@@ -90,8 +94,14 @@ class NativeBackend:
                     return
         self.reader=threading.Thread(target=read,daemon=True);self.reader.start()
         compiled=compiler.compile_model(question)
+        descriptor=json.loads((self.checker_folder/'checkers.json').read_text())
+        base=(self.checker_folder/descriptor['wheel']).resolve()
+        if not base.is_relative_to(self.checker_folder) or compiler.sha(base.read_bytes())!=descriptor['sha256']:
+            raise VariantError('Checker wheel differs from its canonical descriptor')
         reply=self._call({'request':dict(schema=1,question=question,compiled=compiled,sourceSha256=self.source_hash,
             runtimeRoot=str(self.runtime_root),admissionRoot=self.temporary.name,checkerWheelSha256=wheel_hash,
+            python={'executable':sys.executable,'paths':[str(base),str(wheel)],
+                    'baseWheelSha256':descriptor['sha256'],'version':list(sys.version_info[:3])},
             cache=str(self.cache) if self.cache else None)},timeout=180)
         self.prepared_question=reply['question'];self.identity=reply['identity']
 
@@ -115,19 +125,32 @@ class NativeBackend:
         return reply
 
     def seed_record(self,question,seed,timeout=30,*,identity=None):
-        if identity is not None:
-            raise VariantError('Native Python checker identity continuation is a separate capability (M4d)')
-        if question!=self.source_question:
-            raise VariantError('Native compiler question changed during resolution')
-        if type(seed) is not int or not 1<=seed<=2147483647:
-            raise VariantError('Native seed must be an integer from 1 to 2147483647')
-        if seed not in self.records:
-            self.records[seed]=self._call({'type':'seed','seed':seed},timeout)['record']
-        row=self.records[seed];plan=row['plan']
+        if question!=self.source_question:raise VariantError('Native compiler question changed during resolution')
+        if type(seed) is not int or not 1<=seed<=2147483647:raise VariantError('Invalid native seed')
+        key=(seed,json.dumps(identity,sort_keys=True))
+        if key not in self.records:
+            deadline=time.monotonic()+timeout
+            remaining=lambda:max(.01,deadline-time.monotonic())
+            prepared=self._call({'type':'prepare-seed','seed':seed},remaining())['record']
+            draft=self._candidate(question,prepared)
+            assigned=identity or dict(n=None,id=draft['id'],hash=draft['hash'])
+            if assigned.get('id')!=draft['id'] or assigned.get('hash')!=draft['hash']:
+                raise VariantError('Assigned native candidate identity is stale')
+            row=self._call({'type':'seed','seed':seed,'identity':assigned},remaining())['record']
+            if self._candidate(question,row)['hash']!=draft['hash']:
+                raise VariantError('Native preparation changed before candidate tests')
+            if question.get('authored_tests'):
+                row['tests']['authored']=copy.deepcopy(row['tests']['qtests']['authored'])
+            self.records[key]=row
+        return self._candidate(question,self.records[key])
+
+    def _candidate(self,question,row):
+        seed=row['seed'];plan=row['plan']
         grading={k:copy.deepcopy(v) for k,v in question.items() if k not in {
-            'name','variables','questiontext','generalfeedback','specificfeedback','questionnote','deployedseeds','inputs','prts','qtests'}}
+            'name','variables','questiontext','generalfeedback','specificfeedback','questionnote','deployedseeds','inputs','prts','qtests','authored_tests','native_test_inputs'}}
         grading.update(component='ctm-stack',backend='maxima',stackRevision=self.prepared_question['native']['stackRevision'],
             runtimeHash=self.identity['packageHash'],compilerHash=self.identity['compilerHash'],admissionWheelHash=self.identity['checkerWheelSha256'])
+        if self.prepared_question['native']['pythonGrading']:grading['python']=self.identity['python']
         grading['inputs']=[]
         for inp in question['inputs']:
             item={k:copy.deepcopy(v) for k,v in inp.items() if k not in {'boxsize','syntaxhint','showvalidation'}}
@@ -144,7 +167,7 @@ class NativeBackend:
         note=html.unescape(re.sub('<[^>]*>','',plan.get('questionnote_html',''))).strip()
         teacher={k:v['source'] for k,v in plan['teachers'].items()}
         return candidate('seed='+str(seed),snapshot(plan['approval']['math'],teacher,grading,plan['env']),note=note,
-            data={'backend':'maxima','plan':copy.deepcopy(plan),'teacherInputs':row['teacherInputs']},tests=copy.deepcopy(row['tests']))
+            data={'backend':'maxima','plan':copy.deepcopy(plan),'teacherInputs':row.get('teacherInputs',{})},tests=copy.deepcopy(row.get('tests',{})))
 
     def propose(self,question,count=25,*,start=1,retained=(),attempt_limit=5000,elapsed_limit=120,resolve_seed=None):
         deadline=time.monotonic()+elapsed_limit;records=[];skipped=[]
@@ -173,10 +196,18 @@ class NativeBackend:
         variants=[]
         for record in records:
             row=by_id.get(record['id']);approved=row is not None and row['state'] in ('current','moved') and row['entry']['status']=='approved'
+            plan=copy.deepcopy(record['data']['plan'])
+            if self.prepared_question['native']['python']:
+                identity=dict(n=row['entry']['n'] if approved else None,id=record['id'],hash=record['hash'])
+                plan.update(identity)
+                verified=identity_verifier(question,plan['seed'],identity) if identity_verifier else self.seed_record(question,plan['seed'],identity=identity)
+                if verified['hash']!=record['hash'] or verified['data']['plan']!=plan:
+                    raise VariantError('Assigned native checker identity changed its frozen candidate')
             variants.append({'n':row['entry']['n'] if approved else None,'id':record['id'],'hash':record['hash'],
                 'proposal':not approved,'reviewKey':digest([record['id'],record['hash']]),
-                'display':{k:v for k,v in record['data']['plan'].items() if k.endswith('_html')},'plan':record['data']['plan']})
-        return {'version':2,'id':identifier,'common':{'inputs':question['inputs'],'qtests':question['qtests'],'checker':None},
+                'display':{k:v for k,v in plan.items() if k.endswith('_html')},'plan':plan})
+        return {'version':2,'id':identifier,'common':{'inputs':question['inputs'],'qtests':question['qtests'],
+                'checker':{'source':question['checker'],'value':question.get('checker_value',1)} if question.get('checker') else None},
             'backend':{'id':'maxima','planSchema':1,'stackRevision':self.prepared_question['native']['stackRevision'],
                 'runtimeHash':self.identity['packageHash'],'question':self.prepared_question},'variants':variants,'review':review}
 
