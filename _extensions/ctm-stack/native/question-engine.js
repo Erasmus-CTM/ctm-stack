@@ -58,22 +58,24 @@
     return value.replace(/\n /g, '').replace(/\n/g, '').replace(/ {4}/g, ' ').replace(/ {3}/g, ' ').replace(/ {2}/g, ' ');
   }
   function casttext(value, compiled, io = token => '[[' + token[1] + ':' + token[2] + ']]') {
+    const unmask=s=>s.replace(/QMCHAR/g,'?');
     let nodes = 0;
-    function render(v, depth) {
+    function render(v, depth, masked = false) {
       if (++nodes > 10000 || depth > 64) throw fault('Native CASText output exceeded its bound');
       if (typeof v === 'string') {
         for (const [key, text] of Object.entries(compiled.statics)) v = v.split(key).join(text);
-        return v;
+        return masked?unmask(v):v;
       }
       if (!Array.isArray(v)) throw fault('Malformed native CASText output', 'runtime');
-      if (v[0] === '%root') return v.slice(1).map(c => render(c, depth + 1)).join('').replace(/QMCHAR/g, '?');
-      if (v[0] === 'smlt' && v.length === 2) return tidy(v[1], compiled);
-      if (v[0] === 'ioblock' && v.length === 3) return io(v);
+      if (v[0] === '%root') return v.slice(1).map(c => render(c, depth + 1, true)).join('');
+      if (v[0] === 'ctm_python_feedback' && v.length === 2 && typeof v[1] === 'string') return escape(v[1]);
+      if (v[0] === 'smlt' && v.length === 2) { const text=tidy(v[1], compiled); return masked?unmask(text):text; }
+      if (v[0] === 'ioblock' && v.length === 3) { const text=io(v); return masked?unmask(text):text; }
       if (v[0] === '%strans' && v.length === 2) {
         if (!root.NativeFeedback) throw fault('Native feedback formatter is missing', 'runtime');
         const description = root.NativeFeedback.describe(v[1], compiled.language);
         if (!description.translated) throw fault('Unsupported native feedback: ' + description.reason);
-        return description.html;
+        return masked?unmask(description.html):description.html;
       }
       throw fault('Unsupported compiled CASText output block: ' + v[0]);
     }
@@ -258,7 +260,7 @@
             const node=question.prts.find(tree=>tree.name===name).nodes.find(n=>n.name===raw[1]);
             if(!response.valid)return invalid(node.quiet?{...response,feedback:'Invalid answer'}:response,descriptor.sans);
             if(!node.quiet)for(const [key,value] of Object.entries(response.assessment||{}))validation.inputs[key].assessment=value;
-            const feedback=node.quiet?'':escape(response.feedback||'');
+            const feedback=node.quiet?'':response.feedback||'';
             const call=p.function+'('+[...p.callArguments,quote(raw[2]),'['+bool(response.status==='correct')+','+quote(feedback)+']'].join(',')+')';
             raw=await this.evaluateProgram(this.program(question,variant,[...setup,call]));
           }

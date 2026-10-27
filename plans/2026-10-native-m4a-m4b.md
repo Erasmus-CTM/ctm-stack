@@ -131,3 +131,11 @@ Python nodes and exact 39-digit state), five native integration families with
 Firefox and WebKit. CI artifacts contain the raw observations. Remaining
 programme work includes JSXGraph/CASText breadth, validation/locales and
 packaging/offline distribution; M4e seed import remains separate.
+
+M4d adversarial review found an adapter defect before merge: Python predicate
+feedback was inserted as generic CASText, so a literal `QMCHAR` could be changed
+and compiler static markers could be expanded. A typed plain-feedback block
+now bypasses CASText substitutions and escapes exactly once. The regression
+checks nested roots, literal markers, angle brackets and existing entities;
+real installed-card acceptance retains the literal marker. This is our adapter
+finding, not an upstream compiler report.

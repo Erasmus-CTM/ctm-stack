@@ -47,7 +47,7 @@ def run(project,output,engine='chromium',executable=None):
                 report['checks'].append('ordinary native grading starts no Python interpreter')
                 card=page.locator('[data-stack-id="native-python"]')
                 answer(card,selected(card)['plan']['teachers']['ans']['source'])
-                assert '<plain Python feedback>' in card.inner_text()
+                assert '<plain Python feedback> QMCHAR' in card.inner_text()
                 assert card.locator('plain').count()==0
                 report['checks'].append('native Python predicate and implicit checker use fresh namespaces and plain feedback')
                 answer(card,'-1','retry');answer(card,'0','invalid')

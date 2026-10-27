@@ -25,7 +25,7 @@ def check(response, symbols):
     if ans==999:
         while True: pass
     ratio=ans/response['variables']['d']
-    return {'score':1 if ratio.is_integer and ratio.is_positive else 0,'feedback':'<plain Python feedback>'}
+    return {'score':1 if ratio.is_integer and ratio.is_positive else 0,'feedback':'<plain Python feedback> QMCHAR'}
 '''
 AUTHORED='''- name: teacher
   answers: {ans: d}
@@ -62,6 +62,8 @@ def main():
                 question=backend.load_question(source,title,options)
                 record=backend.seed_record(question,1)
                 assert record['tests']['passed'] and record['tests']['teacher']['score']==1
+                if options.get('checker'):
+                    assert '&lt;plain Python feedback&gt; QMCHAR' in record['tests']['teacher']['prts']['prt1']['feedback']
                 identity={'n':7,'id':record['id'],'hash':record['hash']}
                 assigned=backend.seed_record(question,1,identity=identity)
                 assert assigned['hash']==record['hash']

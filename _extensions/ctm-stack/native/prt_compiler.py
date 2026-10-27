@@ -217,7 +217,7 @@ def compile_tree(tree):
             branches.append('('+','.join(actions)+')')
         steps.append('if ctm_test[2] then '+branches[0]+' else '+branches[1])
         if isinstance(node.predicate,PythonCheck) and not node.quiet:
-            steps.append('if slength(ctm_test[4])>0 then ctm_feedback:castext_concat(ctm_feedback,["%root",ctm_test[4]])')
+            steps.append('if slength(ctm_test[4])>0 then ctm_feedback:castext_concat(ctm_feedback,["ctm_python_feedback",ctm_test[4]])')
         body.append('if is(ctm_active='+quote(node.id)+') then ('+','.join(steps)+')')
     body.extend(['simp:true',
         "ctm_score:ev('float('round('max('min(ctm_score,1.0),0.0)*1000)/1000),nouns,simp)",
