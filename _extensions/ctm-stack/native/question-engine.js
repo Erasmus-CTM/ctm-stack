@@ -1,9 +1,9 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0-or-later AND GPL-3.0-or-later
 // Shared Node/browser execution of native compiled PRT and CASText programs.
 // No SymPy preparation, independent response-tree walker or grading fallback.
 (function (root) {
   'use strict';
-  const STACK = '33383047af39c204bf4442802a058f8b918b2b1b';
+  const STACK = typeof module==='object'&&module.exports?require('./stack-pin.js'):root.CTMStackRevision;
   const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
   const escape = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'}[c]));
   function fault(message, kind = 'author') { return Object.assign(new Error(message), {kind, code: 'maxima-question'}); }
@@ -130,8 +130,9 @@
         return identifier;
       }).join(',') + ')'];
       if (variant) {
-        setup.push('simp:false', ...Object.entries(variant.env).map(([k,v]) => name(k) + ':' + evaluate(v)));
-        setup.push('simp:' + bool(question.simplify));
+        // Recreate native values/structure from the owned seed. Printed env
+        // text is evidence for the checker, never a native state checkpoint.
+        setup.push('stack_randseed('+variant.seed+')',c.variables.statement);
       } else setup.push('stack_randseed(' + question.native.seed + ')', c.variables.statement);
       return block(locals, [...setup, ...Object.values(c.prts).map(p => p.def), ...expressions]);
     }
@@ -202,7 +203,7 @@
             ['feedback','simplode(ctm_lines," ")']]));
         rows.push([input.name, block(['ctm_s','ctm_t','ctm_r','ctm_lines:[]','ctm_stream','ctm_line',
           '%ERR:["stack_map"]','%NOTES:["stack_map"]','%FEEDBACK:["stack_map"]'], [
-          'simp:false', 'ctm_t:' + evaluate(variant.teachers[input.name].source),
+          'simp:false', 'ctm_t:' + (question.native.compiled.inputTeachers?.[input.name]??input.teacher),
           'ctm_r:ctm_classified_errcatch(' + block([],checks) + ')',
           'if ctm_r[1]="ok" then ctm_r[2] else ' + map([['valid','false'],['latex','""'],
             ['feedback','if ctm_r[1]="internal" then "Internal native validation fault" else "Native STACK could not evaluate this expression"'],

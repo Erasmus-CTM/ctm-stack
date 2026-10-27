@@ -52,7 +52,8 @@ class NativeBackend:
         if hasattr(self,'errors'):
             self.errors.close();del self.errors
 
-    def load_question(self,source,question_name,options):
+    def load_question(self,source,question_name,options,*,authored_tests=None):
+        if authored_tests is not None:raise VariantError('maxima backend does not support authored tests until M4d')
         if any(k in options for k in ['checker','checker-value','tests','python-checkers']):
             raise VariantError('Native Python/declarative continuation is a separate capability (M4d)')
         question,self.source_hash=compiler.model(source,question_name)

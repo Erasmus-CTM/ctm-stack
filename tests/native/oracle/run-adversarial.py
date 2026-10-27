@@ -19,7 +19,7 @@ from adversarial import corpus
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
-PIN = '33383047af39c204bf4442802a058f8b918b2b1b'
+PIN = json.loads((Path(__file__).resolve().parents[3]/'_extensions/ctm-stack/native/stack-pin.json').read_text())['revision']
 
 
 def main():

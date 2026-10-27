@@ -60,3 +60,12 @@ test('random callbacks are tracked for seeds and rejected in feedback',()=>{
   model.prts=[{name:'p',feedbackvariables:'r:map(rand,[5]);',nodes:[]}];
   assert.throws(()=>compileIR(model),/random callbacks/);
 });
+
+test('strings cannot smuggle evaluator or random callbacks through pure calls',()=>{
+  for(const source of ['a:subst("eval_string",sin,sin("2+3"));',
+    'a:subst("parse_string",sin,sin("2+3"));',
+    'a:subst("rand",sin,sin(5));','a:subst("random",sin,sin(5));',
+    'a:map("eval_string",["2+3"]);','a:ev("parse_string");',
+    'a:subst("unknown_function",sin,sin("2+3"));'])
+    assert.throws(()=>compileIR(question('{@a@}',source)),/unsupported/);
+});

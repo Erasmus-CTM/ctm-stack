@@ -1,5 +1,6 @@
 {
   "schema": 1,
+  "licence": "GPL-3.0-or-later; STACK-derived metadata; see NOTICE",
   "stackRevision": "33383047af39c204bf4442802a058f8b918b2b1b",
   "security": {
     "!": {

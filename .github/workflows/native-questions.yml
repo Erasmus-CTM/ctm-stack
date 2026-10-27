@@ -32,10 +32,13 @@ jobs:
         with:
           version: 1.8.27
       - uses: ./.github/actions/ctm-dependencies
+      - name: Read the owned STACK revision
+        id: stack-pin
+        run: echo "revision=$(jq -r .revision _extensions/ctm-stack/native/stack-pin.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
         with:
           repository: maths/moodle-qtype_stack
-          ref: 33383047af39c204bf4442802a058f8b918b2b1b
+          ref: ${{ steps.stack-pin.outputs.revision }}
           path: .cache/stack
           persist-credentials: false
       - name: Test-only dependencies and generated grammar reproducibility
@@ -61,6 +64,7 @@ jobs:
         run: |
           mkdir -p test-results/native-questions
           python -c 'import json,runpy; print(json.dumps(runpy.run_path("tests/native/test_prt_compiler.py")["programs"]()))' > test-results/native-questions/python-prt-input.json
+          node tests/native/exact-replay.mjs .cache/native-v3 test-results/native-questions/exact-replay.json
           node tests/native/prt-audit.mjs .cache/native-v3 test-results/native-questions/python-prt-input.json test-results/native-questions/python-prt-native.json
           python tests/native/oracle/run-adversarial.py --stack-source .cache/stack --runtime .cache/native-v3 --output test-results/native-questions/upstream
       - name: Native generation, leased approvals, replay and change invalidation without SymPy

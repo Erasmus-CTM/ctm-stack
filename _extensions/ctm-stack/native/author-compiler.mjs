@@ -46,6 +46,10 @@ function analyse(node,source,where,random=false){
       if(n.name.kind!=='MPIdentifier') fail(where,'dynamic function calls require a separate capability');
       const target=aliases[n.name.value]||n.name.value;
       if(!functions.has(target)||!random&&/^(rand|random|multiselqn)/.test(target)) fail(where,'unsupported native author call '+target);
+      if(['subst','substinpart','ev','at','map','apply'].includes(target)){
+        const hasString=n=>n.kind==='MPString'||children(n).some(hasString);
+        if(n.args.some(hasString))fail(where,'strings in dynamic function arguments are unsupported');
+      }
       calls.add(target);
       if(aliases[n.name.value]) replacements.push([n.name.position.start.offset,n.name.position.end.offset,target]);
       for(const arg of n.args) visit(arg,depth+1);
@@ -54,6 +58,7 @@ function analyse(node,source,where,random=false){
     if(n.kind==='MPOperation'&&n.op.startsWith(':')) fail(where,'nested writes or function definitions require a separate capability');
     if(n.kind==='MPLoop'||n.kind==='MPEvaluationFlag'||n.kind==='MPAnnotation') fail(where,'unsupported native author control construct '+n.kind);
     if(n.kind==='MPPrefixOp'&&['?','??',"''"].includes(n.op.trim())) fail(where,'Lisp escapes and dynamic evaluation are unsupported');
+    if(n.kind==='MPString' && Object.hasOwn(data.security,n.value))fail(where,'strings naming native security entries are unsupported: '+n.value);
     if(n.kind==='MPIdentifier'){
       // A function passed to map is still executable authority even though it
       // is not syntactically a call. Keep callback references in the same

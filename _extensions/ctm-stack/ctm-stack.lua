@@ -65,7 +65,7 @@ local function nativeResources(runtime)
     return
   end
   local resources = {}
-  for _, name in ipairs({'card-worker.js','direct-runtime.js','browser-package.js','question-engine.js','feedback.js'}) do
+  for _, name in ipairs({'stack-pin.js','card-worker.js','direct-runtime.js','browser-package.js','question-engine.js','feedback.js'}) do
     resources[#resources+1] = {name=name,path=quarto.utils.resolve_path('native/' .. name)}
   end
   for _, name in ipairs(runtime.files) do

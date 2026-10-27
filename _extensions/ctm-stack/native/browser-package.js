@@ -25,7 +25,7 @@ async function open(message) {
   const encoded = await response.arrayBuffer();
   if (encoded.byteLength > 1024 * 1024 || await digest(encoded) !== message.packageHash) throw new Error('Native package hash mismatch');
   const spec = JSON.parse(new TextDecoder().decode(encoded));
-  if (spec.schema !== 1 || spec.runtimeTag !== 'runtime-v3' || spec.manifest.stackRevision !== '33383047af39c204bf4442802a058f8b918b2b1b') throw new Error('Wrong native runtime package');
+  if (spec.schema !== 1 || spec.runtimeTag !== 'runtime-v3' || spec.manifest.stackRevision !== self.CTMStackRevision) throw new Error('Wrong native runtime package');
   const bytes = new Map(), stackFiles = [], assets = new Map();
   for (const item of spec.runtimeAssets) {
     safePath(item.path);

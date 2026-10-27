@@ -15,7 +15,7 @@ import importlib.util
 import sys
 
 HERE = Path(__file__).resolve().parent
-STACK = '33383047af39c204bf4442802a058f8b918b2b1b'
+STACK = json.loads((HERE/'stack-pin.json').read_text())['revision']
 
 
 def sha(body):

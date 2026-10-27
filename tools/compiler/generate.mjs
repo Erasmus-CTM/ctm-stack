@@ -10,7 +10,7 @@ const require=createRequire(import.meta.url), peg=require('pegjs');
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const source=process.argv[2];
 if(!source) throw Error('generate.mjs STACK-CHECKOUT');
-const revision='33383047af39c204bf4442802a058f8b918b2b1b';
+const revision=JSON.parse(await fs.readFile(path.join(root,'_extensions/ctm-stack/native/stack-pin.json'),'utf8')).revision;
 const sha=x=>crypto.createHash('sha256').update(x).digest('hex');
 const records=[];
 async function blob(name) {
@@ -27,6 +27,7 @@ async function write(name,body) {
     if(await fs.readFile(filename,'utf8')!==body)throw Error('Generated compiler file differs: '+name);
   } else await fs.writeFile(filename,body);
 }
+await write('stack-pin.js','// Generated from stack-pin.json by tools/compiler/generate.mjs.\n(function(root){const revision='+JSON.stringify(revision)+";if(typeof module==='object'&&module.exports)module.exports=revision;else root.CTMStackRevision=revision;})(globalThis);\n");
 for(const [kind,name] of [['maxima','stack/maximaparser/autogen/parser-grammar.pegjs'],['castext','stack/cas/castext2/autogen/parser-grammar.pegjs']]) {
   let grammar=await blob(name);
   // The upstream JS actions contain TypeScript-only annotations. Erase
@@ -55,6 +56,6 @@ for(const m of language.matchAll(/^\$string\['([A-Za-z0-9_]+)'\]\s*=\s*'((?:[^'\
 }
 await blob('stack/prt.class.php');await blob('stack/cas/keyval.class.php');await blob('locallib.php');
 for(const name of ['root.specialblock.php','latex.block.php','raw.block.php','if.block.php'])await blob('stack/cas/castext2/blocks/'+name);
-await write('compiler-data.json',JSON.stringify({schema:1,stackRevision:revision,security,messages,answerTests,replacements:[...Object.entries(symbols),...Object.entries(letters)]},null,2)+'\n');
+await write('compiler-data.json',JSON.stringify({schema:1,licence:'GPL-3.0-or-later; STACK-derived metadata; see NOTICE',stackRevision:revision,security,messages,answerTests,replacements:[...Object.entries(symbols),...Object.entries(letters)]},null,2)+'\n');
 await write('compiler-provenance.json',JSON.stringify({schema:1,stackRevision:revision,generator:'pegjs@0.10.0',
   transformation:'Use upstream JavaScript grammar actions; erase TypeScript annotations; retain source text for all emitted mathematical expressions',sourceFiles:records},null,2)+'\n');

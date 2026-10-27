@@ -31,10 +31,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Read the owned STACK revision
+        id: stack-pin
+        run: echo "revision=$(jq -r .revision _extensions/ctm-stack/native/stack-pin.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
         with:
           repository: maths/moodle-qtype_stack
-          ref: 33383047af39c204bf4442802a058f8b918b2b1b
+          ref: ${{ steps.stack-pin.outputs.revision }}
           path: .cache/stack
           persist-credentials: false
       - name: Download the immutable v3 release; stage and verify every byte
@@ -94,10 +97,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Read the owned STACK revision
+        id: stack-pin
+        run: echo "revision=$(jq -r .revision _extensions/ctm-stack/native/stack-pin.json)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v4
         with:
           repository: maths/moodle-qtype_stack
-          ref: 33383047af39c204bf4442802a058f8b918b2b1b
+          ref: ${{ steps.stack-pin.outputs.revision }}
           path: .cache/stack
           persist-credentials: false
       - name: Stage the verified v3 release

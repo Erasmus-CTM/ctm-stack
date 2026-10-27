@@ -2,7 +2,7 @@
 // One sealed question/variant per heap. Only typed card operations are exposed;
 // raw Maxima/Lisp programs are never accepted from a card request.
 'use strict';
-importScripts('direct-runtime.js','browser-package.js','feedback.js','question-engine.js');
+importScripts('stack-pin.js','direct-runtime.js','browser-package.js','feedback.js','question-engine.js');
 const send=self.postMessage.bind(self);
 let configured=false,engine,session,question,variant,queue=Promise.resolve();
 async function handle(message){

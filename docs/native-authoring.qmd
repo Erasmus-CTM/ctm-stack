@@ -101,3 +101,17 @@ and card changes use the normal replay, lifecycle and browser gates.
 JSXGraph, native Python continuations,
 broader input/feedback conformance, locales and offline distribution remain
 tracked work.
+
+## Revision and exact replay
+
+`_extensions/ctm-stack/native/stack-pin.json` is the one editable STACK revision.
+The workflows, Python tools and grammar generator read it. Run
+`node tools/compiler/generate.mjs /path/to/STACK` to regenerate the browser pin,
+grammars, metadata and provenance. Refresh the checked source inventories with
+their recording tools when upgrading; generated inventories report the pin but
+do not configure it. Runtime upgrades still require the owned release gate.
+
+Native operations recreate question variables from the seed on every call,
+including teacher validation. They never restore native state from the printed
+`env` evidence. This preserves binary float precision and unevaluated structure
+even when an author sets `fpprintprec:12`.

@@ -1,3 +1,4 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later AND GPL-3.0-or-later
 """Compile a checked PRT intermediate representation into scoped Maxima.
 
 This is a compiler, not a Python response-tree interpreter. Native tests run

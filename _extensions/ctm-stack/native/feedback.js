@@ -3,7 +3,7 @@
 // run CAS code, infer correctness, or execute Moodle's PHP/JavaScript protocol.
 (function (scope) {
   'use strict';
-  const REVISION = '33383047af39c204bf4442802a058f8b918b2b1b';
+  const REVISION = typeof module==='object'&&module.exports?require('./stack-pin.js'):root.CTMStackRevision;
   const MAX_LENGTH = 131072, MAX_CALLS = 128, MAX_ARGS = 8;
   const PLACEHOLDER = /\{\$a->m([0-7])\}/g;
   const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);

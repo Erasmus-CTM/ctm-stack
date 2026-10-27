@@ -28,7 +28,7 @@ export class QuestionCompiler {
     const admission=require(path.join(request.admissionRoot,'admission.js'))(
       JSON.parse(await fs.readFile(path.join(request.admissionRoot,'admission-data.json'))));
     const sources=await Promise.all(['question-engine.js','feedback.js','author-compiler.mjs','maxima-parser.cjs','castext-parser.cjs',
-      'compiler-data.json','compiler-provenance.json','prt_compiler.py'].map(async name=>[name,sha256(await fs.readFile(new URL(name,import.meta.url)))]));
+      'compiler-data.json','compiler-provenance.json','stack-pin.json','stack-pin.js','prt_compiler.py'].map(async name=>[name,sha256(await fs.readFile(new URL(name,import.meta.url)))]));
     const identity={schema:1,packageHash:installed.packageHash,transportHash:await adapterHash(),
       compilerHash:sha256(JSON.stringify(sources)),checkerWheelSha256:request.checkerWheelSha256,node:process.versions.node};
     const question={...request.question};delete question.native;

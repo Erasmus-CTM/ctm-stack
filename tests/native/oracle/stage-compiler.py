@@ -9,7 +9,7 @@ import subprocess
 import tempfile
 
 INDEX = Path(__file__).resolve().with_name('compiler-files.json')
-PIN = '33383047af39c204bf4442802a058f8b918b2b1b'
+PIN = json.loads((Path(__file__).resolve().parents[3]/'_extensions/ctm-stack/native/stack-pin.json').read_text())['revision']
 
 
 def inventory(source):
