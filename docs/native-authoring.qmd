@@ -54,7 +54,8 @@ an additional native serialization allowlist before Maxima evaluation.
 Unsupported features stop the author build with a diagnostic. These include
 PythonChecker continuations and block checkers, arbitrary author function
 definitions or execution, JSXGraph, external includes, general CASText blocks
-such as `foreach`, and CASText question-test inputs (`CT:`). An explicitly
+such as `foreach`, CASText question-test inputs (`CT:`), and variable/input
+names that collide with protected native functions. An explicitly
 rejected feature is not a fallback to SymPy. This is an initial native question
 subset, not complete Moodle/STACK compatibility.
 
@@ -89,7 +90,11 @@ continued-fraction approximation. This compatibility difference is explicit.
 
 The native question CI also exercises actual installed Quarto cards, mixed
 backends, full/partial/zero grades, invalid input, XML tests, fresh variant
-heaps, shared approvals and stale leases. Transport/GC acceptance remains in
+heaps, shared approvals and stale leases. Six additional authored families
+(rational, numerical, matrix, Boolean, nested collections and hyperbolic)
+pass 20 XML tests and their full-mark teacher vectors. Literal test decimals
+retain trailing zeros, and expected note sequences use upstream's anchoring
+rules. Transport/GC acceptance remains in
 the separate native foundation workflow. JSXGraph, native Python continuations,
 broader input/feedback conformance, locales and offline distribution remain
 tracked work.

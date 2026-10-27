@@ -139,6 +139,7 @@ export function compileIR(question){
   };
   function casttext(source,where,mathOutput=math,readOutput=new Set()){
     if(typeof source!=='string'||source.length>200000)fail(where,'CASText exceeds its text bound');
+    if(source==='')return '""';
     let tree;try{tree=castextParser.parse(source);}catch(error){fail(where,'unsupported CASText syntax: '+error.message);}
     let count=0;
     function list(nodes){return '["%root"'+nodes.map(n=>','+visit(n)).join('')+']';}
@@ -205,6 +206,11 @@ export function compileIR(question){
   const testInputs='['+question.qtests.map(test=>map(Object.fromEntries(Object.entries(test.inputs).map(([key,value])=>{
     if(value.startsWith('CT:'))fail('question test','CASText input needs a separate capability');
     if(value.startsWith('RAW:'))return [key,quote(value.slice(4))];
+    // Literal decimals are student text, including significant trailing zeros.
+    // Serializing a native float would turn 17.50 into 17.5 before NumDecPlaces
+    // sees its raw input. Expressions involving variables still evaluate in
+    // native Maxima below; this branch performs no mathematical calculation.
+    if(/^[+-]?(?:\d+\.\d*|\.\d+)(?:[eE][+-]?\d+)?$/.test(value.trim()))return [key,quote(value.trim())];
     let text;try{text=operand(value,'question test').text;}catch(error){return [key,quote(value)];}
     return [key,'string('+text+')'];
   })))).join(',')+']';

@@ -22,6 +22,21 @@ test('large exact author integers survive the JavaScript parser', () => {
   assert.ok(compiled.variables.statement.includes(value));
 });
 
+test('absent feedback and question notes compile as empty strings', () => {
+  const compiled=compileIR(question('Question {@x@}'));
+  assert.equal(compiled.texts.generalfeedback,'""');
+  assert.equal(compiled.texts.specificfeedback,'""');
+  assert.equal(compiled.texts.questionnote,'""');
+});
+
+test('literal question-test decimals preserve raw precision', () => {
+  const model=question('Question {@x@}');
+  model.qtests=[{inputs:{ans:'17.50'}}];
+  const compiled=compileIR(model);
+  assert.ok(compiled.testInputs.includes('"17.50"'));
+  assert.ok(!compiled.testInputs.includes('string(17.50)'));
+});
+
 test('inline mathematics closes before the next expression', () => {
   for(const source of [String.raw`\({@x@}\) outside {@x@}`, '$ {@x@} $ outside {@x@}']) {
     const compiled=compileIR(question(source));

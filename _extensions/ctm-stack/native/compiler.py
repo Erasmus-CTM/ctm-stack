@@ -45,7 +45,7 @@ def model(source, question_name):
     texts = [question.get(k,'') for k in ['questiontext','generalfeedback','specificfeedback','questionnote']]
     texts += [n[b]['feedback'] for p in question['prts'] for n in p['nodes'] for b in ['true','false']]
     for text in texts:
-        blocks = re.findall(r'\[\[\s*/?\s*([A-Za-z][\w-]*)',text)
+        blocks = re.findall(r'\[\[\s*/?\s*([A-Za-z][\w-]*)(?=[:\s/\]])',text)
         unsupported = set(blocks)-{'input','validation','feedback','if','elif','else','foreach','comment'}
         if unsupported:
             raise UnsupportedQuestion(question_name,'CASText','Unsupported native block(s): '+', '.join(sorted(unsupported)))

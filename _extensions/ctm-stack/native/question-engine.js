@@ -95,6 +95,21 @@
   function typeOf(expression) {
     return 'if matrixp(' + expression + ') then "matrix" else if listp(' + expression + ') then "list" else if setp(' + expression + ') then "set" else if equationp(' + expression + ') then "equation" else "scalar"';
   }
+  function testAnswerNote(expected,actual) {
+    expected=expected.trim();
+    if(!expected)return false;
+    if(expected==='()')return true;
+    if(!actual.length)return expected==='NULL';
+    if(expected==='NULL')return false;
+    const start=expected.startsWith('['),end=!expected.endsWith(')');
+    if(expected.startsWith('[')||expected.startsWith('('))expected=expected.slice(1);
+    if(expected.endsWith(']')||expected.endsWith(')'))expected=expected.slice(0,-1);
+    const wanted=expected.split('|').map(n=>n.trim());
+    if(start&&wanted[0]!==actual[0]||end&&wanted.at(-1)!==actual.at(-1))return false;
+    let at=0;
+    for(const note of wanted){while(at<actual.length&&actual[at].trim()!==note)at++;if(at===actual.length)return false;at++;}
+    return true;
+  }
   class Engine {
     constructor(evaluateProgram, admission) { this.evaluateProgram = evaluateProgram; this.admission = admission; }
     check(question, variant) {
@@ -220,8 +235,9 @@
         if(Array.isArray(raw)&&raw[0]==='CTM_PRT_ERROR')throw fault('Native response tree failed: '+raw[2],raw[1]==='internal'?'runtime':'author');
         if (!Array.isArray(raw) || raw.length !== 5 || typeof raw[1] !== 'number') throw fault('Native PRT did not return its result: ' + prt.name);
         const [path, fraction, penalty, feedback, notes] = raw;
+        const answerNotes=path.flatMap((test,index)=>[test[2],notes[index]].filter(n=>typeof n==='string'&&n.trim()).map(n=>n.trim()));
         prts[prt.name] = {score:fraction, penalty:fraction === 1 ? 0 : penalty,
-          feedback:casttext(feedback,c), notes, note:notes.join(' | '), path};
+          feedback:casttext(feedback,c), notes, answerNotes, note:notes.join(' | '), path};
         score += total ? fraction * prt.value / total : 0;
       }
       return {status:'graded',score,inputs:validation.inputs,prts,feedback:Object.values(prts).map(p => p.feedback).filter(Boolean).join(' ')};
@@ -233,14 +249,14 @@
         const checks = Object.entries(test.expected).map(([key,wanted]) => {
           const p = actual.prts[key];
           return {prt:key,passed:!!p && Math.abs(p.score-wanted.score)<1e-8 && Math.abs(p.penalty-wanted.penalty)<1e-8
-            && (wanted.note === '()' || p.note === wanted.note)};
+            && testAnswerNote(wanted.note,p.answerNotes)};
         });
         results.push({testcase:test.testcase,seed:variant.seed,passed:checks.every(c => c.passed),checks,actual});
       }
       return {passed:results.every(r => r.passed),results};
     }
   }
-  const api = {Engine,learnerSource,casttext,quote};
+  const api = {Engine,learnerSource,casttext,quote,testAnswerNote};
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.CTMMaximaQuestions = api;
 })(globalThis);

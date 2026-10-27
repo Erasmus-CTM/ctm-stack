@@ -53,9 +53,10 @@ jobs:
           python scripts/stage-native.py --release .cache/release --stack-source .cache/stack --output .cache/native-v3
       - name: Compiler invariants and adapter lifecycle controls
         run: |
-          python -m pytest -q tests/native/test_prt_compiler.py
+          python -m pytest -q tests/native/test_prt_compiler.py tests/native/test_compiler_frontend.py
           node tests/native/author-compiler.test.mjs
           node tests/native/card-adapter.test.mjs
+          node tests/native/question-engine.test.mjs
       - name: Independent Python emitter and upstream adversarial audit
         run: |
           mkdir -p test-results/native-questions
@@ -65,14 +66,15 @@ jobs:
       - name: Native generation, leased approvals, replay and change invalidation without SymPy
         run: |
           python tests/native/producer-integration.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --xml _ctm-checkers-source/examples/stack/polynomial-expansion.xml --output test-results/native-questions/producer.json
+          python tests/native/families.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --sources _ctm-checkers-source/examples/stack --output test-results/native-questions/families.json
       - name: Render the actual mixed-backend Quarto card
         run: |
-          python tests/native/render-card.py --libs "$CTM_LIBS_EXTENSION" --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --xml _ctm-checkers-source/examples/stack/polynomial-expansion.xml --output .cache/card-project
+          python tests/native/render-card.py --libs "$CTM_LIBS_EXTENSION" --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --xml _ctm-checkers-source/examples/stack/polynomial-expansion.xml --output "$RUNNER_TEMP/native-card-project"
           python -m playwright install --with-deps chromium firefox webkit
       - name: Real native card validation, grading, XML tests and fresh variant heaps
         run: |
           for browser in chromium firefox webkit; do
-            python tests/native/card-browser.py .cache/card-project test-results/native-questions/card-$browser.json --browser "$browser" || exit 1
+            python tests/native/card-browser.py "$RUNNER_TEMP/native-card-project" test-results/native-questions/card-$browser.json --browser "$browser" || exit 1
           done
       - uses: actions/upload-artifact@v4
         if: always()

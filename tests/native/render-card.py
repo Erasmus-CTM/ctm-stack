@@ -38,6 +38,9 @@ def main():
     environment={**os.environ,'CTM_COMPONENT_DEV':'1','CTM_VARIANTS':'review',
         'CTM_STACK_NATIVE_PACKAGE':str(args.runtime.resolve()),'CTM_STACK_PYTHON':os.environ.get('CTM_STACK_PYTHON',os.sys.executable)}
     subprocess.run([os.environ.get('QUARTO','quarto'),'render','index.qmd'],cwd=project,env=environment,check=True,timeout=600)
+    rendered=(project/'index.html').read_text()
+    if not all('data-stack-id="'+name+'"' in rendered for name in ['native-proof','sympy-control']):
+        raise ValueError('Quarto did not run the STACK filter in the card project; use a standalone directory outside an enclosing project')
 
 
 if __name__=='__main__':main()

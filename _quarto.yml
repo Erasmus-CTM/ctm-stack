@@ -9,11 +9,14 @@ project:
     - corpus.qmd
     - docs/authoring.qmd
     - docs/backend-contract.qmd
+    - docs/native-authoring.qmd
     - docs/python-answer-tests.qmd
     - docs/python-checker-api.qmd
     - docs/matrix-input.qmd
   resources:
     - questions/**
+    - docs/audits/upstream-compiler-2026-10-27.md
+    - docs/audits/upstream-compiler-2026-10-27/**
 
 website:
   title: "CTM STACK"
@@ -31,6 +34,8 @@ website:
             text: Teacher guide
           - href: docs/matrix-input.qmd
             text: Matrix input and grading
+          - href: docs/native-authoring.qmd
+            text: Native runtime-v3 authoring
           - href: docs/python-checker-api.qmd#symmetric-positive-definite-matrices
             text: Positive-definiteness checks
           - href: docs/authoring.qmd#for-developers

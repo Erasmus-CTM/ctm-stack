@@ -45,7 +45,9 @@ at the project root would use `questions/`. The stable `label` identifies the
 card and its review history. `variants` is a proposal batch size, default 25.
 SymPy generates its own seeds starting at 1; Moodle's deployed seeds do not
 carry over. Equal question notes produce one proposal. Maxima owns its own
-seed generation and is not available through this SymPy generator.
+seed generation. Select `cas: maxima` for the native producer described in the
+[runtime-v3 authoring guide](native-authoring.qmd); it uses the same review and
+approval workflow.
 
 Generate candidates from the current source, then inspect their live student
 cards and actual XML question-test results before approving any for publication:

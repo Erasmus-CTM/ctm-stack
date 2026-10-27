@@ -109,7 +109,13 @@ async function server() {
         process.stdout.write(JSON.stringify({id:message.id,ok:true,record:await compiler.seed(message.seed)})+'\n');
       } else throw new Error('Unexpected native compiler operation');
     }
-  } finally {await compiler?.close();}
+  } finally {
+    // A failed seed must close the stdin reader too. Otherwise Node keeps the
+    // pipe alive after reporting the author error, and the parent can only
+    // observe a misleading deadline rather than the actual test diagnostic.
+    lines.close();process.stdin.pause();
+    await compiler?.close();
+  }
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   try {
