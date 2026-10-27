@@ -35,10 +35,11 @@ def test_feedback_copy_prompt_and_context_modes(browser_site):
         card = page.locator('[data-stack-id="expansion"]')
         assert card.locator(".stack-feedback-button").count() == 1
         assert card.locator(".ai-feedback-gear").count() == 1
-        assert page.locator("#ai-feedback-settings").count() == 0
+        # The gear opens ctm-libs' shared Settings dialog at its AI section.
         card.locator(".ai-feedback-gear").click()
-        assert page.locator("#ai-feedback-settings[open]").count() == 1
-        page.locator("#ai-feedback-settings button").first.click()
+        assert page.locator("#ctm-settings[open] #ai-feedback-settings").count() == 1
+        page.locator("#ctm-settings .ctm-settings-close").click()
+        assert page.locator("#ctm-settings[open]").count() == 0
         card.locator(".stack-answer").first.fill(correct_expansion(card))
         first = prompt_data(card)
         assert "[Answer " in first["task"]
@@ -75,7 +76,7 @@ def test_feedback_copy_prompt_and_context_modes(browser_site):
         cards = page.locator(".ctm-stack[data-stack-feedback]")
         assert cards.count() > 0
         seen_modes = set()
-        assert page.locator("#ai-feedback-settings").count() == 0
+        assert page.locator("#ctm-settings[open], #ai-feedback-settings[open]").count() == 0
         for index in range(cards.count()):
             card = cards.nth(index)
             card.locator(".stack-answer").first.fill("1")
