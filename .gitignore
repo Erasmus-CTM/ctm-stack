@@ -22,3 +22,4 @@ test-results/
 /.quarto/
 **/*.quarto_ipynb
 .native-stack-image/
+/.cache/
