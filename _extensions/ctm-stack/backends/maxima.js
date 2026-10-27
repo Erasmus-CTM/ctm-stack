@@ -83,6 +83,9 @@
           live();python=py;
           await py.loadPackage('sympy');live();
           await R.ensureCheckers(py,checker);live();
+          const observed=await py.runPythonAsync('__import__("sympy").__version__');live();
+          const expected=request.question.native.pythonIdentity?.browserSympyVersion;
+          if(typeof expected!=='string'||observed!==expected)throw fault('Native checker plan and browser SymPy version differ','python-checker-identity');
         })();
         const limit=new Promise((_,reject)=>{timer=setTimeout(()=>reject(fault('Python checker loading timed out','python-checker-load-timeout')),R.loadTimeout);});
         try{await Promise.race([loading,limit]);}finally{clearTimeout(timer);}

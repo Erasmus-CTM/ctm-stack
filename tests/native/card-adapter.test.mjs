@@ -40,11 +40,11 @@ test('variant changes retire the previous heap and never send raw programs',asyn
 });
 
 test('native Python continuations use a private runtime and are never replayed',async()=>{
-  const py={loadPackage:async()=>{},terminate(){this.terminated=true;}},calls=[];
+  const py={loadPackage:async()=>{},runPythonAsync:async()=> '1.13.3',terminate(){this.terminated=true;}},calls=[];
   const p=setup({CTMCheckers:{sha256:'b'.repeat(64)},CTMWorker:{start:async options=>{assert.equal(options.publish,false);return py;}},
     MathExerciseRuntime:{loadTimeout:1000,indexURL:'/py/',ensureCheckers:async()=>{},
       callCheckers:async(runtime,operation,request)=>{calls.push({runtime,operation,request});return {ok:true,result:{valid:true,status:'correct',score:1}};}}});
-  const req=request();Object.assign(req.question.native,{python:true,pythonBaseWheelSha256:'b'.repeat(64)});
+  const req=request();Object.assign(req.question.native,{python:true,pythonBaseWheelSha256:'b'.repeat(64),pythonIdentity:{browserSympyVersion:'1.13.3'}});
   req.question.checker='def check(response, symbols): return True';
   const ready=p.adapter.prepareRequest(req),child=p.workers[0];child.reply({ok:true,result:{ready:true}});await ready;
   const outcome=p.adapter.request(req);await tick();
@@ -63,6 +63,19 @@ test('Stop retires loading and ignores late replies',async()=>{
   const rejected=assert.rejects(loading,/Stopped/);
   await p.adapter.stop();await rejected;old.reply({ok:true,result:{ready:true}});
   assert.equal(old.terminated,true);await initialize(p,2);assert.equal(p.workers.length,2);
+});
+
+test('a changed or absent browser SymPy identity retires both heaps before grading',async()=>{
+  for(const expected of ['1.13.3',undefined]){
+    const py={loadPackage:async()=>{},runPythonAsync:async()=> 'different',terminate(){this.terminated=true;}};
+    const p=setup({CTMCheckers:{sha256:'b'.repeat(64)},CTMWorker:{start:async()=>py},
+      MathExerciseRuntime:{loadTimeout:1000,indexURL:'/py/',ensureCheckers:async()=>{}}});
+    const req=request();Object.assign(req.question.native,{python:true,pythonBaseWheelSha256:'b'.repeat(64),pythonIdentity:{browserSympyVersion:expected}});
+    const loading=p.adapter.prepareRequest(req);p.workers[0].reply({ok:true,result:{ready:true}});
+    await assert.rejects(loading,error=>error.code==='python-checker-identity');
+    assert.equal(py.terminated,true);assert.equal(p.workers[0].terminated,true);
+    assert.equal(p.workers[0].sent.some(m=>m.type==='grade'),false);
+  }
 });
 
 test('load timeout and calculation timeout are separate, with no automatic replay',async()=>{

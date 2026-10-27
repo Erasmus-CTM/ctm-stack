@@ -41,14 +41,17 @@ export class QuestionCompiler {
       if(!/^[a-f0-9]{64}$/.test(request.python?.baseWheelSha256))throw new Error('Python continuation needs the installed base checker wheel identity');
       const actual=await checker.identity();
       if(JSON.stringify(actual.version)!==JSON.stringify(request.python.version)){await checker.close();throw new Error('Python checker interpreter identity differs');}
-      identity.python={baseWheelSha256:request.python.baseWheelSha256,...actual};
+      // Host and browser must use the same SymPy version. The browser measures
+      // its loaded package before accepting any request; a runtime upgrade
+      // therefore needs a matching host rebuild and fresh approval.
+      identity.python={baseWheelSha256:request.python.baseWheelSha256,...actual,browserSympyVersion:actual.sympyVersion};
     }
     const questionHash=sha256(canonical({question,compiled,sourceSha256:request.sourceSha256,
       packageHash:identity.packageHash,compilerHash:identity.compilerHash,checkerWheelSha256:identity.checkerWheelSha256,python:identity.python||null}));
     question.native={schema:1,stackRevision:admission.stackCommit,questionHash,compiled,
       checkerWheelSha256:identity.checkerWheelSha256,feedbackNames:compiled.feedbackNames,packageHash:identity.packageHash,
       python:usesPython,pythonGrading:!!question.checker||Object.values(compiled.prts).some(p=>p.continuations),
-      pythonBaseWheelSha256:identity.python?.baseWheelSha256};
+      pythonBaseWheelSha256:identity.python?.baseWheelSha256,pythonIdentity:identity.python};
     const self=new QuestionCompiler();
     Object.assign(self,{question,identity,checker,cache:request.cache});
     self.session=new NodeMaximaSession(request.runtimeRoot);

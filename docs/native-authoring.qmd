@@ -164,6 +164,12 @@ deadlines limit accidental failures; they do not sandbox filesystem, network
 or host access. Only trusted authored checker source may be built. Browser
 checkers run in the card's private Pyodide worker. The author Python identity
 records its actual interpreter and SymPy versions and the checker wheel hash.
+The Python identity also records `browserSympyVersion`; this backend requires
+host and browser SymPy versions to match. After installing its packages, each
+private Pyodide worker measures `sympy.__version__` and compares it to the
+compiled identity before grading or authored-test execution. Missing or changed
+versions retire both heaps. A browser SymPy upgrade needs a matching host rebuild
+and fresh variant approval; the identity is part of the question/cache hash.
 
 Continuation feedback variables are re-evaluated from the same native inputs
 and seeded question variables on every resume. Only routing/score/feedback
