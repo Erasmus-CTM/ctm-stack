@@ -52,3 +52,11 @@ test('author execution and scope mutation fail closed', () => {
     assert.throws(()=>compileIR(question('{@x@}',source)),undefined,source);
   }
 });
+
+test('random callbacks are tracked for seeds and rejected in feedback',()=>{
+  const compiled=compileIR(question('Question {@x@}','x:map(rand,[5,6]);'));
+  assert.equal(compiled.variables.random,true);
+  const model=question('Question {@x@}');
+  model.prts=[{name:'p',feedbackvariables:'r:map(rand,[5]);',nodes:[]}];
+  assert.throws(()=>compileIR(model),/random callbacks/);
+});

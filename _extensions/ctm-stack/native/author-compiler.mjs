@@ -60,6 +60,10 @@ function analyse(node,source,where,random=false){
       // pure-function subset and reserve the compiler's own local namespace.
       if(n.value.startsWith('ctm_')||data.security[n.value]?.function&&!functions.has(n.value)&&!constants.has(n.value))
         fail(where,'unsupported native author function or internal reference '+n.value);
+      if(data.security[n.value]?.function){
+        if(!random&&/^(rand|random|multiselqn)/.test(n.value))fail(where,'random callbacks are only supported in question variables');
+        calls.add(n.value);
+      }
       read.add(n.value);
       if(constants.has(n.value)) replacements.push([n.position.start.offset,n.position.end.offset,constants.get(n.value)]);
       else if(/[^\x00-\x7f]/.test(n.value)){
