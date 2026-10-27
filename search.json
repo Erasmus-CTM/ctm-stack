@@ -53,7 +53,7 @@
     "href": "docs/authoring.html",
     "title": "Authoring and support",
     "section": "",
-    "text": "Your answers are saved only in this browser.Delete answers on this page\nDelete all your answers in this course\nDo not save on this device\nExport my answers\nStart with the teaching choices below. The developer reference collects all question-block options, supported notation and integration details. For matrix questions, see matrix input; for a basis, a matrix condition or positive definiteness, see Python answer tests."
+    "text": "Your answers are saved only in this browser.Do not save on this device\nExport my answers\nDelete answers on this page\nDelete all your answers in this course\nStart with the teaching choices below. The developer reference collects all question-block options, supported notation and integration details. For matrix questions, see matrix input; for a basis, a matrix condition or positive definiteness, see Python answer tests."
   },
   {
     "objectID": "docs/authoring.html#for-teachers",
@@ -74,7 +74,7 @@
     "href": "examples.html",
     "title": "Worked questions",
     "section": "",
-    "text": "Your answers are saved only in this browser.Delete answers on this page\nDelete all your answers in this course\nDo not save on this device\nExport my answers\nPress Validate answers to inspect each interpreted response, then Check answer to grade it. After an edit, validate again."
+    "text": "Your answers are saved only in this browser.Do not save on this device\nExport my answers\nDelete answers on this page\nDelete all your answers in this course\nPress Validate answers to inspect each interpreted response, then Check answer to grade it. After an edit, validate again."
   },
   {
     "objectID": "examples.html#for-teachers",
@@ -102,7 +102,7 @@
     "href": "index.html",
     "title": "STACK questions with AI Feedback",
     "section": "",
-    "text": "Your answers are saved only in this browser.Delete answers on this page\nDelete all your answers in this course\nDo not save on this device\nExport my answers\nBring selected Moodle STACK questions to a teaching website. Learners practise in their browser, see how their answers are interpreted, and can request guided AI Feedback alongside the question’s mathematical grading. The exported XML, scoring rules and author tests remain available for inspection.\nQuarto turns plain-text teaching material into web pages. CTM STACK adds interactive question cards to those pages for publication as a static site."
+    "text": "Your answers are saved only in this browser.Do not save on this device\nExport my answers\nDelete answers on this page\nDelete all your answers in this course\nBring selected Moodle STACK questions to a teaching website. Learners practise in their browser, see how their answers are interpreted, and can request guided AI Feedback alongside the question’s mathematical grading. The exported XML, scoring rules and author tests remain available for inspection.\nQuarto turns plain-text teaching material into web pages. CTM STACK adds interactive question cards to those pages for publication as a static site."
   },
   {
     "objectID": "index.html#for-teachers",
@@ -123,7 +123,7 @@
     "href": "corpus.html",
     "title": "Question corpus",
     "section": "",
-    "text": "Your answers are saved only in this browser.Delete answers on this page\nDelete all your answers in this course\nDo not save on this device\nExport my answers\nUse the teacher track to choose and try a question. The developer track keeps replay details and adaptation issues together."
+    "text": "Your answers are saved only in this browser.Do not save on this device\nExport my answers\nDelete answers on this page\nDelete all your answers in this course\nUse the teacher track to choose and try a question. The developer track keeps replay details and adaptation issues together."
   },
   {
     "objectID": "corpus.html#for-teachers",
@@ -151,7 +151,7 @@
     "href": "docs/python-checker-api.html",
     "title": "Python answer tests and custom checkers",
     "section": "",
-    "text": "Your answers are saved only in this browser.Delete answers on this page\nDelete all your answers in this course\nDo not save on this device\nExport my answers\nUse a Python checker when the task accepts a mathematical property rather than one displayed answer. Install CTM Assessment and use filters: [ctm-assessment]; the shared checker library supplies Python and SymPy. Checker source is trusted author code and is public in the static page. Keep credentials and private data out of it."
+    "text": "Your answers are saved only in this browser.Do not save on this device\nExport my answers\nDelete answers on this page\nDelete all your answers in this course\nUse a Python checker when the task accepts a mathematical property rather than one displayed answer. Install CTM Assessment and use filters: [ctm-assessment]; the shared checker library supplies Python and SymPy. Checker source is trusted author code and is public in the static page. Keep credentials and private data out of it."
   },
   {
     "objectID": "docs/python-checker-api.html#choose-the-mathematical-test",
