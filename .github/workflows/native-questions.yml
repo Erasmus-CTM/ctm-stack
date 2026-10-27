@@ -46,7 +46,16 @@ jobs:
           python -m pip install -r requirements-dev.txt
           npm ci --prefix tools/compiler
           node tools/compiler/generate.mjs .cache/stack --check
+          # GitHub's Ubuntu sources use mirror+file indirection as well as direct URLs.
+          sudo sed -i \
+            -e 's|mirror+file:/etc/apt/apt-mirrors.txt|https://archive.ubuntu.com/ubuntu|g' \
+            -e 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' \
+            /etc/apt/sources.list.d/ubuntu.sources
+          cat /etc/apt/sources.list.d/ubuntu.sources
+          grep -Fq 'https://archive.ubuntu.com/ubuntu' /etc/apt/sources.list.d/ubuntu.sources
           sudo apt-get update -qq
+          apt-get --print-uris download libflite1 | tee "$RUNNER_TEMP/native-ubuntu-package-uri.txt"
+          grep -Fq 'https://archive.ubuntu.com/ubuntu/' "$RUNNER_TEMP/native-ubuntu-package-uri.txt"
           sudo apt-get install -y php-cli php-intl php-mbstring
       - name: Stage the unchanged owned runtime-v3
         env:
@@ -65,6 +74,7 @@ jobs:
         run: |
           mkdir -p test-results/native-questions
           python -c 'import json,runpy; print(json.dumps(runpy.run_path("tests/native/test_prt_compiler.py")["programs"]()))' > test-results/native-questions/python-prt-input.json
+          node tests/native/function-security.mjs .cache/native-v3 test-results/native-questions/function-security.json
           node tests/native/exact-replay.mjs .cache/native-v3 test-results/native-questions/exact-replay.json
           node tests/native/prt-audit.mjs .cache/native-v3 test-results/native-questions/python-prt-input.json test-results/native-questions/python-prt-native.json
           python tests/native/oracle/run-adversarial.py --stack-source .cache/stack --runtime .cache/native-v3 --output test-results/native-questions/upstream

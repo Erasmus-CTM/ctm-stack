@@ -65,7 +65,41 @@ test('strings cannot smuggle evaluator or random callbacks through pure calls',(
   for(const source of ['a:subst("eval_string",sin,sin("2+3"));',
     'a:subst("parse_string",sin,sin("2+3"));',
     'a:subst("rand",sin,sin(5));','a:subst("random",sin,sin(5));',
-    'a:map("eval_string",["2+3"]);','a:ev("parse_string");',
+    'a:map("eval_string",["2+3"]);','a:ev(1,parse_string);',
     'a:subst("unknown_function",sin,sin("2+3"));'])
     assert.throws(()=>compileIR(question('{@a@}',source)),/unsupported/);
+});
+
+test('function authority uses an explicit allowlist including every callback position',()=>{
+  const lisp='"(progn (defun ctmx () 42) (ctmx))"';
+  for(const source of [
+    `s:[${lisp}];a:map(eval_string_lisp,s);`,
+    `s:[${lisp},${lisp}];a:sort(s,eval_string_lisp);`,
+    `a:map(?eval_string_lisp,[${lisp}]);`,
+    `a:?eval_string_lisp(${lisp});`,
+    `f:eval_string_lisp;a:map(f,[${lisp}]);`,
+    `f:eval_string_lisp;a:f(${lisp});`,
+    `f:[eval_string_lisp];a:map(first(f),[${lisp}]);`,
+    `f:["eval_string_lisp"];a:map(first(f),[${lisp}]);`,
+    `f:concat("eval_string","_lisp");a:map(f,[${lisp}]);`,
+    `f:sconcat("eval_string","_lisp");a:map(f,[${lisp}]);`,
+    `a:subst(eval_string_lisp,sin,sin(${lisp}));`,
+    `a:map(subst,[[1,x,x]]);`,
+    `a:ev(1,eval_string_lisp);`,
+    `a:substinpart(eval_string_lisp,sin(${lisp}),0);`,
+    `f:lambda([x],x);a:map(f,[1]);`,
+    `a:map(lambda([sin],map(sin,[${lisp}])),[eval_string_lisp]);`,
+    `a:makelist(map(sin,[${lisp}]),sin,[eval_string_lisp]);`,
+    `a:'map(sin,[1]);`,
+  ])assert.throws(()=>compileIR(question('{@a@}',source)),undefined,source);
+});
+
+test('ordinary strings remain data in variables, answers, labels and lambda collections',()=>{
+  for(const label of ['none','red','true','real','all','max','e','eval_string','eval_string_lisp']){
+    const source=`s:["${label}"];a:map(lambda([t],t),s);b:subst("${label}",x,x);c:ev("${label}");`;
+    const compiled=compileIR(question('{@a@}',source));
+    assert.ok(compiled.variables.statement.includes('"'+label+'"'),label);
+  }
+  const model=question('Question {@"red"@}');model.inputs=[{name:'ans',teacher:'"none"'}];
+  assert.equal(compileIR(model).inputTeachers.ans,'"none"');
 });

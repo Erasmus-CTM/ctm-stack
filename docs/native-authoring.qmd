@@ -51,6 +51,21 @@ validation, feedback, conditionals and comments. Learner expressions use the
 same pinned JavaScript admission implementation as the checker payload, with
 an additional native serialization allowlist before Maxima evaluation.
 
+Author execution uses an explicit function allowlist independent of STACK's
+security-map completeness. `map` and custom `sort` callbacks must be literal
+allowlisted first-order functions or inline lambdas. Function names obtained
+through variables, lists, strings, `concat` or `sconcat` do not grant executable
+authority. Stored lambdas, syntax forms passed as callbacks, `apply` and `at`
+remain outside this subset. Strings such as `"none"`, `"red"` and `"real"` are
+ordinary data, including in lambda collections, substitutions and answers.
+
+`subst(new, old, expression)` checks actual native operator replacements before
+substituting: a new operator must be an allowlisted first-order function
+(non-random in feedback). Rewriting lambda or evaluator syntax is unsupported.
+`substinpart` accepts positive literal indices only, and `ev` accepts the
+supported first-order function flags or `simp`, `numer`, `nouns`, `noeval`.
+Author-definition failures are checked before producing candidate evidence.
+
 Unsupported features stop the author build with a diagnostic. These include
 PythonChecker continuations and block checkers, arbitrary author function
 definitions or execution, JSXGraph, external includes, general CASText blocks

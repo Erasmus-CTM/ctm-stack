@@ -114,6 +114,16 @@ jobs:
           python scripts/stage-native.py --release .cache/release --stack-source .cache/stack --output .cache/native-v3
       - name: Install the browser harness
         run: |
+          # GitHub's Ubuntu sources use mirror+file indirection as well as direct URLs.
+          sudo sed -i \
+            -e 's|mirror+file:/etc/apt/apt-mirrors.txt|https://archive.ubuntu.com/ubuntu|g' \
+            -e 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' \
+            /etc/apt/sources.list.d/ubuntu.sources
+          cat /etc/apt/sources.list.d/ubuntu.sources
+          grep -Fq 'https://archive.ubuntu.com/ubuntu' /etc/apt/sources.list.d/ubuntu.sources
+          sudo apt-get update -qq
+          apt-get --print-uris download libflite1 | tee "$RUNNER_TEMP/native-ubuntu-package-uri.txt"
+          grep -Fq 'https://archive.ubuntu.com/ubuntu/' "$RUNNER_TEMP/native-ubuntu-package-uri.txt"
           python -m pip install playwright==1.56.0
           python -m playwright install --with-deps ${{ matrix.browser }}
       - name: Replay the preparation and controller programs without COOP/COEP

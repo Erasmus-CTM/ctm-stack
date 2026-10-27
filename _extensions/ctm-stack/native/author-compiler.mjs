@@ -25,10 +25,14 @@ const aliases=Object.assign(Object.create(null),{ln:'log',cosec:'csc',cosech:'cs
   arcsec:'asec',arccot:'acot',arccsc:'acsc',arcsinh:'asinh',arccosh:'acosh',arctanh:'atanh',arcsech:'asech',arccoth:'acoth',arccsch:'acsch',
   arccosec:'acsc',arsinh:'asinh',arcosh:'acosh',artanh:'atanh',arsech:'asech',arcoth:'acoth',arcsch:'acsch'});
 const constants=new Map([['e','%e'],['pi','%pi'],['Pi','%pi'],['PI','%pi'],['i','%i']]);
+// These forms evaluate function arguments or syntax. They are supported only as
+// audited direct calls, never as callbacks hidden in a collection or variable.
+const syntaxFunctions=new Set('map sort apply subst substinpart ev at lambda block if makelist sum product'.split(' '));
+const callbacks=new Set([...functions].filter(name=>!syntaxFunctions.has(name)));
 function fail(where,message){throw new Error(where+': '+message);}
-function safeName(value,where){
-  if(typeof value!=='string'||!/^[A-Za-z][A-Za-z0-9_]*$/.test(value)||value.startsWith('ctm_')||constants.has(value)
-      ||data.security[value]?.function) fail(where,'reserved or unsupported native name '+value);
+function safeName(value,where,allowFunction=false){
+  if(typeof value!=='string'||!/^[A-Za-z][A-Za-z0-9_]*$/.test(value)||value.startsWith('ctm_')||!allowFunction&&constants.has(value)
+      ||!allowFunction&&(functions.has(aliases[value]||value)||data.security[value]?.function)) fail(where,'reserved or unsupported native name '+value);
   return value;
 }
 function children(node){
@@ -39,35 +43,80 @@ function parse(source,where){
   try{return maximaParser.parse(source);}catch(error){fail(where,'unsupported Maxima syntax: '+error.message);}
 }
 function analyse(node,source,where,random=false){
-  const read=new Set(),calls=new Set(),replacements=[];let count=0;
-  function visit(n,depth=0){
+  const read=new Set(),calls=new Set();let replacements=[],count=0;
+  const callbackSymbols='['+[...callbacks].filter(name=>random||!/^(rand|random|multiselqn)/.test(name)).map(name=>"'"+name).join(',')+']';
+  function render(n){
+    const start=n.position.start.offset,end=n.position.end.offset;
+    let text=source.slice(start,end);
+    for(const [a,b,value] of replacements.filter(([a,b])=>a>=start&&b<=end).sort((a,b)=>b[0]-a[0]))text=text.slice(0,a-start)+value+text.slice(b-start);
+    return text;
+  }
+  function replace(n,text){
+    const a=n.position.start.offset,b=n.position.end.offset;
+    replacements=replacements.filter(([start,end])=>start<a||end>b);replacements.push([a,b,text]);
+  }
+  function callback(n){
+    if(n.kind==='MPFunctionCall'&&n.name.kind==='MPIdentifier'&&n.name.value==='lambda')return;
+    if(n.kind!=='MPIdentifier'||!callbacks.has(aliases[n.value]||n.value))fail(where,'unsupported native function argument: use an allowlisted function or inline lambda');
+  }
+  function inspect(expression,extra='true'){
+    return 'local(ctm_inspect),ctm_inspect(ctm_e):=if atom(ctm_e) then true else ('
+      +'if member(string(op(ctm_e)),['+[...syntaxFunctions,'ctm_inspect'].map(quote).join(',')+']) then error("unsupported syntax rewriting") else true,'
+      +extra+',every(ctm_inspect,args(ctm_e))),ctm_inspect('+expression+')';
+  }
+  function visit(n,depth=0,asCallback=false){
     if(++count>2500||depth>100) fail(where,'author syntax exceeds its structural bound');
     if(n.kind==='MPFunctionCall'){
       if(n.name.kind!=='MPIdentifier') fail(where,'dynamic function calls require a separate capability');
       const target=aliases[n.name.value]||n.name.value;
       if(!functions.has(target)||!random&&/^(rand|random|multiselqn)/.test(target)) fail(where,'unsupported native author call '+target);
-      if(['subst','substinpart','ev','at','map','apply'].includes(target)){
-        const hasString=n=>n.kind==='MPString'||children(n).some(hasString);
-        if(n.args.some(hasString))fail(where,'strings in dynamic function arguments are unsupported');
+      const callbackAt=target==='map'?0:target==='sort'&&n.args.length>1?1:-1;
+      if(callbackAt>=0)callback(n.args[callbackAt]);
+      if(target==='lambda'){
+        if(!asCallback||n.args.length!==2||n.args[0].kind!=='MPList')fail(where,'unsupported stored lambda: use an inline callback');
+        for(const param of n.args[0].items){if(param.kind!=='MPIdentifier')fail(where,'unsupported lambda parameter');safeName(param.value,where);}
       }
+      if(['makelist','sum','product'].includes(target)){
+        if(n.args[1]?.kind!=='MPIdentifier')fail(where,'unsupported iteration variable');safeName(n.args[1].value,where);
+      }
+      if(target==='block'&&n.args[0]?.kind==='MPList')for(const param of n.args[0].items){if(param.kind!=='MPIdentifier')fail(where,'unsupported block binding');safeName(param.value,where);}
+      if(target==='ev')for(const flag of n.args.slice(1)){
+        if(flag.kind!=='MPIdentifier'||!callbacks.has(flag.value)&&!['simp','numer','nouns','noeval'].includes(flag.value))fail(where,'unsupported native evaluation flag');
+      }
+      if(target==='subst'){
+        if(n.args.length!==3)fail(where,'unsupported substitution rules: use subst(new,old,expression)');
+        if(n.args[1].kind==='MPIdentifier'&&functions.has(n.args[1].value))callback(n.args[0]);
+      }
+      if(target==='substinpart'&&(n.args.length<3||n.args.slice(2).some(i=>!/^\d+$/.test(source.slice(i.position.start.offset,i.position.end.offset))||Number(source.slice(i.position.start.offset,i.position.end.offset))<1)))fail(where,'unsupported operator or dynamic part substitution');
       calls.add(target);
       if(aliases[n.name.value]) replacements.push([n.name.position.start.offset,n.name.position.end.offset,target]);
-      for(const arg of n.args) visit(arg,depth+1);
+      for(const [at,arg] of n.args.entries())visit(arg,depth+1,at===callbackAt);
+      if(target==='subst'){
+        const args=n.args.map(render);
+        replace(n,'block([ctm_new:'+args[0]+',ctm_old:'+args[1]+',ctm_expr:'+args[2]+'],'
+          +inspect('ctm_expr','if is(equal(op(ctm_e),ctm_old)) and not member(ctm_new,'+callbackSymbols+') then error("unsupported function substitution") else true')
+          +',subst(ctm_new,ctm_old,ctm_expr))');
+      }
+      if(target==='substinpart'){
+        const args=n.args.map(render);
+        replace(n,'block([ctm_new:'+args[0]+',ctm_expr:'+args[1]+'],'+inspect('ctm_expr')+',substinpart(ctm_new,ctm_expr,'+args.slice(2).join(',')+'))');
+      }
       return;
     }
     if(n.kind==='MPOperation'&&n.op.startsWith(':')) fail(where,'nested writes or function definitions require a separate capability');
     if(n.kind==='MPLoop'||n.kind==='MPEvaluationFlag'||n.kind==='MPAnnotation') fail(where,'unsupported native author control construct '+n.kind);
     if(n.kind==='MPPrefixOp'&&['?','??',"''"].includes(n.op.trim())) fail(where,'Lisp escapes and dynamic evaluation are unsupported');
-    if(n.kind==='MPString' && Object.hasOwn(data.security,n.value))fail(where,'strings naming native security entries are unsupported: '+n.value);
+    if(n.kind==='MPPrefixOp'&&n.op.trim()==="'"&&n.rhs?.kind==='MPFunctionCall'&&syntaxFunctions.has(n.rhs.name?.value))fail(where,'unsupported quoted executable syntax');
     if(n.kind==='MPIdentifier'){
       // A function passed to map is still executable authority even though it
       // is not syntactically a call. Keep callback references in the same
       // pure-function subset and reserve the compiler's own local namespace.
-      if(n.value.startsWith('ctm_')||data.security[n.value]?.function&&!functions.has(n.value)&&!constants.has(n.value))
+      if(n.value.startsWith('ctm_'))
         fail(where,'unsupported native author function or internal reference '+n.value);
-      if(data.security[n.value]?.function){
+      if(functions.has(aliases[n.value]||n.value)){
         if(!random&&/^(rand|random|multiselqn)/.test(n.value))fail(where,'random callbacks are only supported in question variables');
-        calls.add(n.value);
+        calls.add(aliases[n.value]||n.value);
+        if(aliases[n.value])replacements.push([n.position.start.offset,n.position.end.offset,aliases[n.value]]);
       }
       read.add(n.value);
       if(constants.has(n.value)) replacements.push([n.position.start.offset,n.position.end.offset,constants.get(n.value)]);
@@ -87,10 +136,7 @@ function analyse(node,source,where,random=false){
     for(const child of children(n))visit(child,depth+1);
   }
   visit(node);
-  let text=source.slice(node.position.start.offset,node.position.end.offset);
-  const origin=node.position.start.offset;
-  for(const [start,end,value] of replacements.sort((a,b)=>b[0]-a[0]))text=text.slice(0,start-origin)+value+text.slice(end-origin);
-  return {text,read,calls};
+  return {text:render(node),read,calls};
 }
 function operand(source,where,random=false){
   const root=parse(source,where),items=root.items.filter(i=>i.kind!=='MPComment');
@@ -109,7 +155,7 @@ function keyval(source,where,random=false){
     rhs.calls.forEach(c=>called.add(c));rhs.read.forEach(n=>read.add(n));
     write.push(key);steps.push(ec(key+':'+rhs.text,where+'/'+at));
   }
-  return {names:write,random:[...called].some(c=>/^(rand|random|multiselqn)/.test(c)),statement:steps.length?'('+steps.join(',')+',true)':null,
+  return {names:write,random:[...called].some(c=>/^(rand|random|multiselqn)/.test(c)),statement:steps.length?'('+steps.join(',')+',if length(%ERR)>1 then error("native author definitions failed") else true)':null,
     references:{write:Object.fromEntries(write.map(n=>[n,true])),read:Object.fromEntries([...read].map(n=>[n,true]))}};
 }
 function latexReplacements(){
@@ -194,7 +240,7 @@ export function compileIR(question){
   const inputTeachers={};
   for(const input of question.inputs)inputTeachers[input.name]=operand(input.teacher,'input/'+input.name+'/teacher').text;
   for(const prt of question.prts){
-    safeName(prt.name,'PRT');
+    safeName(prt.name,'PRT',true);
     const fv=keyval(prt.feedbackvariables,'prt/'+prt.name+'/feedbackvariables');
     if(fv.names.some(n=>variables.names.includes(n)||inputs.includes(n)))fail('prt/'+prt.name,'feedback names collide with question variables or inputs');
     fv.names.forEach(n=>feedbackNames.add(n));

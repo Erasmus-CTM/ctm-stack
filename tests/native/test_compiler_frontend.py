@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import xml.etree.ElementTree as ET
+import pytest
 
 ROOT=Path(__file__).resolve().parents[2]
 NATIVE=ROOT/'_extensions/ctm-stack/native'
@@ -14,6 +15,8 @@ compiler=importlib.util.module_from_spec(spec);spec.loader.exec_module(compiler)
 
 def test_nested_list_text_is_not_mistaken_for_a_castext_block(tmp_path):
     source=Path(os.environ.get('CTM_CHECKERS_SOURCE',ROOT/'_ctm-checkers-source'))/'examples/stack/polynomial-expansion.xml'
+    if not source.is_file():
+        pytest.skip('ctm-checkers source is absent; set CTM_CHECKERS_SOURCE to its checkout for XML frontend tests')
     tree=ET.parse(source)
     question=tree.getroot().find('question')
     question.find('questiontext/text').text=r'Compare \([[a,b],[c,d]]\). [[input:ans]] [[validation:ans]]'

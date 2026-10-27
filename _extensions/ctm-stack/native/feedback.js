@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0-or-later AND GPL-3.0-or-later
 // Display native STACK's bounded translation protocol. This module does not
 // run CAS code, infer correctness, or execute Moodle's PHP/JavaScript protocol.
 (function (scope) {
