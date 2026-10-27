@@ -47,7 +47,8 @@ test('inline mathematics closes before the next expression', () => {
 
 test('author execution and scope mutation fail closed', () => {
   for(const source of ['x:system("id");', 'x:load("evil");', 'x:kill(all);',
-      'ctm_score:1;', 'x::1;', 'f(x):=x;', 'x:assume(y>0);']) {
+      'ctm_score:1;', 'x::1;', 'f(x):=x;', 'x:assume(y>0);',
+      'x:map(kill,[a]);', 'x:map(\'system,["id"]);', 'x:ctm_score;']) {
     assert.throws(()=>compileIR(question('{@x@}',source)),undefined,source);
   }
 });

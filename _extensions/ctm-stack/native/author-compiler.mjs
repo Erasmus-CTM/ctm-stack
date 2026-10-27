@@ -55,6 +55,11 @@ function analyse(node,source,where,random=false){
     if(n.kind==='MPLoop'||n.kind==='MPEvaluationFlag'||n.kind==='MPAnnotation') fail(where,'unsupported native author control construct '+n.kind);
     if(n.kind==='MPPrefixOp'&&['?','??',"''"].includes(n.op.trim())) fail(where,'Lisp escapes and dynamic evaluation are unsupported');
     if(n.kind==='MPIdentifier'){
+      // A function passed to map is still executable authority even though it
+      // is not syntactically a call. Keep callback references in the same
+      // pure-function subset and reserve the compiler's own local namespace.
+      if(n.value.startsWith('ctm_')||data.security[n.value]?.function&&!functions.has(n.value)&&!constants.has(n.value))
+        fail(where,'unsupported native author function or internal reference '+n.value);
       read.add(n.value);
       if(constants.has(n.value)) replacements.push([n.position.start.offset,n.position.end.offset,constants.get(n.value)]);
       else if(/[^\x00-\x7f]/.test(n.value)){
