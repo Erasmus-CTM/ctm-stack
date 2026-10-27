@@ -78,6 +78,7 @@ jobs:
           path: test-results/example.png
           if-no-files-found: ignore
       - uses: actions/upload-artifact@v4
+        if: always()  # also after failed browser checks, to inspect the page; publish still needs this job to pass
         with:
           name: site-html
           path: _site/
