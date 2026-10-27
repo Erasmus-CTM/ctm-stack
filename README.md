@@ -20,7 +20,7 @@ The project-authored and adapted questions in [ctm-checkers' `examples/stack/`](
 
 ## Install in a Quarto project
 
-ctm-stack needs CTM Assessment: install it in the project (`quarto add https://erasmus-ctm.github.io/ctm-assessment/ctm-assessment.tar.gz`), then add ctm-stack with `quarto add Erasmus-CTM/ctm-stack`, or copy this repository's `_extensions/ctm-stack` folder into the project. Without CTM Assessment (or with one that predates ctm-checkers' STACK engine, 0.2.0) the render stops with the command that installs or updates it. Also run `python -m pip install 'sympy==1.13.3'` in the Python environment Quarto uses; that project does not receive this repository's requirements file. Build-time rendering needs Python 3.9+ and Quarto 1.8.27+.
+ctm-stack is part of CTM Assessment, which installs and runs it: install the package (`quarto add https://erasmus-ctm.github.io/ctm-assessment/ctm-assessment.tar.gz`) and list `filters: [ctm-assessment]` in `_quarto.yml`. Nothing else is installed or listed for STACK cards. Without CTM Assessment (or with one that predates ctm-checkers' STACK engine, 0.2.0) the render stops with the command that installs or updates it. STACK cards are prepared at build time, so also run `python -m pip install 'sympy==1.13.3'` in the Python environment Quarto uses; that project does not receive this repository's requirements file. Build-time rendering needs Python 3.9+ and Quarto 1.8.27+.
 
 For a local checkout of this example site, install the parts of CTM Assessment that it builds against, at the commits in [`.github/pins.json`](.github/pins.json): `quarto add` of a ctm-libs and a ctm-checkers checkout. The site's `questions/` are ctm-checkers' `examples/stack/` (`scripts/fetch-examples.py` copies them before rendering, from `_ctm-checkers-source/` or the checkout named by `CTM_CHECKERS_SOURCE`). Without the CTM Assessment package, render as a component development build (`CTM_COMPONENT_DEV=1`):
 
@@ -38,21 +38,16 @@ python -m http.server --directory _site 8000
 
 When the filter uses a different Python interpreter, set `STACK_SYMPY_PYTHON=/absolute/path/to/.venv/bin/python` for the render. A plain `file://` preview cannot reliably run browser workers; use an HTTP server. Browser grading downloads Pyodide and its packages on first use (ctm-libs' runtime, Pyodide 0.28.3), so a learner needs network access. The site's authored XML files are retained as downloadable resources.
 
-Add the filter to `_quarto.yml`:
+This site lists `ctm-stack` itself in `filters:`, because it builds against those checkouts; a course lists only `ctm-assessment`.
 
-```yaml
-filters:
-  - ctm-stack
-```
-
-In a `.qmd` file, use the exact XML question name:
+In a `.qmd` file, give the card a unique label and use the exact XML question name:
 
 ````markdown
 ```{.stack-question}
+#| label: expand-a-product
 #| file: questions/polynomial-expansion.xml
 #| question: Expand a product (form-sensitive)
 #| variants: 3
-#| seed: 17
 #| review: true
 #| feedback: true
 ```
@@ -60,13 +55,13 @@ In a `.qmd` file, use the exact XML question name:
 
 A learner enters answers, presses **Validate answers** to inspect how each expression was parsed, then presses **Check answer** to grade the validated response. Editing a field clears its validation and requires another Validate step. The preview preserves the written form, so `x+x` still appears as `x+x`; this is important when an answer test checks form. Invalid input receives a validation message and cannot be graded until corrected.
 
-Each rendered question also has closed **Show source** and **Show STACK source** panels below it. They show the authored Quarto fenced block and the original XML file, respectively, for inspection or copying. Opening either panel does not affect the question or its grading.
+With `source-panels: true` (on a card, or for every card under `stack:` in `_quarto.yml`, as this site sets it) each question has closed **Show source** and **Show STACK source** panels below it. They show the authored Quarto fenced block and the original XML file, respectively, for inspection or copying. Opening either panel does not affect the question or its grading. Panels are off by default.
 
-`file` and `question` are required. `variants` is 1–20 (default 1); `seed` is a signed integer (default 1). `review: true` exposes the authored qtests for inspection. `diagnostics: true` displays build errors in the rendered page during authoring. Remove diagnostics for publishing, so unsupported content fails the build. A seed produces repeatable variants in this adapter, but is **not** expected to match Maxima's random sequence for the same seed.
+`label`, `file` and `question` are required; the label is unique on the page and keys the card's variant history, saved answers and policy overrides. `variants` is the number of proposals generated for review, 1–100 (default 25); only approved current variants are published (see the [authoring guide](docs/authoring.qmd#start-with-a-native-export)). `#| seed:` was removed: the render stops and asks for reviewed variants instead. `review: true` exposes the authored qtests for inspection. `diagnostics: true` displays build errors in the rendered page during authoring. Remove diagnostics for publishing, so unsupported content fails the build. The full option list is in the [authoring guide](docs/authoring.qmd#question-block-options).
 
 ## AI feedback and context
 
-`feedback: true` enables optional AI hints for a card (default false). A build without AI feedback (`ai-feedback: enabled: false` or `CTM_FEEDBACK=off`) gives such cards none: no Feedback button and no feedback data in the page; native checking is unchanged, and the build message names them. The shared `math-exercise` policy supplies the hint sequence and is the YAML integration namespace for STACK. `context: auto` is the default; `context: id1,id2` references tagged blocks; `context: none` omits context. `feedback-language` chooses the explanation language, defaulting to document `lang`. `feedback-policy` selects an existing named policy. Use `label` for a stable exercise key in policy YAML; otherwise the card ID is used.
+AI hints are on by default (`feedback: auto`) whenever the build has AI feedback; `feedback: false` turns them off for a card, and `stack: feedback: false` in `_quarto.yml` for every card. A build without AI feedback (`ai-feedback: enabled: false` or `CTM_FEEDBACK=off`) gives cards none: no Feedback button and no feedback data in the page; native checking is unchanged, and the build message names them. Cards use their own feedback integration, `stack`, whose shipped policy has math-exercise's hint sequence. `context: auto` is the default; `context: id1,id2` references tagged blocks; `context: none` omits context. `feedback-language` chooses the explanation language, defaulting to document `lang`. `feedback-policy` selects an existing named policy. Use `label` for a stable exercise key in policy YAML; otherwise the card ID is used.
 
 Automatic context comes from visible prose in the preceding section. To share a specific concept, tag it and reference its ID instead:
 
@@ -76,6 +71,7 @@ Distributivity gives $a(b+c)=ab+ac$.
 :::
 
 ```{.stack-question}
+#| label: expand-with-context
 #| file: questions/polynomial-expansion.xml
 #| question: Expand a product (form-sensitive)
 #| feedback: true
@@ -85,7 +81,7 @@ Distributivity gives $a(b+c)=ab+ac$.
 
 `context: none` turns context off for that card. `.ai-feedback-context` and legacy `.math-exercise-context` are aliases of `.ai-context`. The [live examples](https://erasmus-ctm.github.io/ctm-stack/examples.html) include all three modes. CTM Assessment's AI feedback (ctm-libs) handles explicit aliases, LaTeX and context limits; STACK does not implement a second resolver.
 
-CTM Assessment's AI feedback loads named definitions from `policy-files` and `page-policy-files`; loading a file alone activates nothing. Select `project-policy` or `page-policy` explicitly, either by name or with a `math-exercise` selector map. Policies support `extends`, `base-prompt`, and a replacement list of `step-prompt` entries. The old authored `defaults`, `integrations`, and `prompt` fields are rejected. Resolution follows shipped defaults, explicit project/page selections, exercise-ID overrides, the exercise's selected policy and its ancestry, then its current step. STACK delegates this resolution to the shared runtime. See the [working course policy](feedback/course.yml), [authoring example](docs/authoring.qmd#choose-a-teaching-policy), and [shared policy reference](https://github.com/Erasmus-CTM/ctm-libs/blob/main/docs/feedback-policies.md).
+CTM Assessment's AI feedback loads named definitions from `policy-files`; loading a file alone activates nothing. Select one with `policy`, either by name or with a selector map for the `stack` integration (`policy: {stack: course-mathematics}`, as this site's `_quarto.yml` does); exercise overrides go under `exercises.stack.<label>`. Policies support `extends`, `base-prompt`, and a replacement list of `step-prompt` entries. The old authored `defaults`, `integrations`, and `prompt` fields are rejected. Resolution follows shipped defaults, explicit project/page selections, exercise-ID overrides, the exercise's selected policy and its ancestry, then its current step. STACK delegates this resolution to the shared runtime. See the [working course policy](feedback/course.yml), [authoring example](docs/authoring.qmd#choose-a-teaching-policy), and [shared policy reference](https://github.com/Erasmus-CTM/ctm-libs/blob/main/docs/feedback-policies.md).
 
 The default mathematics sequence has four steps: question, concept, procedure, and worked solution. Edits cancel stale replies and invalidate Check evidence while retaining progression. Check restarts hints when the effective `reset-on-run` is true; selecting another frozen variant always resets hints and evidence. Only a successful displayed reply or copy prompt advances a step. Explicit `jsxgraph:diagram-id` context references use the shared visual-context collector; diagrams are never attached implicitly.
 

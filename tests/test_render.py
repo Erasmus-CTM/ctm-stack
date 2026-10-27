@@ -452,3 +452,15 @@ def test_review_payload_has_native_identities_without_a_selection_menu():
     assert all(v['n'] is None and v['proposal'] and len(v['hash'])==16 for v in data['variants'])
     assert not doc.find('select','stack-variant')
     assert len(doc.find('button','stack-new-variant'))==1
+
+
+def test_readme_examples_render():
+    """The README's card examples are what authors copy first; each renders."""
+    snippets = [snippet for snippet in re.findall(r"````markdown\n(.*?)````", (ROOT / "README.md").read_text(), re.S)
+                if "{.stack-question}" in snippet]
+    assert len(snippets) >= 2
+    for snippet in snippets:
+        result, output = _fixture_render("# Example\n\n" + snippet,
+                                         files={"questions/polynomial-expansion.xml": QUESTION.read_text()})
+        assert result.returncode == 0, snippet + result.stdout + result.stderr
+        assert len(Document(output).find(css_class="ctm-stack")) == 1, snippet

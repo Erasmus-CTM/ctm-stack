@@ -374,15 +374,15 @@ answer.
 
 ### Policy configuration {#policy-configuration}
 
-Loading definitions with `policy-files` or `page-policy-files` does not select
-a policy. Select `project-policy` or `page-policy` explicitly; STACK uses the
-shared `math-exercise` policy namespace. This site's configuration is:
+Loading definitions with `policy-files` does not select a policy. Select one
+with `policy`; STACK cards use their own integration, `stack`. This site's
+configuration is:
 
 ```yaml
 ai-feedback:
   policy-files: feedback/course.yml
-  project-policy:
-    math-exercise: course-mathematics
+  policy:
+    stack: course-mathematics
 ```
 
 A named policy can inherit settings and replace its hint sequence:
@@ -406,7 +406,7 @@ ai-feedback:
 
 Place this definition in a policy YAML file and select
 `feedback-policy: two-step-practice` on a card. A stable `label` targets
-`exercises.math-exercise` overrides. The policy resolver applies defaults,
+`exercises.stack` overrides. The policy resolver applies defaults,
 project/page selections, exercise overrides, the selected policy and its
 ancestry, then the current step. `steps` replaces the inherited list;
 `base-prompt` supplies ongoing instructions and `step-prompt` one step.
