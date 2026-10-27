@@ -1,0 +1,5 @@
+{
+  "name": "ctm-stack-compiler-generation",
+  "private": true,
+  "dependencies": {"pegjs": "0.10.0"}
+}

@@ -15,7 +15,7 @@ import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 NATIVE = ROOT / '_extensions/ctm-stack/native'
-STACK = '33383047af39c204bf4442802a058f8b918b2b1b'
+STACK = json.loads((Path(__file__).resolve().parents[1]/'_extensions/ctm-stack/native/stack-pin.json').read_text())['revision']
 
 
 def digest(data):

@@ -420,7 +420,7 @@ def test_lua_shell_uses_api_two_and_stack_settings_without_source_panels():
 def test_maxima_selection_stops_at_build_without_a_runtime_fallback():
     result, output = _fixture_render(_card(extra='#| cas: maxima\n'))
     assert result.returncode != 0
-    assert 'the Maxima backend is not available yet' in result.stdout + result.stderr
+    assert 'Stage the owned runtime-v3 package' in result.stdout + result.stderr
     assert 'ctm-stack-data' not in output
 
 

@@ -3,6 +3,7 @@ local ctm = dofile(quarto.utils.resolve_path('ctm-bootstrap.lua'))('ctm-stack', 
 local installed, sequence, feedbackRequested, documentLanguage = false, 0, false, 'en'
 local feedback, seenBackends, seenLabels, warnedDefault = nil, {}, {}, false
 local feedbackDefault = 'auto'
+local nativePackageHash = nil
 local function fail(message) assert(false, 'ctm-stack: ' .. message) end
 local function escape(s) return tostring(s or ''):gsub('&','&amp;'):gsub('<','&lt;'):gsub('>','&gt;'):gsub('"','&quot;') end
 local function json(value) return pandoc.json.encode(value):gsub('<','\\u003c'):gsub('>','\\u003e'):gsub('&','\\u0026') end
@@ -52,7 +53,29 @@ local function setup()
   ctm.deps.html({name = 'ctm-ui', stylesheets = {'ui/ctm-ui.css'}})
   quarto.doc.add_html_dependency({name = 'ctm-stack', version = version(),
     scripts = {{path = 'ctm-stack.js', afterBody = true}}, stylesheets = {'ctm-stack.css'},
-    resources = {{name = 'backends/sympy.js', path = 'backends/sympy.js'}}})
+    resources = {{name = 'backends/sympy.js', path = 'backends/sympy.js'},
+      {name = 'backends/maxima.js', path = 'backends/maxima.js'}}})
+end
+local function nativeResources(runtime)
+  if type(runtime) ~= 'table' or type(runtime.root) ~= 'string' or type(runtime.files) ~= 'table'
+      or type(runtime.packageHash) ~= 'string' or #runtime.packageHash ~= 64
+      or not runtime.packageHash:match('^[a-f0-9]+$') then fail('native producer returned invalid runtime resources') end
+  if nativePackageHash then
+    if nativePackageHash ~= runtime.packageHash then fail('a page must use one owned Maxima runtime package') end
+    return
+  end
+  local resources = {}
+  for _, name in ipairs({'stack-pin.js','card-worker.js','direct-runtime.js','browser-package.js','question-engine.js','feedback.js'}) do
+    resources[#resources+1] = {name=name,path=quarto.utils.resolve_path('native/' .. name)}
+  end
+  for _, name in ipairs(runtime.files) do
+    if type(name) ~= 'string' or name:sub(1,1) == '/' or name:find('\\',1,true)
+        or name:find('..',1,true) or name:find('//',1,true) then fail('unsafe native resource path') end
+    resources[#resources+1] = {name='runtime-v3/' .. name,path=pandoc.path.join({runtime.root,name})}
+  end
+  nativePackageHash = runtime.packageHash
+  quarto.doc.add_html_dependency({name='ctm-stack-native',version=version(),
+    scripts={{path=quarto.utils.resolve_path('native/runtime-config.js'),afterBody=true}},resources=resources})
 end
 local function authoredSource(block)
   local longest=0; for ticks in block.text:gmatch('`+') do longest=math.max(longest,#ticks) end
@@ -84,7 +107,6 @@ local function render(block)
   local cas = opts.cas or ctm.settings.choice('stack','cas',{'sympy','maxima'},{default='sympy'})
   if cas ~= 'sympy' and cas ~= 'maxima' then fail('cas must be sympy or maxima') end
   -- This is the build registry. The card controller has no backend branch.
-  if cas == 'maxima' then fail('the Maxima backend is not available yet') end
   if not opts.cas and not ctm.settings.string('stack','cas') and not warnedDefault then
     warnedDefault = true; quarto.log.info('ctm-stack: default CAS: sympy (provisional)')
   end
@@ -118,6 +140,7 @@ local function render(block)
     fail('could not prepare ' .. opts.file .. ' / ' .. opts.question .. ': ' .. detail)
   end
   local resolved = pandoc.json.decode(output)
+  if cas == 'maxima' then nativeResources(resolved.nativeRuntime) end
   for _,warning in ipairs(resolved.warnings or {}) do quarto.log.warning('ctm-stack: ' .. opts.label .. ': ' .. warning) end
   output = assert(resolved.payloadJSON,'ctm-stack: native variants returned no prepared payload')
   local payload = pandoc.json.decode(output)
@@ -149,7 +172,8 @@ local function render(block)
     .. '<button type="button" class="stack-check" disabled>' .. escape(text('checkButton')) .. '</button>'
     .. (payload.review and '<button type="button" class="stack-tests">' .. escape(text('testsButton')) .. '</button>' or '')
   local descriptor = firstBackend and '<script type="application/json" class="ctm-stack-backend" data-backend="' .. cas .. '">'
-    .. json({id=cas,version=ctm.checkers.require('ctm-stack','1.1').version,adapter='backends/sympy.js',requires={isolation=false}}) .. '</script>' or ''
+    .. json({id=cas,version=ctm.checkers.require('ctm-stack','1.1').version,adapter='backends/' .. cas .. '.js',
+      runtimeHash=cas == 'maxima' and nativePackageHash or nil,requires={isolation=false}}) .. '</script>' or ''
   local sourcePanels = bool(opts,'source-panels',ctm.settings.bool('stack','source-panels',{default=false}))
   local source = sourcePanels and '<div class="stack-source-panels">'
     .. sourcePanel(text('showSource'),'markdown',authoredSource(block))

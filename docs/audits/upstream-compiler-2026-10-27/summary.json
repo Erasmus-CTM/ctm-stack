@@ -1,0 +1,821 @@
+{
+  "schema": 1,
+  "date": "2026-10-27",
+  "stackRevision": "33383047af39c204bf4442802a058f8b918b2b1b",
+  "php": "8.3.36",
+  "node": "v24.19.0",
+  "runtime": {
+    "type": "ready",
+    "packageHash": "4e80e54b266aa8c562658e2eb7ea0f8a1881750794e6d95e1792e5ffec2171a8",
+    "adapterHash": "1f172d797bc67bddbb85f6db4f2fd71d6e9d2f99195232a9ebfcf343af27dffc",
+    "maximaVersion": "branch_5_49_base_90_g813903d33",
+    "manifest": {
+      "stackRevision": "33383047af39c204bf4442802a058f8b918b2b1b",
+      "stackLibraryVersion": "2026101500",
+      "runtimeAssets": [
+        {
+          "path": "libecl.so",
+          "bytes": 5123084,
+          "sha256": "f34977d1b0e136c3398940626f8959ed2df12ae414013433b4740766c013e44f",
+          "deployedBytes": 7966927,
+          "deployedSha256": "477e2d4092cc8a6a601e39ddc746440854984115347b62e7faf3b65cc8fa3564",
+          "differenceBytes": -2843843
+        },
+        {
+          "path": "maxima-integration.fas",
+          "bytes": 2000690,
+          "sha256": "f6c93b87f167d61cd419620dd7ef618e11ba93b351ada815cee4048aee81ad82",
+          "deployedBytes": 2156309,
+          "deployedSha256": "f9cfeaaf6dcf3063428a19b08bd1b27cfd7618db3f7e3443a69ad26fcbe95db4",
+          "differenceBytes": -155619
+        },
+        {
+          "path": "maxima-limits.fas",
+          "bytes": 869991,
+          "sha256": "b0d3e2d585c6fe19e4b53969aa0f0525ad547f0f1b767d241102403231669d79",
+          "deployedBytes": 985243,
+          "deployedSha256": "df76a340b53864025e4a8030789a40a91a5d8b6cc0724c11c0e271af9814a5c0",
+          "differenceBytes": -115252
+        },
+        {
+          "path": "maxima-matrix-algebra.fas",
+          "bytes": 581326,
+          "sha256": "3d379089bfbdbfffbbb0509dda5b0843e9ea857765cddd5c0c2d99b8287fbf4b",
+          "deployedBytes": 645537,
+          "deployedSha256": "25a1496b2170cb0ee1d66adc44e89d934e96ea9af1f93c879db02be56e1b3c07",
+          "differenceBytes": -64211
+        },
+        {
+          "path": "maxima-number-theory.fas",
+          "bytes": 1318671,
+          "sha256": "0b3c4a26c1a6e5a3c7119a1acc5334f8d4dbbed875ebf42d710635f7500ede23",
+          "deployedBytes": 1429150,
+          "deployedSha256": "833ac50171d72c4bff7278ae1c989117b15c49a67516790683380d0f5aa0d887",
+          "differenceBytes": -110479
+        },
+        {
+          "path": "maxima-poisson-series.fas",
+          "bytes": 189615,
+          "sha256": "d8b01981336169baa6d2c5bcbac6801fe50992239f9b1a4a5ddc12ab339162e9",
+          "deployedBytes": 217426,
+          "deployedSha256": "439ab53ff86b76052105dbcc8770c04109c7ea95efb89b2440a9a2a533eff9fd",
+          "differenceBytes": -27811
+        },
+        {
+          "path": "maxima-quadpack.fas",
+          "bytes": 3395044,
+          "sha256": "5da888e338cb040051afeaf67b2f56144632a9d9e1242a501e56e16deb9f80a9",
+          "deployedBytes": 3714554,
+          "deployedSha256": "26ca2a9811792cb023730014f9e9179af0e5e47c47fdf64528558d1dbc0c0def",
+          "differenceBytes": -319510
+        },
+        {
+          "path": "maxima-slatec.fas",
+          "bytes": 5424862,
+          "sha256": "a85e302d5f8feb97a6c14a87f520f4330137de2a762efad1bfb897a5e1c0c970",
+          "deployedBytes": 6182186,
+          "deployedSha256": "3123d401b7ab973a66b7e585ea0e746a5c899937e1b0ebdf399589eb9d2a003e",
+          "differenceBytes": -757324
+        },
+        {
+          "path": "maxima-solve.fas",
+          "bytes": 1215181,
+          "sha256": "2a155331677de0f8648ba65c62bb43928eeaf180215cc9a15fa3e1dabdac7828",
+          "deployedBytes": 1373325,
+          "deployedSha256": "7c2b44e14bc16f3b51b2185b5877c0667d8ae27c8fd5f34546d494e118febaf7",
+          "differenceBytes": -158144
+        },
+        {
+          "path": "maxima.js",
+          "bytes": 608449,
+          "sha256": "3e34145350f676f44c06a402ce79a28d5119cb60060917b779bd000f9dc8e745",
+          "deployedBytes": 1239434,
+          "deployedSha256": "4b0b3ecc4eb229b35595e3e5f4063565502df023559d355a23306696af2fdf87",
+          "differenceBytes": -630985
+        },
+        {
+          "path": "maxima.wasm",
+          "bytes": 20629568,
+          "sha256": "182384b851e2ef6b76a6a9cb88a018b6b6f5e3dd8cd7a987da22c6b1db29eb20",
+          "deployedBytes": 23611995,
+          "deployedSha256": "87f155d8eebdcb457da5143c6a7b4f2dfbda1894a254a0caf4869318592b27c1",
+          "differenceBytes": -2982427
+        },
+        {
+          "path": "maxima_thread.js",
+          "bytes": 3229,
+          "sha256": "2e6c397ada0d936a228721788cfda212647a0ae7a1a16e0f54a6aa16587230db",
+          "deployedBytes": 3229,
+          "deployedSha256": "2e6c397ada0d936a228721788cfda212647a0ae7a1a16e0f54a6aa16587230db",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/info/maxima-index-html.lisp",
+          "bytes": 240539,
+          "sha256": "1447fa3ae889b6e2466bee0b1825e24d2c5c06049a2aea46ae841f3736238ce9",
+          "deployedBytes": 240539,
+          "deployedSha256": "1447fa3ae889b6e2466bee0b1825e24d2c5c06049a2aea46ae841f3736238ce9",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/info/maxima-index.lisp",
+          "bytes": 262119,
+          "sha256": "07fe12c5619772c33f8f6867afbfe9bd417b38605816f530689b3d0cfc50890f",
+          "deployedBytes": 262119,
+          "deployedSha256": "c4f25a08a93e2d730bec935a031537f6d01a069ad61f220f473a14f7aabd2160",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/contrib/Grobner/grobner.lisp",
+          "bytes": 83712,
+          "sha256": "027ea2adca8ee282261ef2c860a09506ade398ec8bee53d10f45b4edf3066aa0",
+          "deployedBytes": 83712,
+          "deployedSha256": "027ea2adca8ee282261ef2c860a09506ade398ec8bee53d10f45b4edf3066aa0",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/contrib/diag.mac",
+          "bytes": 13815,
+          "sha256": "058e2c46b050371cb10f45146c80daaabc38699fe057e31826a9c8566c26ea1e",
+          "deployedBytes": 13815,
+          "deployedSha256": "058e2c46b050371cb10f45146c80daaabc38699fe057e31826a9c8566c26ea1e",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/contrib/opsubst.lisp",
+          "bytes": 5719,
+          "sha256": "ff90059ce466a6f111838b6a31876f77c9b7d4947528b16d1642eea97b9fdbd3",
+          "deployedBytes": 5719,
+          "deployedSha256": "ff90059ce466a6f111838b6a31876f77c9b7d4947528b16d1642eea97b9fdbd3",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/contrib/simplifying.lisp",
+          "bytes": 3674,
+          "sha256": "fa7c62ce99c4aac44587ef4eeb301d15b902f8349945e4163f3148fa5f1da12f",
+          "deployedBytes": 3674,
+          "deployedSha256": "fa7c62ce99c4aac44587ef4eeb301d15b902f8349945e4163f3148fa5f1da12f",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/contrib/trigtools/trigtools.mac",
+          "bytes": 5020,
+          "sha256": "cae0f3c2f902ddfa05099d7bd59e9f0b85a8b616f72085d1fc69ac6eab14fbbc",
+          "deployedBytes": 5020,
+          "deployedSha256": "cae0f3c2f902ddfa05099d7bd59e9f0b85a8b616f72085d1fc69ac6eab14fbbc",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/descriptive/descriptive.mac",
+          "bytes": 69297,
+          "sha256": "c9b7d891f0a59d62a4acc0171d46d9234cb9613364c7760206fb34ebf4c2d15a",
+          "deployedBytes": 69297,
+          "deployedSha256": "c9b7d891f0a59d62a4acc0171d46d9234cb9613364c7760206fb34ebf4c2d15a",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/descriptive/descriptive_util.lisp",
+          "bytes": 665,
+          "sha256": "a55a311e59742454623026388173bf8bc53933741bf1eec54dc9754d908d3b89",
+          "deployedBytes": 665,
+          "deployedSha256": "a55a311e59742454623026388173bf8bc53933741bf1eec54dc9754d908d3b89",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/distrib/distrib.mac",
+          "bytes": 75917,
+          "sha256": "bca2baca2a951be94c48d903e9f742dc6c48af56c0ee8d71852d21e8b2c4e674",
+          "deployedBytes": 75917,
+          "deployedSha256": "bca2baca2a951be94c48d903e9f742dc6c48af56c0ee8d71852d21e8b2c4e674",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/distrib/numdistrib.lisp",
+          "bytes": 67103,
+          "sha256": "785a5040c4ddccbf86cbfe545ecd6df9c9c91b3fd0943d175c63ea6842c6361b",
+          "deployedBytes": 67103,
+          "deployedSha256": "785a5040c4ddccbf86cbfe545ecd6df9c9c91b3fd0943d175c63ea6842c6361b",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/draw/draw.lisp",
+          "bytes": 231,
+          "sha256": "45def400e51ed424494d988f0c37e8e880247bda9ae249d54e8f2e33b856dbd9",
+          "deployedBytes": 231,
+          "deployedSha256": "45def400e51ed424494d988f0c37e8e880247bda9ae249d54e8f2e33b856dbd9",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/draw/draw.system",
+          "bytes": 288,
+          "sha256": "b3540ed3cc0623c7269f74418fd316551f4302fd11235d05366158251eb0ece4",
+          "deployedBytes": 288,
+          "deployedSha256": "b3540ed3cc0623c7269f74418fd316551f4302fd11235d05366158251eb0ece4",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/draw/gnuplot.lisp",
+          "bytes": 160983,
+          "sha256": "6a3207114a838113174240e0d1873b19ee3914eaa2a6f7ece59d537e242a490f",
+          "deployedBytes": 160983,
+          "deployedSha256": "6a3207114a838113174240e0d1873b19ee3914eaa2a6f7ece59d537e242a490f",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/draw/grcommon.lisp",
+          "bytes": 102070,
+          "sha256": "db6d1ffd9a740856ca1a31541ff727ab868b98a7815c20ddf0f0eb65ba79f023",
+          "deployedBytes": 102070,
+          "deployedSha256": "db6d1ffd9a740856ca1a31541ff727ab868b98a7815c20ddf0f0eb65ba79f023",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/draw/picture.lisp",
+          "bytes": 16364,
+          "sha256": "cf2fe24284c017ad30c476af6269f04555d572aea851ee8f0ed580df364123a2",
+          "deployedBytes": 16364,
+          "deployedSha256": "cf2fe24284c017ad30c476af6269f04555d572aea851ee8f0ed580df364123a2",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/draw/vtk.lisp",
+          "bytes": 141890,
+          "sha256": "a28dc5a4333b10e568a216a69f658c93a4000cd4f354fc6f8c8454d348e4f5fe",
+          "deployedBytes": 141890,
+          "deployedSha256": "a28dc5a4333b10e568a216a69f658c93a4000cd4f354fc6f8c8454d348e4f5fe",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/fourier_elim/fourier_elim.lisp",
+          "bytes": 22207,
+          "sha256": "b48ebeea74f5bf175e3d42adaceebe7e6d806e9697723309e03b94c509848bf0",
+          "deployedBytes": 22207,
+          "deployedSha256": "b48ebeea74f5bf175e3d42adaceebe7e6d806e9697723309e03b94c509848bf0",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lbfgs/lb1.lisp",
+          "bytes": 9238,
+          "sha256": "3a68fba9fbb1c8e436eaa28841a9c2a43194f976fac12765c536f9f0a631d3a5",
+          "deployedBytes": 9238,
+          "deployedSha256": "3a68fba9fbb1c8e436eaa28841a9c2a43194f976fac12765c536f9f0a631d3a5",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lbfgs/lb2.lisp",
+          "bytes": 1910,
+          "sha256": "1673fc162449c44506e0681fc156cae1d48064cf675bcdfa9958e472d21cfb15",
+          "deployedBytes": 1910,
+          "deployedSha256": "1673fc162449c44506e0681fc156cae1d48064cf675bcdfa9958e472d21cfb15",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lbfgs/lbfgs-daxpy.lisp",
+          "bytes": 5461,
+          "sha256": "8b9d6701475ae051929eed656a6e61c6077e569e8c41a3fa5b30f42972d317f6",
+          "deployedBytes": 5461,
+          "deployedSha256": "8b9d6701475ae051929eed656a6e61c6077e569e8c41a3fa5b30f42972d317f6",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lbfgs/lbfgs-ddot.lisp",
+          "bytes": 5327,
+          "sha256": "2ff8618463103d462dd94fc802c89536edc2ba78ff3701cbc5feb2a2e5e3ae7d",
+          "deployedBytes": 5327,
+          "deployedSha256": "2ff8618463103d462dd94fc802c89536edc2ba78ff3701cbc5feb2a2e5e3ae7d",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lbfgs/lbfgs.lisp",
+          "bytes": 35249,
+          "sha256": "daf18d1bbf8a3e870d9bea27ffc5365b261a227226f5a3077906dfaa6774f366",
+          "deployedBytes": 35249,
+          "deployedSha256": "daf18d1bbf8a3e870d9bea27ffc5365b261a227226f5a3077906dfaa6774f366",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lbfgs/lbfgs.mac",
+          "bytes": 185,
+          "sha256": "f1136424d74dcd47337b9c96536f90d1b47a580dd5c1c552d2931c3620493816",
+          "deployedBytes": 185,
+          "deployedSha256": "f1136424d74dcd47337b9c96536f90d1b47a580dd5c1c552d2931c3620493816",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lbfgs/maxima-lbfgs.lisp",
+          "bytes": 5510,
+          "sha256": "caee6aac20da81e78303b075cd8d855ff5a846a010116ba7f3b44e492397f611",
+          "deployedBytes": 5510,
+          "deployedSha256": "caee6aac20da81e78303b075cd8d855ff5a846a010116ba7f3b44e492397f611",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lbfgs/mcsrch.lisp",
+          "bytes": 9933,
+          "sha256": "3e90e87f806cb09b48885c04473e8caf36646212c21926eb6112b783633f1b04",
+          "deployedBytes": 9933,
+          "deployedSha256": "3e90e87f806cb09b48885c04473e8caf36646212c21926eb6112b783633f1b04",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lbfgs/mcstep.lisp",
+          "bytes": 7096,
+          "sha256": "e95233ea91210438ef1ff783bae0ffd6e57cfd42a6a143904ac835923e4e24b2",
+          "deployedBytes": 7096,
+          "deployedSha256": "e95233ea91210438ef1ff783bae0ffd6e57cfd42a6a143904ac835923e4e24b2",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/linearalgebra/eigens-by-jacobi.lisp",
+          "bytes": 5461,
+          "sha256": "7ad415c80a119bf62a0b1786fe12417c15ffbcc7ac6eb224684eac840b90c856",
+          "deployedBytes": 5461,
+          "deployedSha256": "7ad415c80a119bf62a0b1786fe12417c15ffbcc7ac6eb224684eac840b90c856",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/linearalgebra/linalg-extra.lisp",
+          "bytes": 6189,
+          "sha256": "511f4576fd99db0dfc99bea2ee4fa7b4ea9e8bad619c0ee0c4515bce629a15bf",
+          "deployedBytes": 6189,
+          "deployedSha256": "511f4576fd99db0dfc99bea2ee4fa7b4ea9e8bad619c0ee0c4515bce629a15bf",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/linearalgebra/linalg-utilities.lisp",
+          "bytes": 6658,
+          "sha256": "da67e38dc83182b95b89476df4b436c95a90b797c0d02197c7dadbf6ba2202b0",
+          "deployedBytes": 6658,
+          "deployedSha256": "da67e38dc83182b95b89476df4b436c95a90b797c0d02197c7dadbf6ba2202b0",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/linearalgebra/linalgcholesky.lisp",
+          "bytes": 2533,
+          "sha256": "fadfe281f1ae18d9ef9d658c7b38507e56285d3bec53ce5dc0e67427988ce71b",
+          "deployedBytes": 2533,
+          "deployedSha256": "fadfe281f1ae18d9ef9d658c7b38507e56285d3bec53ce5dc0e67427988ce71b",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/linearalgebra/linearalgebra.mac",
+          "bytes": 12218,
+          "sha256": "6f509719c842128e9c8fb34a91e2b0efeec38e45f9a1dbe11fd2cfe3a76e45cf",
+          "deployedBytes": 12218,
+          "deployedSha256": "6f509719c842128e9c8fb34a91e2b0efeec38e45f9a1dbe11fd2cfe3a76e45cf",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/linearalgebra/load-linearalgebra-lisp-files.lisp",
+          "bytes": 818,
+          "sha256": "ff456f078307f59c845d2ba6712e4bf2d4dd90908979cda01abcfb37b4daa778",
+          "deployedBytes": 818,
+          "deployedSha256": "ff456f078307f59c845d2ba6712e4bf2d4dd90908979cda01abcfb37b4daa778",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/linearalgebra/lu.lisp",
+          "bytes": 12284,
+          "sha256": "493fc8dd91b5283f365b90d5babc0a4c0884ba68a43d0e08a5025e2e6fd6cdb0",
+          "deployedBytes": 12284,
+          "deployedSha256": "493fc8dd91b5283f365b90d5babc0a4c0884ba68a43d0e08a5025e2e6fd6cdb0",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/linearalgebra/matrixexp.lisp",
+          "bytes": 6603,
+          "sha256": "06810384023da28279abc1a1c0ac296c192cdaacab8fb0dc2e80f5a9b8ef5d87",
+          "deployedBytes": 6603,
+          "deployedSha256": "06810384023da28279abc1a1c0ac296c192cdaacab8fb0dc2e80f5a9b8ef5d87",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/linearalgebra/mring.lisp",
+          "bytes": 16809,
+          "sha256": "c4af22f8e472e182cef693328d3000e36749397202d5d48ca5db2178a320b0c8",
+          "deployedBytes": 16809,
+          "deployedSha256": "c4af22f8e472e182cef693328d3000e36749397202d5d48ca5db2178a320b0c8",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/lisp-utils/defsystem.lisp",
+          "bytes": 211935,
+          "sha256": "5752e3cb3b1653009ea11d92c54ccda008275225f76c5e869f7f08d173133d8d",
+          "deployedBytes": 211935,
+          "deployedSha256": "5752e3cb3b1653009ea11d92c54ccda008275225f76c5e869f7f08d173133d8d",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/macro/basic.mac",
+          "bytes": 1106,
+          "sha256": "ec99cf76b3653dcfe661d58b5868d51d2718b0f6e73a75696ff11fc2596536b7",
+          "deployedBytes": 1106,
+          "deployedSha256": "ec99cf76b3653dcfe661d58b5868d51d2718b0f6e73a75696ff11fc2596536b7",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/macro/packg.mac",
+          "bytes": 1571,
+          "sha256": "be614af9f8583290f54879a5978156f768798ee3e5ce4d67ed7ee44265dfeb8a",
+          "deployedBytes": 1571,
+          "deployedSha256": "be614af9f8583290f54879a5978156f768798ee3e5ce4d67ed7ee44265dfeb8a",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/matrix/eigen.mac",
+          "bytes": 8120,
+          "sha256": "cc63e4b33108bfc8cb3657c7dd84861bb40be5202e1fa5eff5dcb4ff842efe0c",
+          "deployedBytes": 8120,
+          "deployedSha256": "cc63e4b33108bfc8cb3657c7dd84861bb40be5202e1fa5eff5dcb4ff842efe0c",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/simplification/facexp.mac",
+          "bytes": 11079,
+          "sha256": "a749264a1679b7a7eee0d1f01e5459b81bd589ae1bf908232dd3d6588c0fdbfd",
+          "deployedBytes": 11079,
+          "deployedSha256": "a749264a1679b7a7eee0d1f01e5459b81bd589ae1bf908232dd3d6588c0fdbfd",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/simplification/functs.mac",
+          "bytes": 4915,
+          "sha256": "59319fd8623025ce5444ac508f4d6defce594829b26e8ec950c7b5e2cc6f2181",
+          "deployedBytes": 4915,
+          "deployedSha256": "59319fd8623025ce5444ac508f4d6defce594829b26e8ec950c7b5e2cc6f2181",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/simplification/genut.mac",
+          "bytes": 8469,
+          "sha256": "9c60b72c98b369a7a98e5d7076c9f7db03c05189cbc5c0623d0c1ec6ba56a960",
+          "deployedBytes": 8469,
+          "deployedSha256": "9c60b72c98b369a7a98e5d7076c9f7db03c05189cbc5c0623d0c1ec6ba56a960",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/simplification/lrats.mac",
+          "bytes": 2536,
+          "sha256": "8ba7506bf7a30695f3d513d2a89b62852689f9a44b13822e656cb45ebce23ba2",
+          "deployedBytes": 2536,
+          "deployedSha256": "8ba7506bf7a30695f3d513d2a89b62852689f9a44b13822e656cb45ebce23ba2",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stats/inference_result.lisp",
+          "bytes": 8238,
+          "sha256": "c56c33c6bc6e0cc1e735f3d0025c2e615f40b481093fa48e6197a24728485faf",
+          "deployedBytes": 8238,
+          "deployedSha256": "c56c33c6bc6e0cc1e735f3d0025c2e615f40b481093fa48e6197a24728485faf",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stats/numstats.lisp",
+          "bytes": 12080,
+          "sha256": "c961431de9c647558c3f2f993a64abd6af69fde6a849e24d089255b8c9497811",
+          "deployedBytes": 12080,
+          "deployedSha256": "c961431de9c647558c3f2f993a64abd6af69fde6a849e24d089255b8c9497811",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stats/stats.mac",
+          "bytes": 66662,
+          "sha256": "d6dd9065e460e92512c3050508e7c0918e6da258fc4c02d1587e2c6f3a60050c",
+          "deployedBytes": 66662,
+          "deployedSha256": "d6dd9065e460e92512c3050508e7c0918e6da258fc4c02d1587e2c6f3a60050c",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/base64.lisp",
+          "bytes": 5901,
+          "sha256": "acc82d7fb13251e2a67ce4f9162ca7184d5a9ce8e35e848d063d0f410f530ff1",
+          "deployedBytes": 5901,
+          "deployedSha256": "acc82d7fb13251e2a67ce4f9162ca7184d5a9ce8e35e848d063d0f410f530ff1",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/cryptools.lisp",
+          "bytes": 10760,
+          "sha256": "75c9b17bd4f33a896f4207e6652d5ab63c63edd200858ddab6fec0d40adb8273",
+          "deployedBytes": 10760,
+          "deployedSha256": "75c9b17bd4f33a896f4207e6652d5ab63c63edd200858ddab6fec0d40adb8273",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/eval_string.lisp",
+          "bytes": 2395,
+          "sha256": "39ef5cc589851f013f5846c89f8d2dd3cc847dfea040e55dc662f5f74ff7ae6b",
+          "deployedBytes": 2395,
+          "deployedSha256": "39ef5cc589851f013f5846c89f8d2dd3cc847dfea040e55dc662f5f74ff7ae6b",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/md5.lisp",
+          "bytes": 8193,
+          "sha256": "c8fb5a9241e800c0173c76ac87344a02cd35c972c4595868c9ca2b037ca729db",
+          "deployedBytes": 8193,
+          "deployedSha256": "c8fb5a9241e800c0173c76ac87344a02cd35c972c4595868c9ca2b037ca729db",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/printf.lisp",
+          "bytes": 21346,
+          "sha256": "35ec2642b830737b1c5543692c9c2385fd5970ce70028189966d36e3bdd434ac",
+          "deployedBytes": 21346,
+          "deployedSha256": "35ec2642b830737b1c5543692c9c2385fd5970ce70028189966d36e3bdd434ac",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/sha1.lisp",
+          "bytes": 13633,
+          "sha256": "c19ee8b7532cce05bfaa382c1877110d61113caad7a09af52cc29648d6b6cfeb",
+          "deployedBytes": 13633,
+          "deployedSha256": "c19ee8b7532cce05bfaa382c1877110d61113caad7a09af52cc29648d6b6cfeb",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/sregex.lisp",
+          "bytes": 7501,
+          "sha256": "e8f6d2fb9a8d4a3184b644b49175d2a2ad4b9b6c0759e34ad7ce9e01588ce50c",
+          "deployedBytes": 7501,
+          "deployedSha256": "e8f6d2fb9a8d4a3184b644b49175d2a2ad4b9b6c0759e34ad7ce9e01588ce50c",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/sregex.mac",
+          "bytes": 76,
+          "sha256": "ca75d7da5c533701f736efd8b9ae8ea160b650d1b7f6066c2479e2363d13c248",
+          "deployedBytes": 76,
+          "deployedSha256": "ca75d7da5c533701f736efd8b9ae8ea160b650d1b7f6066c2479e2363d13c248",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/stringproc.lisp",
+          "bytes": 47721,
+          "sha256": "5b5678e3fbd9efab7e9870bf8cfb34652907a196ec7aee4f20ccee21e94d6211",
+          "deployedBytes": 47721,
+          "deployedSha256": "5b5678e3fbd9efab7e9870bf8cfb34652907a196ec7aee4f20ccee21e94d6211",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/stringproc.mac",
+          "bytes": 184,
+          "sha256": "fe11a711f0af6214a976aca4ac0a1e52720186790bb4b9c61d1e606ee40e3118",
+          "deployedBytes": 184,
+          "deployedSha256": "fe11a711f0af6214a976aca4ac0a1e52720186790bb4b9c61d1e606ee40e3118",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/stringproc/unicode-sniffer.lisp",
+          "bytes": 6599,
+          "sha256": "e4179ffab65b8e2c98162634d2c408e8e04c6577e943a8dacd99faa7f90bd1fb",
+          "deployedBytes": 6599,
+          "deployedSha256": "e4179ffab65b8e2c98162634d2c408e8e04c6577e943a8dacd99faa7f90bd1fb",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/to_poly_solve/to_poly.lisp",
+          "bytes": 24670,
+          "sha256": "bfcae0e610d039bb43d71e6bfa2723820df3cfe0fca012a05530f73c1a8d0e3d",
+          "deployedBytes": 24670,
+          "deployedSha256": "bfcae0e610d039bb43d71e6bfa2723820df3cfe0fca012a05530f73c1a8d0e3d",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/to_poly_solve/to_poly_solve.mac",
+          "bytes": 26278,
+          "sha256": "2441e553d1604a55dad602cdb2e997c6f48eff668932d7cc7b7a12ec0ca1fb5e",
+          "deployedBytes": 26278,
+          "deployedSha256": "2441e553d1604a55dad602cdb2e997c6f48eff668932d7cc7b7a12ec0ca1fb5e",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/to_poly_solve/to_poly_solve_extra.lisp",
+          "bytes": 6966,
+          "sha256": "0a364d75e9e6700c0cb170dc6bf08fbc3a700739e87218a8b029ffd0ee340b30",
+          "deployedBytes": 6966,
+          "deployedSha256": "0a364d75e9e6700c0cb170dc6bf08fbc3a700739e87218a8b029ffd0ee340b30",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/trigonometry/atrig1.mac",
+          "bytes": 1528,
+          "sha256": "11843e2e013d1e9888251c1acb0109c3b6f7d9c7d57cb9db9e1a285744b02dd8",
+          "deployedBytes": 1528,
+          "deployedSha256": "11843e2e013d1e9888251c1acb0109c3b6f7d9c7d57cb9db9e1a285744b02dd8",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/trigonometry/ntrig.mac",
+          "bytes": 1096,
+          "sha256": "3a2422f3c749c9fd8673c9dbda0e1f125f4b06c6ac7e8ec408c4fbcc8279df58",
+          "deployedBytes": 1096,
+          "deployedSha256": "3a2422f3c749c9fd8673c9dbda0e1f125f4b06c6ac7e8ec408c4fbcc8279df58",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/trigonometry/spangl.mac",
+          "bytes": 1945,
+          "sha256": "999b974b59ce420302ac818e49b6876b42615788b4a18c887d4f961e39e84a65",
+          "deployedBytes": 1945,
+          "deployedSha256": "999b974b59ce420302ac818e49b6876b42615788b4a18c887d4f961e39e84a65",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/trigonometry/trgsmp.mac",
+          "bytes": 4874,
+          "sha256": "0f5db0cb2e22d4ce8536e84a3767830e76ac1751f4555ca253b86c70aa3c56a1",
+          "deployedBytes": 4874,
+          "deployedSha256": "0f5db0cb2e22d4ce8536e84a3767830e76ac1751f4555ca253b86c70aa3c56a1",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share/maxima/branch_5_49_base_90_g813903d33/share/trigonometry/trigrat.lisp",
+          "bytes": 1909,
+          "sha256": "5da6c242383b117fc4d75b241193ab6976b63fe58542ef17b3332ead900973ec",
+          "deployedBytes": 1909,
+          "deployedSha256": "5da6c242383b117fc4d75b241193ab6976b63fe58542ef17b3332ead900973ec",
+          "differenceBytes": 0
+        },
+        {
+          "path": "share_files.js",
+          "bytes": 528107,
+          "sha256": "e07cdd6ef8eac3ee63869a1f9c0e5cb3ec30f7f538f3dadd764e248e404a6057",
+          "deployedBytes": 533835,
+          "deployedSha256": "0a325df1e0e85c65ebaf3102fd75cb2db2d989735a0976e97c1a2108a8f5bca0",
+          "differenceBytes": -5728
+        }
+      ]
+    }
+  },
+  "graphs": 120,
+  "graphVerdicts": 2572,
+  "graphMismatches": 0,
+  "scoreSamples": 1001,
+  "changedScores": 761,
+  "largestScoreChange": 9.890109890110799e-05,
+  "questionTestRoundingMismatches": 0,
+  "mathPaint": [
+    {
+      "id": "html-environment-control",
+      "format": 1,
+      "source": "\\begin{equation}{@1@}\\end{equation} outside {@2@}",
+      "expected": [
+        true,
+        false
+      ],
+      "actual": [
+        true,
+        false
+      ]
+    },
+    {
+      "id": "markdown-unescaped-control",
+      "format": 4,
+      "source": "\\\\begin{equation}{@1@}\\\\end{equation} outside {@2@}",
+      "expected": [
+        true,
+        false
+      ],
+      "actual": [
+        true,
+        false
+      ]
+    },
+    {
+      "id": "markdown-escaped-open-brace",
+      "format": 4,
+      "source": "\\\\begin\\{equation}{@1@}\\\\end\\{equation} outside {@2@}",
+      "expected": [
+        true,
+        false
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    },
+    {
+      "id": "markdown-escaped-both-braces",
+      "format": 4,
+      "source": "\\\\begin\\{equation\\}{@1@}\\\\end\\{equation\\} outside {@2@}",
+      "expected": [
+        true,
+        false
+      ],
+      "actual": [
+        true,
+        true
+      ]
+    }
+  ],
+  "renderedCASText": [
+    {
+      "id": "marker-literal",
+      "value": [
+        "%root",
+        "A sufficiently long static prefix ",
+        [
+          "smlt",
+          "\\({1}\\)"
+        ],
+        " literal A sufficiently long static prefix "
+      ],
+      "rendered": "A sufficiently long static prefix \\({1}\\) literal A sufficiently long static prefix "
+    },
+    {
+      "id": "marker-control",
+      "value": [
+        "%root",
+        "A sufficiently long static prefix ",
+        [
+          "smlt",
+          "\\({1}\\)"
+        ],
+        " literal KEEP"
+      ],
+      "rendered": "A sufficiently long static prefix \\({1}\\) literal KEEP"
+    },
+    {
+      "id": "math-close",
+      "value": [
+        "%root",
+        "\\(",
+        [
+          "smlt",
+          "{1}"
+        ],
+        "\\) outside ",
+        [
+          "smlt",
+          "\\({1}\\)"
+        ]
+      ],
+      "rendered": "\\({1}\\) outside \\({1}\\)"
+    },
+    {
+      "id": "dollar-close",
+      "value": [
+        "%root",
+        "$ ",
+        [
+          "smlt",
+          "\\({1}\\)"
+        ],
+        " $ outside ",
+        [
+          "smlt",
+          "\\({1}\\)"
+        ]
+      ],
+      "rendered": "$ \\({1}\\) $ outside \\({1}\\)"
+    },
+    {
+      "id": "unicode",
+      "value": [
+        "%root",
+        "\u00e6\u00f8\u00e5 \ud83d\ude00 ",
+        [
+          "smlt",
+          "\\({1}\\)"
+        ],
+        " \u00e6\u00f8\u00e5 \ud83d\ude00"
+      ],
+      "rendered": "\u00e6\u00f8\u00e5 \ud83d\ude00 \\({1}\\) \u00e6\u00f8\u00e5 \ud83d\ude00"
+    }
+  ],
+  "rawFiles": [
+    {
+      "file": "input.json.gz",
+      "sha256": "2197efae7c020750319440b21d32cfbcea94926033a78509a0db9b1c56242ee5"
+    },
+    {
+      "file": "compiled.json.gz",
+      "sha256": "76190f05820da0bd1a8e2ca8ac8ff9d7026a7dd713b5c5e7066c407417ccd727"
+    },
+    {
+      "file": "native.json.gz",
+      "sha256": "373144f601c602e51dcde1caf3c15c63dcefa60c465b8abceb4fd5e0df1bc5ee"
+    },
+    {
+      "file": "restored.json.gz",
+      "sha256": "7d572ea7ea79ba9a73364a1bf1207ac8e733c5b9cd51ac897181c204b36ed33c"
+    }
+  ],
+  "ourCompiler": {
+    "cases": 2572,
+    "mismatches": 0,
+    "unitTests": 10,
+    "frontendTests": 4,
+    "rawFiles": [
+      {
+        "file": "python-prt-input.json.gz",
+        "sha256": "85b870fd84a6c59fd2ad2debd8c260339bfda44002840ce82e1f3e2f348482bc"
+      },
+      {
+        "file": "python-prt-native.json.gz",
+        "sha256": "01191e340521d518cb02e411e55755db43eb12e271ebb44c5f2622c445113e9d"
+      }
+    ]
+  }
+}

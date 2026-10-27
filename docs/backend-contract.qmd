@@ -3,9 +3,14 @@ title: "STACK backend contract"
 ---
 
 CTM STACK builds one card shell in Lua. `cas: sympy` is the provisional default;
-`cas: maxima` stops the build until its backend is installed. A mixed-backend
+`cas: maxima` uses the owned runtime-v3 package for preparation and grading.
+A native author build needs Node and a staged package; missing resources stop
+the build. A mixed-backend
 page is noted once at build time. Each backend generates its own variants:
 SymPy seeds use Python's RNG and do not reproduce Moodle's deployed seeds.
+
+The [native authoring guide](native-authoring.qmd) describes staging, supported
+features, the Python compiler and the independent/upstream audit.
 
 The version-2 JSON island contains `common` input/qtest/checker data,
 `backend.question` and per-variant `plan` data that the controller treats as
@@ -32,6 +37,8 @@ The adapter URL is relative to the component script. Its script registers a
 factory under `window.CTMStackAdapters[id]`, returning:
 
 - `start()`: a promise that resolves when requests may run;
+- optional `prepareRequest(request)`: load the question/variant context before
+  the calculation clock starts;
 - `request({type, question, variant, answers})`: a promise of `{ok, result}` or
   `{ok: false, error: {kind, code, message}}`;
 - `stop(reason)`: stop this backend only; resolves with `{restarted}`;
@@ -40,11 +47,19 @@ factory under `window.CTMStackAdapters[id]`, returning:
 
 The controller has no backend-specific branch. It serializes requests per
 backend, drops queued requests superseded by the same card/kind, and ignores
-stale results after edits. The calculation clock starts after `start()`;
+stale results after edits. The calculation clock starts after `start()` and
+`prepareRequest()`;
 loading has its own bound. Stop keeps answers, interrupts first when the shared
 runtime can do so, and otherwise restarts only the private backend. Runtime
 errors offer Retry; author errors preserve the session. Invalid answers and
 undecidable CAS tests remain ordinary results.
+
+Maxima seals one question and variant into each worker. Switching variants or
+cards starts a fresh native heap. Loading has a 180-second deadline; individual
+calculations have a 30-second deadline. Stop and internal failure retire the
+worker without replaying the failed request. Its protocol exposes validation,
+grading and question tests, never raw Maxima/Lisp evaluation. Maxima does not
+load Pyodide or use the page's Python interpreter.
 
 SymPy starts `CTMWorker` with `publish: false`, then loads SymPy and the STACK
 checker part from the page. It never assigns or stops `mainPyodide`. Its

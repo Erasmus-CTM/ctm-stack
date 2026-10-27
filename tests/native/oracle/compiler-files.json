@@ -1,0 +1,1151 @@
+{
+  "schema": 1,
+  "stackRevision": "33383047af39c204bf4442802a058f8b918b2b1b",
+  "files": [
+    {
+      "path": "COPYING.txt",
+      "bytes": 35147,
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903"
+    },
+    {
+      "path": "api/config_sample.txt",
+      "bytes": 4549,
+      "sha256": "7f3ae63091c0a03438acf9cf60d78ac1b4e391a57497cc5401e78b2adc62b549"
+    },
+    {
+      "path": "api/emulation/Constants.php",
+      "bytes": 2123,
+      "sha256": "b8e11f711da348525b6d038ddb335df567518fabaf6c19d17966c4d3dab71313"
+    },
+    {
+      "path": "api/emulation/HtmlWriter.php",
+      "bytes": 27471,
+      "sha256": "796e718a5f034ae592adb1c9c5269468332e559ab23d93b4b79b35c59445dbdb"
+    },
+    {
+      "path": "api/emulation/Language.php",
+      "bytes": 8308,
+      "sha256": "54c1976d6c801a5f3b8b7f3de6b54aff1182818af269e533439e1d27e1422fff"
+    },
+    {
+      "path": "api/emulation/Localization.php",
+      "bytes": 4396,
+      "sha256": "73d55564eaf419ad42c6f552644520b88d8b510045668f20abb605282fea6b28"
+    },
+    {
+      "path": "api/emulation/MoodleEmulation.php",
+      "bytes": 5395,
+      "sha256": "0ef49618efa1a8a6815a421266bcbb149c29f431b371f4e899dc964d7dfcb8b5"
+    },
+    {
+      "path": "api/emulation/Renderer.php",
+      "bytes": 1298,
+      "sha256": "5b72779755a0e3371e025d197e0861d0972aa196479e293ef7d31f58140595a7"
+    },
+    {
+      "path": "api/emulation/libdir/questionlib.php",
+      "bytes": 959,
+      "sha256": "8a4e63024b92dc2351eb88c344819afec14e26d92055a2e81f7ff2a58f986bfe"
+    },
+    {
+      "path": "api/emulation/libdir/weblib.php",
+      "bytes": 924,
+      "sha256": "a2fb997a6e51c68052cc04f102d3cf2371b54eaad493c1a76fb403bc78b423c1"
+    },
+    {
+      "path": "lang/en/qtype_stack.php",
+      "bytes": 171154,
+      "sha256": "efbc42e93a186343bba31e00b1abebbb5c58f86c0b74221bcee555d8847c2713"
+    },
+    {
+      "path": "lang/multilang.php",
+      "bytes": 14094,
+      "sha256": "32ae87baedc6c0f59b07dfe74096e679cf3fc2dbac14c78c0a7e357b83d80823"
+    },
+    {
+      "path": "locallib.php",
+      "bytes": 12801,
+      "sha256": "ccb4d3c9b59f0e4a0c40e255e1187b734ab46f5ac9ab4c02af1fcd182cfe547f"
+    },
+    {
+      "path": "stack/answertest/anstest.class.php",
+      "bytes": 6414,
+      "sha256": "198fc7f5201a44bb834de66c3a3da9d75c14175a7e0f40b48e6c414371c49f72"
+    },
+    {
+      "path": "stack/answertest/at_general_cas.class.php",
+      "bytes": 11136,
+      "sha256": "401b25d0c8f9e3d04cd60268e4e169de12262b9dd85623a4d27b3eede4d33601"
+    },
+    {
+      "path": "stack/answertest/at_general_cas_preprepare.class.php",
+      "bytes": 2944,
+      "sha256": "0be96bc83ba1c09754b89b0af4a7393aaba85f055de9305118ad872e638ab065"
+    },
+    {
+      "path": "stack/answertest/controller.class.php",
+      "bytes": 15219,
+      "sha256": "2a7bdaf834f50e202c31ba3c9bfe1ca1ab82b7ddd8ae78e1af1e11c0cabb139d"
+    },
+    {
+      "path": "stack/bulktester.class.php",
+      "bytes": 38608,
+      "sha256": "5349e49d512c26756e5acc938385a733635375e8bd1fd6cd59d28e7f2fba6fd2"
+    },
+    {
+      "path": "stack/cas/ast.container.class.php",
+      "bytes": 16109,
+      "sha256": "864b5f334d8b5b5f58576d21cfdadb5be9697bc2a2605046833ef16b17333eb4"
+    },
+    {
+      "path": "stack/cas/ast.container.conditional.class.php",
+      "bytes": 10919,
+      "sha256": "8583620cd64e40076c5e4039d24f96a203036c95763ad2848c77105b52110fdf"
+    },
+    {
+      "path": "stack/cas/ast.container.silent.class.php",
+      "bytes": 41113,
+      "sha256": "32d4ab2ce8ec385c43382caf022268b504a6b09d5d04b8d378a511e96bcfccfc"
+    },
+    {
+      "path": "stack/cas/base-identifier-map.json",
+      "bytes": 1966474,
+      "sha256": "79bc03f63c46e8edd1b6309384f72d90fbd5317e09becee96c95f3abc0d29054"
+    },
+    {
+      "path": "stack/cas/caserror.class.php",
+      "bytes": 12196,
+      "sha256": "4571d1f0565aa03c4e526e43fc7f7fbc94dca8cd6616d2a17646030396a891f8"
+    },
+    {
+      "path": "stack/cas/cassecurity.class.php",
+      "bytes": 29655,
+      "sha256": "29d30779a36b533c40372317aba2315f8d4dc1095ac8fed27183d8a7b3279234"
+    },
+    {
+      "path": "stack/cas/cassession2.class.php",
+      "bytes": 22623,
+      "sha256": "155d6031a72acc0bd8c38e6e98c7934d7868df2f837d2060b89b2586cec5f85c"
+    },
+    {
+      "path": "stack/cas/casstring.units.class.php",
+      "bytes": 15371,
+      "sha256": "b20cedacc7885e20c98eaa92818557ece48eda7642ac6937320529c08617fa92"
+    },
+    {
+      "path": "stack/cas/castext2/CTP_classes.php",
+      "bytes": 8279,
+      "sha256": "b310d5752ec64addb0b3826f01d07cdf7a060dac41f0bdad15f4a03da1e587b8"
+    },
+    {
+      "path": "stack/cas/castext2/autogen/parser.mbstring.php",
+      "bytes": 228919,
+      "sha256": "642359bfe8b2bb297b4999658b0c115514c1d69c8d8845590f618b3e60835705"
+    },
+    {
+      "path": "stack/cas/castext2/block.factory.php",
+      "bytes": 3568,
+      "sha256": "66a403f003d8b80a6e68bbe41e0e418f487384b3663aec815ee4c5e34fc9f070"
+    },
+    {
+      "path": "stack/cas/castext2/block.interface.php",
+      "bytes": 6508,
+      "sha256": "00c4e54692df55b4a7d8c0af0a4ac71bbe4221e7dac909bff67d1612d46feb37"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/adapt.block.php",
+      "bytes": 3096,
+      "sha256": "292b718ff98737ef2d2851838f5c188429435170390eed44576781355853d62d"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/adaptauto.block.php",
+      "bytes": 4448,
+      "sha256": "6b843b453ffd8c82319099c7348e9d6b59c5d07c0003ced2230fb9da6ebcd26c"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/adaptbutton.block.php",
+      "bytes": 6566,
+      "sha256": "570205dbdeae5d4342c28560c9aa1b4cb5d6aea242c41c2d113a72b8053d5fc2"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/ascii.block.php",
+      "bytes": 14055,
+      "sha256": "2b5d0011902b8de910c981e495680c6189d1d23e61de8285c75a7b0bb6d1d612"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/body.block.php",
+      "bytes": 2936,
+      "sha256": "ad0191d6faccc4726045747702cbfedd34642471ae4ce700918ad589a216d2b1"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/castext.block.php",
+      "bytes": 2679,
+      "sha256": "1601f125aa01e9ae6ee2a0f590992ef98bba6ee3e9bd2defda10a8a4a0bd8a8f"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/comment.block.php",
+      "bytes": 1534,
+      "sha256": "48a897c8606c909eb18ba6fe2fec6ca8de781a86629bc44f63429223b11adf15"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/commonstring.block.php",
+      "bytes": 9843,
+      "sha256": "f24450942dc17f10554410e47dea79869357474bebcc67bf67affa0f5cd3b3e4"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/cors.block.php",
+      "bytes": 2167,
+      "sha256": "ec6ae25c37053a43d9baef0ead756dd982605cf6ad3d57590428c4a654a9ee09"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/debug.block.php",
+      "bytes": 3004,
+      "sha256": "76844cfb99d90c9aa542aa16b99ab93aff7edc551a215d266eb8497f6045ebe8"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/define.block.php",
+      "bytes": 3048,
+      "sha256": "5cf7343cf5fa9ae2d008c57f6822533acd23bd6178b026ef28e273f8d3a75ef8"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/demarkdown.block.php",
+      "bytes": 4391,
+      "sha256": "1f91ee11d1f9a60e6962247760911be726bcd912d2a136fbc896173671b59d19"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/demoodle.block.php",
+      "bytes": 3532,
+      "sha256": "de5c5b41dd90db916bdc3474c48a1abf4ba6bfe873b17c1de135ca9c99b8e8c5"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/entityescape.block.php",
+      "bytes": 3319,
+      "sha256": "d8c6148b189888c4d90d42371d167cdb124fa444d63dcfb08bedfa1709ed4b50"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/escape.block.php",
+      "bytes": 3093,
+      "sha256": "43b6ed58609a1d1893f9d96eae58b84b69dd9b94548a59eb2bdfa5418cb1521d"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/extractor.block.php",
+      "bytes": 3743,
+      "sha256": "d517d7a1b2d3e22ebca81123bd288c8d1e64e101344f301f40e10c9fa203791e"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/filter.block.php",
+      "bytes": 4287,
+      "sha256": "6ab4f3ca29a105d1ecefda14a0a732b53de081a6e52f163d876d68f5ec637d3c"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/foreach.block.php",
+      "bytes": 7835,
+      "sha256": "96eae98e6f943f963c17bfd736fd5adfd17991f569cb983fb6a4b12f73c33f8d"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/geogebra.block.php",
+      "bytes": 30827,
+      "sha256": "5cd54f53226e0b86af5394397e48362c47f3d89bb7904b1ca7d1dfde0c5a735f"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/hint.block.php",
+      "bytes": 2813,
+      "sha256": "8fd74fca6fb52ae7781bcd3329e0b1e9c38df34bcbbf9fdc15176932f8cd8b79"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/htmlformat.block.php",
+      "bytes": 3336,
+      "sha256": "a3d905241379a863a333d5eed6aa177f16a352087fb2ff371c47a4e4e89f6dfa"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/if.block.php",
+      "bytes": 7812,
+      "sha256": "4fff40ab20730a213c83fbb6bf2fcaa8be1bab7b99ead85dd768247b18174084"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/iframe.block.php",
+      "bytes": 14303,
+      "sha256": "e1408f0382e009216b8b114912030b30ba7926571c5623c74989d9f5c07d6e42"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/include.block.php",
+      "bytes": 4343,
+      "sha256": "237ef89c8087e69f1cf77520db5d9a03e40fcd84bddd9a98e7850f1c0257ee51"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/ioblock.specialblock.php",
+      "bytes": 2852,
+      "sha256": "8d22b948185ccec476921110093a3449846c72450b84033692ad32676c8b3f1e"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/javascript.block.php",
+      "bytes": 11034,
+      "sha256": "2dbb341a18b897f8b5f38d979302253d1af9060dfe3045711058f7d075420fc8"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/jsstring.block.php",
+      "bytes": 3291,
+      "sha256": "ae5330e85614643d4941a34ed1dacba9aa8b888f7c7fd46729483773cdf19e4f"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/jsxgraph.block.php",
+      "bytes": 16012,
+      "sha256": "37fd003bb6b50c5389f3f3ca1fbbdfe8ad151f89f49290ae7c123e662fa2a731"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/lang.block.php",
+      "bytes": 3539,
+      "sha256": "1218069bf69f9c06a95d162de5dad9a66a392c3f2e56b5a973830b5d1a53cc34"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/latex.block.php",
+      "bytes": 4510,
+      "sha256": "81243126206e7cead8850ab288d2ff92f4d350822419e3aa42449a05a5347152"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/markdownformat.block.php",
+      "bytes": 1359,
+      "sha256": "30d070f7584e03c039ce5dda492e9c3a6cd5dd0623872aaa1c996e3ced60e59d"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/moodleformat.block.php",
+      "bytes": 1373,
+      "sha256": "218b5cd86c022c3eb33f448eccc99d1b3b81a25dcd026cf2761beb0f08c8e3cc"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/parsons.block.php",
+      "bytes": 27500,
+      "sha256": "0d041aad7d8ae689d825410fa6bf8fa53ab7223a955b9aed45df307540c8c7bd"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/pfs.specialblock.php",
+      "bytes": 4983,
+      "sha256": "c4b3d16849042d13d06c0c8411051df866d080a54224ca2a5ea38b90306e2150"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/placeholder.specialblock.php",
+      "bytes": 2042,
+      "sha256": "501b2ac6dcfdbc61292320affb3a5c4efbcb12f09251fd53fbf647c8841ccd8c"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/quid.block.php",
+      "bytes": 2811,
+      "sha256": "998c1795f67ee9f65abb5d53db30eacac047f5b271471ae9c33f8c97c9bdea7e"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/raw.block.php",
+      "bytes": 5288,
+      "sha256": "75cf2574a58ba125671e7714fd820fa1c515805be81a0ec8a9f2c8e583355239"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/raw.specialblock.php",
+      "bytes": 1918,
+      "sha256": "8bba43dd9b6db6bb71493341f4fbb7f0a219ec589b6198cfa4f1fc1a922fab8b"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/reveal.block.php",
+      "bytes": 4834,
+      "sha256": "a0ad8d107b70083abe4b9ff221248927d1a40032a40a9c2d10c27e1c2af21903"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/root.specialblock.php",
+      "bytes": 9842,
+      "sha256": "3bcf2ee524a972eb23e34fc4975ad0a9e47dbb219eed981755c80e61d1dc1759"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/script.block.php",
+      "bytes": 3911,
+      "sha256": "b49cc0e816a629f2c1c216119d14732ebf438721bbea4f49469fc5d3f5922a4f"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/smlt.specialblock.php",
+      "bytes": 3428,
+      "sha256": "7a6948bb198cea10371247863b9d0e1017287da94cb47abdd20c9cebcb750bd6"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/stack_translate.specialblock.php",
+      "bytes": 2378,
+      "sha256": "11ad39d4537ab46538ead6b3404eb1ca5c265c303b31bb18707b47662cd866fa"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/style.block.php",
+      "bytes": 3942,
+      "sha256": "cf524b167aef8580da5e7e39d09a15ecdd13a70ec0333e63c059720d66bcd6c2"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/template.block.php",
+      "bytes": 5115,
+      "sha256": "f5f2ae0bd292a49877c0e461d11979af35e0809045c0b16bc38b1152c39a319f"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/textdownload.block.php",
+      "bytes": 5419,
+      "sha256": "2772b0a714c9ba491ceb5837cf4bcb62e9111829423f5e2104f4594816047d1b"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/todo.block.php",
+      "bytes": 2080,
+      "sha256": "86af5b56705cb7c2674e4dfba0895ebde5a94c1d5bad612b7efec1596713fb92"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/unknown.block.php",
+      "bytes": 2135,
+      "sha256": "8b5ff9044a8fb66cb0d5b210f28085734929465a5768017ad7bf25c996f3b473"
+    },
+    {
+      "path": "stack/cas/castext2/castext2_evaluatable.class.php",
+      "bytes": 15114,
+      "sha256": "c0fae03b491bc73625dbf714661701a7d0bf4a9d17111bf14fb2469a0f44e92c"
+    },
+    {
+      "path": "stack/cas/castext2/castext2_placeholder_holder.class.php",
+      "bytes": 3114,
+      "sha256": "1c8fd997cad0af5c5a062970ea25aa49c95a06d8431e93cd07bc674f103c2575"
+    },
+    {
+      "path": "stack/cas/castext2/castext2_static_replacer.class.php",
+      "bytes": 6126,
+      "sha256": "e5065e024e459a915b1fdf1aa712492cf115899a93e0114126babc2a3ccf0b8e"
+    },
+    {
+      "path": "stack/cas/castext2/processor.class.php",
+      "bytes": 4710,
+      "sha256": "bb172ace8dbec04b081e56682decefc2eaf566732fb450ac0439df631918140d"
+    },
+    {
+      "path": "stack/cas/castext2/utils.php",
+      "bytes": 28504,
+      "sha256": "aedf4f83f29f26a0ae65993c214c1640dce46253e71f3cca12015c9524fc346f"
+    },
+    {
+      "path": "stack/cas/connector.class.php",
+      "bytes": 13525,
+      "sha256": "004e617590c81574adc95b8b7660e38f3e336474b34a2301082553478d4c43ec"
+    },
+    {
+      "path": "stack/cas/connector.dbcache.class.php",
+      "bytes": 9287,
+      "sha256": "4a9ead0452f38cf26a0c0dd9a24007c9ff672df3fcbeca6299b8f4372c21df97"
+    },
+    {
+      "path": "stack/cas/connector.healthcheck.class.php",
+      "bytes": 13491,
+      "sha256": "0ff6c70b263130fb0ee19c0be7fb85e5b0abe7cbfda29aeeae0b56cd6c8ea8db"
+    },
+    {
+      "path": "stack/cas/connector.interface.php",
+      "bytes": 1643,
+      "sha256": "28e49eec47149f08b71132f028200737319606adaaf17bdf5c15438886bb3647"
+    },
+    {
+      "path": "stack/cas/connector.linux.class.php",
+      "bytes": 4517,
+      "sha256": "22cb107adf9b4e38b9861ce79b726e76f739687af3fb9685c3fbb343be855a5c"
+    },
+    {
+      "path": "stack/cas/connector.server.class.php",
+      "bytes": 4451,
+      "sha256": "dcbb3fa5ff5f61711bff6ff876256c3181a4cebce4ef8e9f93d6e959456a0526"
+    },
+    {
+      "path": "stack/cas/connector.server_proxy.class.php",
+      "bytes": 5804,
+      "sha256": "09dc604241e1e871ca35825e83f0350b82b2cd04235d17def4478ab21a97f52e"
+    },
+    {
+      "path": "stack/cas/connector.windows.class.php",
+      "bytes": 2881,
+      "sha256": "cde55ef13d67ccd5c5384e85f2a50d336ceb85eb9b8f6ee59916ee888a626f80"
+    },
+    {
+      "path": "stack/cas/connectorhelper.class.php",
+      "bytes": 18254,
+      "sha256": "709f898e4be7e0722d436f20de46f8ca3cbae7cfec164b6a37f4f1e5310683fb"
+    },
+    {
+      "path": "stack/cas/evaluatable_object.interfaces.php",
+      "bytes": 5128,
+      "sha256": "efc1052c8d279e4c4c1cd80fb1ff6e015fc7669be5a17cb8ed8e8624c26ca671"
+    },
+    {
+      "path": "stack/cas/installhelper.class.php",
+      "bytes": 14361,
+      "sha256": "1711e23632e4dee847a2e24bd4ee3ab3efc690542b0dcf21d88a3d5760a5de18"
+    },
+    {
+      "path": "stack/cas/keyval.class.php",
+      "bytes": 19739,
+      "sha256": "a9fe8edc1857e5503f3557773b96e02e2ea173362717392f974c64d40005702a"
+    },
+    {
+      "path": "stack/cas/parsingrules/001_fix_call_of_a_group_or_function.filter.php",
+      "bytes": 2296,
+      "sha256": "3ccefb641481ef855590929e8a69b53a2fb0124a119e4275ade677c449944aaa"
+    },
+    {
+      "path": "stack/cas/parsingrules/002_log_candy.filter.php",
+      "bytes": 10644,
+      "sha256": "2c66749f7f7f71609e6a3a2abaf1bd3b4f8e5d8dcfc7951ac7f6a97f4d0141a7"
+    },
+    {
+      "path": "stack/cas/parsingrules/003_no_dot_dot.filter.php",
+      "bytes": 5251,
+      "sha256": "59a6957f3bad3e8c8b50042f1688470b411b3c1e3782ddcaf9bb17d05e80c30c"
+    },
+    {
+      "path": "stack/cas/parsingrules/005_i_is_never_a_function.filter.php",
+      "bytes": 2196,
+      "sha256": "1e675eb8e8bedef3726e41e15ba1b580c1a3c85038f1ccc16127ae9e9a9d79da"
+    },
+    {
+      "path": "stack/cas/parsingrules/022_trig_replace_synonyms.filter.php",
+      "bytes": 2626,
+      "sha256": "eb339900bc76d42403002aee96b1f62f77913cd4e437a4a3cdd3305cdc488469"
+    },
+    {
+      "path": "stack/cas/parsingrules/025_no_trig_power.filter.php",
+      "bytes": 8850,
+      "sha256": "4e38b6d5a726fae8164cef3fb48e75273a414b2726b4073a3142cd62c499603a"
+    },
+    {
+      "path": "stack/cas/parsingrules/030_no_trig_space.filter.php",
+      "bytes": 2565,
+      "sha256": "f84bebd20a9a53e8848ea62dd50f65204dbd388176dc9f09b6cd7e48e66370b9"
+    },
+    {
+      "path": "stack/cas/parsingrules/031_no_trig_brackets.filter.php",
+      "bytes": 2352,
+      "sha256": "496318822fb68bd613a9764a5a395db6ef6bec01b9e46c866d6a8e1f790643c2"
+    },
+    {
+      "path": "stack/cas/parsingrules/033_no_extra_evaluation.filter.php",
+      "bytes": 1949,
+      "sha256": "f9e8856fa43c9b36da0a8875956a22ada2396d3577d969c139ae76d9b526e5a1"
+    },
+    {
+      "path": "stack/cas/parsingrules/050_no_chained_inequalities.filter.php",
+      "bytes": 2523,
+      "sha256": "a91aa56268288f3db4cb23e89d91974bf53f815e1084aafcc970457d0d9c534e"
+    },
+    {
+      "path": "stack/cas/parsingrules/090_special_forbidden_characters.filter.php",
+      "bytes": 1948,
+      "sha256": "6b244aac58c380b3c3f463276e7360261db401a6a655eda66aed039553dac32c"
+    },
+    {
+      "path": "stack/cas/parsingrules/101_no_floats.filter.php",
+      "bytes": 2048,
+      "sha256": "587b0b26d844ce3c38684a706330dc419ba166ac79444163fc501f97049f55db"
+    },
+    {
+      "path": "stack/cas/parsingrules/102_no_strings.filter.php",
+      "bytes": 1794,
+      "sha256": "93a82c09672bc96be7875452d99731d15478944dc1f8b0278026aac9729066b9"
+    },
+    {
+      "path": "stack/cas/parsingrules/103_no_lists.filter.php",
+      "bytes": 1782,
+      "sha256": "e8886e7279f3b220f9541c8a9e4bad6c8268509a4bd1b5b38c33bb568a598173"
+    },
+    {
+      "path": "stack/cas/parsingrules/104_no_sets.filter.php",
+      "bytes": 1776,
+      "sha256": "0c553541a0c8a670710fd95cc3a479f445506583af94f2bd4161f85f7f15c3d8"
+    },
+    {
+      "path": "stack/cas/parsingrules/105_no_grouppings.filter.php",
+      "bytes": 2019,
+      "sha256": "b94be9b50cd36cd92da0bf35b4e7b6eb6baf38a7f226b57462d0f2db68b169ac"
+    },
+    {
+      "path": "stack/cas/parsingrules/106_no_control_flow.filter.php",
+      "bytes": 2029,
+      "sha256": "4bb1d49b37f65a31701c011272f9652065ca3306f77fe7808fa047c316420c01"
+    },
+    {
+      "path": "stack/cas/parsingrules/115_lexer_post_process_stackbasen.filter.php",
+      "bytes": 2942,
+      "sha256": "1edd407b05d71696104284cb87cc52260efe952f81f0e6e4b0560cab3a66f5da"
+    },
+    {
+      "path": "stack/cas/parsingrules/120_no_arc.filter.php",
+      "bytes": 3044,
+      "sha256": "72549e8220a52cc223df3fff90b1ca8175d08ecb2c62dcb57e23f0fff27d1aa8"
+    },
+    {
+      "path": "stack/cas/parsingrules/150_replace_unicode_letters.filter.php",
+      "bytes": 2271,
+      "sha256": "d7c7a0590e67cecb1a9c49e5e431700213f4c7775659450949cdaf4ce964e440"
+    },
+    {
+      "path": "stack/cas/parsingrules/180_char_based_superscripts.filter.php",
+      "bytes": 5906,
+      "sha256": "b33821174f02399a2ff361c261e5a29f11b6f71eff5e6c315aafc4cc77da2c45"
+    },
+    {
+      "path": "stack/cas/parsingrules/201_sig_figs_validation.filter.php",
+      "bytes": 6862,
+      "sha256": "49885541d3c61cab25d29c0c2d8891f9e9a4bb184fd7eff6074c2012854bd52a"
+    },
+    {
+      "path": "stack/cas/parsingrules/202_decimal_places_validation.filter.php",
+      "bytes": 3677,
+      "sha256": "9e1b6cde8e69f072d0a723c35594814d96deefe6f9fb6b23c57ef06a9829d254"
+    },
+    {
+      "path": "stack/cas/parsingrules/210_x_used_as_multiplication.filter.php",
+      "bytes": 4165,
+      "sha256": "d1d028a446f6475e97bdeeb7ab5d241279120bce979f189fce8a58da11cc118d"
+    },
+    {
+      "path": "stack/cas/parsingrules/402_split_prefix_from_common_function_name.filter.php",
+      "bytes": 3843,
+      "sha256": "de561727ac6d11c36a90a8e450c0c9c3a8b4a4c3b267756885b364f2b5381035"
+    },
+    {
+      "path": "stack/cas/parsingrules/403_split_at_number_letter_boundary.filter.php",
+      "bytes": 3741,
+      "sha256": "51c3325a50466ac276407ad57a2ec1bedf9407dad95fd2b056891a4b051cd805"
+    },
+    {
+      "path": "stack/cas/parsingrules/404_split_at_number_letter_number_boundary.filter.php",
+      "bytes": 4390,
+      "sha256": "8832a3c986c6c86045e63f934310e701ee197aab1b3b3a5e4f4e48abcfbe43f2"
+    },
+    {
+      "path": "stack/cas/parsingrules/406_split_implied_variable_names.filter.php",
+      "bytes": 2888,
+      "sha256": "3160e1e6ca6d01aa7ba356744bb01be28cc1f2067b0c1fe0487970dcfa003c95"
+    },
+    {
+      "path": "stack/cas/parsingrules/407_split_unknown_functions.filter.php",
+      "bytes": 2622,
+      "sha256": "b6721b0cd06461f7896f5d8ed03c7ddde5d52c01525c95e921b21868d7cfc092"
+    },
+    {
+      "path": "stack/cas/parsingrules/410_single_char_vars.filter.php",
+      "bytes": 5059,
+      "sha256": "3d579b23538b67e263aec9ce4b033a72556a65baac7feb78c7e34444370f7208"
+    },
+    {
+      "path": "stack/cas/parsingrules/420_consolidate_subscripts.filter.php",
+      "bytes": 2293,
+      "sha256": "cb32d8fb0c1e3f6a7c0b1e2147069089ee546de704bfb8ad68009a856594630e"
+    },
+    {
+      "path": "stack/cas/parsingrules/442_split_all_functions.filter.php",
+      "bytes": 2658,
+      "sha256": "cd686c06f859d5c61ea96d7e77324c67867550ba3bf4f70bad20b881a627708a"
+    },
+    {
+      "path": "stack/cas/parsingrules/450_split_floats.filter.php",
+      "bytes": 5420,
+      "sha256": "03c6c3b1d751ef020d3102cdb7a027002d4466343a39ef28417346831e1f61b6"
+    },
+    {
+      "path": "stack/cas/parsingrules/502_replace_pm.filter.php",
+      "bytes": 1664,
+      "sha256": "0200f7df89b64dd9053a33f792bc95987d12bcb1fecdb02141579df6b5c32f9e"
+    },
+    {
+      "path": "stack/cas/parsingrules/504_insert_tuples_for_groups.php",
+      "bytes": 2283,
+      "sha256": "9c14e4fc17a2dfdc873f28592d2c12fcbe084f1a4a390354c09bf931512afe26"
+    },
+    {
+      "path": "stack/cas/parsingrules/505_no_evaluation_groups.filter.php",
+      "bytes": 1952,
+      "sha256": "506ff2ec2665ffe4c5f54adec62030f3e9b32d59b5cd7ecbc8e844b9cc340942"
+    },
+    {
+      "path": "stack/cas/parsingrules/520_no_equality_with_logic.filter.php",
+      "bytes": 2756,
+      "sha256": "d17f8029bc80dcc16878f5d24a0077bf1f4a3741c9793bc7f0831a7e7c8daa7d"
+    },
+    {
+      "path": "stack/cas/parsingrules/541_no_unknown_functions.filter.php",
+      "bytes": 3060,
+      "sha256": "46a978e774ffa2383c4893c3b7ec5468c15727d320531e639b5a4dae01750ac6"
+    },
+    {
+      "path": "stack/cas/parsingrules/542_no_functions_at_all.filter.php",
+      "bytes": 2833,
+      "sha256": "c15ac42a584df5b73a959b5b9ab39d090a3371ef6afe56b011af2013072a3b37"
+    },
+    {
+      "path": "stack/cas/parsingrules/545_wrong_decimal_separator_validation.filter.php",
+      "bytes": 2840,
+      "sha256": "fd976438b37a4e2599a0c79683aafd47b31b9ef6999a42be90f6a957a6d03bd8"
+    },
+    {
+      "path": "stack/cas/parsingrules/601_castext.filter.php",
+      "bytes": 6205,
+      "sha256": "de8d84e8dfd7867b70b282b19b4cec8975cf6e4400a46d679fcb31150a8cb598"
+    },
+    {
+      "path": "stack/cas/parsingrules/602_castext_simplifier.filter.php",
+      "bytes": 20608,
+      "sha256": "24af7fe165e535579f9dbaf6e9ee4db7e1621a0ebc62f941692fadd9bd97f3f9"
+    },
+    {
+      "path": "stack/cas/parsingrules/610_castext_static_string_extractor.filter.php",
+      "bytes": 4149,
+      "sha256": "33337301fb0e635f2826bf1b5bc8e8b0acac483b08484fa0d1c7f87d39967163"
+    },
+    {
+      "path": "stack/cas/parsingrules/650_string_protect_slash.filter.php",
+      "bytes": 1611,
+      "sha256": "6799089ca624e2579ec8152767d73cba1f3ec0cb4599ccd8c028b773907fffd9"
+    },
+    {
+      "path": "stack/cas/parsingrules/680_gcl_sconcat.filter.php",
+      "bytes": 2457,
+      "sha256": "d2bfade4892a32f09cc371e4ae7041e22750b8977fb787244b35887ed1590ccc"
+    },
+    {
+      "path": "stack/cas/parsingrules/801_singleton_numeric.filter.php",
+      "bytes": 14066,
+      "sha256": "a39e8c1a1b889f22cebde27b577416283f6b939ed190191bb616c627cc5e09db"
+    },
+    {
+      "path": "stack/cas/parsingrules/802_singleton_units.filter.php",
+      "bytes": 9729,
+      "sha256": "d4bfdfbf3872e4ce766e64c63a4fb2c2d342167f07e2511f1a32386bf655703d"
+    },
+    {
+      "path": "stack/cas/parsingrules/901_remove_comments.filter.php",
+      "bytes": 1955,
+      "sha256": "d333911889790ced8ce05053b4cbc4a59a9a46809f8ac4036221b23edb8eea03"
+    },
+    {
+      "path": "stack/cas/parsingrules/908_parsons_decode_state_for_display.filter.php",
+      "bytes": 2013,
+      "sha256": "bc4b9c9bd32d67d32f6c22c511fcb07da74ad190d77881b60357690a88cf580b"
+    },
+    {
+      "path": "stack/cas/parsingrules/909_parsons_get_final_submission.filter.php",
+      "bytes": 2043,
+      "sha256": "ce7a563b1537cf51822d023d8e72f6d2d13d7a1c7c72b5d4e0e0558ceaca779a"
+    },
+    {
+      "path": "stack/cas/parsingrules/910_inert_float_for_display.filter.php",
+      "bytes": 3856,
+      "sha256": "4fed37be91704f2375590258702968b769bc2451dd00678bf4c3ec520b1fad0c"
+    },
+    {
+      "path": "stack/cas/parsingrules/912_inert_string_for_display.filter.php",
+      "bytes": 2432,
+      "sha256": "aefc7a1fb2fa9605f27e84f32a4e44c332e9314f05b0502c7395e77039ca1fa9"
+    },
+    {
+      "path": "stack/cas/parsingrules/990_no_fixing_spaces.filter.php",
+      "bytes": 2494,
+      "sha256": "f0fc8868e9f656c9688231a6f4089781446a401dad3574330eac153d04424dbd"
+    },
+    {
+      "path": "stack/cas/parsingrules/991_no_fixing_stars.filter.php",
+      "bytes": 2602,
+      "sha256": "1aa0ba268875631b8fe243893924148b41779b0346224974c491f2015bc4a278"
+    },
+    {
+      "path": "stack/cas/parsingrules/995_ev_modification.filter.php",
+      "bytes": 5852,
+      "sha256": "a46fcc76e2f12104390442ca883958dc1eb9de97b933495a08feb0ca06b653d6"
+    },
+    {
+      "path": "stack/cas/parsingrules/996_call_modification.filter.php",
+      "bytes": 13173,
+      "sha256": "bab4b7f3fa1650a1ae04c2c7da37cccc897d52568ff465bebee7bb050cad76cb"
+    },
+    {
+      "path": "stack/cas/parsingrules/997_string_security.filter.php",
+      "bytes": 1759,
+      "sha256": "0f2701e4acca4f201541313d25c17e0740ac9a82fee57b12c2a44006888f493b"
+    },
+    {
+      "path": "stack/cas/parsingrules/998_security.filter.php",
+      "bytes": 28840,
+      "sha256": "0a92a8243ac0d12d4fe7c912822d7e234f53b2793abb57d682cd7330d9914652"
+    },
+    {
+      "path": "stack/cas/parsingrules/999_strict.filter.php",
+      "bytes": 3372,
+      "sha256": "320da7fc97b9f372289509ae415d2b8571f779f697bc2d2717040d8350cd3617"
+    },
+    {
+      "path": "stack/cas/parsingrules/filter.interface.php",
+      "bytes": 2581,
+      "sha256": "50bcd478d726e62ff64cd70238fe99acb834d64437bcc9aba07cdf72a591aa86"
+    },
+    {
+      "path": "stack/cas/parsingrules/parsingrule.factory.php",
+      "bytes": 17776,
+      "sha256": "2c604d3cd42c56a658e7ab53cd44bbbb0f8d2dddc1584993a9cf4d2ecb8667f1"
+    },
+    {
+      "path": "stack/cas/parsingrules/pipeline.class.php",
+      "bytes": 1805,
+      "sha256": "b532ef55f5d3f594f31055d9b616e3b54ce62fc1c8b8846edde501604bac4d0a"
+    },
+    {
+      "path": "stack/cas/secure_loader.class.php",
+      "bytes": 4353,
+      "sha256": "6bd2f8d98910f52c16306ca2a25dbcf4d66b8a410979be2f4d9a20771e130dbc"
+    },
+    {
+      "path": "stack/cas/security-map.json",
+      "bytes": 140997,
+      "sha256": "6a0435870103287eb3ed2f4048e58f76be0e9abc81c0bde9afe76292978bfd58"
+    },
+    {
+      "path": "stack/graphlayout/displayexamples.php",
+      "bytes": 5544,
+      "sha256": "76abd4d4bcf3b0940efb06173776590cc5f3629201e6a2788d29cfa9d9f6893a"
+    },
+    {
+      "path": "stack/graphlayout/displayprts.php",
+      "bytes": 3608,
+      "sha256": "ba7db192763caf36d89fc2be44c996cce37e2799182eb2293d5e0e50b860f190"
+    },
+    {
+      "path": "stack/graphlayout/graph.php",
+      "bytes": 20593,
+      "sha256": "b3507d115cf1f4e910609553e01936f8e30308f6a6c12f3e2f612dc9192f2e32"
+    },
+    {
+      "path": "stack/graphlayout/graphclump.php",
+      "bytes": 8564,
+      "sha256": "3f311f7a8c152a60906c0bbf7092164e8d0e2ee80613ae5392a6c4ed0278ca89"
+    },
+    {
+      "path": "stack/graphlayout/graphnode.php",
+      "bytes": 3387,
+      "sha256": "43d210515a51052cc168eab672c27928e689110b7a92b877cd9eece43f448f78"
+    },
+    {
+      "path": "stack/graphlayout/prtnode.php",
+      "bytes": 2059,
+      "sha256": "46019381ff39b219940a701485288171e46e938f808dcd5ed1933d3117604667"
+    },
+    {
+      "path": "stack/graphlayout/svgrenderer.php",
+      "bytes": 9172,
+      "sha256": "24aa2c4b3fdb7d89f9de001bb3f5c8e6df91cef332d4110c21cae277b999284c"
+    },
+    {
+      "path": "stack/graphlayout/textrenderer.php",
+      "bytes": 2992,
+      "sha256": "61aeb623bd393b87811927a279eedd9b0bf59e1fc135669c297299d6f3cc3882"
+    },
+    {
+      "path": "stack/input/algebraic/algebraic.class.php",
+      "bytes": 6492,
+      "sha256": "370ddc92b722ed6e604b1a148f31dae19c1255bb771a1a2a3b9e999c3b94882c"
+    },
+    {
+      "path": "stack/input/boolean/boolean.class.php",
+      "bytes": 3577,
+      "sha256": "6565eefbbae1349457738af276e8fe19d16a9066e8b7a4da2db49dd49dfa25ef"
+    },
+    {
+      "path": "stack/input/checkbox/checkbox.class.php",
+      "bytes": 8032,
+      "sha256": "50dcdfee63a996394e374bff3576292b09f8dedca6edfd2d8b4cf88ec71e1179"
+    },
+    {
+      "path": "stack/input/dropdown/dropdown.class.php",
+      "bytes": 28860,
+      "sha256": "43cfc66ac1af48174afe9312c3e4203e92b342739f519a84365d9f1808773be3"
+    },
+    {
+      "path": "stack/input/equiv/equiv.class.php",
+      "bytes": 24668,
+      "sha256": "b57d52993191ee35c72a13c0833eb47b2ee245d8e0bbe2dd70b468eb6a3360f8"
+    },
+    {
+      "path": "stack/input/factory.class.php",
+      "bytes": 9553,
+      "sha256": "ee948a8b9c6769c3d28268139fe4ca629f59b5a7118ec0ab6a5e797ee6d45fd7"
+    },
+    {
+      "path": "stack/input/freetext/freetext.class.php",
+      "bytes": 7007,
+      "sha256": "51d0f0a2357893cbfc1662c17ab3a6d0a095b101fb0207553d5c61dd1b5c8e29"
+    },
+    {
+      "path": "stack/input/geogebra/geogebra.class.php",
+      "bytes": 6116,
+      "sha256": "cc29440b69fd0281e111bfe66ffdf1b438e287d231c06b02792f090da9e9dc12"
+    },
+    {
+      "path": "stack/input/inputbase.class.php",
+      "bytes": 76088,
+      "sha256": "ce0d2226fd3f33b9b44e92f4a096d9a68c559f3e2697b909cdc631dfa78b12d5"
+    },
+    {
+      "path": "stack/input/inputstate.class.php",
+      "bytes": 4852,
+      "sha256": "d9dc7ed45bd1db26dea6cddc8c6d9e7895c87e8d73e0717dc35974e1dbb94c03"
+    },
+    {
+      "path": "stack/input/json/json.class.php",
+      "bytes": 2771,
+      "sha256": "d80df256269acf967fb87617129175a0235ff05d9a8ea8dd8eee7db7df0f5a76"
+    },
+    {
+      "path": "stack/input/matrix/matrix.class.php",
+      "bytes": 29345,
+      "sha256": "728375cd31f27b0ace72957365b473add5e11b2466570508e5e8b24f85702300"
+    },
+    {
+      "path": "stack/input/notes/notes.class.php",
+      "bytes": 8908,
+      "sha256": "7472d55c93e0e06e8e2d5aa90d0ea4909099c16da37645ffdddcf5142c009e7b"
+    },
+    {
+      "path": "stack/input/numerical/numerical.class.php",
+      "bytes": 7204,
+      "sha256": "5e16437ca6d6ce136cbb1be30a27d6118bf701f6ba7f47f06a0470386e6e414e"
+    },
+    {
+      "path": "stack/input/parsons/parsons.class.php",
+      "bytes": 15209,
+      "sha256": "38a97e15fde3da470c131b9df9c532f7cf049a3711c3aaa20ceaac7505110602"
+    },
+    {
+      "path": "stack/input/radio/radio.class.php",
+      "bytes": 3604,
+      "sha256": "4b018404a99a3fba6e4fc4420ff562f65fd03c457e21ef09ee178c5975dc2085"
+    },
+    {
+      "path": "stack/input/singlechar/singlechar.class.php",
+      "bytes": 3184,
+      "sha256": "c023ab4579b483073a646017c677d5c0cb1c4dedb0141606e9cd701da2faec8e"
+    },
+    {
+      "path": "stack/input/string/string.class.php",
+      "bytes": 7132,
+      "sha256": "7f8c54b342653a6b57ee4101a936273a889baa3e14192e10e0d734e5a25f3051"
+    },
+    {
+      "path": "stack/input/textarea/textarea.class.php",
+      "bytes": 13454,
+      "sha256": "c22951a6cb873a0abd67e71775487108b857e6333066636e1e2c0c544acf0bf6"
+    },
+    {
+      "path": "stack/input/units/units.class.php",
+      "bytes": 8331,
+      "sha256": "ce5d84216a78155f9d39a8aeee3d95463df7dfc6cf891e1cefce60e4344da273"
+    },
+    {
+      "path": "stack/input/varmatrix/varmatrix.class.php",
+      "bytes": 26500,
+      "sha256": "49f8aeef35d2b57dbae161930bbdfd582b0926792829752029115bd4a92b0d4e"
+    },
+    {
+      "path": "stack/mathsoutput/fact_sheets.class.php",
+      "bytes": 5326,
+      "sha256": "cd84e96c7c372f84f4324cd9a537018e701c1ac6b0abc0e0409b48d6e7b51001"
+    },
+    {
+      "path": "stack/mathsoutput/mathsoutput.class.php",
+      "bytes": 5653,
+      "sha256": "d393b487dc44d69567ab34e5839d14f10ce8734eb35e534535633ed3a0726495"
+    },
+    {
+      "path": "stack/mathsoutput/mathsoutputapi.class.php",
+      "bytes": 2081,
+      "sha256": "90bb9a0c0caa5ea9926e5c42c151ef5a4af3db5a0eed516713ec4835b3000972"
+    },
+    {
+      "path": "stack/mathsoutput/mathsoutputbase.class.php",
+      "bytes": 6749,
+      "sha256": "6512784759d0a8d4c7552673be7194dc2eee7c773c3165a3e6bcd4defc5f08e6"
+    },
+    {
+      "path": "stack/mathsoutput/mathsoutputfilterbase.class.php",
+      "bytes": 6735,
+      "sha256": "8f610f6f7564eff92d5c343887edb4b064c7fe716706c776dbaabc02ea0e5507"
+    },
+    {
+      "path": "stack/mathsoutput/mathsoutputmathjax.class.php",
+      "bytes": 2105,
+      "sha256": "d25ad1fcd4aedd48327a902966ab9f7d4c5c912b4a55cb99623bc20732c22973"
+    },
+    {
+      "path": "stack/mathsoutput/mathsoutputmaths.class.php",
+      "bytes": 2117,
+      "sha256": "73fbd341ee3759feb4f2883d559325e348359d28060a7d02b1f64da08902a4b9"
+    },
+    {
+      "path": "stack/mathsoutput/mathsoutputoumaths.class.php",
+      "bytes": 2185,
+      "sha256": "ccb1806a4a37f6d1d3d5b7103fb723d29cdeef9dc953489f1574e71b454e68f8"
+    },
+    {
+      "path": "stack/mathsoutput/mathsoutputtex.class.php",
+      "bytes": 1909,
+      "sha256": "9693246617f5766a530cb6f2974a74bb919d83a637b07cd900faff600c5ab64b"
+    },
+    {
+      "path": "stack/maximaparser/MP_classes.php",
+      "bytes": 86030,
+      "sha256": "f5d2e435b1f1cdb06b6265f86d906f85d2e8920fb6c3a0d74bb7604f2d2b6ea0"
+    },
+    {
+      "path": "stack/maximaparser/autogen/lalr-equivline.json",
+      "bytes": 107743,
+      "sha256": "b8e598debc59ce70469df83049c22377f1f4f841b692b0988bc4f9538d1ed022"
+    },
+    {
+      "path": "stack/maximaparser/autogen/lalr-root.json",
+      "bytes": 110270,
+      "sha256": "b51da17e0fb09e6f9b1115a710548cc64d7f559e9cf60dea850bb2591fb14a61"
+    },
+    {
+      "path": "stack/maximaparser/autogen/parser-equivline.php",
+      "bytes": 28652,
+      "sha256": "68ea5b8f910b3d86211276ad64ec10982761e7ebfef53237a14b7db54349bc5f"
+    },
+    {
+      "path": "stack/maximaparser/autogen/parser-root.php",
+      "bytes": 30705,
+      "sha256": "8d759cca347f6b40621cda96bbf9f3ac179570a0ad342d2cbe761e676c0ebb17"
+    },
+    {
+      "path": "stack/maximaparser/autogen/parser.mbstring.php",
+      "bytes": 292519,
+      "sha256": "a9a9808b48048b5a9932872c990961fec7d43af36a817f74c63cde9b89c43094"
+    },
+    {
+      "path": "stack/maximaparser/basen.lexer.class.php",
+      "bytes": 16048,
+      "sha256": "f800ae4de0237537e3f061372c2512db03746f3fc3490ca27b392ac0aad0b7a4"
+    },
+    {
+      "path": "stack/maximaparser/corrective_parser.php",
+      "bytes": 26161,
+      "sha256": "95e093271b05cc1f1158d81c792cb1110937a39586ead91495127f5476050d78"
+    },
+    {
+      "path": "stack/maximaparser/decimal.comma.lexer.class.php",
+      "bytes": 14789,
+      "sha256": "b4f5907ef9bcdf0c95da9a0224d51d3762c2dd488206babec1476397085a4290"
+    },
+    {
+      "path": "stack/maximaparser/error.interpreter.class.php",
+      "bytes": 24059,
+      "sha256": "8f90a64da872a9dbfebf14152ce5f59821d50688cd9701c9eba0f352159225dd"
+    },
+    {
+      "path": "stack/maximaparser/lexer.base.class.php",
+      "bytes": 38889,
+      "sha256": "395495fa34ff95a89cb2828513251dbe976e1dabdb93abf71ae9b0dd157aefd3"
+    },
+    {
+      "path": "stack/maximaparser/parser.common.classes.php",
+      "bytes": 7114,
+      "sha256": "d55b637b44ed3f9e19a59a35e00df8c3a370c24352bbffe381272f33a9fe3472"
+    },
+    {
+      "path": "stack/maximaparser/parser.options.class.php",
+      "bytes": 14031,
+      "sha256": "bbae6469619456196e86ea02267712eebd7630d56574b0b5c152b41a9ce28b94"
+    },
+    {
+      "path": "stack/maximaparser/preparser.class.php",
+      "bytes": 8830,
+      "sha256": "787a4b75b9d243e963d5d5230acfd522da18facc3c3f374497b3635b17817d13"
+    },
+    {
+      "path": "stack/maximaparser/unicode/letters-stack.json",
+      "bytes": 26665,
+      "sha256": "38983ed0f7b43213fe59f09497601629007b4b6434b24f0b047b06bda2d044b7"
+    },
+    {
+      "path": "stack/maximaparser/unicode/subscript-stack.json",
+      "bytes": 718,
+      "sha256": "6cf63b364e7c7d65c8d6d32cc6111057284c1fc5e43e9b6277fd22c97f615023"
+    },
+    {
+      "path": "stack/maximaparser/unicode/superscript-stack.json",
+      "bytes": 325,
+      "sha256": "4ca10284428dcb0ed609397c82ffc7438f45402456a835d527caeab29b336444"
+    },
+    {
+      "path": "stack/maximaparser/unicode/symbols-stack.json",
+      "bytes": 1211,
+      "sha256": "dcdf658aa7d23d0767eeafa4249e166469d5ab2e37cbe8010a279b870aa5ea43"
+    },
+    {
+      "path": "stack/maximaparser/utils.php",
+      "bytes": 21608,
+      "sha256": "99446cc036296d418cd5cf89f34c1fb50c7967b45216e57b4be632c10f2aba22"
+    },
+    {
+      "path": "stack/options.class.php",
+      "bytes": 15901,
+      "sha256": "66a8920a3f6f41d1f5dd6f6bda4e838324c8dc22ed582d3f47ff838d12dfedb8"
+    },
+    {
+      "path": "stack/potentialresponsetreestate.class.php",
+      "bytes": 9315,
+      "sha256": "ee0532e5aedc8b5968ea84df08d839193fa6513d39a1c41615449289fcfa6de4"
+    },
+    {
+      "path": "stack/prt.class.php",
+      "bytes": 41183,
+      "sha256": "7551fa03111f003c43b0fa4e2ba00b927704e152275dd88ef776807c8c46e06e"
+    },
+    {
+      "path": "stack/prt.evaluatable.class.php",
+      "bytes": 13750,
+      "sha256": "0e01b14d2d14f8731424acb52fd1bd863341918400b7f275c708055710ed70fa"
+    },
+    {
+      "path": "stack/questiondashboard.class.php",
+      "bytes": 14892,
+      "sha256": "57dade2e005ff2683317b6d5b4750b097df045733b1d8f5cc484bdad6d20fe17"
+    },
+    {
+      "path": "stack/questionlibrary.class.php",
+      "bytes": 27380,
+      "sha256": "c2a70c0eef03caff0285f1a838442160f0dbf41edf8910e0092da0006eb0655b"
+    },
+    {
+      "path": "stack/questionreport.class.php",
+      "bytes": 34845,
+      "sha256": "ccbb962d72ea8a58572fb9a53ea51fe739c992b18519ac847df0b9e3240e6e53"
+    },
+    {
+      "path": "stack/questiontest.php",
+      "bytes": 14251,
+      "sha256": "19f141c2a38071d05eb9922aac8a4f7660ed6bd5e300a5462164f07a786557f9"
+    },
+    {
+      "path": "stack/questiontestresult.php",
+      "bytes": 20557,
+      "sha256": "bbea5c5db3cc054c42868d5fc5a579dafbbf1186b769d9c7765b8faa71af297f"
+    },
+    {
+      "path": "stack/questionxmlcompare.class.php",
+      "bytes": 36122,
+      "sha256": "10a3db24b10777c3cd6923afda8fa47022e40948a0be396faa57213fafc1fabd"
+    },
+    {
+      "path": "stack/utils.class.php",
+      "bytes": 44071,
+      "sha256": "bf3750823606bbf0e2d4e7e141b8299ea3f61f261e0c43283c59ff0eb33f20b3"
+    },
+    {
+      "path": "version.php",
+      "bytes": 1391,
+      "sha256": "2aa77aa4d1e8e6ed8d2d764120121232ce30eae4b455360e8f6eeeb678b8ac83"
+    },
+    {
+      "path": "vle_specific.php",
+      "bytes": 14926,
+      "sha256": "742e46d66d3861ea29a2e511419e121d4ab669298714c54a7b53dbaefc355dd9"
+    }
+  ]
+}

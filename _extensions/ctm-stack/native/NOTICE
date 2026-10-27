@@ -1,0 +1,10 @@
+STACK-derived native compiler files
+
+STACK (maths/moodle-qtype_stack), GPL-3.0-or-later, supplies the grammar,
+compiler/controller conventions, answer-test metadata and language data used by:
+  author-compiler.mjs, question-engine.js, prt_compiler.py, feedback.js,
+  maxima-parser.cjs, castext-parser.cjs, compiler-data.json.
+See compiler-provenance.json for exact upstream revision and source hashes.
+Our adaptations and Python compiler are AGPL-3.0-or-later; combined derived
+files carry AGPL-3.0-or-later AND GPL-3.0-or-later SPDX notices.
+compiler-data.json is generated STACK-derived metadata under GPL-3.0-or-later.

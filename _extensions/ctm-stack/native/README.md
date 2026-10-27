@@ -1,11 +1,12 @@
 # Native Maxima transport and build foundation
 
-This is the first M4a/M4b implementation change. It provides a shared direct
+This directory provides a shared direct
 ECL call core, worker lifetime/deadline controls, and an internal Node build
 runner against the unchanged **runtime-v3** release. Source-loaded STACK stays
-the default. It does **not** yet make `cas: maxima` available in Quarto:
-the native compiler, shared admission, backend adapter and reviewed-variants
-producer still need integration. See the [implementation ledger](../../../plans/2026-10-native-m4a-m4b.md).
+the default. It now includes the Python PRT compiler, grammar frontend,
+supervised native producer and sealed card worker for the initial `cas: maxima`
+subset. See the [native authoring guide](../../../docs/native-authoring.qmd)
+and [implementation ledger](../../../plans/2026-10-native-m4a-m4b.md).
 
 `direct-runtime.js` replaces the prototype's stdin/SAB transport with the
 exported ECL call entry qualified by the runtime repository's step-0 research.
@@ -76,4 +77,5 @@ publish variants and are not the final question-plan/receipt schema.
 Its caller supplies an expected package hash, every fetched byte is verified,
 and all runtime reads use verified in-memory data. It requires neither
 COOP/COEP nor SharedArrayBuffer. It is deliberately absent from the extension's
-published card resources until the native backend is integrated.
+published card resources: the card uses `card-worker.js`, whose protocol exposes
+only validation, grading and tests for one sealed question/variant.

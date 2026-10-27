@@ -2,7 +2,7 @@
 // Internal transport qualification; deliberately not registered as a card
 // adapter. Only a trusted plan compiler may produce its programs.
 'use strict';
-importScripts('direct-runtime.js');
+importScripts('stack-pin.js','direct-runtime.js');
 const send = self.postMessage.bind(self);
 const hex = buffer => Array.from(new Uint8Array(buffer), x => x.toString(16).padStart(2, '0')).join('');
 const digest = async bytes => hex(await crypto.subtle.digest('SHA-256', bytes));
@@ -29,7 +29,7 @@ async function init(message) {
   const encoded = await response.arrayBuffer();
   if (encoded.byteLength > 1024 * 1024 || await digest(encoded) !== message.packageHash) throw new Error('Native package hash mismatch');
   const spec = JSON.parse(new TextDecoder().decode(encoded));
-  if (spec.schema !== 1 || spec.runtimeTag !== 'runtime-v3' || spec.manifest.stackRevision !== '33383047af39c204bf4442802a058f8b918b2b1b') throw new Error('Wrong native runtime package');
+  if (spec.schema !== 1 || spec.runtimeTag !== 'runtime-v3' || spec.manifest.stackRevision !== self.CTMStackRevision) throw new Error('Wrong native runtime package');
   const bytes = new Map(), stackFiles = [], assets = new Map();
   for (const item of spec.runtimeAssets) {
     safePath(item.path);

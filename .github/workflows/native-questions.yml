@@ -1,0 +1,99 @@
+name: Native question compiler and cards
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '_extensions/ctm-stack/**'
+      - 'tests/native/**'
+      - 'tools/compiler/**'
+      - '.github/pins.json'
+      - '.github/workflows/native-questions.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  questions:
+    name: Native compilation, review and browser cards
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22.16.0'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 1.8.27
+      - uses: ./.github/actions/ctm-dependencies
+      - name: Read the owned STACK revision
+        id: stack-pin
+        run: echo "revision=$(jq -r .revision _extensions/ctm-stack/native/stack-pin.json)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        with:
+          repository: maths/moodle-qtype_stack
+          ref: ${{ steps.stack-pin.outputs.revision }}
+          path: .cache/stack
+          persist-credentials: false
+      - name: Test-only dependencies and generated grammar reproducibility
+        run: |
+          python -m pip install -r requirements-dev.txt
+          npm ci --prefix tools/compiler
+          node tools/compiler/generate.mjs .cache/stack --check
+          # GitHub's Ubuntu sources use mirror+file indirection as well as direct URLs.
+          sudo sed -i \
+            -e 's|mirror+file:/etc/apt/apt-mirrors.txt|https://archive.ubuntu.com/ubuntu|g' \
+            -e 's|http://azure.archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' \
+            /etc/apt/sources.list.d/ubuntu.sources
+          cat /etc/apt/sources.list.d/ubuntu.sources
+          grep -Fq 'https://archive.ubuntu.com/ubuntu' /etc/apt/sources.list.d/ubuntu.sources
+          sudo apt-get update -qq
+          apt-get --print-uris download libflite1 | tee "$RUNNER_TEMP/native-ubuntu-package-uri.txt"
+          grep -Fq 'https://archive.ubuntu.com/ubuntu/' "$RUNNER_TEMP/native-ubuntu-package-uri.txt"
+          sudo apt-get install -y php-cli php-intl php-mbstring
+      - name: Stage the unchanged owned runtime-v3
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download runtime-v3 --repo Erasmus-CTM/stack-wasm-maxima --dir .cache/release --pattern maxima-runtime-v3.json --pattern maxima-runtime-v3.tar.gz
+          python scripts/stage-native.py --release .cache/release --stack-source .cache/stack --output .cache/native-v3
+      - name: Compiler invariants and adapter lifecycle controls
+        run: |
+          python -m pytest -q tests/native/test_prt_compiler.py tests/native/test_compiler_frontend.py
+          node tests/native/author-compiler.test.mjs
+          node tests/native/pin.test.mjs
+          node tests/native/card-adapter.test.mjs
+          node tests/native/question-engine.test.mjs
+      - name: Independent Python emitter and upstream adversarial audit
+        run: |
+          mkdir -p test-results/native-questions
+          python -c 'import json,runpy; print(json.dumps(runpy.run_path("tests/native/test_prt_compiler.py")["programs"]()))' > test-results/native-questions/python-prt-input.json
+          node tests/native/function-security.mjs .cache/native-v3 test-results/native-questions/function-security.json
+          node tests/native/exact-replay.mjs .cache/native-v3 test-results/native-questions/exact-replay.json
+          node tests/native/prt-audit.mjs .cache/native-v3 test-results/native-questions/python-prt-input.json test-results/native-questions/python-prt-native.json
+          python tests/native/oracle/run-adversarial.py --stack-source .cache/stack --runtime .cache/native-v3 --output test-results/native-questions/upstream
+      - name: Native generation, leased approvals, replay and change invalidation without SymPy
+        run: |
+          python tests/native/producer-integration.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --xml _ctm-checkers-source/examples/stack/polynomial-expansion.xml --output test-results/native-questions/producer.json
+          python tests/native/families.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --sources _ctm-checkers-source/examples/stack --output test-results/native-questions/families.json
+      - name: Render the actual mixed-backend Quarto card
+        run: |
+          python tests/native/render-card.py --libs "$CTM_LIBS_EXTENSION" --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --xml _ctm-checkers-source/examples/stack/polynomial-expansion.xml --output "$RUNNER_TEMP/native-card-project"
+          python -m playwright install --with-deps chromium firefox webkit
+      - name: Real native card validation, grading, XML tests and fresh variant heaps
+        run: |
+          for browser in chromium firefox webkit; do
+            python tests/native/card-browser.py "$RUNNER_TEMP/native-card-project" test-results/native-questions/card-$browser.json --browser "$browser" || exit 1
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-question-evidence
+          path: test-results/native-questions/
+          if-no-files-found: error

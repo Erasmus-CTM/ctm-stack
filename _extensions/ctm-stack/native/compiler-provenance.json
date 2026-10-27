@@ -1,0 +1,78 @@
+{
+  "schema": 1,
+  "stackRevision": "33383047af39c204bf4442802a058f8b918b2b1b",
+  "generator": "pegjs@0.10.0",
+  "transformation": "Use upstream JavaScript grammar actions; erase TypeScript annotations; retain source text for all emitted mathematical expressions",
+  "sourceFiles": [
+    {
+      "path": "stack/maximaparser/autogen/parser-grammar.pegjs",
+      "bytes": 37084,
+      "sha256": "c68d0de47d5a4423e78cffda3d3029139b65ea08ccf54e6dbdb6beda9c8d2391"
+    },
+    {
+      "path": "stack/cas/castext2/autogen/parser-grammar.pegjs",
+      "bytes": 23535,
+      "sha256": "5fee18a97ad393501c5ef065632e7184c08814bd959a727bd4164144bde9203b"
+    },
+    {
+      "path": "stack/cas/security-map.json",
+      "bytes": 140997,
+      "sha256": "6a0435870103287eb3ed2f4048e58f76be0e9abc81c0bde9afe76292978bfd58"
+    },
+    {
+      "path": "stack/maximaparser/unicode/symbols-stack.json",
+      "bytes": 1211,
+      "sha256": "dcdf658aa7d23d0767eeafa4249e166469d5ab2e37cbe8010a279b870aa5ea43"
+    },
+    {
+      "path": "stack/maximaparser/unicode/letters-stack.json",
+      "bytes": 26665,
+      "sha256": "38983ed0f7b43213fe59f09497601629007b4b6434b24f0b047b06bda2d044b7"
+    },
+    {
+      "path": "stack/answertest/controller.class.php",
+      "bytes": 15219,
+      "sha256": "2a7bdaf834f50e202c31ba3c9bfe1ca1ab82b7ddd8ae78e1af1e11c0cabb139d"
+    },
+    {
+      "path": "lang/en/qtype_stack.php",
+      "bytes": 171154,
+      "sha256": "efbc42e93a186343bba31e00b1abebbb5c58f86c0b74221bcee555d8847c2713"
+    },
+    {
+      "path": "stack/prt.class.php",
+      "bytes": 41183,
+      "sha256": "7551fa03111f003c43b0fa4e2ba00b927704e152275dd88ef776807c8c46e06e"
+    },
+    {
+      "path": "stack/cas/keyval.class.php",
+      "bytes": 19739,
+      "sha256": "a9fe8edc1857e5503f3557773b96e02e2ea173362717392f974c64d40005702a"
+    },
+    {
+      "path": "locallib.php",
+      "bytes": 12801,
+      "sha256": "ccb4d3c9b59f0e4a0c40e255e1187b734ab46f5ac9ab4c02af1fcd182cfe547f"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/root.specialblock.php",
+      "bytes": 9842,
+      "sha256": "3bcf2ee524a972eb23e34fc4975ad0a9e47dbb219eed981755c80e61d1dc1759"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/latex.block.php",
+      "bytes": 4510,
+      "sha256": "81243126206e7cead8850ab288d2ff92f4d350822419e3aa42449a05a5347152"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/raw.block.php",
+      "bytes": 5288,
+      "sha256": "75cf2574a58ba125671e7714fd820fa1c515805be81a0ec8a9f2c8e583355239"
+    },
+    {
+      "path": "stack/cas/castext2/blocks/if.block.php",
+      "bytes": 7812,
+      "sha256": "4fff40ab20730a213c83fbb6bf2fcaa8be1bab7b99ead85dd768247b18174084"
+    }
+  ]
+}
