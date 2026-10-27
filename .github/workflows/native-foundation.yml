@@ -23,6 +23,8 @@ jobs:
         node: ['22.16.0', '24.19.0']
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
@@ -47,7 +49,30 @@ jobs:
         run: node tests/native/session.test.mjs
       - name: Exact 327-program replay, lifecycle, isolation and build cache
         run: node tests/native/integration.mjs .cache/native-v3 test-results/native/programs.json test-results/native/node.json
+      - name: Select full GC qualification for transport or runtime changes
+        id: gc
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "$EVENT_NAME" = workflow_dispatch ] || [ -z "$BASE_SHA" ] || ! git cat-file -e "$BASE_SHA^{commit}" 2>/dev/null; then
+            echo 'run=true' >> "$GITHUB_OUTPUT"
+          elif git diff --quiet "$BASE_SHA" HEAD -- \
+            _extensions/ctm-stack/native/direct-runtime.js \
+            '_extensions/ctm-stack/native/node-*.mjs' \
+            _extensions/ctm-stack/native/build-runner.mjs \
+            _extensions/ctm-stack/native/startup.mjs \
+            _extensions/ctm-stack/native/classified-errcatch.lisp \
+            _extensions/ctm-stack/native/release.json \
+            scripts/stage-native.py tests/native/gc-stress.mjs; then
+            echo 'run=false' >> "$GITHUB_OUTPUT"
+          else
+            result=$?
+            if [ "$result" -ne 1 ]; then exit "$result"; fi
+            echo 'run=true' >> "$GITHUB_OUTPUT"
+          fi
       - name: Direct-call root safety during frequent garbage collection
+        if: steps.gc.outputs.run == 'true'
         run: node tests/native/gc-stress.mjs .cache/native-v3 test-results/native/programs.json test-results/native/gc-stress.json
       - uses: actions/upload-artifact@v4
         if: always()

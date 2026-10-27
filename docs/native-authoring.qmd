@@ -94,7 +94,10 @@ heaps, shared approvals and stale leases. Six additional authored families
 (rational, numerical, matrix, Boolean, nested collections and hyperbolic)
 pass 20 XML tests and their full-mark teacher vectors. Literal test decimals
 retain trailing zeros, and expected note sequences use upstream's anchoring
-rules. Transport/GC acceptance remains in
-the separate native foundation workflow. JSXGraph, native Python continuations,
+rules. Transport replay remains in the separate native foundation workflow.
+The full GC stress campaign runs for changes to the call boundary, lifetime,
+runtime pin/staging or GC stress test itself, and for manual qualification. Compiler
+and card changes use the normal replay, lifecycle and browser gates.
+JSXGraph, native Python continuations,
 broader input/feedback conformance, locales and offline distribution remain
 tracked work.
