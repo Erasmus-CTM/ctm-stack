@@ -159,7 +159,51 @@ def current_source(payload):
 
 def request(payload):
     from ctm_variants.stack_component import request as resolve
+    options,_ = parse_source(payload.get('source',''))
+    if options.get('cas',payload.get('backend','sympy')) == 'maxima':
+        from ctm_stack_native import NativeBackend
+        folder = next((p for p in _folders() if (p/'checkers.json').is_file()), None)
+        if os.environ.get('CTM_CHECKERS_WHEEL'):
+            folder = Path(os.environ['CTM_CHECKERS_WHEEL']).resolve().parent
+        return resolve(payload,backend=NativeBackend(checker_folder=folder))
     return resolve(payload)
+
+def configured_backend(payload):
+    """Resolve file-command defaults with the same ctm-libs settings reader.
+
+    Quarto supplies merged metadata; the canonical reader restores individual
+    settings hidden by a nearer section map. Do not infer the engine from a
+    downloaded decision or a retained replay tape.
+    """
+    import subprocess
+    cli=os.environ.get('CTM_VARIANTS_QUARTO','quarto')
+    root=Path(payload['projectRoot']).resolve()
+    source=(root/payload['file']).resolve()
+    inspection=json.loads(subprocess.check_output([cli,'inspect',str(source)],cwd=root,timeout=30))
+    formats=inspection.get('formats',{})
+    html=next((value for key,value in formats.items() if key=='html' or value.get('identifier',{}).get('base-format')=='html'),{})
+    metadata=html.get('metadata',{})
+    project=inspection.get('project',{})
+    configuration=project.get('config',{})
+    defaults=configuration.get('profile',{})
+    profiles=os.environ.get('QUARTO_PROFILE')
+    profiles=profiles.split(',') if profiles else defaults.get('default',[]) if isinstance(defaults,dict) else []
+    if isinstance(profiles,str):profiles=[profiles]
+    # Installed flat and owner-prefixed layouts both use ctm-libs' own reader.
+    candidates=[HERE.parent/'ctm-libs']
+    for parent in [root,*source.parents]:
+        ext=parent/'_extensions'
+        candidates += [ext/'ctm-libs',*sorted(ext.glob('*/ctm-libs'))]
+        if parent==root:break
+    library=next((folder for folder in candidates if (folder/'read-settings.ts').is_file()),None)
+    if library is None:raise ValueError('Install ctm-libs to resolve the authored STACK backend')
+    settings=json.loads(subprocess.check_output([cli,'run',str(library/'read-settings.ts')],cwd=root,
+        input=json.dumps({'projectDirectory':project.get('dir',str(root)),'inputFile':str(source),
+            'profiles':profiles,'sections':['stack'],'documentMeta':{'stack':metadata.get('stack',{})}}).encode(),timeout=30))
+    if settings.get('errors'):raise ValueError('; '.join(settings['errors']))
+    backend=settings.get('settings',{}).get('stack',{}).get('cas',{}).get('value','sympy')
+    if backend not in ('sympy','maxima'):raise ValueError('stack.cas must be sympy or maxima')
+    return backend
 
 def file_request(payload, command):
     """Build the same version-1 request from current source and explicit files.
@@ -184,6 +228,8 @@ def file_request(payload, command):
     request_payload = current_source({"projectRoot": project, "file": file,
         "sourceFile": file, "label": label, "manifest": manifest, "version": 1,
         "approval": "required", "renderMode": "review"})
+    if 'cas' not in request_payload['options']:
+        request_payload['backend']=configured_backend(request_payload)
     value, lease = history.load(path, label)
     if command == "generate25more":
         expected = payload.get("expectedBaseHash", lease)

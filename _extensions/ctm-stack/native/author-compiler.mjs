@@ -1,0 +1,213 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later AND GPL-3.0-or-later
+// Scoped author/CASText frontend using pinned upstream JS grammar actions.
+// Produces syntax IR for the Python PRT compiler and native programs for
+// author expressions; it never evaluates author maths in JavaScript.
+import fs from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import maximaParser from './maxima-parser.cjs';
+import castextParser from './castext-parser.cjs';
+const data=JSON.parse(await fs.readFile(new URL('./compiler-data.json',import.meta.url)));
+const quote=s=>'"'+String(s).replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'"';
+const bool=x=>x?'true':'false';
+const map=pairs=>'["stack_map"'+Object.entries(pairs).map(([k,v])=>',['+quote(k)+','+v+']').join('')+']';
+const scope=(locals,steps)=>'block(['+[...new Set(locals)].join(',')+'],'+steps.filter(Boolean).join(',')+')';
+const ec=(expression,where)=>'_EC(errcatch('+expression+'),'+quote(where)+')';
+const functions=new Set(('sqrt sin cos tan sec csc cot sinh cosh tanh sech csch coth exp log ln abs '
+  +'asin acos atan asec acsc acot asinh acosh atanh asech acsch acoth cosec cosech gcd mod matrix '
+  +'diff integrate sum product expand factor ratsimp cancel ev float floor ceiling round truncate '
+  +'min max lcm num denom part length first second third last rest reverse append endcons cons '
+  +'makelist map lambda block if listp matrixp setp numberp integerp equal is subst substinpart '
+  +'set setify listify union intersection setdifference member subsetp cardinality sort '
+  +'determinant rank transpose invert ident zeromatrix diag_matrix echelon charpoly '
+  +'rand rand_with_step rand_with_prohib random_subset random_permutation '
+  +'decimalplaces dispdp displaydp significantfigures dispsf').split(' '));
+const aliases=Object.assign(Object.create(null),{ln:'log',cosec:'csc',cosech:'csch',arcsin:'asin',arccos:'acos',arctan:'atan',
+  arcsec:'asec',arccot:'acot',arccsc:'acsc',arcsinh:'asinh',arccosh:'acosh',arctanh:'atanh',arcsech:'asech',arccoth:'acoth',arccsch:'acsch',
+  arccosec:'acsc',arsinh:'asinh',arcosh:'acosh',artanh:'atanh',arsech:'asech',arcoth:'acoth',arcsch:'acsch'});
+const constants=new Map([['e','%e'],['pi','%pi'],['Pi','%pi'],['PI','%pi'],['i','%i']]);
+function fail(where,message){throw new Error(where+': '+message);}
+function safeName(value,where){
+  if(typeof value!=='string'||!/^[A-Za-z][A-Za-z0-9_]*$/.test(value)||value.startsWith('ctm_')||constants.has(value)
+      ||data.security[value]?.function) fail(where,'reserved or unsupported native name '+value);
+  return value;
+}
+function children(node){
+  return Object.entries(node).filter(([k])=>!['kind','position'].includes(k)).flatMap(([,v])=>Array.isArray(v)?v:[v]).filter(v=>v&&typeof v==='object'&&typeof v.kind==='string');
+}
+function parse(source,where){
+  if(typeof source!=='string'||source.length>20000) fail(where,'author expression exceeds its text bound');
+  try{return maximaParser.parse(source);}catch(error){fail(where,'unsupported Maxima syntax: '+error.message);}
+}
+function analyse(node,source,where,random=false){
+  const read=new Set(),calls=new Set(),replacements=[];let count=0;
+  function visit(n,depth=0){
+    if(++count>2500||depth>100) fail(where,'author syntax exceeds its structural bound');
+    if(n.kind==='MPFunctionCall'){
+      if(n.name.kind!=='MPIdentifier') fail(where,'dynamic function calls require a separate capability');
+      const target=aliases[n.name.value]||n.name.value;
+      if(!functions.has(target)||!random&&/^(rand|random|multiselqn)/.test(target)) fail(where,'unsupported native author call '+target);
+      calls.add(target);
+      if(aliases[n.name.value]) replacements.push([n.name.position.start.offset,n.name.position.end.offset,target]);
+      for(const arg of n.args) visit(arg,depth+1);
+      return;
+    }
+    if(n.kind==='MPOperation'&&n.op.startsWith(':')) fail(where,'nested writes or function definitions require a separate capability');
+    if(n.kind==='MPLoop'||n.kind==='MPEvaluationFlag'||n.kind==='MPAnnotation') fail(where,'unsupported native author control construct '+n.kind);
+    if(n.kind==='MPPrefixOp'&&['?','??',"''"].includes(n.op.trim())) fail(where,'Lisp escapes and dynamic evaluation are unsupported');
+    if(n.kind==='MPIdentifier'){
+      read.add(n.value);
+      if(constants.has(n.value)) replacements.push([n.position.start.offset,n.position.end.offset,constants.get(n.value)]);
+      else if(/[^\x00-\x7f]/.test(n.value)){
+        let value=n.value;for(const [old,replacement] of data.replacements)value=value.split(old).join(replacement);
+        if(value!==n.value) replacements.push([n.position.start.offset,n.position.end.offset,value]);
+      }
+    }
+    if(n.kind==='MPOperation'&&['and','or'].includes(n.op)){
+      const start=n.lhs.position.end.offset,end=n.rhs.position.start.offset;
+      replacements.push([start,end,source.slice(start,end).replace(new RegExp('\\b'+n.op+'\\b'),'noun'+n.op)]);
+    }
+    if(n.kind==='MPPrefixOp'&&n.op.trim()==='not'){
+      const start=n.position.start.offset,end=n.rhs.position.start.offset;
+      replacements.push([start,end,source.slice(start,end).replace(/\bnot\b/,'nounnot')]);
+    }
+    for(const child of children(n))visit(child,depth+1);
+  }
+  visit(node);
+  let text=source.slice(node.position.start.offset,node.position.end.offset);
+  const origin=node.position.start.offset;
+  for(const [start,end,value] of replacements.sort((a,b)=>b[0]-a[0]))text=text.slice(0,start-origin)+value+text.slice(end-origin);
+  return {text,read,calls};
+}
+function operand(source,where,random=false){
+  const root=parse(source,where),items=root.items.filter(i=>i.kind!=='MPComment');
+  if(items.length!==1||items[0].kind!=='MPStatement'||items[0].flags.length)fail(where,'expected one author expression without evaluation flags');
+  return analyse(items[0].expression,source,where,random);
+}
+function keyval(source,where,random=false){
+  const root=parse(source,where),write=[],steps=[],called=new Set(),read=new Set();
+  for(const [at,statement] of root.items.entries()){
+    if(statement.kind==='MPComment')continue;
+    const node=statement.expression;
+    if(statement.kind!=='MPStatement'||statement.flags.length||node.kind!=='MPOperation'||node.op!==':'||node.lhs.kind!=='MPIdentifier')fail(where,'only scoped name:expression assignments are supported');
+    const key=safeName(node.lhs.value,where);
+    if(write.includes(key))fail(where,'reassigned question variable '+key);
+    const rhs=analyse(node.rhs,source,where+'/'+key,random);
+    rhs.calls.forEach(c=>called.add(c));rhs.read.forEach(n=>read.add(n));
+    write.push(key);steps.push(ec(key+':'+rhs.text,where+'/'+at));
+  }
+  return {names:write,random:[...called].some(c=>/^(rand|random|multiselqn)/.test(c)),statement:steps.length?'('+steps.join(',')+',true)':null,
+    references:{write:Object.fromEntries(write.map(n=>[n,true])),read:Object.fromEntries([...read].map(n=>[n,true]))}};
+}
+function latexReplacements(){
+  const r={'QMCHAR':'?','!LEFTSQ!':'\\left[','!LEFTR!':'\\left(','!RIGHTSQ!':'\\right]','!RIGHTR!':'\\right)'};
+  for(const [tag,key] of [['ANDOR','equiv_ANDOR'],['SAMEROOTS','equiv_SAMEROOTS'],['MISSINGVAR','equiv_MISSINGVAR'],['ASSUMEPOSVARS','equiv_ASSUMEPOSVARS'],
+    ['ASSUMEPOSREALVARS','equiv_ASSUMEPOSREALVARS'],['LET','equiv_LET'],['AND','equiv_AND'],['OR','equiv_OR'],['NOT','equiv_NOT'],['NAND','equiv_NAND'],
+    ['NOR','equiv_NOR'],['XOR','equiv_XOR'],['XNOR','equiv_XNOR'],['IMPLIES','equiv_IMPLIES'],['BOOLTRUE','true'],['BOOLFALSE','false']]){
+    if(typeof data.messages[key]!=='string')fail('compiler data','missing language key '+key);
+    r['!'+tag+'!']=data.messages[key];
+  }
+  return r;
+}
+function mathMode(source) {
+  let mode=null;
+  for(const match of source.matchAll(/\\[()[\]]|\$\$?/g)) {
+    let escaped=0;for(let at=match.index-1;at>=0&&source[at]==='\\';at--)escaped++;
+    if(escaped%2)continue;
+    const token=match[0];
+    if(token==='\\('||token==='\\[')mode=token;
+    else if(token==='\\)'||token==='\\]')mode=null;
+    else if(mode===token)mode=null;
+    else if(mode===null)mode=token;
+  }
+  return mode!==null;
+}
+export function compileIR(question){
+  const variables=keyval(question.variables,'question/variables',true),inputs=question.inputs.map(i=>safeName(i.name,'input'));
+  if(inputs.some(n=>variables.names.includes(n)))fail('question','question variables collide with inputs');
+  const statics={},math=[],feedbackNames=new Set(),grading={},prts={};
+  let staticIndex=0;
+  const sourceText=JSON.stringify(question);
+  let prefix;
+  for(let nonce=0;nonce<10;nonce++) {
+    prefix='//CTM_STATIC_'+createHash('sha256').update(String(nonce)+sourceText).digest('hex').slice(0,16)+'_';
+    if(!sourceText.includes(prefix))break;
+    if(nonce===9)fail('CASText','cannot allocate collision-free static markers');
+  }
+  const literal=value=>{
+    if(value.length<20)return quote(value);
+    const key=prefix+(staticIndex++)+'//';statics[key]=value;return quote(key);
+  };
+  function casttext(source,where,mathOutput=math,readOutput=new Set()){
+    if(typeof source!=='string'||source.length>200000)fail(where,'CASText exceeds its text bound');
+    let tree;try{tree=castextParser.parse(source);}catch(error){fail(where,'unsupported CASText syntax: '+error.message);}
+    let count=0;
+    function list(nodes){return '["%root"'+nodes.map(n=>','+visit(n)).join('')+']';}
+    function visit(n){
+      if(++count>3000)fail(where,'CASText exceeds its node bound');
+      if(n.kind==='CTPRaw')return literal(n.value);
+      if(n.kind==='CTPIOBlock'){
+        if(!['input','validation','feedback'].includes(n.channel))fail(where,'unsupported IO channel '+n.channel);
+        if(n.channel==='feedback'?!question.prts.some(p=>p.name===n.variable):!inputs.includes(n.variable))fail(where,'unknown IO target '+n.variable);
+        return '["ioblock",'+quote(n.channel)+','+quote(n.variable)+']';
+      }
+      if(n.kind!=='CTPBlock')fail(where,'unsupported CASText node '+n.kind);
+      if(n.name==='comment')return '""';
+      if(n.name==='latex'||n.name==='raw'){
+        const text=n.children.map(c=>c.value).join(''),parsed=operand(text,where+'/'+n.name),value=parsed.text;
+        parsed.read.forEach(key=>readOutput.add(key));
+        mathOutput.push('string('+value+')');
+        if(n.name==='raw')return scope(['ctm_text'],[ec('ctm_text:'+value,where+'/raw'),'string(ctm_text)']);
+        const inMath=mathMode(source.slice(0,n.position.start.offset));
+        return scope(['_ct2_tmp','_ct2_simp'],['_ct2_simp:simp','_ct2_tmp:'+quote(text),ec('_ct2_tmp:'+value,where+'/latex'),
+          'simp:false','_ct2_tmp:ct2_latex(_ct2_tmp,'+quote(inMath?'':'i')+',_ct2_simp)','simp:_ct2_simp','_ct2_tmp']);
+      }
+      if(n.name==='if'){
+        const tests=Array.isArray(n.params.test)?n.params.test:[n.params.test];
+        const lengths=n.params[' branch lengths']||[n.children.length];
+        let index=0;const branches=lengths.map(length=>{const nodes=n.children.slice(index,index+length);index+=length;return list(nodes);});
+        let expression=branches.length>tests.length?branches.at(-1):'""';
+        for(let at=tests.length-1;at>=0;at--){
+          const parsed=operand(tests[at].value,where+'/if'),condition=parsed.text;parsed.read.forEach(key=>readOutput.add(key));mathOutput.push('string('+condition+')');
+          expression='if ('+condition+') then '+branches[at]+' else '+expression;
+        }
+        return expression;
+      }
+      fail(where,'unsupported native CASText block '+n.name);
+    }
+    return 'castext_simplify('+list(tree.children)+')';
+  }
+  const inputTeachers={};
+  for(const input of question.inputs)inputTeachers[input.name]=operand(input.teacher,'input/'+input.name+'/teacher').text;
+  for(const prt of question.prts){
+    safeName(prt.name,'PRT');
+    const fv=keyval(prt.feedbackvariables,'prt/'+prt.name+'/feedbackvariables');
+    if(fv.names.some(n=>variables.names.includes(n)||inputs.includes(n)))fail('prt/'+prt.name,'feedback names collide with question variables or inputs');
+    fv.names.forEach(n=>feedbackNames.add(n));
+    const snapshots={},feedbackMath=[],required=new Set(Object.keys(fv.references.read).filter(n=>inputs.includes(n))),parsedNodes={};
+    for(const node of prt.nodes){
+      const where='question/prt/'+prt.name+'/n/'+node.name;
+      if(!data.answerTests[node.test]&&node.test!=='PythonChecker')fail(where,'unsupported native answer test '+node.test);
+      const student=operand(node.student,where+'/student');
+      const teacher=node.teacher?operand(node.teacher,where+'/teacher'):{text:'""',read:new Set()};
+      const options=node.options&&node.test!=='PythonChecker'?operand(node.options,where+'/options'):{text:'',read:new Set()};
+      for(const part of [student,teacher,options])part.read.forEach(n=>{if(inputs.includes(n))required.add(n);});
+      const value={student:student.text,teacher:teacher.text,options:options.text};
+      for(const branch of ['true','false'])value[branch+'Feedback']=node[branch].feedback?.trim()
+        ?casttext(' '+node[branch].feedback,where+'/'+branch+'feedback',feedbackMath,required):null;
+      parsedNodes[node.name]=value;
+      snapshots[node.name]=map({student:'string('+student.text+')',teacher:'string('+teacher.text+')',options:options.text?'string('+options.text+')':'""'});
+    }
+    prts[prt.name]={feedbackStatement:fv.statement,feedbackNames:fv.names,required:inputs.filter(n=>required.has(n)),nodes:parsedNodes,defaultPenalty:question.penalty};
+    grading[prt.name]=scope([...fv.names,'simp'],['simp:'+bool(prt.autosimplify),fv.statement,'simp:false',map(snapshots)]);
+    if(feedbackMath.length)math.push(scope([...fv.names,'simp'],['simp:'+bool(prt.autosimplify),fv.statement,'['+feedbackMath.join(',')+']']));
+  }
+  const texts={};for(const field of ['questiontext','generalfeedback','specificfeedback','questionnote'])texts[field]=casttext(question[field],'question/'+field);
+  const testInputs='['+question.qtests.map(test=>map(Object.fromEntries(Object.entries(test.inputs).map(([key,value])=>{
+    if(value.startsWith('CT:'))fail('question test','CASText input needs a separate capability');
+    if(value.startsWith('RAW:'))return [key,quote(value.slice(4))];
+    let text;try{text=operand(value,'question test').text;}catch(error){return [key,quote(value)];}
+    return [key,'string('+text+')'];
+  })))).join(',')+']';
+  return {schema:1,variables,prts,texts,statics,inputTeachers,answerTests:data.answerTests,feedbackNames:[...feedbackNames],math:'flatten(['+math.join(',')+'])',grading:map(grading),testInputs,
+    language:{schema:1,stackRevision:data.stackRevision,language:'en',messages:data.messages,latexReplacements:latexReplacements()}};
+}

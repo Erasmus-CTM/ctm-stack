@@ -1,0 +1,95 @@
+---
+title: "Native STACK preparation and cards"
+---
+
+Select `cas: maxima` in a STACK block, or set `stack.cas: maxima` in the project
+or page settings. Native questions use the owned **runtime-v3**, with
+source-loaded STACK at `33383047af39c204bf4442802a058f8b918b2b1b`, for both
+author preparation and learner grading. The SymPy backend remains available.
+
+The author path uses Python for the PRT compiler and the common variant review
+workflow, Node for the pinned JavaScript grammar frontend and Wasm runner, and
+Maxima for mathematical evaluation. PHP is used only in adversarial comparison
+tests. Neither PHP, SymPy nor a browser is required for native preparation.
+PythonCheckers are a separate continuation capability; they do not execute in
+this native backend yet.
+
+## Stage runtime-v3
+
+Use Node 22 or 24 and Python with the installed CTM checker wheels and native
+authoring distribution. Obtain `maxima-runtime-v3.json` and
+`maxima-runtime-v3.tar.gz` from the owned runtime-v3 GitHub Release, and check out
+STACK at the exact revision above. From the component source:
+
+```bash
+python scripts/stage-native.py --release /path/to/release-files \
+  --stack-source /path/to/pinned-stack --output /path/to/new-native-package
+export CTM_STACK_NATIVE_PACKAGE=/path/to/new-native-package
+```
+
+Staging verifies the release record, archive, manifest and every runtime/STACK
+file. It does not rebuild or modify the runtime, change the release record
+format, or change the release archive layout. A missing package is a build
+error. Set `CTM_STACK_NODE` if Node is not available as `node`.
+
+The usual `question-variants.py` generate/review/apply commands now use the
+selected backend. Maxima owns its seed sequence; these are not imported Moodle
+deployments. Approval is required by default. Preview proposals are visibly
+unapproved. Publication replays retained candidates, requires current approval,
+and checks source/history leases using the same producer as SymPy. A prose edit
+refreshes the display while preserving approval; changed mathematics or grading
+requires review. Cached native results bind the runtime, STACK pin, compiler,
+checker admission wheel, question, seed and Node version; caches do not approve
+variants.
+
+## Current capability boundary
+
+The native frontend supports the structural XML importer's bounded algebraic,
+numerical and matrix inputs; scoped question/feedback assignments; native
+answer tests; weighted PRTs; and basic CASText text, mathematics, input,
+validation, feedback, conditionals and comments. Learner expressions use the
+same pinned JavaScript admission implementation as the checker payload, with
+an additional native serialization allowlist before Maxima evaluation.
+
+Unsupported features stop the author build with a diagnostic. These include
+PythonChecker continuations and block checkers, arbitrary author function
+definitions or execution, JSXGraph, external includes, general CASText blocks
+such as `foreach`, and CASText question-test inputs (`CT:`). An explicitly
+rejected feature is not a fallback to SymPy. This is an initial native question
+subset, not complete Moodle/STACK compatibility.
+
+Every prepared seed must pass its XML tests and a full-mark teacher-vector
+check on every PRT. Wrong-answer probes are retained as author evidence.
+Question-test support is bounded by the importer and is not a claim to every
+Moodle test sentinel or expectation mode.
+
+Learners validate with the explicit button before grading. Instant validation
+is not enabled by this change. One question/variant owns a fresh worker heap;
+switching variants retires it. This proves state separation at the cost of
+runtime startup on a switch. Loading is outside the calculation clock.
+The page needs neither cross-origin isolation nor SharedArrayBuffer. Native
+operations do not download or start Pyodide. Pages containing only SymPy cards
+do not load the native runtime package.
+
+## Compiler and audit
+
+The PRT compiler is a clean Python implementation with typed IR and a single
+active-node transition. The emitted program runs in Maxima; Python and
+JavaScript do not interpret the response tree at grading time. The independent
+test reference walks paths with Decimal arithmetic. Both our compiler and the
+pinned upstream PHP compiler passed the same 120 graphs and 2,572 verdict
+assignments against that reference. This tests routing and score arithmetic,
+not the mathematical correctness of each answer test.
+
+The [adversarial audit](audits/upstream-compiler-2026-10-27.md) provides two
+reproduced upstream rendering defects and one score-precision concern, with
+raw evidence and standalone reproduction. Our backend preserves Maxima's
+three-decimal PRT score rather than applying upstream PHP's additional
+continued-fraction approximation. This compatibility difference is explicit.
+
+The native question CI also exercises actual installed Quarto cards, mixed
+backends, full/partial/zero grades, invalid input, XML tests, fresh variant
+heaps, shared approvals and stale leases. Transport/GC acceptance remains in
+the separate native foundation workflow. JSXGraph, native Python continuations,
+broader input/feedback conformance, locales and offline distribution remain
+tracked work.

@@ -5,11 +5,44 @@ runtime, with source-loaded STACK at `3338304`; no new compiler profile,
 compiled STACK default, tag or release is part of this work.
 
 The shared card shell, backend contract, reviewed-variants infrastructure and
-H1 checker entry are already on main. `cas: maxima` currently fails at build,
-and the canonical variants resolver separately rejects a Maxima backend.
-Those guards must stay until a real native producer and adapter satisfy the
-same publication and request contracts. The research prototype is evidence
-and a regression oracle, not the production UI implementation.
+H1 checker entry are already on main. The transport foundation and shared
+JavaScript admission API have also merged. The compiler/card change below
+replaces the unavailable-backend guards with a real native producer, runtime
+staging diagnostics and the same publication/request contracts. The research
+prototype is evidence and a regression oracle, not the production UI.
+
+## Compiler/card implementation — 27 October 2026
+
+AC requested a Python PRT compiler and a clean implementation rather than a
+PHP dependency or line-by-line port. This supersedes the original compiler
+language choice below. Typed Python IR emits a native Maxima program; there is
+no second runtime tree interpreter. Upstream PHP is an oracle only. Its output
+and our compiler independently match a Decimal/path reference on 120 DAGs and
+2,572 verdict assignments. The adversarial audit records two upstream rendering
+defects and a separately classified score-precision difference.
+
+Implemented and locally exercised:
+
+- Structural XML → pinned JS grammar IR → Python PRT compiler → runtime-v3
+  preparation, XML tests, mandatory full-mark teacher vector and wrong probes.
+  The native producer works with SymPy imports blocked.
+- Common leased review history, backend-owned replay tapes, required approval,
+  stable numbering, prose refresh and mathematical-edit invalidation.
+- Quarto runtime resources and descriptor, sealed native card worker, native
+  validation/grading/tests, fresh heaps on variant changes and mixed backends.
+  The real rendered card earns full, partial and zero marks, rejects invalid
+  input, recovers, and passes XML tests without starting Pyodide or requiring
+  cross-origin isolation. Runtime loading precedes the calculation clock.
+- Separate loading/calculation watchdogs, Stop, internal-fault retirement and
+  rejection of late-generation replies. The failed request is never replayed.
+
+This is a functional initial native subset, not completion of every M4a/M4b
+acceptance item. Remaining work includes JSXGraph/general CASText coverage,
+broader validation/message conformance, retiring the older SymPy admission
+path, additional question-family coverage and the wider distribution/locales
+phases. Native PythonCheckers remain M4d and are rejected explicitly. The
+following original checklist remains the full programme scope; CI evidence
+for the compiler/card change is attached to its PR.
 
 ## First reviewable change: direct transport and supervised build core
 

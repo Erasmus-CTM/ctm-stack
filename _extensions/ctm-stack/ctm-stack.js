@@ -56,6 +56,9 @@
       var job = state.queue.shift(), slowTimer, ceiling, cancelSlow, stopping, stopped = false, stopResult;
       try {
         var adapter = await state.start();
+        // Backends may need a fresh question/variant heap. Its loading time
+        // belongs before the calculation/Stop clock, just like initial start.
+        if (typeof adapter.prepareRequest === 'function') await adapter.prepareRequest(job.payload);
         var ms = Number(job.card.dataset.stopAfter) * 1000;
         slowTimer = setTimeout(function () {
           cancelSlow = job.onSlow(function () {

@@ -23,3 +23,5 @@ test-results/
 **/*.quarto_ipynb
 .native-stack-image/
 /.cache/
+/tools/compiler/node_modules/
+/_extensions/ctm-stack/native/runtime-v3/
