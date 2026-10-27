@@ -13,6 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 import re
+import json
 
 
 def quote(value):
@@ -84,7 +85,8 @@ def tree_from_model(model,parsed,traits):
     for node in model['nodes']:
         source=parsed['nodes'][node['name']]
         if node['test']=='PythonChecker':
-            predicate=PythonCheck(node['options'])
+            predicate=PythonCheck({'sans':node['student'],'teacher':source['teacher'],
+                                   'options':json.loads(node['options'])})
         else:
             flags=traits[node['test']]
             predicate=NativeTest(node['test'],source['student'],source['teacher'],source['options'],node['student'].strip(),
@@ -150,11 +152,15 @@ def compile_tree(tree):
     native_raw=any(isinstance(n.predicate,NativeTest) and n.predicate.requires_raw for n in ordered)
     if native_raw:
         arguments.append('_INPUT_STRING')
+    continuations={node.id:node.predicate.descriptor for node in ordered if isinstance(node.predicate,PythonCheck)}
+    if continuations:
+        arguments.extend(['ctm_resume','ctm_reply'])
     function='ctm_prt_'+tree.name
     signature=function+'('+','.join(arguments)+')'
     internal=['ctm_score:0','ctm_penalty:0','ctm_feedback:""','ctm_path:[]','ctm_notes:[]',
         'ctm_active:'+quote(tree.start),'ctm_test','ctm_caught','ctm_delta','simp',
         '%ERR:["stack_map"]','%NOTES:["stack_map"]','%FEEDBACK:["stack_map"]']
+    if continuations:internal.append('ctm_saved')
     locals_=internal+[identifier(n) for n in tree.feedback_names]
     body=['simp:'+('true' if tree.simplify else 'false')]
 
@@ -166,25 +172,39 @@ def compile_tree(tree):
             'if ctm_caught[1]#"ok" then return(["CTM_PRT_ERROR",ctm_caught[1],'+quote(where)+'])',
             'if length(%ERR)>1 then return(["CTM_PRT_ERROR","author",'+quote(where)+'])']
 
-    if tree.feedback_program:
+    if continuations:
+        fields=['ctm_score','ctm_penalty','ctm_feedback','ctm_path','ctm_notes','ctm_active']
+        initialize=checked(tree.feedback_program,'feedback variables') if tree.feedback_program else ['false']
+        restore=['simp:false','ctm_saved:eval_string(ctm_resume)',
+                 *[key+':ctm_saved['+str(index+1)+']' for index,key in enumerate(fields)]]
+        body.extend(initialize)
+        body.append('if stringp(ctm_resume) then ('+','.join(restore)+')')
+    elif tree.feedback_program:
         body.extend(checked(tree.feedback_program,'feedback variables'))
     for node in ordered:
         if isinstance(node.predicate,PythonCheck):
-            raise ValueError('PythonChecker requires the H1 native continuation capability (M4d)')
-        test=node.predicate;identifier(test.name)
-        args=[test.student,test.teacher]
-        if test.required_options is True or test.required_options=='optional' and test.options:
-            if not test.options:
-                raise ValueError('Answer-test options are required for '+test.name)
-            args.append('ev('+test.options+',simp)')
-        if test.requires_raw:
-            args.append('stackmap_get_ifexists(_INPUT_STRING,'+quote(test.raw_name)+')')
-        expression='AT'+test.name+'('+','.join(args)+')'
-        steps=['simp:'+('true' if test.simplify else 'false'),*checked(expression,'node '+node.id),
-            'ctm_test:ctm_caught[2]',
+            descriptor=node.predicate.descriptor
+            if not isinstance(descriptor,dict) or set(descriptor)!={'sans','teacher','options'}:
+                raise ValueError('Invalid PythonChecker continuation descriptor')
+            saved='block([fpprintprec:0],string(['+','.join(fields)+']))'
+            steps=['if not listp(ctm_reply) then return(["CTM_PYTHON",'+quote(node.id)+','+saved+',block([ctm_print_value:'+descriptor['teacher']+',fpprintprec:0],string(ctm_print_value))])',
+                   'ctm_test:[true,ctm_reply[1],"",ctm_reply[2]]','ctm_reply:false']
+        else:
+            test=node.predicate;identifier(test.name)
+            args=[test.student,test.teacher]
+            if test.required_options is True or test.required_options=='optional' and test.options:
+                if not test.options:
+                    raise ValueError('Answer-test options are required for '+test.name)
+                args.append('ev('+test.options+',simp)')
+            if test.requires_raw:
+                args.append('stackmap_get_ifexists(_INPUT_STRING,'+quote(test.raw_name)+')')
+            expression='AT'+test.name+'('+','.join(args)+')'
+            steps=['simp:'+('true' if test.simplify else 'false'),*checked(expression,'node '+node.id),
+                   'ctm_test:ctm_caught[2]']
+        steps.extend([
             'if not listp(ctm_test) or length(ctm_test)<2 then return(["CTM_PRT_ERROR","author","Malformed answer-test result"])',
-            'simp:true','ctm_path:endcons(ctm_test,ctm_path)']
-        if not node.quiet:
+            'simp:true','ctm_path:endcons(ctm_test,ctm_path)'])
+        if not node.quiet and not isinstance(node.predicate,PythonCheck):
             steps.append('if length(ctm_test)>3 and stringp(ctm_test[4]) and slength(ctm_test[4])>0 then ctm_feedback:castext_concat(ctm_feedback,["%strans",ctm_test[4]])')
         branches=[]
         for branch in [node.on_true,node.on_false]:
@@ -197,13 +217,17 @@ def compile_tree(tree):
                 actions.extend(checked('ctm_feedback:castext_concat(ctm_feedback,'+branch.feedback+')','node '+node.id+' feedback'))
             branches.append('('+','.join(actions)+')')
         steps.append('if ctm_test[2] then '+branches[0]+' else '+branches[1])
+        if isinstance(node.predicate,PythonCheck) and not node.quiet:
+            steps.append('if slength(ctm_test[4])>0 then ctm_feedback:castext_concat(ctm_feedback,["ctm_python_feedback",ctm_test[4]])')
         body.append('if is(ctm_active='+quote(node.id)+') then ('+','.join(steps)+')')
     body.extend(['simp:true',
         "ctm_score:ev('float('round('max('min(ctm_score,1.0),0.0)*1000)/1000),nouns,simp)",
         "ctm_penalty:ev('float('round('max('min(ctm_penalty,1.0),0.0)*1000)/1000),nouns,simp)",
         '[ctm_path,ctm_score,ctm_penalty,ctm_feedback,ctm_notes]'])
-    return {'function':function,'sig':signature,'def':signature+':=block(['+','.join(locals_)+'],'+','.join(body)+')',
-        'required':dict.fromkeys(tree.arguments,True)}
+    call=function+'('+','.join([*arguments[:-2],'false','false'])+')' if continuations else signature
+    return {'function':function,'sig':call,'def':signature+':=block(['+','.join(locals_)+'],'+','.join(body)+')',
+        'required':dict.fromkeys(tree.arguments,True),
+        **({'continuations':continuations,'callArguments':arguments[:-2]} if continuations else {})}
 
 
 def compile_ir(question,parsed):

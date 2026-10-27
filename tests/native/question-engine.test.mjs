@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {createRequire} from 'node:module';
-const {Engine,testAnswerNote}=createRequire(import.meta.url)('../../_extensions/ctm-stack/native/question-engine.js');
+const {Engine,testAnswerNote,casttext}=createRequire(import.meta.url)('../../_extensions/ctm-stack/native/question-engine.js');
 
 test('question test notes use ordered subsequences with explicit anchoring',()=>{
   for(const [expected,actual,passed] of [
@@ -32,4 +32,12 @@ test('six equally weighted full marks remain exactly full marks',async()=>{
   fractions=[1,1,1,1,1,0];
   const partial=(await engine.grade(question,{},{})).score;
   assert.ok(partial<1&&Math.abs(partial-5/6)<1e-15);
+});
+
+test('Python feedback bypasses CASText marker expansion and is escaped once',()=>{
+  const compiled={statics:{'//compiler-marker//':'author text'}};
+  assert.equal(casttext('QMCHAR',compiled),'QMCHAR');
+  const result=casttext(['%root','//compiler-marker// QMCHAR ',
+    ['%root',['ctm_python_feedback','QMCHAR //compiler-marker// <plain> &lt;']]],compiled);
+  assert.equal(result,'author text ? QMCHAR //compiler-marker// &lt;plain&gt; &amp;lt;');
 });

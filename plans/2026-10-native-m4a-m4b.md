@@ -40,7 +40,7 @@ This is a functional initial native subset, not completion of every M4a/M4b
 acceptance item. Remaining work includes JSXGraph/general CASText coverage,
 broader validation/message conformance, retiring the older SymPy admission
 path, additional question-family coverage and the wider distribution/locales
-phases. Native PythonCheckers remain M4d and are rejected explicitly. The
+phases. Native PythonCheckers are implemented in M4d below. The
 following original checklist remains the full programme scope; CI evidence
 for the compiler/card change is attached to its PR.
 
@@ -101,8 +101,63 @@ certify the final production backend.
    cache and conformance suite, with no Chromium/Playwright dependency in
    author builds. Test the installed package, not only source checkouts.
 
-H1's native continuation is M4d and uses the merged text-only stack.check
+H1's native continuation is implemented as M4d below using the text-only stack.check
 contract; Moodle seed import is M4e. Neither is silently replaced by the old
 prototype bridge. M4g compatibility/locales and M4h distribution/offline closure
 remain separate, tracked phases. Report implementation evidence and deviations
 at each phase boundary; AC retains merging and release ownership.
+
+## M4d: native PythonChecker continuation — 27 October 2026
+
+The compiled Maxima PRT suspends/resumes around Python nodes using opaque exact
+written state. It retains all tree routing and scoring; there is no host-side
+tree interpreter. Author builds invoke the existing H1 checker in isolated
+Python processes. Browser cards own an unpublished private Pyodide worker,
+loaded before the calculation clock. Stop, internal failure and variant
+changes retire the native/Python pair. Ordinary native questions start no
+Python interpreter. Source-loaded runtime-v3 and its archive format are unchanged.
+
+Custom, supplied library and implicit block checkers are covered, including
+numeric partial credit, invalid outcomes, escaped plain feedback, matrix axes,
+fresh namespaces and final assigned identities. Declarative answers are resolved
+in native Maxima; a small result-only checker endpoint reuses the common
+expectation contract. It never prepares or grades mathematics. CI retains
+normal native replay/lifecycle coverage; this change does not modify the ECL
+call/lifetime boundary and does not trigger the full GC stress campaign.
+
+Evidence: 32 independent mixed-tree verdict cases (including two consecutive
+Python nodes and exact 39-digit state), five native integration families with
+23 XML/declarative tests, and installed browser acceptance in Chromium,
+Firefox and WebKit. CI artifacts contain the raw observations. Remaining
+programme work includes JSXGraph/CASText breadth, validation/locales and
+packaging/offline distribution; M4e seed import remains separate.
+
+M4d adversarial review found an adapter defect before merge: Python predicate
+feedback was inserted as generic CASText, so a literal `QMCHAR` could be changed
+and compiler static markers could be expanded. A typed plain-feedback block
+now bypasses CASText substitutions and escapes exactly once. The regression
+checks nested roots, literal markers, angle brackets and existing entities;
+real installed-card acceptance retains the literal marker. This is our adapter
+finding, not an upstream compiler report.
+
+## Pre-merge independent review fixes
+
+Provider records are checked against the active backend and seed; backend moves
+preserve decision history and require new approval without replaying foreign
+CAS tapes. Native backends receive parsed authored tests and must supply named
+per-candidate evidence. Result verification binds names, full declarations and
+the actual candidate id/hash. Resource admission precedes history writes.
+
+String-named evaluator/random substitutions are rejected. Native question and
+feedback variables are re-evaluated rather than restored from printed text;
+the fpprintprec-12 float regression passes. Host PythonChecker execution now
+uses one supervised process per question with fresh H1 namespaces. Its actual
+Python and SymPy versions are recorded. A three-node/ten-test fixture runs 47
+checker calls per seed; local seed samples were 5.87 s and 5.32 s (30 s budget).
+CI records its own raw samples as artifacts, outside the repositories.
+
+The editable STACK revision is stack-pin.json; browser pin and provenance are
+generated. NOTICE identifies STACK-derived files and the requested combined
+SPDX notices are present. Host CPython checker code is explicitly trusted and
+unsandboxed, as required by H1. AC retains merge-commit-only merge ownership:
+ctm-checkers #42 → #43, then ctm-stack #39 → #40. No tag/release or branch deletion.

@@ -70,10 +70,20 @@ def test_malformed_graphs_and_resources_fail_closed(defect):
     with pytest.raises(ValueError):prt.compile_tree(replace(tree,nodes=tuple(nodes)))
 
 
-def test_python_checker_is_an_explicit_unimplemented_continuation():
+def test_python_checker_rejects_an_untyped_continuation_descriptor():
     tree=example();node=replace(tree.nodes[0],predicate=prt.PythonCheck({'entry':'stack.check'}))
     with pytest.raises(ValueError,match='continuation'):
         prt.compile_tree(replace(tree,nodes=(node,*tree.nodes[1:])))
+
+
+def test_python_checker_emits_an_explicit_native_pause_and_resume():
+    tree=example()
+    descriptor={'sans':'ans','teacher':'1','options':{'checker':'check'}}
+    node=replace(tree.nodes[1],predicate=prt.PythonCheck(descriptor))
+    compiled=prt.compile_tree(replace(tree,nodes=(tree.nodes[0],node,*tree.nodes[2:])))
+    assert compiled['continuations']=={'1':descriptor}
+    assert compiled['sig']=='ctm_prt_audit(false,false)'
+    assert 'CTM_PYTHON' in compiled['def'] and 'ctm_resume' in compiled['def']
 
 
 def programs():

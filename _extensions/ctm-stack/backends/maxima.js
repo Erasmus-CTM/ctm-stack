@@ -5,13 +5,14 @@
   'use strict';
   const registry=root.CTMStackAdapters=root.CTMStackAdapters||{};
   registry.maxima=function(descriptor){
-    let child,ready,key,lastRequest,epoch=0,sequence=0;
+    let child,ready,key,lastRequest,python,epoch=0,sequence=0,lastCheck=0;
     const pending=new Map();
     const fault=(message,code='maxima-runtime')=>Object.assign(new Error(message),{kind:'runtime',code});
     function retire(reason){
-      epoch++;const old=child;child=null;ready=null;key=null;
+      epoch++;const old=child;child=null;ready=null;key=null;lastCheck=0;
       for(const item of pending.values()){clearTimeout(item.timer);item.reject(reason instanceof Error?reason:fault(String(reason)));}
       pending.clear();old?.terminate();
+      if(python){python.terminate(reason);python=null;}
     }
     function rpc(message,timeout){
       return new Promise((resolve,reject)=>{
@@ -23,7 +24,7 @@
     }
     async function prepareRequest(request){
       lastRequest=request;
-      const identity=JSON.stringify([request.question?.native?.questionHash,request.variant?.questionHash,request.variant?.seed]);
+      const identity=JSON.stringify([request.question?.native?.questionHash,request.variant?.questionHash,request.variant?.seed,request.variant?.n,request.variant?.id,request.variant?.hash]);
       if(ready&&key===identity)return ready;
       retire('Native question or variant changed');key=identity;
       const current=epoch;
@@ -32,6 +33,25 @@
       child=new Worker(new URL('card-worker.js',base));
       child.onmessage=({data})=>{
         if(current!==epoch)return;
+        if(data?.type==='python-check'){
+          const item=pending.get(data.id),request=data.request;
+          const testResults=request?.operation==='test-results';
+          if(!item||!['grade','tests'].includes(item.type)||!Number.isSafeInteger(data.call)||data.call!==lastCheck+1||!python
+            ||request?.backend!=='maxima'||(testResults
+              ?item.type!=='tests'||request.candidate?.id!==lastRequest.variant.id||request.candidate?.hash!==lastRequest.variant.hash||JSON.stringify(request.tests)!==JSON.stringify(lastRequest.question.authored_tests)
+              :request.checker!==(lastRequest.question.checker||'')||request.variant?.id!==(lastRequest.variant.id||'seed='+lastRequest.variant.seed)
+                ||request.variant.n!==(lastRequest.variant.n??null)||request.variant.hash!==lastRequest.variant.hash)){
+            retire(fault('Malformed or stale PythonChecker continuation'));return;
+          }
+          lastCheck=data.call;
+          Promise.resolve(root.MathExerciseRuntime.callCheckers(python,testResults?'stack.test-results':'stack.check',request,root.CTMCheckersStack)).then(reply=>{
+            if(current!==epoch||!pending.has(data.id))return;
+            const result=typeof reply==='string'?JSON.parse(reply):reply;
+            child.postMessage({id:data.id,call:data.call,type:'python-result',ok:result.ok,
+              result:result.result,error:result.errorDetail||{kind:'author',message:result.error||'Python checker failed'}});
+          }).catch(error=>{if(current===epoch)retire(fault(error.message||'Python checker runtime failed'));});
+          return;
+        }
         if(!data||typeof data!=='object'||typeof data.ok!=='boolean'){
           retire(fault('Malformed native worker response'));return;
         }
@@ -49,8 +69,28 @@
         }
       };
       child.onerror=event=>{if(current===epoch)retire(fault(event.message||'Native worker failed'));};
-      ready=rpc({type:'init',baseURL:new URL('runtime-v3/',base).href,packageHash:descriptor.runtimeHash,
-        checkerURL:checker.scriptURL,question:request.question,variant:request.variant},180000).catch(error=>{
+      const native=rpc({type:'init',baseURL:new URL('runtime-v3/',base).href,packageHash:descriptor.runtimeHash,
+        checkerURL:checker.scriptURL,question:request.question,variant:request.variant},180000);
+      const checked=async()=>{
+        if(!request.question.native.python)return;
+        const R=root.MathExerciseRuntime,W=root.CTMWorker;
+        if(!R||!W)throw fault('Python checker assets are missing');
+        if(root.CTMCheckers?.sha256!==request.question.native.pythonBaseWheelSha256)throw fault('Native checker plan and base Python wheel differ');
+        let timer;
+        const loading=(async()=>{
+          const py=await W.start({indexURL:R.indexURL,publish:false,loadTimeout:R.loadTimeout});
+          const live=()=>{if(current!==epoch){py.terminate('Native checker startup superseded');throw fault('Native checker startup superseded');}};
+          live();python=py;
+          await py.loadPackage('sympy');live();
+          await R.ensureCheckers(py,checker);live();
+          const observed=await py.runPythonAsync('__import__("sympy").__version__');live();
+          const expected=request.question.native.pythonIdentity?.browserSympyVersion;
+          if(typeof expected!=='string'||observed!==expected)throw fault('Native checker plan and browser SymPy version differ','python-checker-identity');
+        })();
+        const limit=new Promise((_,reject)=>{timer=setTimeout(()=>reject(fault('Python checker loading timed out','python-checker-load-timeout')),R.loadTimeout);});
+        try{await Promise.race([loading,limit]);}finally{clearTimeout(timer);}
+      };
+      ready=Promise.all([native,checked()]).catch(error=>{
           if(current===epoch)retire(error);throw error;
         });
       return ready;

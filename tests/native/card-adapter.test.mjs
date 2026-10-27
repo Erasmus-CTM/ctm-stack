@@ -6,7 +6,7 @@ import test from 'node:test';
 
 const code=await fs.readFile(new URL('../../_extensions/ctm-stack/backends/maxima.js',import.meta.url),'utf8');
 const tick=()=>new Promise(resolve=>setImmediate(resolve));
-function setup(){
+function setup(overrides={}){
   const workers=[],timers=new Map();let timer=0;
   class Worker {
     constructor(url){this.url=String(url);this.sent=[];workers.push(this);}
@@ -18,6 +18,7 @@ function setup(){
     CTMCheckersStack:{scriptURL:'https://course.test/checkers.js'},
     setTimeout(fn,ms){const id=++timer;timers.set(id,{fn,ms});return id;},
     clearTimeout(id){timers.delete(id);}};
+  Object.assign(context,overrides);
   vm.runInNewContext(code,context);
   return {adapter:context.CTMStackAdapters.maxima({runtimeHash:'a'.repeat(64)}),workers,timers};
 }
@@ -38,11 +39,43 @@ test('variant changes retire the previous heap and never send raw programs',asyn
   assert.equal(p.workers[1].sent.length,1);
 });
 
+test('native Python continuations use a private runtime and are never replayed',async()=>{
+  const py={loadPackage:async()=>{},runPythonAsync:async()=> '1.13.3',terminate(){this.terminated=true;}},calls=[];
+  const p=setup({CTMCheckers:{sha256:'b'.repeat(64)},CTMWorker:{start:async options=>{assert.equal(options.publish,false);return py;}},
+    MathExerciseRuntime:{loadTimeout:1000,indexURL:'/py/',ensureCheckers:async()=>{},
+      callCheckers:async(runtime,operation,request)=>{calls.push({runtime,operation,request});return {ok:true,result:{valid:true,status:'correct',score:1}};}}});
+  const req=request();Object.assign(req.question.native,{python:true,pythonBaseWheelSha256:'b'.repeat(64),pythonIdentity:{browserSympyVersion:'1.13.3'}});
+  req.question.checker='def check(response, symbols): return True';
+  const ready=p.adapter.prepareRequest(req),child=p.workers[0];child.reply({ok:true,result:{ready:true}});await ready;
+  const outcome=p.adapter.request(req);await tick();
+  const callback={id:child.sent.at(-1).id,type:'python-check',call:1,request:{backend:'maxima',checker:req.question.checker,variant:{n:null,id:'seed=1'}}};
+  child.onmessage({data:callback});await tick();
+  assert.equal(calls.length,1);assert.equal(calls[0].operation,'stack.check');assert.equal(calls[0].runtime,py);
+  assert.equal(child.sent.at(-1).type,'python-result');
+  // A duplicate callback is a protocol fault, not another Python invocation.
+  child.onmessage({data:callback});
+  assert.equal((await outcome).error.kind,'runtime');assert.equal(calls.length,1);
+  assert.equal(child.terminated,true);assert.equal(py.terminated,true);
+});
+
 test('Stop retires loading and ignores late replies',async()=>{
   const p=setup(),loading=p.adapter.prepareRequest(request()),old=p.workers[0];
   const rejected=assert.rejects(loading,/Stopped/);
   await p.adapter.stop();await rejected;old.reply({ok:true,result:{ready:true}});
   assert.equal(old.terminated,true);await initialize(p,2);assert.equal(p.workers.length,2);
+});
+
+test('a changed or absent browser SymPy identity retires both heaps before grading',async()=>{
+  for(const expected of ['1.13.3',undefined]){
+    const py={loadPackage:async()=>{},runPythonAsync:async()=> 'different',terminate(){this.terminated=true;}};
+    const p=setup({CTMCheckers:{sha256:'b'.repeat(64)},CTMWorker:{start:async()=>py},
+      MathExerciseRuntime:{loadTimeout:1000,indexURL:'/py/',ensureCheckers:async()=>{}}});
+    const req=request();Object.assign(req.question.native,{python:true,pythonBaseWheelSha256:'b'.repeat(64),pythonIdentity:{browserSympyVersion:expected}});
+    const loading=p.adapter.prepareRequest(req);p.workers[0].reply({ok:true,result:{ready:true}});
+    await assert.rejects(loading,error=>error.code==='python-checker-identity');
+    assert.equal(py.terminated,true);assert.equal(p.workers[0].terminated,true);
+    assert.equal(p.workers[0].sent.some(m=>m.type==='grade'),false);
+  }
 });
 
 test('load timeout and calculation timeout are separate, with no automatic replay',async()=>{
@@ -80,4 +113,12 @@ test('malformed worker messages fail closed and retire the heap',async()=>{
   const rejected=assert.rejects(loading,/Malformed/);
   child.onmessage({data:null});await rejected;
   assert.equal(child.terminated,true);await initialize(p,2);
+});
+
+test('a changed assigned identity replaces a sealed heap even for the same seed',async()=>{
+  const p=setup();await initialize(p);const old=p.workers[0];
+  const req=request();Object.assign(req.variant,{n:7,id:'seed=1',hash:'b'.repeat(16)});
+  const loading=p.adapter.prepareRequest(req);
+  assert.equal(old.terminated,true);assert.equal(p.workers.length,2);
+  p.workers[1].reply({ok:true,result:{ready:true}});await loading;
 });

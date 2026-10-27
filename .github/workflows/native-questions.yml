@@ -70,6 +70,7 @@ jobs:
           node tests/native/pin.test.mjs
           node tests/native/card-adapter.test.mjs
           node tests/native/question-engine.test.mjs
+          node tests/native/python-checker.test.mjs
       - name: Independent Python emitter and upstream adversarial audit
         run: |
           mkdir -p test-results/native-questions
@@ -77,19 +78,28 @@ jobs:
           node tests/native/function-security.mjs .cache/native-v3 test-results/native-questions/function-security.json
           node tests/native/exact-replay.mjs .cache/native-v3 test-results/native-questions/exact-replay.json
           node tests/native/prt-audit.mjs .cache/native-v3 test-results/native-questions/python-prt-input.json test-results/native-questions/python-prt-native.json
+          python tests/native/continuation-audit.py test-results/native-questions/continuation-input.json
+          node tests/native/continuation-audit.mjs .cache/native-v3 test-results/native-questions/continuation-input.json test-results/native-questions/continuations.json
           python tests/native/oracle/run-adversarial.py --stack-source .cache/stack --runtime .cache/native-v3 --output test-results/native-questions/upstream
       - name: Native generation, leased approvals, replay and change invalidation without SymPy
         run: |
           python tests/native/producer-integration.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --xml _ctm-checkers-source/examples/stack/polynomial-expansion.xml --output test-results/native-questions/producer.json
           python tests/native/families.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --sources _ctm-checkers-source/examples/stack --output test-results/native-questions/families.json
+      - name: Native preparation with custom and library PythonCheckers
+        run: |
+          python tests/native/python-integration.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --sources _ctm-checkers-source/examples/stack --output test-results/native-questions/python-integration.json
+      - name: Three Python nodes and ten tests stay within the per-seed budget
+        run: python tests/native/python-budget.py --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --sources _ctm-checkers-source/examples/stack --output test-results/native-questions/python-budget.json
       - name: Render the actual mixed-backend Quarto card
         run: |
           python tests/native/render-card.py --libs "$CTM_LIBS_EXTENSION" --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --xml _ctm-checkers-source/examples/stack/polynomial-expansion.xml --output "$RUNNER_TEMP/native-card-project"
+          python tests/native/render-python-card.py --libs "$CTM_LIBS_EXTENSION" --checkers "$CTM_CHECKERS_EXTENSION" --runtime .cache/native-v3 --sources _ctm-checkers-source/examples/stack --output "$RUNNER_TEMP/native-python-card-project"
           python -m playwright install --with-deps chromium firefox webkit
       - name: Real native card validation, grading, XML tests and fresh variant heaps
         run: |
           for browser in chromium firefox webkit; do
             python tests/native/card-browser.py "$RUNNER_TEMP/native-card-project" test-results/native-questions/card-$browser.json --browser "$browser" || exit 1
+            python tests/native/python-card-browser.py "$RUNNER_TEMP/native-python-card-project" test-results/native-questions/python-card-$browser.json --browser "$browser" || exit 1
           done
       - uses: actions/upload-artifact@v4
         if: always()
