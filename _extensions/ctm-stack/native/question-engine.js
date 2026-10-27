@@ -20,7 +20,7 @@
   const bool = x => x ? 'true' : 'false';
   const map = pairs => '["stack_map"' + pairs.map(([k, v]) => ',[' + quote(k) + ',' + v + ']').join('') + ']';
   const block = (locals, values) => 'block([' + [...new Set(locals)].join(',') + '],' + values.filter(Boolean).join(',') + ')';
-  const exact=expression=>'block([fpprintprec:0],string('+expression+'))';
+  const exact=expression=>'block([ctm_print_value:'+expression+',fpprintprec:0],string(ctm_print_value))';
   const evaluate = source => 'eval_string(' + quote(source) + ')';
   const aliases = Object.assign(Object.create(null), {ln: 'log', cosec: 'csc', cosech: 'csch',
     arcsin:'asin', arccos:'acos', arctan:'atan', arcsec:'asec', arccot:'acot', arccsc:'acsc',

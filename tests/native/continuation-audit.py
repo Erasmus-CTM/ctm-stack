@@ -27,4 +27,8 @@ for label,model,python_nodes in [('one',tree,['1']),('two',two,['1','2'])]:
 float_model=replace(two,feedback_program='hidden:1/3.0')
 rows.append({'id':'float/12','compiled':prt.compile_tree(float_model),'pythonNodes':['1','2'],
     'expectedTans':'0.3333333333333333','verdicts':[True]*4,'expected':reference['expected'](float_model,[True]*4)})
+control_nodes=tuple(replace(n,predicate=prt.PythonCheck({'sans':'ans','teacher':'fpprintprec','options':{'checker':'check'}})) if n.id in ('1','2') else n for n in two.nodes)
+control_model=replace(two,nodes=control_nodes)
+rows.append({'id':'printing-control/12','compiled':prt.compile_tree(control_model),'pythonNodes':['1','2'],
+    'expectedTans':'12','verdicts':[True]*4,'expected':reference['expected'](control_model,[True]*4)})
 Path(sys.argv[1]).write_text(json.dumps({'rows':rows,'big':big},indent=2)+'\n')

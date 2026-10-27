@@ -11,7 +11,7 @@ const quote=s=>'"'+String(s).replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'"';
 const bool=x=>x?'true':'false';
 const map=pairs=>'["stack_map"'+Object.entries(pairs).map(([k,v])=>',['+quote(k)+','+v+']').join('')+']';
 const scope=(locals,steps)=>'block(['+[...new Set(locals)].join(',')+'],'+steps.filter(Boolean).join(',')+')';
-const exact=expression=>'block([fpprintprec:0],string('+expression+'))';
+const exact=expression=>'block([ctm_print_value:'+expression+',fpprintprec:0],string(ctm_print_value))';
 const ec=(expression,where)=>'_EC(errcatch('+expression+'),'+quote(where)+')';
 const functions=new Set(('sqrt sin cos tan sec csc cot sinh cosh tanh sech csch coth exp log ln abs '
   +'asin acos atan asec acsc acot asinh acosh atanh asech acsch acoth cosec cosech gcd mod matrix '

@@ -187,7 +187,7 @@ def compile_tree(tree):
             if not isinstance(descriptor,dict) or set(descriptor)!={'sans','teacher','options'}:
                 raise ValueError('Invalid PythonChecker continuation descriptor')
             saved='block([fpprintprec:0],string(['+','.join(fields)+']))'
-            steps=['if not listp(ctm_reply) then return(["CTM_PYTHON",'+quote(node.id)+','+saved+',block([fpprintprec:0],string('+descriptor['teacher']+'))])',
+            steps=['if not listp(ctm_reply) then return(["CTM_PYTHON",'+quote(node.id)+','+saved+',block([ctm_print_value:'+descriptor['teacher']+',fpprintprec:0],string(ctm_print_value))])',
                    'ctm_test:[true,ctm_reply[1],"",ctm_reply[2]]','ctm_reply:false']
         else:
             test=node.predicate;identifier(test.name)
