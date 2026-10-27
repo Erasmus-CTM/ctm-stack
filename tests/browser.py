@@ -11,14 +11,22 @@ import os
 from pathlib import Path
 from threading import Thread
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
 
 from test_render import ROOT, question_pages, render_site
 from ctm_parts import engine_data
 
 
+# Pages open with service workers blocked, as in ctm-libs' own browser tests: ctm-libs'
+# runtime reloads a standalone page once when its cross-origin-isolation service worker
+# becomes ready, which would race these interactions.
+
 def card_data(card):
-    card.page.wait_for_function("element => !!element.dataset.stackVariantId",arg=card.element_handle())
+    try:
+        card.page.wait_for_function("element => !!element.dataset.stackVariantId",arg=card.element_handle())
+    except PlaywrightTimeoutError:
+        # A card that never renders a variant means its initialization threw; name the page errors.
+        raise AssertionError(f"card {card.get_attribute('data-stack-id')} has no variant; page errors: {getattr(card.page, 'ctm_errors', 'not collected')}")
     payload=json.loads(card.locator('.ctm-stack-data').text_content())
     current=card.get_attribute('data-stack-variant-id')
     payload['variants'].sort(key=lambda v:v['id']!=current)
@@ -46,7 +54,7 @@ def test_browser_python_checker_source_parity_feedback_and_card_isolation(browse
             options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
         browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**options)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             errors = []
             page.on('pageerror', lambda error: errors.append(str(error)))
             page.goto(url + '/custom.html', wait_until='domcontentloaded')
@@ -151,7 +159,7 @@ def test_browser_python_basis_and_ordinary_matrix_questions(browser_site):
             options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
         browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**options)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             errors = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             page.goto(url + "/bases.html", wait_until="domcontentloaded")
@@ -251,7 +259,7 @@ def test_browser_bounded_matrix_editor_worker_and_stale_evidence(browser_site):
             options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
         browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**options)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             errors = []
             page.on('pageerror', lambda error: errors.append(str(error)))
             page.goto(url + '/matrices.html', wait_until='domcontentloaded')
@@ -360,7 +368,7 @@ def test_browser_published_pages_mount_cards():
             options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
         browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**options)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             errors = []
             page.on("pageerror", lambda error: errors.append(str(error)))
             for qmd in question_pages():
@@ -375,7 +383,7 @@ def test_browser_published_pages_mount_cards():
                     assert card.locator(".stack-check").count() == 1
                     assert card.locator(".stack-check").is_disabled()
                     if card.get_attribute("data-stack-feedback"):
-                        assert card.locator(".stack-feedback-button").count() == 1
+                        assert card.locator(".stack-feedback-button").count() == 1, (route, errors)
             assert not errors, errors
         finally:
             browser.close()
@@ -388,7 +396,7 @@ def test_browser_worker_grades_and_runs_authored_tests(browser_site):
         if os.getenv("CTM_STACK_BROWSER", "chromium") == "chromium" and os.environ.get("STACK_SYMPY_CHROMIUM"):
             browser_options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
         browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**browser_options)
-        page = browser.new_page()
+        page = browser.new_page(service_workers="block")
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto(url + "/index.html", wait_until="domcontentloaded")
@@ -620,9 +628,10 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             browser_options["executable_path"] = os.environ["STACK_SYMPY_CHROMIUM"]
         browser = getattr(pw, os.getenv('CTM_STACK_BROWSER', 'chromium')).launch(**browser_options)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             errors = []
             page.on("pageerror", lambda error: errors.append(str(error)))
+            page.ctm_errors = errors
             page.goto(url + "/corpus.html", wait_until="domcontentloaded")
             cards = page.locator(".ctm-stack:not(.stack-diagnostic)")
             assert cards.count() == len(expected) + 1

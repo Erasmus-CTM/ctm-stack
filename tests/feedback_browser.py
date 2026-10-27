@@ -11,6 +11,10 @@ from playwright.sync_api import sync_playwright
 from browser import serve, correct_expansion, next_variant
 
 
+# Pages open with service workers blocked, as in ctm-libs' own browser tests: ctm-libs'
+# runtime reloads a standalone page once when its cross-origin-isolation service worker
+# becomes ready, which would race these interactions.
+
 def browser_for(pw):
     options = {"headless": True}
     if os.getenv("CTM_STACK_BROWSER", "chromium") == "chromium" and os.environ.get("STACK_SYMPY_CHROMIUM"):
@@ -28,17 +32,18 @@ def test_feedback_copy_prompt_and_context_modes(browser_site):
     site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
-        page = browser.new_page()
+        page = browser.new_page(service_workers="block")
         errors = []
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.goto(url + "/index.html", wait_until="domcontentloaded")
         card = page.locator('[data-stack-id="expansion"]')
         assert card.locator(".stack-feedback-button").count() == 1
         assert card.locator(".ai-feedback-gear").count() == 1
-        assert page.locator("#ai-feedback-settings").count() == 0
+        # The gear opens ctm-libs' shared Settings dialog at its AI section.
         card.locator(".ai-feedback-gear").click()
-        assert page.locator("#ai-feedback-settings[open]").count() == 1
-        page.locator("#ai-feedback-settings button").first.click()
+        assert page.locator("#ctm-settings[open] #ai-feedback-settings").count() == 1
+        page.locator("#ctm-settings .ctm-settings-close").click()
+        assert page.locator("#ctm-settings[open]").count() == 0
         card.locator(".stack-answer").first.fill(correct_expansion(card))
         first = prompt_data(card)
         assert "[Answer " in first["task"]
@@ -75,7 +80,7 @@ def test_feedback_copy_prompt_and_context_modes(browser_site):
         cards = page.locator(".ctm-stack[data-stack-feedback]")
         assert cards.count() > 0
         seen_modes = set()
-        assert page.locator("#ai-feedback-settings").count() == 0
+        assert page.locator("#ctm-settings[open], #ai-feedback-settings[open]").count() == 0
         for index in range(cards.count()):
             card = cards.nth(index)
             card.locator(".stack-answer").first.fill("1")
@@ -97,7 +102,7 @@ def test_inherited_policy_steps_permissions_and_parent_changes(browser_site):
     site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
-        page = browser.new_page()
+        page = browser.new_page(service_workers="block")
         page.goto(url + "/examples.html", wait_until="domcontentloaded")
         card = page.locator('[data-stack-id="rational-practice"]')
         card.locator(".stack-answer").first.fill("x+1")
@@ -150,7 +155,7 @@ def test_explicit_diagram_context_uses_shared_collector(browser_site):
     output = output.replace("</body>", '<iframe id="lesson-board" srcdoc="' + html.escape(frame, quote=True) + '"></iframe></body>')
     with serve(site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
-        page = browser.new_page()
+        page = browser.new_page(service_workers="block")
         page.route("**/index.html", lambda route: route.fulfill(body=output, content_type="text/html"))
         page.goto(url + "/index.html", wait_until="domcontentloaded")
         card = page.locator('[data-stack-id="expansion"]')
@@ -205,7 +210,7 @@ def test_feedback_api_evidence_and_stale_cancellation(browser_site):
     site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
-        page = browser.new_page()
+        page = browser.new_page(service_workers="block")
         page.add_init_script(API_STUB)
         page.goto(url + "/index.html", wait_until="domcontentloaded")
         card = page.locator('[data-stack-id="expansion"]')
@@ -282,7 +287,7 @@ def test_check_can_preserve_hints_but_variant_selection_always_resets(browser_si
     site = browser_site
     with serve(site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
-        page = browser.new_page()
+        page = browser.new_page(service_workers="block")
         page.goto(url + "/index.html", wait_until="domcontentloaded")
         # Override through the shared exercise namespace using the emitted card key.
         page.evaluate("""() => {
@@ -341,7 +346,7 @@ def test_worker_initial_message_failure_cleans_up_and_retry_stays_alive(browser_
     with serve(browser_site) as url, sync_playwright() as pw:
         browser = browser_for(pw)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             page.add_init_script(INIT_FAILURE_PROBE)
             page.goto(url + "/index.html", wait_until="domcontentloaded")
             page.evaluate("window.__stackInitFailure.configure()")

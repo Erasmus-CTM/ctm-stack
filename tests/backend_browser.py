@@ -10,6 +10,10 @@ import ctm_parts
 ROOT = Path(__file__).resolve().parents[1]
 
 
+# Pages open with service workers blocked, as in ctm-libs' own browser tests: ctm-libs'
+# runtime reloads a standalone page once when its cross-origin-isolation service worker
+# becomes ready, which would race these interactions.
+
 def browser_for(pw):
     name = os.getenv('CTM_STACK_BROWSER', 'chromium')
     options = {'headless': True}
@@ -71,7 +75,7 @@ def test_future_backend_opaque_plans_and_store_result():
     with sync_playwright() as pw:
         browser = browser_for(pw)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             mount(page, store=True)
             page.locator('.stack-answer').fill('x+1')
             page.locator('.stack-validate').click()
@@ -93,7 +97,7 @@ def test_author_failure_keeps_session_and_runtime_failure_can_retry():
     with sync_playwright() as pw:
         browser = browser_for(pw)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             for kind in ['author', 'runtime']:
                 mount(page, behavior=kind)
                 page.locator('.stack-answer').fill('keep me')
@@ -114,7 +118,7 @@ def test_stop_routes_to_adapter_and_keeps_the_published_runtime():
     with sync_playwright() as pw:
         browser = browser_for(pw)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             mount(page, behavior='pending', stop_after=.01)
             page.locator('.stack-answer').fill('keep me')
             page.locator('.stack-validate').click()
@@ -133,7 +137,7 @@ def test_sympy_adapter_scopes_shared_stop_to_its_private_proxy():
     with sync_playwright() as pw:
         browser = browser_for(pw)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             for isolated in [False, True]:
                 page.goto('about:blank')
                 page.add_script_tag(path=str(ctm_parts.CTM_LIBS / 'runtime/pyodide-runtime.js'))
@@ -171,7 +175,7 @@ def test_sympy_late_failed_startup_cannot_replace_the_retry_session():
     with sync_playwright() as pw:
         browser = browser_for(pw)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             page.add_script_tag(path=str(ROOT / '_extensions/ctm-stack/backends/sympy.js'))
             result = page.evaluate('''async () => {
               let finish, calls=0; const released=[];
@@ -199,7 +203,7 @@ def test_loading_does_not_consume_the_calculation_stop_clock():
     with sync_playwright() as pw:
         browser = browser_for(pw)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             mount(page, behavior='startup-pending', stop_after=.01)
             page.locator('.stack-answer').fill('x')
             page.locator('.stack-validate').click()
@@ -219,7 +223,7 @@ def test_superseded_queued_request_never_reaches_a_backend():
     with sync_playwright() as pw:
         browser = browser_for(pw)
         try:
-            page = browser.new_page()
+            page = browser.new_page(service_workers="block")
             mount(page, behavior='pending')
             answer = page.locator('.stack-answer')
             answer.fill('first')
@@ -243,7 +247,7 @@ def test_real_store_variant_rotation_confirmation_restore_and_changed_content():
     with sync_playwright() as pw:
         browser=browser_for(pw)
         try:
-            page=browser.new_page()
+            page=browser.new_page(service_workers="block")
             page.route('https://ctm.test/',lambda route:route.fulfill(body='<html></html>',content_type='text/html'))
             page.goto('https://ctm.test/')
             mount(page,store='real',variants=3)
