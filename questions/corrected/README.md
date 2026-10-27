@@ -2,7 +2,7 @@
 
 These four files are derivatives of the matching, unchanged exports in
 `../corpus/`, pinned to STACK commit
-`10d323311b7f39fb7b092dd10ce75f7d8632f525`. Original author attribution,
+`33383047af39c204bf4442802a058f8b918b2b1b`. Original author attribution,
 source URLs, and checksums are in the [corpus manifest](../corpus/manifest.json).
 They retain the original authors' CC BY-SA 4.0 license; see
 [the license text](../corpus/COPYING.txt). CTM made these teaching corrections
@@ -21,3 +21,5 @@ card. Original downloads and the compatibility replay baseline continue to
 refer to the unmodified upstream exports.
 
 On 2026-10-17 CTM added `7-3-26-(Write-sim-eqns-with-matrices).xml` as a presentation teaching copy: remove the unsupported `style="list-style-type:none;"` attribute from its `<ul>`, close the unclosed list, and label the question name as a derivative. No mathematical content, variables, answers, PRT scores or original qtests were changed. The unchanged original remains blocked in the corpus baseline. Its single original qtest passes for deployed seeds 1930245414, 812684119 and 1827462946 in this teaching copy. This copy retains the same CC BY-SA 4.0 license and the original attribution recorded in the corpus manifest.
+
+On 27 October 2026 the copies received the new upstream metadata while retaining every teaching correction. The reference-pin migration audit and golden replay record the unchanged grading behavior.
