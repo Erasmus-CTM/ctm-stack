@@ -11,14 +11,18 @@ import os
 from pathlib import Path
 from threading import Thread
 
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
 
 from test_render import ROOT, question_pages, render_site
 from ctm_parts import engine_data
 
 
 def card_data(card):
-    card.page.wait_for_function("element => !!element.dataset.stackVariantId",arg=card.element_handle())
+    try:
+        card.page.wait_for_function("element => !!element.dataset.stackVariantId",arg=card.element_handle())
+    except PlaywrightTimeoutError:
+        # A card that never renders a variant means its initialization threw; name the page errors.
+        raise AssertionError(f"card {card.get_attribute('data-stack-id')} has no variant; page errors: {getattr(card.page, 'ctm_errors', 'not collected')}")
     payload=json.loads(card.locator('.ctm-stack-data').text_content())
     current=card.get_attribute('data-stack-variant-id')
     payload['variants'].sort(key=lambda v:v['id']!=current)
@@ -375,7 +379,7 @@ def test_browser_published_pages_mount_cards():
                     assert card.locator(".stack-check").count() == 1
                     assert card.locator(".stack-check").is_disabled()
                     if card.get_attribute("data-stack-feedback"):
-                        assert card.locator(".stack-feedback-button").count() == 1
+                        assert card.locator(".stack-feedback-button").count() == 1, (route, errors)
             assert not errors, errors
         finally:
             browser.close()
@@ -623,6 +627,7 @@ def test_browser_corpus_native_author_tests_and_form_sensitive_answers():
             page = browser.new_page()
             errors = []
             page.on("pageerror", lambda error: errors.append(str(error)))
+            page.ctm_errors = errors
             page.goto(url + "/corpus.html", wait_until="domcontentloaded")
             cards = page.locator(".ctm-stack:not(.stack-diagnostic)")
             assert cards.count() == len(expected) + 1
