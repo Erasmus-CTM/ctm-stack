@@ -240,6 +240,13 @@
           feedback:casttext(feedback,c), notes, answerNotes, note:notes.join(' | '), path};
         score += total ? fraction * prt.value / total : 0;
       }
+      // Six equal full-mark PRTs otherwise sum to 0.9999999999999999 in
+      // JavaScript, making the common card display "partial, 100%". Preserve
+      // exact full-mark semantics independently of weighted float arithmetic.
+      if(total>0){
+        const full=question.prts.every(p=>p.value===0||prts[p.name].score===1);
+        score=full?1:Math.min(1-Number.EPSILON,Math.max(0,score));
+      }
       return {status:'graded',score,inputs:validation.inputs,prts,feedback:Object.values(prts).map(p => p.feedback).filter(Boolean).join(' ')};
     }
     async tests(question, variant) {
