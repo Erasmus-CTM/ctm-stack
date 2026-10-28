@@ -75,7 +75,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-9f3af2d5c51ff0cbfe226a1ffe5d6a50.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-c411a90488d61a8f78c388da4fb18f1a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -213,7 +213,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#current-capability-boundary" id="toc-current-capability-boundary" class="nav-link" data-scroll-target="#current-capability-boundary">Current capability boundary</a></li>
   <li><a href="#compiler-and-audit" id="toc-compiler-and-audit" class="nav-link" data-scroll-target="#compiler-and-audit">Compiler and audit</a></li>
   <li><a href="#pythonchecker-continuations-m4d" id="toc-pythonchecker-continuations-m4d" class="nav-link" data-scroll-target="#pythonchecker-continuations-m4d">PythonChecker continuations (M4d)</a></li>
-  <li><a href="#revision-and-exact-replay" id="toc-revision-and-exact-replay" class="nav-link" data-scroll-target="#revision-and-exact-replay">Revision and exact replay</a></li>
+  <li><a href="#revision-and-exact-replay" id="toc-revision-and-exact-replay" class="nav-link" data-scroll-target="#revision-and-exact-replay">Revision and exact replay</a>
+  <ul class="collapse">
+  <li><a href="#host-sympy-pin" id="toc-host-sympy-pin" class="nav-link" data-scroll-target="#host-sympy-pin">Host SymPy pin</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -276,9 +279,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>_extensions/ctm-stack/native/stack-pin.json</code> is the one editable STACK revision. The workflows, Python tools and grammar generator read it. Run <code>node tools/compiler/generate.mjs /path/to/STACK</code> to regenerate the browser pin, grammars, metadata and provenance. Refresh the checked source inventories with their recording tools when upgrading; generated inventories report the pin but do not configure it. Runtime upgrades still require the owned release gate.</p>
 <p>Native operations recreate question variables from the seed on every call, including teacher validation. They never restore native state from the printed <code>env</code> evidence. This preserves binary float precision and unevaluated structure even when an author sets <code>fpprintprec:12</code>.</p>
 <p>Build-time PythonCheckers are <strong>trusted, unsandboxed code in host CPython</strong>, following the H1 author trust model. Process isolation, output bounds and deadlines limit accidental failures; they do not sandbox filesystem, network or host access. Only trusted authored checker source may be built. Browser checkers run in the card’s private Pyodide worker. The author Python identity records its actual interpreter and SymPy versions and the checker wheel hash. The Python identity also records <code>browserSympyVersion</code>; this backend requires host and browser SymPy versions to match. After installing its packages, each private Pyodide worker measures <code>sympy.__version__</code> and compares it to the compiled identity before grading or authored-test execution. Missing or changed versions retire both heaps. A browser SymPy upgrade needs a matching host rebuild and fresh variant approval; the identity is part of the question/cache hash.</p>
+<section id="host-sympy-pin" class="level3">
+<h3 class="anchored" data-anchor-id="host-sympy-pin">Host SymPy pin</h3>
+<p>The native build host’s SymPy is pinned to the SymPy that the ctm-libs Pyodide runtime bundles, not chosen here. ctm-libs owns the Pyodide pin and records its SymPy in <code>_extensions/ctm-libs/runtime/pyodide-sympy.json</code>, generated from Pyodide’s own <code>pyodide-lock.json</code> by ctm-libs’ <code>scripts/sync-pyodide-sympy.py</code> (Pyodide 0.28.3 bundles SymPy 1.13.3). <code>requirements.txt</code> pins exactly that version (<code>sympy==1.13.3</code>), and so do the install commands of the README and the <a href="../docs/authoring.html">authoring guide</a>. The pin changes only together with the Pyodide pin: a ctm-libs Pyodide upgrade that brings another SymPy is adopted here by repinning ctm-libs (<code>.github/pins.json</code>) and moving <code>requirements.txt</code> in the same change.</p>
+<p>Install exactly the pinned SymPy in the build environment. Overriding SymPy locally (another <code>pip install sympy</code>, an unpinned environment) would build PythonChecker questions whose recorded <code>browserSympyVersion</code> the learner’s browser does not have, and grading there fails closed with <code>python-checker-identity</code>. The native build therefore stops such a question: before preparing any seed of a question with PythonCheckers or declarative tests, it compares the host SymPy with the record of the ctm-libs installed beside ctm-stack (<code>CTM_LIBS_EXTENSION</code> in component development builds) and names both versions and the <code>pip install</code> command for the build’s Python. Questions without Python are not affected, and a ctm-libs that predates the record leaves the browser check as the only one. <code>python scripts/check-host-sympy.py --libs &lt;ctm-libs checkout or installed _extensions/ctm-libs&gt;</code> compares the pins with the ctm-libs record without a browser; CI runs it (<code>host-sympy.yml</code>) at the ctm-libs commit of <code>.github/pins.json</code> on every pull request that touches the requirements, the pins or native code. The browser card test (<code>tests/native/python-card-browser.py</code>) remains the end-to-end check of the identity.</p>
 <p>Continuation feedback variables are re-evaluated from the same native inputs and seeded question variables on every resume. Only routing/score/feedback control data is serialized, with full float printing precision. Printed mathematical values are never used to restore native question/feedback state. Authored-test observations carry checked test names and the actual candidate id/hash before validation, including the final numbered-identity replay.</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
