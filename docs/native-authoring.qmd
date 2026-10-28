@@ -185,9 +185,16 @@ here by repinning ctm-libs (`.github/pins.json`) and moving `requirements.txt`
 in the same change.
 
 Install exactly the pinned SymPy in the build environment. Overriding SymPy
-locally (another `pip install sympy`, an unpinned environment) builds
+locally (another `pip install sympy`, an unpinned environment) would build
 PythonChecker questions whose recorded `browserSympyVersion` the learner's
-browser does not have: grading fails closed with `python-checker-identity`.
+browser does not have, and grading there fails closed with
+`python-checker-identity`. The native build therefore stops such a question:
+before preparing any seed of a question with PythonCheckers or declarative
+tests, it compares the host SymPy with the record of the ctm-libs installed
+beside ctm-stack (`CTM_LIBS_EXTENSION` in component development builds) and
+names both versions and the `pip install` command for the build's Python.
+Questions without Python are not affected, and a ctm-libs that predates the
+record leaves the browser check as the only one.
 `python scripts/check-host-sympy.py --libs <ctm-libs checkout or installed
 _extensions/ctm-libs>` compares the pins with the ctm-libs record without a
 browser; CI runs it (`host-sympy.yml`) at the ctm-libs commit of

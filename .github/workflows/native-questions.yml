@@ -65,7 +65,7 @@ jobs:
           python scripts/stage-native.py --release .cache/release --stack-source .cache/stack --output .cache/native-v3
       - name: Compiler invariants and adapter lifecycle controls
         run: |
-          python -m pytest -q tests/native/test_prt_compiler.py tests/native/test_compiler_frontend.py
+          python -m pytest -q tests/native/test_prt_compiler.py tests/native/test_compiler_frontend.py tests/native/test_host_sympy.py
           node tests/native/author-compiler.test.mjs
           node tests/native/pin.test.mjs
           node tests/native/card-adapter.test.mjs

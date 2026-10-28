@@ -104,6 +104,10 @@ class NativeBackend:
                     'baseWheelSha256':descriptor['sha256'],'version':list(sys.version_info[:3])},
             cache=str(self.cache) if self.cache else None)},timeout=180)
         self.prepared_question=reply['question'];self.identity=reply['identity']
+        try:
+            compiler.check_host_sympy(self.identity.get('python'),sys.executable)
+        except ValueError as error:
+            self.close();raise VariantError(str(error)) from error
 
     def _call(self,message,timeout):
         self.sequence+=1;message=dict(message,id=self.sequence)
