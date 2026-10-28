@@ -70,6 +70,22 @@ def main():
                 assert all(assigned['data']['plan'][key]==value for key,value in identity.items())
                 report['cases'].append({'file':file,'passed':True,'tests':len(record['tests']['qtests']['results']),
                     'assignedIdentity':identity,'teacher':record['tests']['teacher']})
+        # The build's SymPy is the browser's: a ctm-libs record that names
+        # another Pyodide SymPy stops a Python question before any seed.
+        import ctm_stack_native
+        from ctm_variants.model import VariantError
+        recorded=ctm_stack_native.compiler.pyodide_sympy
+        assert recorded() is not None, 'ctm-libs records no Pyodide SymPy: the build-time guard would not run'
+        ctm_stack_native.compiler.pyodide_sympy=lambda libs=None:{'pyodide':'0.0.1','sympy':'0.0.1','path':'test record'}
+        try:
+            source,options=sources[0]
+            with NativeBackend(runtime_root=args.runtime,checker_folder=folder) as backend:
+                backend.load_question(source,ET.parse(source).findtext('question/name/text'),options)
+        except VariantError as error:
+            assert 'python-checker-identity' in str(error) and "sympy==0.0.1" in str(error),str(error)
+        else:raise AssertionError('A host SymPy the browser does not run was accepted')
+        finally:ctm_stack_native.compiler.pyodide_sympy=recorded
+        report['hostSympyGuard']={'passed':True,'record':recorded()['sympy']}
         # Checker-only cards have no native PRT functions. Their partial mark
         # is numeric, unlike the Boolean predicate used by an XML Python node.
         tree=ET.parse(args.sources/'python-checker.xml');q=tree.getroot().find('question')

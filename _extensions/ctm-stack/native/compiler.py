@@ -84,6 +84,47 @@ def checker_part(folder):
     return wheel, part['sha256']
 
 
+def pyodide_sympy(libs=None):
+    """ctm-libs' record of its Pyodide's SymPy, {pyodide, sympy, path}, or None.
+
+    The ctm-libs installed beside this component is the runtime the page loads;
+    CTM_LIBS_EXTENSION (component development builds) comes after it. A ctm-libs
+    that predates the record (runtime/pyodide-sympy.json) gives None.
+    """
+    extensions = next((path for path in HERE.parents if path.name == '_extensions'), None)
+    candidates = [libs] if libs else [HERE.parent.parent/'ctm-libs']
+    if not libs and extensions is not None:
+        candidates += [extensions/'ctm-libs', *sorted(extensions.glob('*/ctm-libs'))]
+    if not libs and os.environ.get('CTM_LIBS_EXTENSION'):
+        candidates.append(Path(os.environ['CTM_LIBS_EXTENSION']))
+    for folder in dict.fromkeys(Path(c) for c in candidates):
+        path = folder/'runtime/pyodide-sympy.json'
+        if path.is_file():
+            record = json.loads(path.read_text())
+            if not (isinstance(record.get('pyodide'), str) and isinstance(record.get('sympy'), str)):
+                raise ValueError(f'{path} records no Pyodide and SymPy versions')
+            return {'pyodide': record['pyodide'], 'sympy': record['sympy'], 'path': str(path)}
+    return None
+
+
+def check_host_sympy(python, executable, libs=None):
+    """Stop a Python build whose host SymPy the learner's browser would refuse.
+
+    `python` is the checker identity (its sympyVersion is the host's). The
+    browser compares its Pyodide SymPy with the recorded one and fails closed
+    (python-checker-identity); this reports the same mismatch at build time.
+    """
+    record = pyodide_sympy(libs)
+    host = (python or {}).get('sympyVersion')
+    if record is None or host is None or host == record['sympy']:
+        return
+    raise ValueError(
+        f"Host SymPy {host} differs from SymPy {record['sympy']}, which ctm-libs' Pyodide {record['pyodide']} "
+        f"runs in the browser ({record['path']}). Learners' browsers would refuse this PythonChecker question "
+        f"(python-checker-identity). Install the pinned version in the build's Python: "
+        f"\"{executable}\" -m pip install 'sympy=={record['sympy']}'")
+
+
 def compile_model(question):
     """Parse with upstream JS grammar actions; emit the PRTs in Python."""
     result=subprocess.run([os.environ.get('CTM_STACK_NODE','node'),'--max-old-space-size=256',

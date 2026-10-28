@@ -1,0 +1,59 @@
+name: Host SymPy follows ctm-libs' Pyodide
+
+# Native PythonCheckers grade authored tests at build time in host CPython;
+# the browser refuses a question whose host SymPy differs from the SymPy of
+# ctm-libs' Pyodide (python-checker-identity). ctm-libs records that version
+# (runtime/pyodide-sympy.json); requirements.txt must pin exactly it. Fast:
+# no install, network fetch of the runtime or browser. The full card test
+# (native-questions.yml, python-card-browser.py) stays the end-to-end check.
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'requirements*.txt'
+      - '.github/pins.json'
+      - '_extensions/ctm-stack/native/**'
+      - '_extensions/ctm-stack/backends/maxima.js'
+      - 'scripts/*native*'
+      - 'scripts/check-host-sympy.py'
+      - 'tests/native/**'
+      - 'tools/compiler/**'
+      - 'README.md'
+      - 'docs/authoring.qmd'
+      - 'docs/native-authoring.qmd'
+      - '.github/workflows/host-sympy.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  host-sympy:
+    name: requirements.txt SymPy = SymPy of ctm-libs' Pyodide
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      - name: The ctm-libs commit (pins, review refs)
+        id: refs
+        uses: ./.github/actions/ctm-dependencies
+        with:
+          install: 'false'
+      - name: Its record of Pyodide's SymPy
+        uses: actions/checkout@v4
+        with:
+          repository: Erasmus-CTM/ctm-libs
+          ref: ${{ steps.refs.outputs.ctm-libs }}
+          path: _ctm-libs-source
+          sparse-checkout: _extensions/ctm-libs/runtime/pyodide-sympy.json
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - name: Compare the host pin
+        run: |
+          # The failure becomes an annotation, readable without the raw log.
+          out=$(python3 scripts/check-host-sympy.py --libs _ctm-libs-source 2>&1) || {
+            echo "$out"
+            printf '::error file=requirements.txt,title=Host SymPy differs from ctm-libs Pyodide::%s\n' "$(echo "$out" | sed -e ':a' -e 'N' -e '$!ba' -e 's/%/%25/g' -e 's/\n/%0A/g')"; exit 1; }
+          echo "$out"
