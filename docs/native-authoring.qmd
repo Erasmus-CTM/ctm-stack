@@ -171,6 +171,30 @@ compiled identity before grading or authored-test execution. Missing or changed
 versions retire both heaps. A browser SymPy upgrade needs a matching host rebuild
 and fresh variant approval; the identity is part of the question/cache hash.
 
+### Host SymPy pin
+
+The native build host's SymPy is pinned to the SymPy that the ctm-libs Pyodide
+runtime bundles, not chosen here. ctm-libs owns the Pyodide pin and records its
+SymPy in `_extensions/ctm-libs/runtime/pyodide-sympy.json`, generated from
+Pyodide's own `pyodide-lock.json` by ctm-libs' `scripts/sync-pyodide-sympy.py`
+(Pyodide 0.28.3 bundles SymPy 1.13.3). `requirements.txt` pins exactly that
+version (`sympy==1.13.3`), and so do the install commands of the README and the
+[authoring guide](authoring.qmd). The pin changes only together with the
+Pyodide pin: a ctm-libs Pyodide upgrade that brings another SymPy is adopted
+here by repinning ctm-libs (`.github/pins.json`) and moving `requirements.txt`
+in the same change.
+
+Install exactly the pinned SymPy in the build environment. Overriding SymPy
+locally (another `pip install sympy`, an unpinned environment) builds
+PythonChecker questions whose recorded `browserSympyVersion` the learner's
+browser does not have: grading fails closed with `python-checker-identity`.
+`python scripts/check-host-sympy.py --libs <ctm-libs checkout or installed
+_extensions/ctm-libs>` compares the pins with the ctm-libs record without a
+browser; CI runs it (`host-sympy.yml`) at the ctm-libs commit of
+`.github/pins.json` on every pull request that touches the requirements, the
+pins or native code. The browser card test (`tests/native/python-card-browser.py`)
+remains the end-to-end check of the identity.
+
 Continuation feedback variables are re-evaluated from the same native inputs
 and seeded question variables on every resume. Only routing/score/feedback
 control data is serialized, with full float printing precision. Printed

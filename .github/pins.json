@@ -1,8 +1,8 @@
 {
- "comment": "Commits CI uses (.github/actions/ctm-dependencies and site.yml; a head commit's CTM-Review-Refs trailer names others for review). ctm-libs: the library of CTM Assessment (the Python runtime, AI feedback, the bootstrap's target). ctm-checkers: the Python checker library with the STACK engine (ctm_checkers.stack), its example questions (examples/stack, copied into questions/ by scripts/fetch-examples.py) and the native STACK workflow that renders the compliance report. ctm-assessment: the umbrella, for tools/ci/review-dependencies.py (the one copy of every CTM repository).",
+ "comment": "Commits CI uses (.github/actions/ctm-dependencies and site.yml; a head commit's CTM-Review-Refs trailer names others for review). ctm-libs: the library of CTM Assessment (the Python runtime, AI feedback, the bootstrap's target; its runtime/pyodide-sympy.json is the SymPy that requirements.txt pins, checked by host-sympy.yml). ctm-checkers: the Python checker library with the STACK engine (ctm_checkers.stack), its example questions (examples/stack, copied into questions/ by scripts/fetch-examples.py) and the native STACK workflow that renders the compliance report. ctm-assessment: the umbrella, for tools/ci/review-dependencies.py (the one copy of every CTM repository).",
  "ctm-libs": {
   "repository": "Erasmus-CTM/ctm-libs",
-  "commit": "365eadcc98489f0202d0e55b06172e3567b0a8c3"
+  "commit": "34ff5cfa2932cea1e5bec451e1526213b82c44fa"
  },
  "ctm-checkers": {
   "repository": "Erasmus-CTM/ctm-checkers",
